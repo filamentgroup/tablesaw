@@ -1,0 +1,243 @@
+/*
+ * swipeable column toggle - extends the coltoggle plugin when you add a data-swipe attr
+ * Copyright (c) 2013 Filament Group, Inc.
+ * Licensed MIT
+ */
+(function( win, $, undefined ){
+
+
+	function createSwipeTable( $table ){
+
+		var $btns = $( "<div class='table-advance'></div>" ),
+			$prevBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
+			$nextBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
+			hideBtn = 'disabled',
+			persistWidths = 'table-fix-persist',
+			$headerCells = $table.find( "thead th" ),
+			$headerCellsNoPersist = $headerCells.not( '[data-priority="persist"]' ),
+			headerWidths = [],
+			$head = $( document.head || 'head' ),
+			tableId = $table.attr( 'id' );
+
+		// Calculate initial widths
+		$table.css('width', 'auto');
+		$headerCells.each(function() {
+			headerWidths.push( $( this ).outerWidth() );
+		});
+		$table.css( 'width', '' );
+
+		$btns.appendTo( $table.prev( '.ui-table-bar' ) );
+
+		$table.addClass( "table-coltoggle-swipe" );
+
+		if( !tableId ) {
+			tableId = 'tableswipe-' + Math.round( Math.random() * 10000 );
+			$table.attr( 'id', tableId );
+		}
+
+		function $getCells( headerCell ) {
+			return $( headerCell.cells ).add( headerCell );
+		}
+
+		function showColumn( headerCell ) {
+			$getCells( headerCell ).removeClass( 'ui-table-cell-hidden' );
+		}
+
+		function hideColumn( headerCell ) {
+			$getCells( headerCell ).addClass( 'ui-table-cell-hidden' );
+		}
+
+		function persistColumn( headerCell ) {
+			$getCells( headerCell ).addClass( 'ui-table-cell-persist' );
+		}
+
+		function isPersistent( headerCell ) {
+			return $( headerCell ).is( '[data-priority="persist"]' );
+		}
+
+		function unmaintainWidths() {
+			$table.removeClass( persistWidths );
+			$( '#' + tableId + '-persist' ).remove();
+		}
+
+		function maintainWidths() {
+			var prefix = '#' + tableId + ' ',
+				styles = [],
+				tableWidth = $table.width();
+
+			$headerCells.each(function( index ) {
+				var width;
+				if( isPersistent( this ) ) {
+					width = $( this ).width();
+
+					// Don’t persist greedy columns (take up more than 75% of table width)
+					if( width < tableWidth * 0.75 ) {
+						styles.push( prefix + ' .ui-table-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
+					}
+				}
+			});
+
+			unmaintainWidths();
+			$table.addClass( persistWidths );
+			$head.append( $( '<style>' ).attr( 'id', tableId + '-persist' ).html( styles.join( "\n" ) ) );
+		}
+
+		function getNext(){
+			var next = [],
+				checkFound;
+
+			$headerCellsNoPersist.each(function( i ) {
+				var $t = $( this ),
+					isHidden = $t.css( "display" ) === "none";
+
+				if( !isHidden && !checkFound ) {
+					checkFound = true;
+					next[ 0 ] = i;
+				} else if( isHidden && checkFound && !next[ 1 ] ) {
+					next[ 1 ] = i;
+				}
+			});
+
+			return next;
+		}
+
+		function getPrev(){
+			var next = getNext();
+			return [ next[ 1 ] - 1 , next[ 0 ] - 1 ];
+		}
+
+		function nextpair( fwd ){
+			return fwd ? getNext() : getPrev();
+		}
+
+		function canAdvance( pair ){
+			return pair[ 1 ] > -1 && pair[ 1 ] < $headerCellsNoPersist.length;
+		}
+
+		function fakeBreakpoints() {
+			var extraPaddingPixels = 20,
+				containerWidth = $table.parent().width(),
+				sum = 0;
+
+			$headerCells.each(function( index ) {
+				var $t = $( this ),
+					isPersist = $t.is( '[data-priority="persist"]' );
+				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+
+				if( isPersist ) {
+					// for visual box-shadow
+					persistColumn( this );
+					return;
+				}
+
+				if( sum > containerWidth ) {
+					hideColumn( this );
+				} else {
+					showColumn( this );
+				}
+
+			});
+
+			unmaintainWidths();
+			$table.trigger( 'tablecolumns' );
+		}
+
+		function advance( fwd ){
+			var pair = nextpair( fwd );
+			if( canAdvance( pair ) ){
+				if( isNaN( pair[ 0 ] ) ){
+					if( fwd ){
+						pair[0] = 0;
+					}
+					else {
+						pair[0] = $headerCellsNoPersist.length - 1;
+					}
+				}
+
+				maintainWidths();
+
+				hideColumn( $headerCellsNoPersist.get( pair[ 0 ] ) );
+				showColumn( $headerCellsNoPersist.get( pair[ 1 ] ) );
+
+				$table.trigger( 'tablecolumns' );
+			}
+		}
+
+		$prevBtn.add( $nextBtn ).click(function( e ){
+			advance( !!$( e.target ).closest( $nextBtn ).length );
+			e.preventDefault();
+		});
+
+		$table
+			.bind( "touchstart.swipetoggle", function( e ){
+				var origin = ( e.touches || e.originalEvent.touches )[ 0 ].pageX,
+					x,
+					drag;
+
+				$table.addClass( "table-noanimate" );
+
+				$( this )
+					.bind( "touchmove", function( e ){
+						x = ( e.touches || e.originalEvent.touches )[ 0 ].pageX;
+						drag = x - origin;
+						if( drag < -30 ){
+							drag = -30;
+						}
+						if( drag > 30 ){
+							drag = 30;
+						}
+
+						//$table.css( { "position": "relative", "left": drag + "px" } );
+					})
+					.bind( "touchend.swipetoggle", function(){
+						if( x - origin < 15 ){
+							advance( true );
+						}
+						if( x - origin > -15 ){
+							advance( false );
+						}
+
+						$( this ).unbind( "touchmove touchend" );
+						$table.removeClass( "table-noanimate" );
+						//$table.css( "left", "0" );
+
+					});
+
+			})
+			.bind( "tablecolumns.swipetoggle", function(){
+				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
+				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
+			})
+			.bind( "tablenext.swipetoggle", function(){
+				advance( true );
+			} )
+			.bind( "tableprev.swipetoggle", function(){
+				advance( false );
+			} )
+			.bind( "tabledestroy.swipetoggle", function(){
+				var $t = $( this );
+
+				$t.removeClass( 'table-coltoggle-swipe' );
+				$t.prev( '.ui-table-bar' ).find( '.table-advance' ).remove();
+				$( win ).off( "resize", fakeBreakpoints );
+
+				$t.unbind( ".swipetoggle" );
+			});
+
+		fakeBreakpoints();
+		$( win ).on( "resize", fakeBreakpoints );
+	}
+
+
+
+	// on tablecreate, init
+	$( document ).on( "tablecreate", "table", function( e, mode ){
+
+		var $table = $( this );
+		if( mode === 'swipe' ){
+			createSwipeTable( $table );
+		}
+
+	} );
+
+}( this, jQuery ));

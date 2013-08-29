@@ -1,0 +1,115 @@
+.ui-table-navigable {
+	position: relative;
+	overflow: hidden;
+}
+.ui-table-navigable input,
+.ui-table-navigable select {
+	background: transparent;
+	border: none;
+}
+.ui-table-navigable input:focus,
+.ui-table-navigable select:focus,
+.ui-table-navigable input:hover,
+.ui-table-navigable select:hover {
+	background: transparent;
+	outline: none;
+	box-shadow: none;
+	border: none;
+}
+.ui-table-navigable .ui-table-active-cell {
+	outline: 2px solid #989898;
+}
+.ui-table-navigable .ui-table-active-cell.edit {
+	outline: 2px solid #5292f7;
+	box-shadow: inset 0 0 5px rgba(0,0,0,.2);
+}
+
+.ui-table-navigable thead th span {
+	display: block;
+	height: .2em;
+	border-bottom: 1px solid #e4e1de;
+	margin: 0 -.8em;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+.ui-table-navigable tbody .rank-edit-col-readonly {
+	padding-right: 3%;
+}
+.ui-table-navigable tbody td.icon-arrow-change-down-sm,
+.ui-table-navigable tbody td.icon-arrow-change-up-sm {
+	width: auto;
+	height: auto;
+}
+
+.ui-table-navigable tbody th,
+.ui-table-navigable tbody td {
+	padding: 0 7% 0 0;
+	background-position: 104% center;
+	text-align: right;
+}
+.ie-lte8 .ui-table-navigable tbody th,
+.ie-lte8 .ui-table-navigable tbody td {
+	padding-right: 1.2em;
+}
+.ui-table-navigable .input-numeric {
+	text-align: right;
+}
+.ui-table-navigable input,
+.ui-table-navigable .proxy,
+.ui-table-navigable select {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left:.2em;
+	padding-right:0;
+	width: 100%;
+}
+.ui-table-navigable .proxied {
+	position: relative;
+}
+.ui-table-navigable .proxy {
+	position: absolute;
+	top: .4em;
+	right: 0;
+	padding: .2em;
+	padding-right: 0;
+	width: auto;
+	background-color: #fff;
+	font: 600 1.121794872em Proxima Nova Condensed, sans-serif;
+}
+.ui-table-navigable select {
+	margin: 0;
+	float: right;
+	text-align: right;
+	-webkit-appearance: textfield;
+	-moz-appearance: textfield;
+	direction: rtl;
+	padding: .15em 0 0 0;
+}
+.ui-table-navigable select {
+	pointer-events: none;
+}
+.ui-table-navigable option {
+	text-align: right;
+}
+@media screen and (min-width: 30em) {
+	.ui-table-navigable tbody th,
+	.ui-table-navigable tbody td {
+		padding: 0 5% 0 0;
+		background-position: 100% center;
+	}
+}
+
+@media screen and (min-width: 40em) {
+	.ui-table-navigable tbody th,
+	.ui-table-navigable tbody td {
+		padding: 0 4% 0 0;
+	}
+}
+
+@media screen and (min-width: 50em) {
+	.ui-table-navigable tbody th,
+	.ui-table-navigable tbody td {
+		padding: 0 3% 0 0;
+	}
+}

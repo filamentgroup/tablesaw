@@ -1,0 +1,27 @@
+{
+  "name": "tablesaw",
+  "title": "Tablesaw",
+  "description": "A set of plugins for responsive tables.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/filamentgroup/tablesaw",
+  "author": {
+    "name": "Zach Leatherman",
+    "email": "zach@filamentgroup.com",
+    "url": "http://filamentgroup.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/filamentgroup/tablesaw.git"
+  },
+  "bugs": "https://github.com/filamentgroup/tablesaw/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/filamentgroup/tablesaw/blob/master/LICENSE-MIT"
+    }
+  ],
+  "dependencies": {
+    "jquery": "*"
+  },
+  "keywords": []
+}
