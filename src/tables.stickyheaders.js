@@ -132,7 +132,7 @@
 	win.StickyHeaders = S;
 
 	if( !S.tests.sticky && S.tests.fixed ) {
-		$( win.document ).on( "enhance" , function(){
+		$( win.document ).on( "enhance.tablesaw" , function(){
 			$( S.selectors.init ).each(function() {
 				S.init( this );
 			});

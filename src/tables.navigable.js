@@ -473,7 +473,7 @@
 		}
 	};
 
-	$( document ).on( "enhance", function() {
+	$( document ).on( "enhance.tablesaw", function() {
 		var $tables = $( Nav.selectors.init );
 
 		if( $tables.length ) {

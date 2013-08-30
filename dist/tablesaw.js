@@ -5,7 +5,7 @@
 // Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
 (function( $ ){
 	$( function(){
-		$( document ).trigger( "enhance" );
+		$( document ).trigger( "enhance.tablesaw" );
 	});
 }( jQuery ));
 (function( $ ) {
@@ -335,7 +335,7 @@
 	// add methods
 	$.extend( $.fn[ o.pluginName ].prototype, methods );
 
-	$( document ).on( "enhance", function( e ) {
+	$( document ).on( "enhance.tablesaw", function( e ) {
 		$( e.target ).find( o.initSelector )[ o.pluginName ]();
 	});
 
@@ -810,7 +810,7 @@
 		}
 	};
 
-	$( document ).on( "enhance", function() {
+	$( document ).on( "enhance.tablesaw", function() {
 		var $tables = $( Nav.selectors.init );
 
 		if( $tables.length ) {
@@ -1464,7 +1464,7 @@
 	win.StickyHeaders = S;
 
 	if( !S.tests.sticky && S.tests.fixed ) {
-		$( win.document ).on( "enhance" , function(){
+		$( win.document ).on( "enhance.tablesaw" , function(){
 			$( S.selectors.init ).each(function() {
 				S.init( this );
 			});

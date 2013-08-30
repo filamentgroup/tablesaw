@@ -333,7 +333,7 @@
 	// add methods
 	$.extend( $.fn[ o.pluginName ].prototype, methods );
 
-	$( document ).on( "enhance", function( e ) {
+	$( document ).on( "enhance.tablesaw", function( e ) {
 		$( e.target ).find( o.initSelector )[ o.pluginName ]();
 	});
 
