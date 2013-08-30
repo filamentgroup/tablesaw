@@ -6,9 +6,22 @@ A set of plugins for responsive tables.
 
 ### Stack
 
-### Swipe
+The Stack Table reflows the table headers to a two column layout with headers on the left.
+
+    <table data-mode="reflow">
+
+* [Stack Table Demo](demo/stack.html)
 
 ### Toggle
+
+The Column Toggle Table allows the user to select which columns they want to be visible.
+
+    <table data-mode="columntoggle">
+
+* [Column Toggle Demo](demo/toggle.html)
+
+### Swipe
+
 
 ## Mode Switcher
 

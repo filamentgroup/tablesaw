@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.0 - 2013-08-29
+/*! Tablesaw - v0.1.0 - 2013-08-30
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 table {
@@ -10,7 +10,7 @@ table th {
 }
 table td,
 table tbody th {
-	font-family: 'Proxima Nova Condensed', sans-serif;
+	font-family: sans-serif;
 }
 table tbody th {
 	font-weight: bold;
@@ -64,7 +64,7 @@ table tbody td {
 	margin:0;
 }
 .ui-table tbody th.group {
-	font-family: 'Proxima Nova', sans-serif;
+	font-family: sans-serif;
 	font-size:1em;
 	text-transform: uppercase;
 	font-weight: bold;
@@ -99,7 +99,7 @@ table tbody td {
 	font-weight: normal;
 	padding-top: .9em;
 	padding-bottom: .7em;
-	font-family: "Proxima Nova Light", sans-serif;
+	font-family: sans-serif;
 	border-right: 1px solid #e4e1de;
 }
 
@@ -170,7 +170,7 @@ table tbody td {
 }
 
 .ui-table thead tr.th-groups th {
-	font-family: "Proxima Nova", sans-serif;
+	font-family: sans-serif;
 	font-weight: bold;
 	color:#777;
 }
@@ -236,7 +236,7 @@ table tbody td {
 		font-size: .65em;
 		text-transform: uppercase;
 		color: #888;
-		font-family: "Proxima Nova", sans-serif;
+		font-family: sans-serif;
 	}
 	/* Avoid double strokes when stacked */
 	.ui-table-reflow tbody th.group {
@@ -376,7 +376,7 @@ table tbody td {
 	border: none;
 	box-shadow: none;
 	background: transparent;
-	font-family: Proxima Nova, Verdana, sans-serif;
+	font-family: Verdana, sans-serif;
 	font-size: 1em;
 	padding-left: .3em;
 }
@@ -754,7 +754,7 @@ table.table-fix-persist {
 	padding-right: 0;
 	width: auto;
 	background-color: #fff;
-	font: 600 1.121794872em Proxima Nova Condensed, sans-serif;
+	font: 600 1.121794872em Arial Condensed, sans-serif;
 }
 .ui-table-navigable select {
 	margin: 0;
