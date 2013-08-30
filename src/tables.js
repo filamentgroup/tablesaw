@@ -10,7 +10,6 @@
 	var o = {
 		pluginName : "table",
 		classes : {
-			table : "objl-table",
 			reflowTable: "ui-table-reflow",
 			cellLabels: "ui-table-cell-label",
 			popup: "ui-table-columntoggle-popup",
@@ -56,8 +55,6 @@
 
 			var thrs = this.querySelectorAll( "thead tr" ),
 				trs = this.querySelectorAll( "tbody tr" );
-
-			$table.addClass( o.classes.table );
 
 			// Insert the toolbar
 			var $toolbar = $table.prev( '.' + o.classes.toolbar );
@@ -128,7 +125,6 @@
 		destroy: function() {
 			var $t = $( this );
 			$t.removeAttr( 'data-mode' );
-			$t.removeClass( o.classes.table );
 
 			// reflow
 			$t.removeClass( o.classes.reflowTable );
@@ -243,7 +239,7 @@
 
 					$("<label class='btn btn-check btn-checkbox btn-selected theme-simple'><input type='checkbox' checked>" + $this.text() + "</label>" )
 						.appendTo( $menu )
-						.btn()
+						.trigger('enhance')
 						.children( 0 )
 						.data( "cells", $cells );
 				}
