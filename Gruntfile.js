@@ -22,12 +22,12 @@ module.exports = function(grunt) {
 			},
 			js: {
 				src: [
-					'src/globalenhance.js',
+					'src/tablesaw.js',
+					'src/grunticon.js',
 					'src/tables.js',
-					'src/tables.navigable.js',
+					'src/tables.btnmarkup.js',
 					'src/tables.swipetoggle.js',
 					'src/tables.sortable.js',
-					'src/tables.stickyheaders.js',
 					'src/tables.minimap.js',
 					'src/tables.modeswitch.js'
 				],
@@ -35,12 +35,12 @@ module.exports = function(grunt) {
 			},
 			css: {
 				src: [
+					'src/tables.btnmarkup.css',
+					'src/tables.controlgroup.css',
 					'src/tables.css',
 					'src/tables.swipetoggle.css',
-					'src/tables.stickyheaders.css',
 					'src/tables.columntoggle.css',
 					'src/tables.sortable.css',
-					'src/tables.navigable.css',
 					'src/tables.minimap.css',
 					'src/tables.modeswitch.css'
 				],
@@ -85,25 +85,47 @@ module.exports = function(grunt) {
 				tasks: ['jshint:gruntfile']
 			},
 			src: {
-				files: '<%= jshint.src.src %>',
-				tasks: ['jshint:src', 'qunit']
+				files: ['<%= concat.css.src %>', '<%= concat.js.src %>'],
+				tasks: ['jshint:src', 'qunit', 'concat', 'uglify']
+			},
+			icons: {
+				files: ['<%= grunticon.tablesaw.options.src %>/*'],
+				tasks: ['grunticon:tablesaw']
 			},
 			test: {
 				files: '<%= jshint.test.src %>',
 				tasks: ['jshint:test', 'qunit']
 			},
 		},
+		grunticon: {
+			tablesaw: {
+				options: {
+					src: "src/icons/",
+					dest: "dist/icons/",
+					customselectors: {
+						"arrow-gray-down": ".ui-table-bar .ui-table-columntoggle-btnwrap > a,.enhanced .icon-arrow-gray-down",
+						"sort-ascending": ".sortable-head.sortable-ascending button:after",
+						"sort-descending": ".sortable-head.sortable-descending button:after",
+						"arrow-gray-right": ".ui-table-bar .table-advance > .btn.right,.enhanced .icon-arrow-gray-right",
+						"arrow-gray-left": ".ui-table-bar .table-advance > .btn.left,.enhanced .icon-arrow-gray-left",
+						"check": ".btn-selected.btn-checkbox:after"
+					}
+				}
+			}
+		},
+		bytesize: {
+			dist: {
+				src: [
+					'dist/tablesaw.css',
+					'dist/tablesaw.min.js'
+				]
+			}
+		}
 	});
 
-	// These plugins provide necessary tasks.
-	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-qunit');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-watch');
+	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'concat', 'uglify']);
+	grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'concat', 'uglify', 'grunticon:tablesaw', 'bytesize']);
 
 };
