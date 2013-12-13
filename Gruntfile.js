@@ -120,6 +120,10 @@ module.exports = function(grunt) {
 					'dist/tablesaw.min.js'
 				]
 			}
+		},
+		'gh-pages': {
+			options: {},
+			src: ['dist/**/*', 'bower_components/**/*', 'demo/**/*']
 		}
 	});
 
@@ -127,5 +131,8 @@ module.exports = function(grunt) {
 
 	// Default task.
 	grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'concat', 'uglify', 'grunticon:tablesaw', 'bytesize']);
+
+	// Deploy
+	grunt.registerTask('deploy', ['default', 'gh-pages']);
 
 };
