@@ -22,32 +22,44 @@ The Column Toggle Table allows the user to select which columns they want to be 
 
 ### Swipe
 
+    <table data-mode="swipe">
+
+* [Swipe Demo](demo/swipe.html)
 
 ## Mode Switcher
 
-## Sticky Headers
+* [Mode Switcher Demo](demo/modeswitch.html)
+
+## Sortable
+
+* [Sortable Demo](demo/sort.html)
+
+## Kitchen ~~Table~~ Sink
+
+* [Kitchen Sink Demo](demo/kitchensink.html)
 
 ## Getting Started
-Download the [production version][min] or the [development version][max].
-
-[min]: https://raw.github.com/filamentgroup/tablesaw/master/dist/tablesaw.min.js
-[max]: https://raw.github.com/filamentgroup/tablesaw/master/dist/tablesaw.js
-
-In your web page:
 
 ```html
+<link rel="stylesheet" href="tablesaw.css"></script>
 <script src="jquery.js"></script>
-<script src="dist/tablesaw.min.js"></script>
+<script src="dist/tablesaw.js"></script>
 <script>
 
 </script>
 ```
 
-## Documentation
-_(Coming soon)_
-
-## Examples
-_(Coming soon)_
-
 ## Release History
 _(Nothing yet)_
+
+## TODO
+
+* Generate a zip file that can be downloaded (includes minified/full sources, icons)
+* Make the colors themeable
+* Tests
+* Add to bower
+* Extra CSS/JS in btnmarkup, controlgroup
+* Prune/cleanup non-scoped CSS
+* Remove libs/ move everything into bower
+* Fix issue with sortable switcher not updating
+* These docs suck
