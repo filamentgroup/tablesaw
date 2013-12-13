@@ -10,7 +10,7 @@ The Stack Table reflows the table headers to a two column layout with headers on
 
     <table data-mode="reflow">
 
-* [Stack Table Demo](demo/stack.html)
+* [Stack Table Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html)
 
 ### Toggle
 
@@ -18,35 +18,32 @@ The Column Toggle Table allows the user to select which columns they want to be 
 
     <table data-mode="columntoggle">
 
-* [Column Toggle Demo](demo/toggle.html)
+* [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
 
 ### Swipe
 
     <table data-mode="swipe">
 
-* [Swipe Demo](demo/swipe.html)
+* [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
 
 ## Mode Switcher
 
-* [Mode Switcher Demo](demo/modeswitch.html)
+* [Mode Switcher Demo](http://filamentgroup.github.io/tablesaw/demo/modeswitch.html)
 
 ## Sortable
 
-* [Sortable Demo](demo/sort.html)
+* [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
 
 ## Kitchen ~~Table~~ Sink
 
-* [Kitchen Sink Demo](demo/kitchensink.html)
+* [Kitchen Sink Demo](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
 
 ## Getting Started
 
 ```html
 <link rel="stylesheet" href="tablesaw.css"></script>
 <script src="jquery.js"></script>
-<script src="dist/tablesaw.js"></script>
-<script>
-
-</script>
+<script src="tablesaw.js"></script>
 ```
 
 ## Release History
