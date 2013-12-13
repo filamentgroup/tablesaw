@@ -1,13 +1,89 @@
-/*! Tablesaw - v0.1.0 - 2013-08-30
+/*! Tablesaw - v0.1.0 - 2013-12-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
-// DOM-ready auto-init of plugins.
-// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
-;(function( $ ){
-	$( function(){
-		$( document ).trigger( "enhance.tablesaw" );
+;(function( $ ) {
+	var TS = {
+		regex: {
+			dir: /tablesaw(\.min)?\.js/i
+		}
+	};
+
+	TS.dir = (function() {
+		var dir;
+
+		$( 'script' ).each(function() {
+			var attr = $( this ).attr( 'data-dist-dir' );
+			if( attr ) {
+				dir = attr;
+				return false;
+			} else if ( this.src && this.src.match( TS.regex.dir ) ) {
+				dir = this.src.replace( TS.regex.dir, '' );
+				return false;
+			}
+		});
+
+		return dir;
+	})();
+
+	window.TableSaw = TS;
+
+	// Cut the mustard
+	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
+		return;
+	} else {
+		$( document.documentElement ).addClass( 'enhanced' );
+
+		// DOM-ready auto-init of plugins.
+		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
+		$( function(){
+			$( document ).trigger( "enhance.tablesaw" );
+		});
+	}
+
+})( jQuery );
+;(function( $ ) {
+
+	// grunticon Stylesheet Loader | https://github.com/filamentgroup/grunticon | (c) 2012 Scott Jehl, Filament Group, Inc. | MIT license.
+	function grunticon( css ) {
+		// expects a css array with 3 items representing CSS paths to datasvg, datapng, urlpng
+		if( !css || css.length !== 3 ){
+			return;
+		}
+
+		// Thanks Modernizr & Erik Dahlstrom
+		var w = window,
+			svg = !!w.document.createElementNS && !!w.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect && !!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1"),
+
+			loadCSS = function( data ){
+				var link = w.document.createElement( "link" ),
+					ref = w.document.getElementsByTagName( "script" )[ 0 ];
+
+				link.rel = "stylesheet";
+				link.href = css[ data && svg ? 0 : data ? 1 : 2 ];
+				ref.parentNode.insertBefore( link, ref );
+			},
+
+			// Thanks Modernizr
+			img = new w.Image();
+
+		img.onerror = function(){
+			loadCSS( false );
+		};
+
+		img.onload = function(){
+			loadCSS( img.width === 1 && img.height === 1 );
+		};
+
+		img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+	}
+
+	$(function() {
+			grunticon( [ TableSaw.dir + "icons/icons.data.svg.css",
+				TableSaw.dir + "icons/icons.data.png.css",
+				TableSaw.dir + "icons/icons.fallback.css" ] );
 	});
-}( jQuery ));
+
+})( jQuery );
 (function( $ ) {
 	var o = {
 		pluginName : "table",
@@ -228,7 +304,7 @@
 			$btnContain = $( "<div class='" + o.classes.columnBtnContain + " " + o.columnBtnSide + " " + o.classes.dialogClass + "'></div>" );
 			$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + o.classes.columnBtn +"' data-popup-link>" +
 											"<span>" + o.columnBtnText + "</span></a>" );
-			$popup = $( "<div class='fgdialog dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
+			$popup = $( "<div class='dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
 			$menu = $( "<div class='btn-group'></div>" );
 
 			$(this.headers).not( "td" ).each( function() {
@@ -247,6 +323,7 @@
 				}
 			});
 
+			$menu.find( '.btn' ).btn();
 			$menu.appendTo( $popup );
 
 			// bind change event listeners to inputs - TODO: move to a private method?
@@ -337,488 +414,122 @@
 
 }( jQuery ));
 
-;(function( win, $ ){
-
-	var Nav = {
-		selectors: {
-			init: 'table.ui-table-navigable',
-			editableFields: 'tbody input, tbody select'
-		},
-		attrs: {
-			mode: 'data-navigable-mode',
-			initial: 'data-initial-val',
-			undoValue: 'navigable-value'
-		},
-		modes: {
-			edit: 'edit'
-		},
-		events: {
-			change: "onchange.tablesNavigable",
-			edit: 'ui-table-navigable-edit',
-			editFocus: 'ui-table-navigable-edit-focus',
-			editBlur: 'ui-table-navigable-edit-blur'
-		},
-		classes: {
-			activeCell: 'ui-table-active-cell',
-			editMode: "edit",
-			arrowUp: "icon-arrow-change-up-sm",
-			arrowDown: "icon-arrow-change-down-sm",
-			reverse: "ui-table-col-reverse"
-		},
-		featureTests: {
-			isDisabledFocusableWithoutBlur: null,
-			disabledFocusable: function() {
-				if( Nav.featureTests.isDisabledFocusableWithoutBlur !== null ) {
-					return;
-				}
-
-				var focusFired = false,
-					previousActiveElement = document.activeElement,
-					$el;
-
-				$el = $( '<input type="text">' )
-					.css({
-						position: 'absolute',
-						left: -9999,
-						top: -9999
-					})
-					.appendTo( document.body )
-					.on('focus', function() {
-						$( this ).attr( 'disabled', 'disabled' );
-						if( this === document.activeElement ) {
-							focusFired = true;
-						}
-					})
-					.on('blur', function() {
-						// this fires async
-						Nav.featureTests.isDisabledFocusableWithoutBlur = false;
-					})
-					.trigger('focus');
-
-				// If we don’t setTimeout this, Chrome won’t fire the blur.
-				window.setTimeout(function() {
-					$el.remove();
-				}, 15);
-
-				if( previousActiveElement) {
-					previousActiveElement.focus();
-				}
-				Nav.featureTests.isDisabledFocusableWithoutBlur = focusFired;
-			}
-		},
-		moveDownARow: function( el ) {
-			Nav.moveVertical( el, false );
-		},
-		moveUpARow: function( el ) {
-			Nav.moveVertical( el, true );
-		},
-		moveVertical: function( el, moveUp ) {
-			var $cell = $( el ).closest( 'td' ),
-				$row = $cell.closest( 'tr' )[ moveUp ? 'prev' : 'next' ]( 'tr' ),
-				$input,
-				input,
-				index = $cell.index(),
-				docElem = win.document.documentElement,
-				body = win.document.body,
-				scroll = "pageYOffset" in win ? win.pageYOffset : ( docElem.scrollY || docElem.scrollTop || ( body && body.scrollY ) || 0 ),
-				winHeight = $( window ).height(),
-				offset,
-				isOffscreen;
-
-			while( $row && $row.length ) {
-				$input = $row.find( 'td, th' ).eq( index ).find( 'input, select' );
-				if( $input ) {
-					offset = $input.offset().top;
-					isOffscreen = offset < scroll || ( offset + $input.closest( 'td, th' ).height() ) > ( scroll + winHeight );
-
-					$input.focus();
-					input = $input.get( 0 );
-					if( input.scrollIntoView && isOffscreen ) {
-						input.scrollIntoView();
-					}
-					break;
-				}
-				$row = $row.prev( 'tr' );
-			}
-		},
-		moveLeft: function( el ) {
-			$( el ).closest( 'td' ).prevAll( 'td' ).filter( ":visible" ).find( 'input,select' ).eq( -1 ).focus();
-		},
-		moveRight: function( el ) {
-			$( el ).closest( 'td' ).nextAll( 'td' ).filter( ":visible" ).find( 'input,select' ).eq( 0 ).focus();
-		},
-		onkeyNavigationMode: function( event ) {
-			var charCode = event.which;
-
-			if( charCode >= 37 && charCode <= 40 ) {
-				event.preventDefault();
-			}
-
-			switch( charCode ) {
-				case 37: // LEFT
-					Nav.moveLeft( this );
-					break;
-				case 39: // RIGHT
-					Nav.moveRight( this );
-					break;
-				case 38: // UP
-					Nav.moveUpARow( this );
-					break;
-				case 40: // DOWN
-					Nav.moveDownARow( this );
-					break;
-			}
-		},
-		onkeyEditModeDelete: function( event ) {
-			if( this.tagName === 'SELECT' && event.which === 8 ) {
-				event.preventDefault();
-			}
-		},
-		onkeyNavigate: function( event ) {
-			var code = event.keyCode || event.which,
-				$target = $( event.target ),
-				$table,
-				isEditMode;
-
-			if( code === 13 || code === 9 ) { // ENTER or TAB
-				$table = $target.closest( "table" );
-				isEditMode = $table.attr( Nav.attrs.mode ) === Nav.modes.edit;
-
-				if( isEditMode || event.shiftKey ) {
-					// Enter navigation mode
-					$table.removeAttr( Nav.attrs.mode, Nav.modes.edit );
-				}
-			}
-
-			if( code === 13 ) { // ENTER
-				if( isEditMode || event.shiftKey ) {
-					if( event.shiftKey ) {
-						Nav.moveUpARow( event.target );
-					} else {
-						Nav.moveDownARow( event.target );
-					}
-				} else {
-					Nav.forceEditMode( $table, $target );
-				}
-
-				event.preventDefault();
-			}
-		},
-		onkeyStartEdit: function( event ) {
-			var $t = $( this ),
-				act = function( callback ){
-					event.preventDefault();
-					$table = $t.closest( "table" );
-					$table.attr( Nav.attrs.mode, Nav.modes.edit );
-					if( callback ){
-						callback();
-					}
-					$t.focus();
-					$t[0].selectionStart = $t[0].selectionEnd = $t.val().length;
-				},
-				$table,
-				charac;
-
-			if( event.keyCode ){
-				charac = event.keyCode;
-			} else if( event.which ){
-				charac = event.which;
-			}
-
-			if( !event.altKey && !event.metaKey ) {
-				if( charac > 47 && charac < 91 ){
-					$t.data( Nav.attrs.undoValue, $t.val() );
-					act(function(){
-						$t.val( String.fromCharCode( charac ) );
-					});
-				} else if( charac === 8 || charac === 46 ){
-					event.stopPropagation();
-					act(function(){
-						$t.val("");
-					});
-				}
-			}
-		},
-		onkeyEditModeEsc: function( event ) {
-			var $t, $table, charac;
-
-			if( event.keyCode ){
-				charac = event.keyCode;
-			} else if( event.which ){
-				charac = event.which;
-			}
-
-			if( charac === 27 ) { // ESC
-				$t = $( this );
-				$t.val( $t.data( Nav.attrs.undoValue ) );
-				$t.trigger( 'blur' );
-				$table = $t.closest( "table" );
-				Nav.clearActiveCell( Nav.getActiveCell( $table ) );
-
-				$table.removeAttr( Nav.attrs.mode );
-				$t.trigger( 'focus' );
-			}
-		},
-		onchangeEditMode: function(){
-			var $t = $( this ),
-				$cell = $t.closest( "th,td" ),
-				initial = parseFloat( $cell.attr( Nav.attrs.initial ), 10 ),
-				val = parseFloat( $t.val(), 10),
-				min = $t.attr( "min" ),
-				max = $t.attr( "max" );
-
-			if( Nav.isError( val, min, max ) ){
-				$cell.nope();
-			} else {
-				$t.trigger( Nav.events.change, [ initial, val ] );
-			}
-		},
-		changeArrow: function( $cell, initial, val ){
-			var _changeArrowDown = function(){
-				$cell.removeClass( Nav.classes.arrowUp );
-				$cell.addClass( Nav.classes.arrowDown );
-				$cell.removeClass( "error" );
-			},
-			_changeArrowUp = function(){
-				$cell.addClass( Nav.classes.arrowUp );
-				$cell.removeClass( Nav.classes.arrowDown );
-				$cell.removeClass( "error" );
-			},
-			_removeArrow = function(){
-				$cell.removeClass( Nav.classes.arrowUp );
-				$cell.removeClass( Nav.classes.arrowDown );
-				$cell.removeClass( "error" );
-			};
-
-			var temp;
-			if( $cell.hasClass( Nav.classes.reverse ) ){
-				temp = initial;
-				initial = val;
-				val = temp;
-			}
-
-			if( initial > val ){
-				_changeArrowDown();
-			} else if( val > initial ){
-				_changeArrowUp();
-			} else {
-				_removeArrow();
-			}
-		},
-		isError: function( val, min, max ){
-			var error = false;
-			if( isNaN( val ) || ( min && val < min ) || ( max && val > max )){
-				error = true;
-			}
-			return error;
-		},
-		addInitialVals: function( fields ){
-			$.each( fields, function( idx, el ){
-				var $el = $( el ),
-					cell = $el.closest( "th,td" ),
-					val = $el.val();
-				cell.attr( Nav.attrs.initial, val );
-			});
-		},
-		getActiveCell: function( el ) {
-			return $( el ).closest( 'table' ).find( '.' + Nav.classes.activeCell );
-		},
-		clearActiveCell: function( cell ) {
-			var $cell = $( cell );
-			if( $cell.is( '.' + Nav.classes.editMode ) ) {
-				$cell.trigger( Nav.events.editBlur );
-			}
-			$cell.removeClass( Nav.classes.activeCell + " " + Nav.classes.editMode );
-		},
-		forceEditMode: function( $table, $input ) {
-			$table.attr( Nav.attrs.mode, Nav.modes.edit );
-
-			$input.data( Nav.attrs.undoValue, $input.val() )
-				.trigger( Nav.events.edit );
-
-			var input = $input.get( 0 );
-			if( input.select ) {
-				input.select();
-			}
-			if( input.setSelectionRange ) {
-				input.setSelectionRange( 0, 9999 );
-			}
-		},
-		markReverse: function(){
-			var heads = this.headers;
-			$.each( heads, function( idx, el ){
-				var cells;
-				if( $( el ).is( "[data-reverse]" ) ){
-					cells = this.cells;
-					$( cells ).addClass( Nav.classes.reverse );
-				}
-			});
-		},
-		init: function() {
-			var $table = $( this ),
-				$fields = $table.find( Nav.selectors.editableFields ),
-				activeCellTimeout,
-				clicksWithoutFocus = 0;
-
-			Nav.markReverse.call( this );
-			Nav.addInitialVals( $fields );
-
-			$( win.document ).bind( Nav.events.change, function( event, initial, val ) {
-				var $cell = $( event.target ).closest( 'th, td' );
-				Nav.changeArrow( $cell, initial, val );
-			});
-
-			$table.on( 'dblclick click', 'td', function( event ) {
-				var $cell = $( this ).closest( 'th, td' ),
-					$input = $cell.find( 'input, select' );
-
-				if( $input.length ) {
-					if( event.type === 'dblclick' || 'ontouchend' in window ) {
-						$table.attr( Nav.attrs.mode, Nav.modes.edit );
-					}
-
-					if( 'ontouchend' in window && $input.is( 'input' ) ) {
-						Nav.forceEditMode( $table, $input );
-						return;
-					}
-
-					// DoubleFocus:
-					// When focus is already on the input and you click again, focus doesn’t refire.
-					// But it needs to be tracked to handle the click-on-active-cell in navigation mode
-					// to activate edit mode.
-					if( event.type === 'click' && event.target.tagName === 'INPUT' ) {
-						$cell.data( 'activeFocus', true );
-
-						if( clicksWithoutFocus > 0 ) {
-							$input.trigger( Nav.events.edit );
-						}
-					} else {
-						$input.trigger( 'focus' );
-					}
-					$input.data( Nav.attrs.undoValue, $input.val() );
-
-					// DoubleFocus:
-					if( event.type === 'click' ) {
-						clicksWithoutFocus++;
-					}
-				}
-			}).on( 'focus ' + Nav.events.edit, Nav.selectors.editableFields, function() {
-					var $t = $( this ),
-						$cell = $t.closest( 'th, td' ),
-						forceEditMode = false,
-						$activeCell = Nav.getActiveCell( $t );
-
-					window.clearTimeout( activeCellTimeout );
-					if( $cell[ 0 ] === $activeCell[ 0 ] ) {
-						$table.attr( Nav.attrs.mode, Nav.modes.edit );
-						forceEditMode = true;
-					} else {
-						Nav.clearActiveCell( $activeCell );
-						$cell.addClass( Nav.classes.activeCell );
-					}
-
-					$t.unbind( 'keydown', Nav.onkeyNavigate )
-						.bind( 'keydown', Nav.onkeyNavigate );
-
-					if( forceEditMode || $table.attr( Nav.attrs.mode ) === Nav.modes.edit ) {
-						$cell.removeClass( 'proxied' );
-						$cell.find( '.proxy' ).remove();
-
-						// Prepare input for Edit mode
-						$t.removeAttr( 'readonly' )
-							.unbind( 'keydown', Nav.onkeyNavigationMode )
-							.unbind( 'keydown', Nav.onkeyStartEdit )
-							.bind( 'keydown', Nav.onkeyEditModeEsc )
-							.bind( 'keydown', Nav.onkeyEditModeDelete )
-							.bind( 'keyup', Nav.onchangeEditMode );
-						$cell.addClass( Nav.classes.editMode );
-						$t.trigger( Nav.events.editFocus );
-					} else {
-						// Prepare input for Navigation mode
-
-						$t.attr( 'readonly', 'readonly' )
-							.unbind( 'keydown', Nav.onkeyEditModeEsc )
-							.unbind( 'keydown', Nav.onkeyEditModeDelete )
-							.unbind( 'keyup', Nav.onchangeEditMode )
-							.bind( 'keydown', Nav.onkeyNavigationMode )
-							.bind( 'keydown', Nav.onkeyStartEdit );
-
-						if( $cell.is( '.' + Nav.classes.editMode ) ) {
-							$t.trigger( Nav.events.editBlur );
-						}
-						$cell.removeClass( Nav.classes.editMode );
-
-						// The short-term addition of disabled kills the cursor
-						// and default selection behavior.
-
-						if( Nav.featureTests.isDisabledFocusableWithoutBlur ) {
-							$t.attr( 'disabled', 'disabled' );
-
-							window.setTimeout( function() {
-								$t.removeAttr( 'disabled' );
-							}, 15 );
-						// Make sure the form element is one capable of text selection
-						} else if( 'setSelectionRange' in this ) {
-							var $proxy,
-								val = this.value;
-
-							$cell.addClass( 'proxied' );
-							$proxy = $cell.find( '.proxy' );
-							if( !$proxy.length ) {
-								$proxy = $( '<div>' ).addClass( 'proxy' );
-								$cell.append( $proxy );
-							}
-							$proxy.css( 'right', $cell.css('padding-right') ).html( val );
-						}
-						// else: form element has selected text when tabbed into.
-					}
-				}).on( 'blur', Nav.selectors.editableFields, function() {
-					var $t = $( this ),
-						$cell = $t.closest( 'th, td' );
-					$t.removeAttr( 'readonly' )
-						.unbind( 'keydown' )
-						.unbind( 'keyup' );
-
-					// DoubleFocus:
-					$cell.data( 'activeFocus', false );
-					clicksWithoutFocus = 0;
-
-					// Remove any proxy labels
-					$cell.removeClass( 'proxied' );
-					$cell.find( '.proxy' ).remove();
-
-					// Remove any dialogs from the hash
-					if( win.location.hash.indexOf("d-") === 1 ){
-						win.history.back();
-					}
-
-					// This timeout is used as a fallback,
-					// in case we aren’t focusing to a new field.
-					activeCellTimeout = window.setTimeout(function() {
-						var $cell = Nav.getActiveCell( $t );
-						Nav.clearActiveCell( $cell );
-
-						if( !$( document.activeElement ).closest( 'table' ).is( $table ) ) {
-							$table.removeAttr( Nav.attrs.mode );
-						}
-					}, 200 );
+(function( $ ) {
+	var pluginName = "btn",
+		initSelector = "." + pluginName,
+		activeClass = "btn-selected",
+		methods = {
+			_create: function(){
+				return $( this ).each(function() {
+					$( this )
+						.trigger( "beforecreate." + pluginName )
+						[ pluginName ]( "_init" )
+						.trigger( "create." + pluginName );
 				});
+			},
+			_init: function(){
+				var oEl = $( this ),
+					disabled = this.disabled !== undefined && this.disabled !== false,
+					input = this.getElementsByTagName( "input" )[ 0 ],
+					sel = this.getElementsByTagName( "select" )[ 0 ];
+
+				if( input ) {
+					$( this )
+						.addClass( "btn-" + input.type )
+						[ pluginName ]( "_formbtn", input );
+				}
+				if( sel ) {
+					$( this )
+						.addClass( "btn-select" )
+						[ pluginName ]( "_select", sel );
+				}
+				if( disabled ) {
+					oEl.addClass( "ui-disabled" );
+				}
+				return oEl;
+			},
+			_formbtn: function( input ) {
+				var active = function( el, input ) {
+					if( input.type === "radio" && input.checked ) {
+						var group = input.getAttribute( "name" );
+
+						$( "[name='" + group + "']" ).each(function() {
+							$( this ).parent().removeClass( activeClass );
+						});
+						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
+					} else if ( input.type === "checkbox" ) {
+						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
+					}
+				};
+
+				active( $( this ), input );
+				$( this ).bind("click", function() {
+					active( $( this ), input );
+				});
+			},
+			_select: function( sel ) {
+				var update = function( oEl, sel ) {
+					var opts = $( sel ).find( "option" ),
+						label, el, children;
+
+					opts.each(function() {
+						var opt = this;
+						if( opt.selected ) {
+							label = document.createTextNode( opt.text );
+						}
+					});
+
+					children = oEl.childNodes;
+					if( opts.length > 0 ){
+						for( var i = 0, l = children.length; i < l; i++ ) {
+							el = children[ i ];
+
+							if( el && el.nodeType === 3 ) {
+								oEl.replaceChild( label, el );
+							}
+						}
+					}
+				};
+
+				update( this, sel );
+console.log( this );
+				$( this ).bind( "change refresh", function( e ) {
+console.log( e.type );
+					update( this, sel );
+				});
+			}
+		};
+
+	// Collection method.
+	$.fn[ pluginName ] = function( arrg, a, b, c ) {
+		return this.each(function() {
+
+		// if it's a method
+		if( arrg && typeof( arrg ) === "string" ){
+			return $.fn[ pluginName ].prototype[ arrg ].call( this, a, b, c );
 		}
+
+		// don't re-init
+		if( $( this ).data( pluginName + "active" ) ){
+			return $( this );
+		}
+
+		// otherwise, init
+
+		$( this ).data( pluginName + "active", true );
+			$.fn[ pluginName ].prototype._create.call( this );
+		});
 	};
 
-	$( document ).on( "enhance.tablesaw", function() {
-		var $tables = $( Nav.selectors.init );
+	// add methods
+	$.extend( $.fn[ pluginName ].prototype, methods );
 
-		if( $tables.length ) {
-			Nav.featureTests.disabledFocusable();
-		}
-
-		$tables.each( Nav.init );
+	// Kick it off when `enhance` event is fired.
+	$( document ).on( "enhance", function( e ) {
+		$( initSelector, e.target )[ pluginName ]();
 	});
 
-
-}( this, jQuery ));
-
+}( jQuery ));
 (function( win, $, undefined ){
 
 
@@ -1326,148 +1037,6 @@
 
 }( jQuery ));
 
-;(function( win, $ ) {
-
-	function featureTest( property, value, noPrefixes ) {
-		// Thanks Modernizr! https://github.com/phistuck/Modernizr/commit/3fb7217f5f8274e2f11fe6cfeda7cfaf9948a1f5
-		var prop = property + ':',
-			el = document.createElement( 'test' ),
-			mStyle = el.style;
-
-		if( !noPrefixes ) {
-			mStyle.cssText = prop + [ '-webkit-', '-moz-', '-ms-', '-o-', '' ].join( value + ';' + prop ).slice( 0, -prop.length );
-		} else {
-			mStyle.cssText = prop + value;
-		}
-		return mStyle[ property ].indexOf( value ) !== -1;
-	}
-
-	var S = {
-		selectors: {
-			init: '.stickyheaders'
-		},
-		tests: {
-			sticky: featureTest( 'position', 'sticky' ),
-			fixed: featureTest( 'position', 'fixed', true )
-		},
-		// Thanks jQuery!
-		getScrollTop: function() {
-			var prop = 'pageYOffset',
-				method = 'scrollTop';
-			return win ? (prop in win) ? win[ prop ] :
-				win.document.documentElement[ method ] :
-				win.document.body[ method ];
-		},
-		init: function( table ) {
-			var $table = $( table ),
-				$headers = $table.find( 'thead' ).eq( 0 ),
-				$cloned = $table.next().is( '.stickyclone' ),
-				cloned,
-				getCellSelector = function( cell ) {
-					return cell.tagName + ':eq(' + $( cell ).prevAll().length + ')';
-				},
-				updateCell = function( $new, $old ) {
-					// Warning: on box-sizing: border-box, style.width includes padding (sometimes—not in Firefox). Use clientWidth for more reliable crossbrowser number.
-					$new.replaceWith( $old.clone().width( $old.width() + 'px' ) );
-				},
-				updateClonedHeaders = function() {
-					var $clonedHeaders = $cloned.find( 'th' );
-
-					$cloned.width( $table.width() );
-					$headers.find( 'th' ).each(function( index ) {
-
-						var $t = $( this ),
-							$cell = $clonedHeaders.eq( index );
-
-						if( $t.css( 'display' ) !== 'none' ) {
-							updateCell( $cell, $t );
-						} else {
-							$cell.css( 'display', 'none' );
-						}
-					});
-				};
-
-			if( !$cloned.length ) {
-				cloned = document.createElement( 'table' );
-				cloned.className = table.className.replace(/\bstickyheaders\b/, '') + ' stickyclone';
-				$cloned = $( cloned );
-				$cloned.append( $headers.clone() );
-				$cloned.on( 'click', function( event ) {
-					var $t = $( event.target ),
-						parents = [ getCellSelector( event.target ) ],
-						cellSelector;
-
-					// This line is to enable default popup behavior
-					if( $t.is( 'a[href]' ) ) {
-						return;
-					}
-
-					// Trigger a click
-					$t.parents().each(function() {
-						var tn = this.tagName;
-
-						if( tn === 'THEAD' ) {
-							return false;
-						}
-						parents.unshift( getCellSelector( this ) );
-						if( tn === 'TH' || tn === 'TD' ) {
-							cellSelector = parents;
-						}
-					});
-
-					$headers.find( parents.join( ' > ' ) ).trigger( event.type );
-					updateClonedHeaders();
-				});
-				$table.after( $cloned );
-			}
-
-			function toggle( turnOn ) {
-				$cloned[ $cloned.is( '.on' ) ? 'removeClass' : 'addClass' ]( 'on' );
-
-				if( turnOn ) {
-					updateClonedHeaders();
-				}
-			}
-
-			$( win ).bind( 'scroll', function() {
-				var offset = $table.offset().top,
-					scroll = S.getScrollTop(),
-					isAlreadyOn = $cloned.is( '.on' );
-
-				if( !$table.get(0).offsetWidth ) {
-					return;
-				}
-
-				if( offset > scroll || offset + $table.height() < scroll ) {
-					if( isAlreadyOn ) {
-						toggle();
-					}
-				} else {
-					if( !isAlreadyOn ) {
-						toggle( true );
-					}
-				}
-			}).trigger( 'scroll' );
-
-			$( win ).bind( 'resize', function() {
-				if( $cloned.is( '.on' ) ) {
-					updateClonedHeaders();
-				}
-			});
-		}
-	};
-
-	win.StickyHeaders = S;
-
-	if( !S.tests.sticky && S.tests.fixed ) {
-		$( win.document ).on( "enhance.tablesaw" , function(){
-			$( S.selectors.init ).each(function() {
-				S.init( this );
-			});
-		});
-	}
-
-})( this, jQuery );
 (function( win, $, undefined ){
 
 	var MM = {
