@@ -29,7 +29,10 @@
 	color: #4a4a4a;
 }
 
-.left.ui-table-columntoggle-btnwrap .fgdialog-content {
+.ui-table-columntoggle-btnwrap .dialog-content {
+	padding: 0;
+}
+.left.ui-table-columntoggle-btnwrap .dialog-content {
 	right: -4.9em;
 }
 
@@ -61,14 +64,14 @@
 	}
 }
 
-.fgdialog-background-trans {
+.dialog-background-trans {
 	opacity: 0.0001;
 }
 .ui-table-columntoggle-btnwrap {
 	position: relative;
 	float: right;
 }
-.ui-table-columntoggle-btnwrap .fgdialog-content {
+.ui-table-columntoggle-btnwrap .dialog-content {
 	top: 0 !important;
 	right: 1em;
 	left: auto !important;
@@ -89,7 +92,7 @@
 	margin-bottom: .1em;
 	margin-top: .1em;
 }
-.ui-table-columntoggle-btnwrap .fgdialog-content:focus {
+.ui-table-columntoggle-btnwrap .dialog-content:focus {
 	outline-style: none;
 }
 .dialog-table-coltoggle {

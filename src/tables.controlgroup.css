@@ -1,0 +1,150 @@
+/*
+* Controlgroups
+* Grouping elements for related inputs/links/navigational tabs, etc.
+*
+* Copyright (c) 2012 Filament Group, Inc.
+* Licensed under the MIT, GPL licenses.
+*/
+
+/* Vertical Grouping (default) */
+.btn-group {
+	margin: 0;
+	padding: 0;
+}
+.btn-group .btn {
+	margin: 0;
+}
+.btn-group > .lv,
+.btn-group > .lv .lv-header,
+.btn-group > .btn {
+	margin-top: 0;
+	border-radius: 0;
+	border-top-width: 0;
+	width: 100%; 
+}
+.btn-group > .lv:first-child,
+.btn-group > .lv:first-child .lv-header,
+.btn-group > .btn:first-child {
+	border-top-width: 1px;
+	border-top-left-radius: .25em;
+	border-top-right-radius: .25em;
+}
+.btn-group > .lv:last-child,
+.btn-group > .lv:last-child .lv-header,
+.btn-group > .btn:last-child {
+	border-bottom-left-radius: .25em;
+	border-bottom-right-radius: .25em;
+}
+
+/* Horizontal Grouping (requires btnmarkup.js) */
+.group-horiz {
+	display: table;
+	width: 100%;
+}
+.group-horiz .btn,
+.group-horiz .btn:first-child,
+.group-horiz .btn:last-child {
+	border-radius: 0;
+	width: auto;
+}
+.group-horiz .cell .btn {
+	margin: 0;
+}
+.group-horiz > .cell .btn {
+	width: 100%;
+}
+.group-horiz > .btn,
+.group-horiz > .cell .btn {
+	border-left-width: 0;
+}
+.group-horiz > .btn,
+.group-horiz > .cell {
+	display: table-cell;
+}
+.group-horiz .btn-checkbox,
+.group-horiz .btn-radio {
+	text-align: center;
+}
+.group-horiz > .btn {
+	border-top-width: 1px;
+}
+.group-horiz > .btn:first-child,
+.group-horiz > .cell:first-child .btn {
+	border-top-left-radius: .25em;
+	border-bottom-left-radius: .25em;
+	border-left-width: 1px;
+}
+.group-horiz > .btn:last-child,
+.group-horiz .cell:last-child .btn {
+	border-top-right-radius: .25em;
+	border-bottom-right-radius: .25em;
+}
+.group-horiz .btn {
+	position: relative;
+}
+.group-horiz .cell .btn {
+	display: block;
+}
+.group-horiz .btn-checkbox,
+.group-horiz .btn-radio {
+	padding: .6em 5% .5em 5%;
+}
+.ie-lte8 .group-horiz .btn {
+	padding-left: .5em;
+	padding-right: .5em;
+}
+
+/* Equal-width horizontally-grouped buttons */
+.group-horiz.split-50 > .btn,
+.group-horiz.split-50 > .cell {
+	width: 50%;
+}
+.group-horiz.split-33 > .btn,
+.group-horiz.split-33 > .cell {
+	width: 33.33333%;
+}
+.group-horiz.split-25 > .btn,
+.group-horiz.split-25 > .cell {
+	width: 25%;
+}
+.group-horiz.split-20 > .btn,
+.group-horiz.split-20 > .cell {
+	width: 20%;
+}
+
+/* Basic inline grouping */
+.group-inline {
+	display: inline;
+	clear: none;
+	float: right;
+	max-width: 100%;
+}
+.change-hed .btn {
+	box-shadow: none;
+}
+.group-inline .btn {
+	float: left;
+	clear: none;
+	padding-left: .85em;
+	padding-right: .85em;
+	width: auto;
+	margin-left: .25em;
+	margin-right: 0;
+}
+
+/* Inset tabs */
+.inset-tabs {
+	position: absolute;
+	top: -2em;
+	left: 0;
+	width: auto;
+}
+
+/* Group-associated button styles */
+
+.group-horiz .btn:not(.theme-simple).btn-checkbox:after,
+.group-horiz .btn:not(.theme-simple).btn-radio:after {
+	display: none;
+}
+
+/* Default radio/checkbox styling horizonal controlgroups. */

@@ -226,7 +226,7 @@
 			$btnContain = $( "<div class='" + o.classes.columnBtnContain + " " + o.columnBtnSide + " " + o.classes.dialogClass + "'></div>" );
 			$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + o.classes.columnBtn +"' data-popup-link>" +
 											"<span>" + o.columnBtnText + "</span></a>" );
-			$popup = $( "<div class='fgdialog dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
+			$popup = $( "<div class='dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
 			$menu = $( "<div class='btn-group'></div>" );
 
 			$(this.headers).not( "td" ).each( function() {
@@ -245,6 +245,7 @@
 				}
 			});
 
+			$menu.find( '.btn' ).btn();
 			$menu.appendTo( $popup );
 
 			// bind change event listeners to inputs - TODO: move to a private method?
