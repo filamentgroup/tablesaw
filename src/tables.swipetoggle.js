@@ -12,7 +12,7 @@
 			$prevBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
 			$nextBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
 			hideBtn = 'disabled',
-			persistWidths = 'table-fix-persist',
+			persistWidths = 'tablesaw-fix-persist',
 			$headerCells = $table.find( "thead th" ),
 			$headerCellsNoPersist = $headerCells.not( '[data-priority="persist"]' ),
 			headerWidths = [],

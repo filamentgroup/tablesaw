@@ -17,15 +17,15 @@
 			}).join( '' );
 	}
 
-	var pluginName = "sortable",
-		initSelector = "table[data-" + pluginName + "]",
-		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
+	var topLevelPluginName = "tablesaw-sortable",
+		pluginName = "sortable",
+		initSelector = "table[data-" + topLevelPluginName + "]",
+		sortableSwitchSelector = "[data-" + topLevelPluginName + "-switch]",
 		classes = {
 			head: pluginName + "-head",
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
-			enhanced: pluginName + "-enhanced",
-			switcher: pluginName + "-switch",
+			switcher: topLevelPluginName + "-switch",
 			tableToolbar: 'ui-table-toolbar'
 		},
 		i18n = {
@@ -41,7 +41,6 @@
 					$( this )
 						.data( "init"+ pluginName, true )
 						.trigger( "beforecreate." + pluginName )
-						.addClass( classes.enhanced )
 						[ pluginName ]( "_init" , o )
 						.trigger( "create." + pluginName );
 				});
@@ -52,7 +51,7 @@
 					$switcher;
 
 				var addClassToTable = function(){
-						el.addClass( pluginName );
+						el.addClass( topLevelPluginName );
 					},
 					addClassToHeads = function( h ){
 						$.each( h , function( i , v ){

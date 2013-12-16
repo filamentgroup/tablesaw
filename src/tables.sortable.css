@@ -1,23 +1,24 @@
-.sortable, .sortable thead,
-.sortable thead tr, 
-.sortable thead tr th {
+.tablesaw-sortable,
+.tablesaw-sortable thead,
+.tablesaw-sortable thead tr, 
+.tablesaw-sortable thead tr th {
 	position: relative;
 }
-.sortable thead tr th {
+.tablesaw-sortable thead tr th {
 	padding-right: 1.6em;
 	vertical-align: top;
 }
-.sortable th.sortable-head,
-.sortable tr:first-child th.sortable-head {
+.tablesaw-sortable th.sortable-head,
+.tablesaw-sortable tr:first-child th.sortable-head {
 	padding: 0;
 }
-.sortable th.sortable-head button {
+.tablesaw-sortable th.sortable-head button {
 	padding-top: .9em;
 	padding-bottom: .7em;
 	padding-left: .6em;
 	padding-right: 1.6em;
 }
-.sortable-head button {
+.tablesaw-sortable .sortable-head button {
 	min-width: 100%;
 	color: inherit;
 	background: transparent;
@@ -28,8 +29,8 @@
 	text-transform: inherit;
 	position: relative;
 }
-.sortable-head.sortable-ascending button:after,
-.sortable-head.sortable-descending button:after {
+.tablesaw-sortable .sortable-head.sortable-ascending button:after,
+.tablesaw-sortable .sortable-head.sortable-descending button:after {
 	width: 7px;
 	height: 10px;
 	content: "\0020";
@@ -37,20 +38,20 @@
 	right: .5em;
 }
 
-.sortable .not-applicable:after {
+.tablesaw-sortable .not-applicable:after {
 	content: "--";
 	display: block;
 }
-.sortable .not-applicable span {
+.tablesaw-sortable .not-applicable span {
 	display: none;
 }
 
-.sortable-switch {
+.tablesaw-sortable-switch {
 	float: left;
 	width: 100%;
 }
 @media (min-width: 40em) {
-	.sortable-switch {
+	.tablesaw-sortable-switch {
 		width: auto;
 	}
 }
