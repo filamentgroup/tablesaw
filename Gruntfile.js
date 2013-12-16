@@ -23,7 +23,6 @@ module.exports = function(grunt) {
 			js: {
 				src: [
 					'src/tablesaw.js',
-					'src/grunticon.js',
 					'src/tables.js',
 					'src/tables.btnmarkup.js',
 					'src/tables.swipetoggle.js',
@@ -99,16 +98,21 @@ module.exports = function(grunt) {
 		},
 		grunticon: {
 			tablesaw: {
+				files: [{
+					expand: true,
+					cwd: 'src/icons/',
+					src: ['*.svg'],
+					dest: 'dist/icons/'
+				}],
 				options: {
-					src: "src/icons/",
-					dest: "dist/icons/",
+					loadersnippet: 'grunticon.loader.js',
 					customselectors: {
-						"arrow-gray-down": ".ui-table-bar .ui-table-columntoggle-btnwrap > a,.enhanced .icon-arrow-gray-down",
-						"sort-ascending": ".sortable-head.sortable-ascending button:after",
-						"sort-descending": ".sortable-head.sortable-descending button:after",
-						"arrow-gray-right": ".ui-table-bar .table-advance > .btn.right,.enhanced .icon-arrow-gray-right",
-						"arrow-gray-left": ".ui-table-bar .table-advance > .btn.left,.enhanced .icon-arrow-gray-left",
-						"check": ".btn-selected.btn-checkbox:after"
+						"arrow-gray-down": [".ui-table-bar .ui-table-columntoggle-btnwrap > a", ".enhanced .icon-arrow-gray-down"],
+						"sort-ascending": [".sortable-head.sortable-ascending button:after"],
+						"sort-descending": [".sortable-head.sortable-descending button:after"],
+						"arrow-gray-right": [".ui-table-bar .table-advance > .btn.right", ".enhanced .icon-arrow-gray-right"],
+						"arrow-gray-left": [".ui-table-bar .table-advance > .btn.left", ".enhanced .icon-arrow-gray-left"],
+						"check": [".btn-selected.btn-checkbox:after"]
 					}
 				}
 			}
