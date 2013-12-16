@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.0 - 2013-12-16
+/*! Tablesaw - v0.0.1 - 2013-12-16
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 .enhanced .btn {
@@ -996,11 +996,11 @@ table tbody td {
 }
 
 /* Column navigation buttons for swipe and columntoggle tables */
-.ui-table-bar .table-advance {
+.ui-table-bar .tablesaw-advance {
 	position: relative;
 	top: -2.6em;
 }
-.table-advance .btn {
+.tablesaw-advance .btn {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -1011,11 +1011,11 @@ table tbody td {
 	text-shadow: 0 1px 0 #FFF;
 	border-radius: .25em;
 }
-.table-advance .btn.btn-micro {
+.tablesaw-advance .btn.btn-micro {
 	font-size: .8125em;
 	padding: .4em .7em .25em .7em;
 }
-.table-advance a.ui-table-nav-btn {
+.tablesaw-advance a.ui-table-nav-btn {
 	*display: inline;
 	zoom: 1;
 	display: inline-block;
@@ -1025,7 +1025,7 @@ table tbody td {
 	background-position: 50% 50%;
 	margin-left: .5em;
 }
-.table-advance a.ui-table-nav-btn.disabled {
+.tablesaw-advance a.ui-table-nav-btn.disabled {
 	opacity: .25;
 	cursor: default;
 	pointer-events: none;
@@ -1107,7 +1107,7 @@ table tbody td {
 		margin-top: 0;
 		top: 0;
 	}
-	.ui-table-bar .table-advance {
+	.ui-table-bar .tablesaw-advance {
 		position: static;
 	}
 	.ui-table-bar {
@@ -1115,7 +1115,7 @@ table tbody td {
 		position: static;
 	}
 }
-table.table-fix-persist {
+.tablesaw-fix-persist {
 	table-layout: fixed;
 }
 /* see Gruntfile.js for grunticon selector */
@@ -1292,26 +1292,27 @@ table.table-fix-persist {
 	}
 }
 
-.sortable, .sortable thead,
-.sortable thead tr, 
-.sortable thead tr th {
+.tablesaw-sortable,
+.tablesaw-sortable thead,
+.tablesaw-sortable thead tr, 
+.tablesaw-sortable thead tr th {
 	position: relative;
 }
-.sortable thead tr th {
+.tablesaw-sortable thead tr th {
 	padding-right: 1.6em;
 	vertical-align: top;
 }
-.sortable th.sortable-head,
-.sortable tr:first-child th.sortable-head {
+.tablesaw-sortable th.sortable-head,
+.tablesaw-sortable tr:first-child th.sortable-head {
 	padding: 0;
 }
-.sortable th.sortable-head button {
+.tablesaw-sortable th.sortable-head button {
 	padding-top: .9em;
 	padding-bottom: .7em;
 	padding-left: .6em;
 	padding-right: 1.6em;
 }
-.sortable-head button {
+.tablesaw-sortable .sortable-head button {
 	min-width: 100%;
 	color: inherit;
 	background: transparent;
@@ -1322,8 +1323,8 @@ table.table-fix-persist {
 	text-transform: inherit;
 	position: relative;
 }
-.sortable-head.sortable-ascending button:after,
-.sortable-head.sortable-descending button:after {
+.tablesaw-sortable .sortable-head.sortable-ascending button:after,
+.tablesaw-sortable .sortable-head.sortable-descending button:after {
 	width: 7px;
 	height: 10px;
 	content: "\0020";
@@ -1331,49 +1332,49 @@ table.table-fix-persist {
 	right: .5em;
 }
 
-.sortable .not-applicable:after {
+.tablesaw-sortable .not-applicable:after {
 	content: "--";
 	display: block;
 }
-.sortable .not-applicable span {
+.tablesaw-sortable .not-applicable span {
 	display: none;
 }
 
-.sortable-switch {
+.tablesaw-sortable-switch {
 	float: left;
 	width: 100%;
 }
 @media (min-width: 40em) {
-	.sortable-switch {
+	.tablesaw-sortable-switch {
 		width: auto;
 	}
 }
-.table-advance {
+.tablesaw-advance {
 	display: block;
 	float: right;
 }
-.table-advance.minimap {
+.tablesaw-advance.minimap {
 	margin-right: .4em;
 }
-.table-advance-dots {
+.tablesaw-advance-dots {
 	float: left;
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
-.table-advance-dots li {
+.tablesaw-advance-dots li {
 	display: table-cell;
 	margin: 0;
 	padding: .4em .2em;
 }
-.table-advance-dots li i {
+.tablesaw-advance-dots li i {
 	width: .25em;
 	height: .25em;
 	background: #555;
 	border-radius: 100%;
 	display: inline-block;
 }
-.table-advance-dots-hide {
+.tablesaw-advance-dots-hide {
 	opacity: .25;
 	cursor: default;
 	pointer-events: none;
@@ -1381,7 +1382,7 @@ table.table-fix-persist {
 .ui-table-modeswitch {
 	clear: both;
 }
-.sortable-switch + .ui-table-modeswitch {
+.tablesaw-sortable-switch + .ui-table-modeswitch {
 	border-top: 1px solid #eae8e6;
 }
 @media (min-width: 40em) {
@@ -1389,7 +1390,7 @@ table.table-fix-persist {
 		float: left;
 		clear: none;
 	}
-	.sortable-switch + .ui-table-modeswitch {
+	.tablesaw-sortable-switch + .ui-table-modeswitch {
 		border-top: none;
 	}
 }

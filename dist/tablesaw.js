@@ -1,32 +1,7 @@
-/*! Tablesaw - v0.1.0 - 2013-12-16
+/*! Tablesaw - v0.0.1 - 2013-12-16
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 ;(function( $ ) {
-	var TS = {
-		regex: {
-			dir: /tablesaw(\.min)?\.js/i
-		}
-	};
-
-	TS.dir = (function() {
-		var dir;
-
-		$( 'script' ).each(function() {
-			var attr = $( this ).attr( 'data-dist-dir' );
-			if( attr ) {
-				dir = attr;
-				return false;
-			} else if ( this.src && this.src.match( TS.regex.dir ) ) {
-				dir = this.src.replace( TS.regex.dir, '' );
-				return false;
-			}
-		});
-
-		return dir;
-	})();
-
-	window.TableSaw = TS;
-
 	// Cut the mustard
 	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
 		return;
@@ -41,49 +16,6 @@
 	}
 
 })( jQuery );
-;(function( $ ) {
-
-	// grunticon Stylesheet Loader | https://github.com/filamentgroup/grunticon | (c) 2012 Scott Jehl, Filament Group, Inc. | MIT license.
-	function grunticon( css ) {
-		// expects a css array with 3 items representing CSS paths to datasvg, datapng, urlpng
-		if( !css || css.length !== 3 ){
-			return;
-		}
-
-		// Thanks Modernizr & Erik Dahlstrom
-		var w = window,
-			svg = !!w.document.createElementNS && !!w.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect && !!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1"),
-
-			loadCSS = function( data ){
-				var link = w.document.createElement( "link" ),
-					ref = w.document.getElementsByTagName( "script" )[ 0 ];
-
-				link.rel = "stylesheet";
-				link.href = css[ data && svg ? 0 : data ? 1 : 2 ];
-				ref.parentNode.insertBefore( link, ref );
-			},
-
-			// Thanks Modernizr
-			img = new w.Image();
-
-		img.onerror = function(){
-			loadCSS( false );
-		};
-
-		img.onload = function(){
-			loadCSS( img.width === 1 && img.height === 1 );
-		};
-
-		img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
-	}
-
-	$(function() {
-			grunticon( [ TableSaw.dir + "icons/icons.data.svg.css",
-				TableSaw.dir + "icons/icons.data.png.css",
-				TableSaw.dir + "icons/icons.fallback.css" ] );
-	});
-
-})( jQuery );
 (function( $ ) {
 	var o = {
 		pluginName : "table",
@@ -91,7 +23,7 @@
 			stackTable: "ui-table-stack",
 			cellLabels: "ui-table-cell-label",
 			popup: "ui-table-columntoggle-popup",
-			columnBtnContain: "ui-table-columntoggle-btnwrap table-advance",
+			columnBtnContain: "ui-table-columntoggle-btnwrap tablesaw-advance",
 			columnBtn: "ui-table-columntoggle-btn ui-table-nav-btn",
 			priorityPrefix: "ui-table-priority-",
 			columnToggleTable: "ui-table-columntoggle",
@@ -533,11 +465,11 @@
 
 	function createSwipeTable( $table ){
 
-		var $btns = $( "<div class='table-advance'></div>" ),
+		var $btns = $( "<div class='tablesaw-advance'></div>" ),
 			$prevBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
 			$nextBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
 			hideBtn = 'disabled',
-			persistWidths = 'table-fix-persist',
+			persistWidths = 'tablesaw-fix-persist',
 			$headerCells = $table.find( "thead th" ),
 			$headerCellsNoPersist = $headerCells.not( '[data-priority="persist"]' ),
 			headerWidths = [],
@@ -743,7 +675,7 @@
 				var $t = $( this );
 
 				$t.removeClass( 'table-coltoggle-swipe' );
-				$t.prev( '.ui-table-bar' ).find( '.table-advance' ).remove();
+				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
 				$t.unbind( ".swipetoggle" );
@@ -780,15 +712,15 @@
 			}).join( '' );
 	}
 
-	var pluginName = "sortable",
-		initSelector = "table[data-" + pluginName + "]",
-		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
+	var topLevelPluginName = "tablesaw-sortable",
+		pluginName = "sortable",
+		initSelector = "table[data-" + topLevelPluginName + "]",
+		sortableSwitchSelector = "[data-" + topLevelPluginName + "-switch]",
 		classes = {
 			head: pluginName + "-head",
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
-			enhanced: pluginName + "-enhanced",
-			switcher: pluginName + "-switch",
+			switcher: topLevelPluginName + "-switch",
 			tableToolbar: 'ui-table-toolbar'
 		},
 		i18n = {
@@ -804,7 +736,6 @@
 					$( this )
 						.data( "init"+ pluginName, true )
 						.trigger( "beforecreate." + pluginName )
-						.addClass( classes.enhanced )
 						[ pluginName ]( "_init" , o )
 						.trigger( "create." + pluginName );
 				});
@@ -815,7 +746,7 @@
 					$switcher;
 
 				var addClassToTable = function(){
-						el.addClass( pluginName );
+						el.addClass( topLevelPluginName );
 					},
 					addClassToHeads = function( h ){
 						$.each( h , function( i , v ){
@@ -844,15 +775,19 @@
 
 						e.stopPropagation();
 						var head = $( this ).parent(),
-							v = e.data.col;
+							v = e.data.col,
+							newSortValue = heads.index( head );
+
 						clearOthers( head.siblings() );
 						if( head.hasClass( classes.descend ) ){
 							el[ pluginName ]( "sortBy" , v , true);
+							newSortValue += '_asc';
 						} else {
 							el[ pluginName ]( "sortBy" , v );
+							newSortValue += '_desc';
 						}
 						if( $switcher ) {
-							$switcher.find( 'select' ).val( heads.index( head ) ).trigger( 'refresh' );
+							$switcher.find( 'select' ).val( newSortValue ).trigger( 'refresh' );
 						}
 
 						e.preventDefault();
@@ -1039,15 +974,15 @@
 
 	var MM = {
 		attr: {
-			init: 'data-minimap'
+			init: 'data-tablesaw-minimap'
 		}
 	};
 
 	function createMiniMap( $table ){
 
-		var $btns = $( '<div class="table-advance minimap">' ),
-			$dotNav = $( '<ul class="table-advance-dots">' ).appendTo( $btns ),
-			hideDot = 'table-advance-dots-hide',
+		var $btns = $( '<div class="tablesaw-advance minimap">' ),
+			$dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns ),
+			hideDot = 'tablesaw-advance-dots-hide',
 			$headerCells = $table.find( 'thead th' );
 
 		// populate dots
@@ -1090,7 +1025,7 @@
 			.bind( "tabledestroy.minimap", function(){
 				var $t = $( this );
 
-				$t.prev( '.ui-table-bar' ).find( '.table-advance' ).remove();
+				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
 				$t.unbind( ".minimap" );
@@ -1160,7 +1095,7 @@
 					return html.join('');
 				});
 
-			var $otherToolbarItems = $toolbar.find( '.table-advance' ).eq( 0 );
+			var $otherToolbarItems = $toolbar.find( '.tablesaw-advance' ).eq( 0 );
 			if( $otherToolbarItems.length ) {
 				$switcher.insertBefore( $otherToolbarItems );
 			} else {
