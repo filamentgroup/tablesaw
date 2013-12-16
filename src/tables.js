@@ -1,6 +1,6 @@
 /*
-* Reflow and column toggle Tables
-* Tables that reflow based on available space.
+* stack and column toggle Tables
+* Tables that stack based on available space.
 * the coltoggle feature relies on dialog
 * Copyright (c) 2012 Filament Group, Inc.
 * Licensed under MIT
@@ -10,7 +10,7 @@
 	var o = {
 		pluginName : "table",
 		classes : {
-			reflowTable: "ui-table-reflow",
+			stackTable: "ui-table-stack",
 			cellLabels: "ui-table-cell-label",
 			popup: "ui-table-columntoggle-popup",
 			columnBtnContain: "ui-table-columntoggle-btnwrap table-advance",
@@ -27,7 +27,7 @@
 			destroy: "tabledestroy"
 		},
 		columnBtnText: "Columns",
-		mode: "reflow",
+		mode: "stack",
 		initSelector : "table",
 		columnBtnSide: "right"
 	},
@@ -113,8 +113,8 @@
 				}
 			});
 
-			if( o.mode === "reflow" ){
-				$table[ o.pluginName ]( "reflow", self );
+			if( o.mode === "stack" ){
+				$table[ o.pluginName ]( "stack", self );
 			}
 			else if ( o.mode === "columntoggle" ){
 				$table[ o.pluginName ]( "columntoggle", self );
@@ -126,8 +126,8 @@
 			var $t = $( this );
 			$t.removeAttr( 'data-mode' );
 
-			// reflow
-			$t.removeClass( o.classes.reflowTable );
+			// stack
+			$t.removeClass( o.classes.stackTable );
 			$t.find( '.' + o.classes.cellLabels ).remove();
 
 			// columntoggle
@@ -153,12 +153,12 @@
 			$t.removeData( o.pluginName + 'active' );
 		},
 
-		reflow: function( self ) {
+		stack: function( self ) {
 			var table = this,
-				setClass = this.getAttribute( "class" ) + " " + o.classes.reflowTable;
+				setClass = this.getAttribute( "class" ) + " " + o.classes.stackTable;
 
-			// If it's not reflow mode, return here.
-			if( o.mode !== "reflow" ){
+			// If it's not stack mode, return here.
+			if( o.mode !== "stack" ){
 				return;
 			}
 

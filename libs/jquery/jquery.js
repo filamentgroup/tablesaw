@@ -6678,7 +6678,7 @@ function showHide( elements, show ) {
 	}
 
 	// Set the display of most of the elements in a second loop
-	// to avoid the constant reflow
+	// to avoid the constant stack
 	for ( index = 0; index < length; index++ ) {
 		elem = elements[ index ];
 		if ( !elem.style ) {

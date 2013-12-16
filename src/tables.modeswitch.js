@@ -11,7 +11,7 @@
 			main: 'ui-table-modeswitch',
 			toolbar: 'ui-table-toolbar'
 		},
-		modes: [ 'reflow', 'swipe', 'columntoggle' ],
+		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		i18n: {
 			modes: [ 'Stack', 'Swipe', 'Toggle' ],
 			columns: 'Col<span class="a11y-sm">umn</span>s'

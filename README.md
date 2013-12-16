@@ -6,9 +6,9 @@ A set of plugins for responsive tables.
 
 ### Stack
 
-The Stack Table reflows the table headers to a two column layout with headers on the left.
+The Stack Table stacks the table headers to a two column layout with headers on the left.
 
-    <table data-mode="reflow">
+    <table data-mode="stack">
 
 * [Stack Table Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html)
 

@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.0 - 2013-12-13
+/*! Tablesaw - v0.1.0 - 2013-12-16
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 ;(function( $ ) {
@@ -88,7 +88,7 @@
 	var o = {
 		pluginName : "table",
 		classes : {
-			reflowTable: "ui-table-reflow",
+			stackTable: "ui-table-stack",
 			cellLabels: "ui-table-cell-label",
 			popup: "ui-table-columntoggle-popup",
 			columnBtnContain: "ui-table-columntoggle-btnwrap table-advance",
@@ -105,7 +105,7 @@
 			destroy: "tabledestroy"
 		},
 		columnBtnText: "Columns",
-		mode: "reflow",
+		mode: "stack",
 		initSelector : "table",
 		columnBtnSide: "right"
 	},
@@ -191,8 +191,8 @@
 				}
 			});
 
-			if( o.mode === "reflow" ){
-				$table[ o.pluginName ]( "reflow", self );
+			if( o.mode === "stack" ){
+				$table[ o.pluginName ]( "stack", self );
 			}
 			else if ( o.mode === "columntoggle" ){
 				$table[ o.pluginName ]( "columntoggle", self );
@@ -204,8 +204,8 @@
 			var $t = $( this );
 			$t.removeAttr( 'data-mode' );
 
-			// reflow
-			$t.removeClass( o.classes.reflowTable );
+			// stack
+			$t.removeClass( o.classes.stackTable );
 			$t.find( '.' + o.classes.cellLabels ).remove();
 
 			// columntoggle
@@ -231,12 +231,12 @@
 			$t.removeData( o.pluginName + 'active' );
 		},
 
-		reflow: function( self ) {
+		stack: function( self ) {
 			var table = this,
-				setClass = this.getAttribute( "class" ) + " " + o.classes.reflowTable;
+				setClass = this.getAttribute( "class" ) + " " + o.classes.stackTable;
 
-			// If it's not reflow mode, return here.
-			if( o.mode !== "reflow" ){
+			// If it's not stack mode, return here.
+			if( o.mode !== "stack" ){
 				return;
 			}
 
@@ -1126,7 +1126,7 @@ console.log( e.type );
 			main: 'ui-table-modeswitch',
 			toolbar: 'ui-table-toolbar'
 		},
-		modes: [ 'reflow', 'swipe', 'columntoggle' ],
+		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		i18n: {
 			modes: [ 'Stack', 'Swipe', 'Toggle' ],
 			columns: 'Col<span class="a11y-sm">umn</span>s'

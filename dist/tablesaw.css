@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.0 - 2013-12-13
+/*! Tablesaw - v0.1.0 - 2013-12-16
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 .enhanced .btn {
@@ -872,10 +872,10 @@ table tbody td {
 }
 
 /*
- Styles for the table reflow mode
+ Styles for the table stack mode
 */
-.ui-table-reflow td .ui-table-cell-label,
-.ui-table-reflow th .ui-table-cell-label {
+.ui-table-stack td .ui-table-cell-label,
+.ui-table-stack th .ui-table-cell-label {
 	display: none;
 }
 
@@ -890,26 +890,26 @@ table tbody td {
 /* Mobile first styles: Begin with the stacked presentation at narrow widths */ 
 @media only all {
 	/* Show the table cells as a block level element */ 
-	.ui-table-reflow td,
-	.ui-table-reflow th { 
+	.ui-table-stack td,
+	.ui-table-stack th { 
 		text-align: left;
 		display: block;
 	}
-	.ui-table-reflow tr {
+	.ui-table-stack tr {
 		clear: both;
 		display: table-row;
 	}
 	/* Make the label elements a percentage width */ 
-	.ui-table-reflow td .ui-table-cell-label,
-	.ui-table-reflow th .ui-table-cell-label { 
+	.ui-table-stack td .ui-table-cell-label,
+	.ui-table-stack th .ui-table-cell-label { 
 		display: block;
 		padding: 0 .6em 0 0;
 		min-width: 30%; 
 		display: inline-block; 
 	}
 	/* For grouped headers, have a different style to visually separate the levels by classing the first label in each col group */ 
-	.ui-table-reflow th .ui-table-cell-label-top,
-	.ui-table-reflow td .ui-table-cell-label-top {
+	.ui-table-stack th .ui-table-cell-label-top,
+	.ui-table-stack td .ui-table-cell-label-top {
 		display: block;
 		padding: .4em 0;
 		margin: .4em 0;
@@ -925,68 +925,68 @@ table tbody td {
 		font-family: sans-serif;
 	}
 	/* Avoid double strokes when stacked */
-	.ui-table-reflow tbody th.group {
+	.ui-table-stack tbody th.group {
 		border-bottom: none;
 		margin-top:-1px;
 	}
 	/* Avoid double strokes when stacked */
-	.ui-table-reflow th.group b.ui-table-cell-label {
+	.ui-table-stack th.group b.ui-table-cell-label {
 		display: none !important;
 	}
 
-	.ui-table-reflow .ui-table-row-collapsible {
+	.ui-table-stack .ui-table-row-collapsible {
 		cursor: pointer;
 	}
-	.ui-table-reflow .ui-table-row-collapsible .ui-table-cell-collapsible {
+	.ui-table-stack .ui-table-row-collapsible .ui-table-cell-collapsible {
 		display: none;
 	}
 
-	.ui-table-reflow .ui-table-row-collapsible.open .ui-table-cell-collapsible {
+	.ui-table-stack .ui-table-row-collapsible.open .ui-table-cell-collapsible {
 		display: block;
 	}
 }
 
 @media (max-width: 40em) {
 	/* Avoid double top borders when stacked.  */ 
-	table[data-mode="reflow"] thead,
-	.ui-table.ui-table-reflow thead {
+	table[data-mode="stack"] thead,
+	.ui-table.ui-table-stack thead {
 		border-top: 0;
 	}
-	table[data-mode="reflow"] thead td,
-	table[data-mode="reflow"] thead th,
-	.ui-table-reflow thead td,
-	.ui-table-reflow thead th {
+	table[data-mode="stack"] thead td,
+	table[data-mode="stack"] thead th,
+	.ui-table-stack thead td,
+	.ui-table-stack thead th {
 		display: none;
 	}
 }
 
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */ 
 @media (min-width: 40em) {
-	.ui-table-reflow tr {
+	.ui-table-stack tr {
 		display: table-row;
 	}
 	/* Show the table header rows */ 
-	.ui-table-reflow td,
-	.ui-table-reflow th,
-	.ui-table-reflow tbody th,
-	.ui-table-reflow tbody td,
-	.ui-table-reflow thead td,
-	.ui-table-reflow thead th {
+	.ui-table-stack td,
+	.ui-table-stack th,
+	.ui-table-stack tbody th,
+	.ui-table-stack tbody td,
+	.ui-table-stack thead td,
+	.ui-table-stack thead th {
 		display: table-cell;
 		margin: 0;
 	}
 	/* Hide the labels in each cell */ 
-	.ui-table-reflow td .ui-table-cell-label,
-	.ui-table-reflow th .ui-table-cell-label { 
+	.ui-table-stack td .ui-table-cell-label,
+	.ui-table-stack th .ui-table-cell-label { 
 		display: none !important;
 	}
 
-	.ui-table-reflow .ui-table-row-collapsible {
+	.ui-table-stack .ui-table-row-collapsible {
 		cursor: default;
 	}
 
-	.ui-table-reflow .ui-table-row-collapsible.open .ui-table-cell-collapsible,
-	.ui-table-reflow .ui-table-row-collapsible .ui-table-cell-collapsible {
+	.ui-table-stack .ui-table-row-collapsible.open .ui-table-cell-collapsible,
+	.ui-table-stack .ui-table-row-collapsible .ui-table-cell-collapsible {
 		display: none;
 	}
 
