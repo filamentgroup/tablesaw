@@ -81,15 +81,19 @@
 
 						e.stopPropagation();
 						var head = $( this ).parent(),
-							v = e.data.col;
+							v = e.data.col,
+							newSortValue = heads.index( head );
+
 						clearOthers( head.siblings() );
 						if( head.hasClass( classes.descend ) ){
 							el[ pluginName ]( "sortBy" , v , true);
+							newSortValue += '_asc';
 						} else {
 							el[ pluginName ]( "sortBy" , v );
+							newSortValue += '_desc';
 						}
 						if( $switcher ) {
-							$switcher.find( 'select' ).val( heads.index( head ) ).trigger( 'refresh' );
+							$switcher.find( 'select' ).val( newSortValue ).trigger( 'refresh' );
 						}
 
 						e.preventDefault();
