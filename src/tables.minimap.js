@@ -7,15 +7,15 @@
 
 	var MM = {
 		attr: {
-			init: 'data-minimap'
+			init: 'data-tablesaw-minimap'
 		}
 	};
 
 	function createMiniMap( $table ){
 
-		var $btns = $( '<div class="table-advance minimap">' ),
-			$dotNav = $( '<ul class="table-advance-dots">' ).appendTo( $btns ),
-			hideDot = 'table-advance-dots-hide',
+		var $btns = $( '<div class="tablesaw-advance minimap">' ),
+			$dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns ),
+			hideDot = 'tablesaw-advance-dots-hide',
 			$headerCells = $table.find( 'thead th' );
 
 		// populate dots
@@ -58,7 +58,7 @@
 			.bind( "tabledestroy.minimap", function(){
 				var $t = $( this );
 
-				$t.prev( '.ui-table-bar' ).find( '.table-advance' ).remove();
+				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
 				$t.unbind( ".minimap" );

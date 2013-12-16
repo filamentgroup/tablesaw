@@ -8,7 +8,7 @@
 
 	function createSwipeTable( $table ){
 
-		var $btns = $( "<div class='table-advance'></div>" ),
+		var $btns = $( "<div class='tablesaw-advance'></div>" ),
 			$prevBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
 			$nextBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
 			hideBtn = 'disabled',
@@ -218,7 +218,7 @@
 				var $t = $( this );
 
 				$t.removeClass( 'table-coltoggle-swipe' );
-				$t.prev( '.ui-table-bar' ).find( '.table-advance' ).remove();
+				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
 				$t.unbind( ".swipetoggle" );

@@ -13,7 +13,7 @@
 			stackTable: "ui-table-stack",
 			cellLabels: "ui-table-cell-label",
 			popup: "ui-table-columntoggle-popup",
-			columnBtnContain: "ui-table-columntoggle-btnwrap table-advance",
+			columnBtnContain: "ui-table-columntoggle-btnwrap tablesaw-advance",
 			columnBtn: "ui-table-columntoggle-btn ui-table-nav-btn",
 			priorityPrefix: "ui-table-priority-",
 			columnToggleTable: "ui-table-columntoggle",

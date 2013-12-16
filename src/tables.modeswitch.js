@@ -47,7 +47,7 @@
 					return html.join('');
 				});
 
-			var $otherToolbarItems = $toolbar.find( '.table-advance' ).eq( 0 );
+			var $otherToolbarItems = $toolbar.find( '.tablesaw-advance' ).eq( 0 );
 			if( $otherToolbarItems.length ) {
 				$switcher.insertBefore( $otherToolbarItems );
 			} else {

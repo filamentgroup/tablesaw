@@ -303,11 +303,11 @@ table tbody td {
 }
 
 /* Column navigation buttons for swipe and columntoggle tables */
-.ui-table-bar .table-advance {
+.ui-table-bar .tablesaw-advance {
 	position: relative;
 	top: -2.6em;
 }
-.table-advance .btn {
+.tablesaw-advance .btn {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -318,11 +318,11 @@ table tbody td {
 	text-shadow: 0 1px 0 #FFF;
 	border-radius: .25em;
 }
-.table-advance .btn.btn-micro {
+.tablesaw-advance .btn.btn-micro {
 	font-size: .8125em;
 	padding: .4em .7em .25em .7em;
 }
-.table-advance a.ui-table-nav-btn {
+.tablesaw-advance a.ui-table-nav-btn {
 	*display: inline;
 	zoom: 1;
 	display: inline-block;
@@ -332,7 +332,7 @@ table tbody td {
 	background-position: 50% 50%;
 	margin-left: .5em;
 }
-.table-advance a.ui-table-nav-btn.disabled {
+.tablesaw-advance a.ui-table-nav-btn.disabled {
 	opacity: .25;
 	cursor: default;
 	pointer-events: none;
@@ -414,7 +414,7 @@ table tbody td {
 		margin-top: 0;
 		top: 0;
 	}
-	.ui-table-bar .table-advance {
+	.ui-table-bar .tablesaw-advance {
 		position: static;
 	}
 	.ui-table-bar {
