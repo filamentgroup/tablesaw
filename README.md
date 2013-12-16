@@ -57,6 +57,6 @@ _(Nothing yet)_
 * Add to bower
 * Extra CSS/JS in btnmarkup, controlgroup
 * Prune/cleanup non-scoped CSS
-* Remove libs/ move everything into bower
 * Fix issue with sortable switcher not updating
 * These docs suck
+* Add VanillaJS/non-jQuery version
