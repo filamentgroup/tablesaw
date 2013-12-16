@@ -492,9 +492,7 @@
 				};
 
 				update( this, sel );
-console.log( this );
-				$( this ).bind( "change refresh", function( e ) {
-console.log( e.type );
+				$( this ).bind( "change refresh", function() {
 					update( this, sel );
 				});
 			}
