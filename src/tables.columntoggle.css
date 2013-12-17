@@ -27,18 +27,18 @@
 
 /* Hide all prioritized columns by default */
 @media only all {
-	th.tablesaw-priority-6,
-	td.tablesaw-priority-6,
-	th.tablesaw-priority-5,
-	td.tablesaw-priority-5,
-	th.tablesaw-priority-4,
-	td.tablesaw-priority-4,
-	th.tablesaw-priority-3,
-	td.tablesaw-priority-3,
-	th.tablesaw-priority-2,
-	td.tablesaw-priority-2,
-	th.tablesaw-priority-1,
-	td.tablesaw-priority-1 {
+	.tablesaw-columntoggle th.tablesaw-priority-6,
+	.tablesaw-columntoggle td.tablesaw-priority-6,
+	.tablesaw-columntoggle th.tablesaw-priority-5,
+	.tablesaw-columntoggle td.tablesaw-priority-5,
+	.tablesaw-columntoggle th.tablesaw-priority-4,
+	.tablesaw-columntoggle td.tablesaw-priority-4,
+	.tablesaw-columntoggle th.tablesaw-priority-3,
+	.tablesaw-columntoggle td.tablesaw-priority-3,
+	.tablesaw-columntoggle th.tablesaw-priority-2,
+	.tablesaw-columntoggle td.tablesaw-priority-2,
+	.tablesaw-columntoggle th.tablesaw-priority-1,
+	.tablesaw-columntoggle td.tablesaw-priority-1 {
 		display: none;
 	}
 }
