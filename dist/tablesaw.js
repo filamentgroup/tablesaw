@@ -6,7 +6,7 @@
 	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
 		return;
 	} else {
-		$( document.documentElement ).addClass( 'enhanced' );
+		$( document.documentElement ).addClass( 'tablesaw-enhanced' );
 
 		// DOM-ready auto-init of plugins.
 		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
@@ -16,7 +16,7 @@
 	}
 
 })( jQuery );
-(function( $ ) {
+;(function( $ ) {
 	var o = {
 		pluginName : "table",
 		classes : {
@@ -33,8 +33,8 @@
 			toolbar: "tablesaw-bar"
 		},
 		events: {
-			create: "tablecreate",
-			destroy: "tabledestroy"
+			create: "tablesawcreate",
+			destroy: "tablesawdestroy"
 		},
 		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
@@ -222,7 +222,7 @@
 						.toggleClass( "tablesaw-cell-hidden", !checked )
 						.toggleClass( "tablesaw-cell-visible", checked );
 
-					$table.trigger( 'tablecolumns' );
+					$table.trigger( 'tablesawcolumns' );
 				};
 
 			// assign an id if there is none
@@ -263,7 +263,7 @@
 				$menu.append( '<label class="btn theme-simple">' + o.columnsDialogError + '</label>' );
 			}
 
-			$menu.find( '.btn' ).btn();
+			$menu.find( '.btn' ).tablesawbtn();
 			$menu.appendTo( $popup );
 
 			// bind change event listeners to inputs - TODO: move to a private method?
@@ -353,9 +353,9 @@
 
 }( jQuery ));
 
-(function( $ ) {
-	var pluginName = "btn",
-		initSelector = "." + pluginName,
+;(function( $ ) {
+	var pluginName = "tablesawbtn",
+		initSelector = ".btn",
 		activeClass = "btn-selected",
 		methods = {
 			_create: function(){
@@ -461,13 +461,13 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	// Kick it off when `enhance` event is fired.
+	// We don’t use autoenhance in tablesaw for buttons, yet.
 	$( document ).on( "enhance", function( e ) {
 		$( initSelector, e.target )[ pluginName ]();
 	});
 
 }( jQuery ));
-(function( win, $, undefined ){
+;(function( win, $, undefined ){
 
 
 	function createSwipeTable( $table ){
@@ -603,7 +603,7 @@
 			});
 
 			unmaintainWidths();
-			$table.trigger( 'tablecolumns' );
+			$table.trigger( 'tablesawcolumns' );
 		}
 
 		function advance( fwd ){
@@ -623,7 +623,7 @@
 				hideColumn( $headerCellsNoPersist.get( pair[ 0 ] ) );
 				showColumn( $headerCellsNoPersist.get( pair[ 1 ] ) );
 
-				$table.trigger( 'tablecolumns' );
+				$table.trigger( 'tablesawcolumns' );
 			}
 		}
 
@@ -668,17 +668,17 @@
 					});
 
 			})
-			.bind( "tablecolumns.swipetoggle", function(){
+			.bind( "tablesawcolumns.swipetoggle", function(){
 				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
 				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
 			})
-			.bind( "tablenext.swipetoggle", function(){
+			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );
 			} )
-			.bind( "tableprev.swipetoggle", function(){
+			.bind( "tablesawprev.swipetoggle", function(){
 				advance( false );
 			} )
-			.bind( "tabledestroy.swipetoggle", function(){
+			.bind( "tablesawdestroy.swipetoggle", function(){
 				var $t = $( this );
 
 				$t.removeClass( 'table-coltoggle-swipe' );
@@ -695,7 +695,7 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablecreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", "table", function( e, mode ){
 
 		var $table = $( this );
 		if( mode === 'swipe' ){
@@ -706,7 +706,7 @@
 
 }( this, jQuery ));
 
-(function( $ ) {
+;(function( $ ) {
 	function getSortValue( cell ) {
 		return $.map( cell.childNodes, function( el ) {
 				var $el = $( el );
@@ -844,7 +844,7 @@
 						} else {
 							$switcher.appendTo( $toolbar );
 						}
-						$switcher.find( '.btn' ).btn();
+						$switcher.find( '.btn' ).tablesawbtn();
 						$switcher.find( 'select' ).on( 'change', function() {
 							var val = $( this ).val().split( '_' ),
 								head = heads.eq( val[ 0 ] );
@@ -969,7 +969,7 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	$( document ).on( "tablecreate", "table", function() {
+	$( document ).on( "tablesawcreate", "table", function() {
 		if( $( this ).is( initSelector ) ) {
 			$( this )[ pluginName ]();
 		}
@@ -977,7 +977,7 @@
 
 }( jQuery ));
 
-(function( win, $, undefined ){
+;(function( win, $, undefined ){
 
 	var MM = {
 		attr: {
@@ -1026,10 +1026,10 @@
 
 
 		$table
-			.bind( "tablecolumns.minimap", function(){
+			.bind( "tablesawcolumns.minimap", function(){
 				showHideNav();
 			})
-			.bind( "tabledestroy.minimap", function(){
+			.bind( "tablesawdestroy.minimap", function(){
 				var $t = $( this );
 
 				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
@@ -1042,7 +1042,7 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablecreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", "table", function( e, mode ){
 
 		var $table = $( this );
 		if( ( mode === 'swipe' || mode === 'columntoggle' ) && $table.is( '[ ' + MM.attr.init + ']' ) ){
@@ -1109,7 +1109,7 @@
 				$switcher.appendTo( $toolbar );
 			}
 
-			$switcher.find( '.btn' ).btn();
+			$switcher.find( '.btn' ).tablesawbtn();
 			$switcher.find( 'select' ).bind( 'change', S.onModeChange );
 		},
 		onModeChange: function() {
@@ -1126,7 +1126,7 @@
 		}
 	};
 
-	$( win.document ).on( "tablecreate", "table", function() {
+	$( win.document ).on( "tablesawcreate", "table", function() {
 		if( $( this ).is( S.selectors.init ) ) {
 			S.init( this );
 		}
