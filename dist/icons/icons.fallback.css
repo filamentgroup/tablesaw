@@ -1,13 +1,10 @@
-.ui-table-bar .ui-table-columntoggle-btnwrap > a,
-.enhanced .icon-arrow-gray-down,
+.tablesaw-bar .tablesaw-columntoggle-btnwrap > a.btn,
 .icon-arrow-gray-down { background-image: url('png/arrow-gray-down.png'); background-repeat: no-repeat; }
 
-.ui-table-bar .tablesaw-advance > .btn.left,
-.enhanced .icon-arrow-gray-left,
+.tablesaw-bar .tablesaw-advance > .btn.left,
 .icon-arrow-gray-left { background-image: url('png/arrow-gray-left.png'); background-repeat: no-repeat; }
 
-.ui-table-bar .tablesaw-advance > .btn.right,
-.enhanced .icon-arrow-gray-right,
+.tablesaw-bar .tablesaw-advance > .btn.right,
 .icon-arrow-gray-right { background-image: url('png/arrow-gray-right.png'); background-repeat: no-repeat; }
 
 .btn-selected.btn-checkbox:after,

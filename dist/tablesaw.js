@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.0.1 - 2013-12-16
+/*! Tablesaw - v0.0.1 - 2013-12-17
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 ;(function( $ ) {
@@ -20,22 +20,23 @@
 	var o = {
 		pluginName : "table",
 		classes : {
-			stackTable: "ui-table-stack",
-			cellLabels: "ui-table-cell-label",
-			popup: "ui-table-columntoggle-popup",
-			columnBtnContain: "ui-table-columntoggle-btnwrap tablesaw-advance",
-			columnBtn: "ui-table-columntoggle-btn ui-table-nav-btn",
-			priorityPrefix: "ui-table-priority-",
-			columnToggleTable: "ui-table-columntoggle",
-			collapsibleCell: "ui-table-cell-collapsible",
-			collapsibleRow: "ui-table-row-collapsible",
+			stackTable: "tablesaw-stack",
+			cellLabels: "tablesaw-cell-label",
+			popup: "tablesaw-columntoggle-popup",
+			columnBtnContain: "tablesaw-columntoggle-btnwrap tablesaw-advance",
+			columnBtn: "tablesaw-columntoggle-btn tablesaw-nav-btn",
+			priorityPrefix: "tablesaw-priority-",
+			columnToggleTable: "tablesaw-columntoggle",
+			collapsibleCell: "tablesaw-cell-collapsible",
+			collapsibleRow: "tablesaw-row-collapsible",
 			dialogClass: "",
-			toolbar: "ui-table-bar"
+			toolbar: "tablesaw-bar"
 		},
 		events: {
 			create: "tablecreate",
 			destroy: "tabledestroy"
 		},
+		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
 		mode: "stack",
 		initSelector : "table",
@@ -144,8 +145,8 @@
 			$t.removeClass( o.classes.columnToggleTable );
 			$t.find( 'th, td' ).each(function() {
 				var $cell = $( this );
-				$cell.removeClass( 'ui-table-cell-hidden' )
-					.removeClass( 'ui-table-cell-visible' );
+				$cell.removeClass( 'tablesaw-cell-hidden' )
+					.removeClass( 'tablesaw-cell-visible' );
 
 				this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
 			});
@@ -182,7 +183,7 @@
 			reverseHeaders.each(function(){
 				var $cells = $( this.cells ),
 					colstart = self.colstart,
-					hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " ui-table-cell-label-top",
+					hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
 					text = $(this).text();
 
 				if( text !== ""  ){
@@ -218,8 +219,8 @@
 					var checked = e.target.checked;
 
 					$( e.target ).data( "cells" )
-						.toggleClass( "ui-table-cell-hidden", !checked )
-						.toggleClass( "ui-table-cell-visible", checked );
+						.toggleClass( "tablesaw-cell-hidden", !checked )
+						.toggleClass( "tablesaw-cell-visible", checked );
 
 					$table.trigger( 'tablecolumns' );
 				};
@@ -239,6 +240,7 @@
 			$popup = $( "<div class='dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
 			$menu = $( "<div class='btn-group'></div>" );
 
+			var hasNonPersistentHeaders = false;
 			$(this.headers).not( "td" ).each( function() {
 				var $this = $( this ),
 					priority = $this.attr("data-priority"),
@@ -252,8 +254,14 @@
 						.trigger('enhance')
 						.children( 0 )
 						.data( "cells", $cells );
+
+					hasNonPersistentHeaders = true;
 				}
 			});
+
+			if( !hasNonPersistentHeaders ) {
+				$menu.append( '<label class="btn theme-simple">' + o.columnsDialogError + '</label>' );
+			}
 
 			$menu.find( '.btn' ).btn();
 			$menu.appendTo( $popup );
@@ -268,7 +276,6 @@
 			$popup
 				.appendTo( $btnContain )
 				.dialog( true );
-
 
 			// refresh method
 
@@ -466,8 +473,8 @@
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
-			$prevBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
-			$nextBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
+			$prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
+			$nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
 			hideBtn = 'disabled',
 			persistWidths = 'tablesaw-fix-persist',
 			$headerCells = $table.find( "thead th" ),
@@ -483,7 +490,7 @@
 		});
 		$table.css( 'width', '' );
 
-		$btns.appendTo( $table.prev( '.ui-table-bar' ) );
+		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
 		$table.addClass( "table-coltoggle-swipe" );
 
@@ -497,15 +504,15 @@
 		}
 
 		function showColumn( headerCell ) {
-			$getCells( headerCell ).removeClass( 'ui-table-cell-hidden' );
+			$getCells( headerCell ).removeClass( 'tablesaw-cell-hidden' );
 		}
 
 		function hideColumn( headerCell ) {
-			$getCells( headerCell ).addClass( 'ui-table-cell-hidden' );
+			$getCells( headerCell ).addClass( 'tablesaw-cell-hidden' );
 		}
 
 		function persistColumn( headerCell ) {
-			$getCells( headerCell ).addClass( 'ui-table-cell-persist' );
+			$getCells( headerCell ).addClass( 'tablesaw-cell-persist' );
 		}
 
 		function isPersistent( headerCell ) {
@@ -529,7 +536,7 @@
 
 					// Don’t persist greedy columns (take up more than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
-						styles.push( prefix + ' .ui-table-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
+						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
 					}
 				}
 			});
@@ -675,7 +682,7 @@
 				var $t = $( this );
 
 				$t.removeClass( 'table-coltoggle-swipe' );
-				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
+				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
 				$t.unbind( ".swipetoggle" );
@@ -705,7 +712,7 @@
 				var $el = $( el );
 				if( $el.is( 'input, select' ) ) {
 					return $el.val();
-				} else if( $el.hasClass( 'ui-table-cell-label' ) ) {
+				} else if( $el.hasClass( 'tablesaw-cell-label' ) ) {
 					return;
 				}
 				return $.trim( $el.text() );
@@ -714,14 +721,14 @@
 
 	var topLevelPluginName = "tablesaw-sortable",
 		pluginName = "sortable",
-		initSelector = "table[data-" + topLevelPluginName + "]",
-		sortableSwitchSelector = "[data-" + topLevelPluginName + "-switch]",
+		initSelector = "table[data-" + pluginName + "]",
+		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		classes = {
 			head: pluginName + "-head",
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: topLevelPluginName + "-switch",
-			tableToolbar: 'ui-table-toolbar'
+			tableToolbar: 'tablesaw-toolbar'
 		},
 		i18n = {
 			sort: 'Sort'
@@ -829,7 +836,7 @@
 							return html.join('');
 						});
 
-						var $toolbar = el.prev( '.ui-table-bar' ),
+						var $toolbar = el.prev( '.tablesaw-bar' ),
 							$firstChild = $toolbar.children().eq( 0 );
 
 						if( $firstChild.length ) {
@@ -974,7 +981,7 @@
 
 	var MM = {
 		attr: {
-			init: 'data-tablesaw-minimap'
+			init: 'data-minimap'
 		}
 	};
 
@@ -990,7 +997,7 @@
 			$dotNav.append( '<li><i></i></li>' );
 		});
 
-		$btns.appendTo( $table.prev( '.ui-table-bar' ) );
+		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
 		function showMinimap( $table ) {
 			var mq = $table.attr( MM.attr.init );
@@ -1025,7 +1032,7 @@
 			.bind( "tabledestroy.minimap", function(){
 				var $t = $( this );
 
-				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
+				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
 				$t.unbind( ".minimap" );
@@ -1056,8 +1063,8 @@
 			excludeMode: 'data-mode-exclude'
 		},
 		classes: {
-			main: 'ui-table-modeswitch',
-			toolbar: 'ui-table-toolbar'
+			main: 'tablesaw-modeswitch',
+			toolbar: 'tablesaw-toolbar'
 		},
 		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		i18n: {
@@ -1067,7 +1074,7 @@
 		init: function( table ) {
 			var $table = $( table ),
 				ignoreMode = $table.attr( S.attributes.excludeMode ),
-				$toolbar = $table.prev( '.ui-table-bar' ),
+				$toolbar = $table.prev( '.tablesaw-bar' ),
 				modeVal = '',
 				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
 					var html = [ '<label>' + S.i18n.columns + ':' ],
@@ -1108,7 +1115,7 @@
 		onModeChange: function() {
 			var $t = $( this ),
 				$switcher = $t.closest( '.' + S.classes.main ),
-				$table = $t.closest( '.ui-table-bar' ).nextUntil( $table ).eq( 0 ),
+				$table = $t.closest( '.tablesaw-bar' ).nextUntil( $table ).eq( 0 ),
 				val = $t.val();
 
 			$switcher.remove();
