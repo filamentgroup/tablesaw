@@ -1,3 +1,9 @@
+/*
+* tablesaw: A set of plugins for responsive tables
+* Copyright (c) 2013 Filament Group, Inc.
+* MIT License
+*/
+
 ;(function( $ ) {
 	// Cut the mustard
 	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {

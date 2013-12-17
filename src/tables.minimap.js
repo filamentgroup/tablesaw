@@ -1,9 +1,11 @@
 /*
- * swipeable column toggle - extends the coltoggle plugin when you add a data-swipe attr
- * Copyright (c) 2013 Filament Group, Inc.
- * Licensed MIT
- */
-(function( win, $, undefined ){
+* tablesaw: A set of plugins for responsive tables
+* minimap: a set of dots to show which columns are currently visible.
+* Copyright (c) 2013 Filament Group, Inc.
+* MIT License
+*/
+
+;(function( win, $, undefined ){
 
 	var MM = {
 		attr: {

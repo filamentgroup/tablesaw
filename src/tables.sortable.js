@@ -1,10 +1,11 @@
 /*
-* sortable table plugin
-* Copyright (c) 2012 Filament Group, Inc.
-* Licensed under MIT
+* tablesaw: A set of plugins for responsive tables
+* Sortable column headers
+* Copyright (c) 2013 Filament Group, Inc.
+* MIT License
 */
 
-(function( $ ) {
+;(function( $ ) {
 	function getSortValue( cell ) {
 		return $.map( cell.childNodes, function( el ) {
 				var $el = $( el );

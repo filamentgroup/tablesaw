@@ -1,12 +1,11 @@
 /*
-* Button Markup
-* Custom-styled native inputs/buttons.
-*
-* Copyright (c) 2012 Filament Group, Inc.
-* Licensed MIT
+* tablesaw: A set of plugins for responsive tables
+* Button component
+* Copyright (c) 2013 Filament Group, Inc.
+* MIT License
 */
 
-(function( $ ) {
+;(function( $ ) {
 	var pluginName = "tablesawbtn",
 		initSelector = ".btn",
 		activeClass = "btn-selected",

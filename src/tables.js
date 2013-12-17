@@ -1,12 +1,11 @@
 /*
-* stack and column toggle Tables
-* Tables that stack based on available space.
-* the coltoggle feature relies on dialog
-* Copyright (c) 2012 Filament Group, Inc.
-* Licensed under MIT
+* tablesaw: A set of plugins for responsive tables
+* Stack and Column Toggle tables
+* Copyright (c) 2013 Filament Group, Inc.
+* MIT License
 */
 
-(function( $ ) {
+;(function( $ ) {
 	var o = {
 		pluginName : "table",
 		classes : {
