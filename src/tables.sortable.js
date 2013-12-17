@@ -142,7 +142,7 @@
 						} else {
 							$switcher.appendTo( $toolbar );
 						}
-						$switcher.find( '.btn' ).btn();
+						$switcher.find( '.btn' ).tablesawbtn();
 						$switcher.find( 'select' ).on( 'change', function() {
 							var val = $( this ).val().split( '_' ),
 								head = heads.eq( val[ 0 ] );
@@ -267,7 +267,7 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	$( document ).on( "tablecreate", "table", function() {
+	$( document ).on( "tablesawcreate", "table", function() {
 		if( $( this ).is( initSelector ) ) {
 			$( this )[ pluginName ]();
 		}

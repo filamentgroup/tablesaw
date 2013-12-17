@@ -23,8 +23,8 @@
 			toolbar: "tablesaw-bar"
 		},
 		events: {
-			create: "tablecreate",
-			destroy: "tabledestroy"
+			create: "tablesawcreate",
+			destroy: "tablesawdestroy"
 		},
 		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
@@ -212,7 +212,7 @@
 						.toggleClass( "tablesaw-cell-hidden", !checked )
 						.toggleClass( "tablesaw-cell-visible", checked );
 
-					$table.trigger( 'tablecolumns' );
+					$table.trigger( 'tablesawcolumns' );
 				};
 
 			// assign an id if there is none
@@ -253,7 +253,7 @@
 				$menu.append( '<label class="btn theme-simple">' + o.columnsDialogError + '</label>' );
 			}
 
-			$menu.find( '.btn' ).btn();
+			$menu.find( '.btn' ).tablesawbtn();
 			$menu.appendTo( $popup );
 
 			// bind change event listeners to inputs - TODO: move to a private method?

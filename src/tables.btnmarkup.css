@@ -6,7 +6,7 @@
 * Licensed under the MIT, GPL licenses.
 */
 
-.enhanced .tablesaw-bar .btn {
+.tablesaw-enhanced .tablesaw-bar .btn {
 	border: 1px solid #ccc;
 	background: none;
 	background-color: #fafafa;
@@ -50,12 +50,12 @@
 	transition: background .1s linear, border .1s linear, color .1s linear;
 	*/
 }
-.enhanced .tablesaw-bar a.btn,
-.enhanced .tablesaw-bar button.btn,
-.enhanced .tablesaw-bar [type="submit"].btn {
+.tablesaw-enhanced .tablesaw-bar a.btn,
+.tablesaw-enhanced .tablesaw-bar button.btn,
+.tablesaw-enhanced .tablesaw-bar [type="submit"].btn {
 	color: #1c95d4;
 }
-.enhanced .tablesaw-bar .btn:hover {
+.tablesaw-enhanced .tablesaw-bar .btn:hover {
 	text-decoration: none;
 }
 
@@ -78,7 +78,7 @@
 	background-color: #fafafa;
 	color: #4d4d4d;
 }
-.enhanced .tablesaw-bar .btn:not(.ui-disabled):active {
+.tablesaw-enhanced .tablesaw-bar .btn:not(.ui-disabled):active {
 	background-color: #ddd;
 	background-image: -webkit-linear-gradient( top, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
 	background-image: -moz-linear-gradient( top, rgba( 25,25,100,.35,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
@@ -90,8 +90,8 @@
 .ie-lte8 .tablesaw-bar .btn.ui-disabled:active {
 	background-color: #fafafa;
 }
-.enhanced .tablesaw-bar .btn:not(.ui-disabled):hover,
-.enhanced .tablesaw-bar .btn:not(.ui-disabled):focus {
+.tablesaw-enhanced .tablesaw-bar .btn:not(.ui-disabled):hover,
+.tablesaw-enhanced .tablesaw-bar .btn:not(.ui-disabled):focus {
 	color: #208de3;
 	background-color: #fff;
 	outline: none;
@@ -155,7 +155,7 @@
 .ie-lte8 .tablesaw-bar .btn-checkbox input {
 	filter: alpha(opacity=0);
 }
-.enhanced .tablesaw-bar .btn.btn-select {
+.tablesaw-enhanced .tablesaw-bar .btn.btn-select {
 	color:#4d4d4d;
 	padding-right: 2.5em;
 	min-width: 7.25em;
@@ -191,11 +191,11 @@
 	padding-left: 1.8em;
 }
 
-.enhanced .tablesaw-bar .btn-checkbox,
-.enhanced .tablesaw-bar .btn-select {
+.tablesaw-enhanced .tablesaw-bar .btn-checkbox,
+.tablesaw-enhanced .tablesaw-bar .btn-select {
 	text-align: left;
 }
-.enhanced .tablesaw-bar .btn-checkbox {
+.tablesaw-enhanced .tablesaw-bar .btn-checkbox {
 	padding-left: 2.35em;
 }
 .tablesaw-bar .btn-checkbox:after,

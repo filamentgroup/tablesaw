@@ -54,7 +54,7 @@
 				$switcher.appendTo( $toolbar );
 			}
 
-			$switcher.find( '.btn' ).btn();
+			$switcher.find( '.btn' ).tablesawbtn();
 			$switcher.find( 'select' ).bind( 'change', S.onModeChange );
 		},
 		onModeChange: function() {
@@ -71,7 +71,7 @@
 		}
 	};
 
-	$( win.document ).on( "tablecreate", "table", function() {
+	$( win.document ).on( "tablesawcreate", "table", function() {
 		if( $( this ).is( S.selectors.init ) ) {
 			S.init( this );
 		}

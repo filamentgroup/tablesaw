@@ -7,8 +7,8 @@
 */
 
 (function( $ ) {
-	var pluginName = "btn",
-		initSelector = "." + pluginName,
+	var pluginName = "tablesawbtn",
+		initSelector = ".btn",
 		activeClass = "btn-selected",
 		methods = {
 			_create: function(){
@@ -114,7 +114,7 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	// Kick it off when `enhance` event is fired.
+	// We don’t use autoenhance in tablesaw for buttons, yet.
 	$( document ).on( "enhance", function( e ) {
 		$( initSelector, e.target )[ pluginName ]();
 	});

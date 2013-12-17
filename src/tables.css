@@ -361,12 +361,12 @@ table tbody td {
 	text-transform:uppercase;
 }
 .tablesaw-bar .btn,
-.enhanced .tablesaw-bar .btn {
+.tablesaw-enhanced .tablesaw-bar .btn {
 	margin-top: .5em;
 	margin-bottom: .5em;
 }
 .tablesaw-bar .btn-select,
-.enhanced .tablesaw-bar .btn-select {
+.tablesaw-enhanced .tablesaw-bar .btn-select {
 	margin-bottom: 0;
 }
 .tablesaw-bar .tablesaw-toolbar .btn {

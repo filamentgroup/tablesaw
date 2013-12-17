@@ -107,11 +107,11 @@ module.exports = function(grunt) {
 					loadersnippet: 'grunticon.loader.js',
 					customselectors: {
 						"arrow-gray-down": [".tablesaw-bar .tablesaw-columntoggle-btnwrap > a.btn"],
-						"sort-ascending": [".sortable-head.sortable-ascending button:after"],
-						"sort-descending": [".sortable-head.sortable-descending button:after"],
+						"sort-ascending": [".tablesaw-sortable .sortable-head.sortable-ascending button:after"],
+						"sort-descending": [".tablesaw-sortable .sortable-head.sortable-descending button:after"],
 						"arrow-gray-right": [".tablesaw-bar .tablesaw-advance > .btn.right"],
 						"arrow-gray-left": [".tablesaw-bar .tablesaw-advance > .btn.left"],
-						"check": [".btn-selected.btn-checkbox:after"]
+						"check": [".tablesaw-bar .btn-selected.btn-checkbox:after"]
 					}
 				}
 			}

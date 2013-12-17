@@ -52,10 +52,10 @@
 
 
 		$table
-			.bind( "tablecolumns.minimap", function(){
+			.bind( "tablesawcolumns.minimap", function(){
 				showHideNav();
 			})
-			.bind( "tabledestroy.minimap", function(){
+			.bind( "tablesawdestroy.minimap", function(){
 				var $t = $( this );
 
 				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
@@ -68,7 +68,7 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablecreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", "table", function( e, mode ){
 
 		var $table = $( this );
 		if( ( mode === 'swipe' || mode === 'columntoggle' ) && $table.is( '[ ' + MM.attr.init + ']' ) ){

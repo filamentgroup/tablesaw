@@ -139,7 +139,7 @@
 			});
 
 			unmaintainWidths();
-			$table.trigger( 'tablecolumns' );
+			$table.trigger( 'tablesawcolumns' );
 		}
 
 		function advance( fwd ){
@@ -159,7 +159,7 @@
 				hideColumn( $headerCellsNoPersist.get( pair[ 0 ] ) );
 				showColumn( $headerCellsNoPersist.get( pair[ 1 ] ) );
 
-				$table.trigger( 'tablecolumns' );
+				$table.trigger( 'tablesawcolumns' );
 			}
 		}
 
@@ -204,17 +204,17 @@
 					});
 
 			})
-			.bind( "tablecolumns.swipetoggle", function(){
+			.bind( "tablesawcolumns.swipetoggle", function(){
 				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
 				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
 			})
-			.bind( "tablenext.swipetoggle", function(){
+			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );
 			} )
-			.bind( "tableprev.swipetoggle", function(){
+			.bind( "tablesawprev.swipetoggle", function(){
 				advance( false );
 			} )
-			.bind( "tabledestroy.swipetoggle", function(){
+			.bind( "tablesawdestroy.swipetoggle", function(){
 				var $t = $( this );
 
 				$t.removeClass( 'table-coltoggle-swipe' );
@@ -231,7 +231,7 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablecreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", "table", function( e, mode ){
 
 		var $table = $( this );
 		if( mode === 'swipe' ){
