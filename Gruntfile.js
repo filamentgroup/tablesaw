@@ -126,7 +126,7 @@ module.exports = function(grunt) {
 		},
 		'gh-pages': {
 			options: {},
-			src: ['dist/**/*', 'bower_components/**/*', 'demo/**/*']
+			src: ['dist/**/*', 'bower_components/**/*', 'demo/**/*', 'test/**/*']
 		},
 		myth: {
 			dist: {
