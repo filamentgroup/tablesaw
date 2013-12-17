@@ -1,29 +1,25 @@
-table {
+:root {
+	var-thead-background: #e2dfdc;
+	var-thead-background-to-gradient: #fff;
+}
+
+table.tablesaw {
 	empty-cells: show;
 	max-width: 100%;
 	width: 100%;
 }
-table td,
-table tbody th {
-	font-family: sans-serif;
-}
-table tbody th {
+table.tablesaw tbody th {
 	font-weight: bold;
 }
-table thead th,
-table thead td {
+table.tablesaw thead th,
+table.tablesaw thead td {
 	color: #444;
-	font-size: .8em;
+	font-size: .9em;
 }
-table tbody th,
-table tbody td {
+table.tablesaw tbody th,
+table.tablesaw tbody td {
 	padding: .4em 0 .3em .6em;
 }
-.numeric tbody td {
-	text-align:right;
-	padding-right:.8em;
-}
-
 
 .tablesaw {
 	border: 0;
@@ -56,28 +52,12 @@ table tbody td {
 .tablesaw tbody th .btn {
 	margin:0;
 }
-.tablesaw tbody th.group {
-	font-family: sans-serif;
-	font-size:1em;
-	text-transform: uppercase;
-	font-weight: bold;
-	border-top: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-	padding-top: .8em;
-	padding-bottom: .6em;
-	color: #008b92;
-	background-color:#f7f7f7;
-}
 
 .tablesaw thead {
 	border: 1px solid #e5e5e4;
 	position:relative;
-	background: #e2dfdc;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2dfdc));
-	background-image: -webkit-linear-gradient(top, #ffffff, #e2dfdc);
-	background-image: -moz-linear-gradient(top, #ffffff, #e2dfdc);
-	background-image: -o-linear-gradient(top, #ffffff, #e2dfdc);
-	background-image: linear-gradient(to bottom, #ffffff, #e2dfdc);
+	background: var(thead-background);
+	background-image: linear-gradient(to bottom, var(thead-background-to-gradient), var(thead-background));
 }
 .tablesaw thead th {
 	position: relative;
@@ -96,86 +76,15 @@ table tbody td {
 	border-right: 1px solid #e4e1de;
 }
 
-.tablesaw thead .group-top {
-	background: #f7f3ed;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f7f3ed));
-	background-image: -webkit-linear-gradient(top, #ffffff, #f7f3ed);
-	background-image: -moz-linear-gradient(top, #ffffff, #f7f3ed);
-	background-image: -o-linear-gradient(top, #ffffff, #f7f3ed);
-	background-image: linear-gradient(to bottom, #ffffff, #f7f3ed);
-}
-.tablesaw thead .group-bottom {
-	background: #f7f3ed;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f3ed), to(#e2dfdc));
-	background-image: -webkit-linear-gradient(top, #f7f3ed, #e2dfdc);
-	background-image: -moz-linear-gradient(top, #f7f3ed, #e2dfdc);
-	background-image: -o-linear-gradient(top, #f7f3ed, #e2dfdc);
-	background-image: linear-gradient(to bottom, #f7f3ed, #e2dfdc);
-}
-
 /* Table rows have a gray bottom stroke by default */ 
 .tablesaw tbody tr {
 	border-bottom: 1px solid #dfdfdf;
 }
-/* Optional white row striping for dark tables */ 
-.tablesaw.row-stripe-white tbody tr {
-	border-bottom: none;
-}
-.tablesaw.row-stripe-white tbody tr:nth-child(odd) {
-	background: #fff;
-}
 
-/* Optional gray row striping with vertical lines for display data tables */ 
-.report-data tbody tr {
-	border: none;
-}
-.tablesaw.report-data tbody td,
-.tablesaw.report-data tbody th {
-	border-right: 1px solid #e6e6e6;
-	border-bottom: 0;
-}
-.tablesaw.report-data tbody td:first-child,
-.tablesaw.report-data tbody th:first-child {
-	border-left: 1px solid #e6e6e6;
-}
-.report-data tbody tr:nth-child(even) {
-	background: #f8f7f6;
-}
-.report-data tbody tr:nth-child(odd) {
-	background: #ffffff;
-}
-
-/* Optional shadow and stroke for tables */ 
-.shadow {
-	border: 1px solid #ccc;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
-}
-
-
-
-.tablesaw td a {
-	font-weight:bold;
-}
 .tablesaw caption {
 	text-align:left;
 	margin-bottom:1.4em;
 	opacity:50%;
-}
-
-.tablesaw thead tr.th-groups th {
-	font-family: sans-serif;
-	font-weight: bold;
-	color:#777;
-}
-
-/* Column color coding */
-.tablesaw thead th .swatch {
-	width: 100%;
-	height: 4px;
-	display: block;
-	position: absolute;
-	left: 0;
-	top: 0;
 }
 
 /*
@@ -184,14 +93,6 @@ table tbody td {
 .tablesaw-stack td .tablesaw-cell-label,
 .tablesaw-stack th .tablesaw-cell-label {
 	display: none;
-}
-
-.tablesaw .nope {
-	position: relative;
-}
-.tablesaw .error {
-	outline: 1px solid #d22d2e;
-	background: #fbe8e8;
 }
 
 /* Mobile first styles: Begin with the stacked presentation at narrow widths */ 
@@ -311,11 +212,8 @@ table tbody td {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
-	text-shadow: 0 1px 0 #FFF;
+	text-shadow: 0 1px 0 #fff;
 	border-radius: .25em;
 }
 .tablesaw-advance .btn.btn-micro {
@@ -323,8 +221,6 @@ table tbody td {
 	padding: .4em .7em .25em .7em;
 }
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
-	*display: inline;
-	zoom: 1;
 	display: inline-block;
 	overflow: hidden;
 	width: 1.8em;

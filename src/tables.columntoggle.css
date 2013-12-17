@@ -15,10 +15,6 @@
 .tablesaw-columntoggle-btnwrap .dialog-content {
 	padding: 0;
 }
-.left.tablesaw-columntoggle-btnwrap .dialog-content {
-	right: -4.9em;
-}
-
 .tablesaw-columntoggle tbody td {
 	line-height: 1.5;
 }
@@ -47,9 +43,6 @@
 	}
 }
 
-.dialog-background-trans {
-	opacity: 0.0001;
-}
 .tablesaw-columntoggle-btnwrap {
 	position: relative;
 	float: right;
@@ -79,7 +72,7 @@
 	outline-style: none;
 }
 .dialog-table-coltoggle {
-	border-radius: .5em !important;
+	border-radius: .5em;
 }
 
 /* Preset breakpoints if "" class added to table */
@@ -138,12 +131,7 @@
 	.table-coltoggle-swipe .tablesaw-cell-persist {
 		box-shadow: 3px 0 4px -1px #e4e1de;
 	}
-	.table-coltoggle-swipe.report-data  tbody .tablesaw-cell-persist {
-		background-color: #f5f4f3;
-	}
-	.table-coltoggle-swipe.report-data  tbody tr:nth-child(even) .tablesaw-cell-persist {
-		background-color: #efedec;
-	}
+
 	/* Unchecked manually: Always hide */
 	.table-coltoggle-swipe th.tablesaw-cell-hidden,
 	.table-coltoggle-swipe td.tablesaw-cell-hidden,

@@ -42,7 +42,7 @@ module.exports = function(grunt) {
 					'src/tables.minimap.css',
 					'src/tables.modeswitch.css'
 				],
-				dest: 'dist/<%= pkg.name %>.css'
+				dest: 'dist/<%= pkg.name %>.myth.css'
 			}
 		},
 		uglify: {
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
 			},
 			src: {
 				files: ['<%= concat.css.src %>', '<%= concat.js.src %>'],
-				tasks: ['jshint:src', 'qunit', 'concat', 'uglify']
+				tasks: ['src']
 			},
 			icons: {
 				files: ['<%= grunticon.tablesaw.options.src %>/*'],
@@ -127,13 +127,21 @@ module.exports = function(grunt) {
 		'gh-pages': {
 			options: {},
 			src: ['dist/**/*', 'bower_components/**/*', 'demo/**/*']
+		},
+		myth: {
+			dist: {
+				files: {
+					'dist/<%= pkg.name %>.css': '<%= concat.css.dest %>'
+				}
+			}
 		}
 	});
 
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('default', ['jshint', 'qunit', 'clean', 'concat', 'uglify', 'grunticon:tablesaw', 'bytesize']);
+	grunt.registerTask('src', ['jshint', 'qunit', 'concat', 'uglify', 'myth']);
+	grunt.registerTask('default', ['src', 'grunticon:tablesaw', 'bytesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);

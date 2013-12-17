@@ -98,7 +98,6 @@ _(Nothing yet)_
 ## TODO
 
 * Generate a zip file that can be downloaded (includes minified/full sources, icons)
-* Make the colors themeable
 * Tests
 * Add to bower
 * Add VanillaJS/non-jQuery version

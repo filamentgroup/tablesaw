@@ -6,6 +6,15 @@
 * Licensed under the MIT, GPL licenses.
 */
 
+:root {
+	var-button-text: #1c95d4;
+	var-button-selected-background: #29abe2;
+	var-button-checkbox-selected-background: #34a3de;
+	var-button-selected-shadow: rgba(0,75,115,.45);
+	var-button-interaction-text: #208de3;
+	var-button-interaction-shadow: #4faeef;
+}
+
 .tablesaw-enhanced .tablesaw-bar .btn {
 	border: 1px solid #ccc;
 	background: none;
@@ -26,34 +35,23 @@
 	width: 100%;
 
 	/* Theming */
-	background-image: -webkit-linear-gradient( top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
-	background-image: -moz-linear-gradient( top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
 	background-image: linear-gradient( top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
 
 	-webkit-appearance: none !important;
 	-moz-appearance: none !important;
 	appearance: none !important;
 
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 
 	-webkit-font-smoothing: antialiased;
 
 	border-radius: .25em;
 	opacity: 1;
-	/*
-	-webkit-transition: background .1s linear, border .1s linear, color .1s linear;
-	-moz-transition: background .1s linear, border .1s linear, color .1s linear;
-	-o-transition: background .1s linear, border .1s linear, color .1s linear;
-	transition: background .1s linear, border .1s linear, color .1s linear;
-	*/
 }
 .tablesaw-enhanced .tablesaw-bar a.btn,
 .tablesaw-enhanced .tablesaw-bar button.btn,
 .tablesaw-enhanced .tablesaw-bar [type="submit"].btn {
-	color: #1c95d4;
+	color: var(button-text);
 }
 .tablesaw-enhanced .tablesaw-bar .btn:hover {
 	text-decoration: none;
@@ -61,16 +59,14 @@
 
 /* Default radio/checkbox styling horizonal controlgroups. */
 .tablesaw-bar .btn-selected:not(.ui-disabled):not(.btn-checkbox) {
-	background-color: #29abe2;
-	background-image: -webkit-linear-gradient( top, rgba( 25,25,100,.25 ) 0%, rgba( 255,255,255,0 ) 70% );
-	background-image: -moz-linear-gradient( top, rgba( 25,25,100,.35,.25 ) 0%, rgba( 255,255,255,0 ) 70% );
+	background-color: var(button-selected-background);
 	background-image: linear-gradient( top, rgba( 25,25,100,.25 ) 0%, rgba( 255,255,255,0 ) 70% );
 	color: #fff;
 	box-shadow: inset 0 2px 8px rgba(0,0,0,.1);
 	text-shadow: 0 -1px 0 rgba(0,0,0,.3);
 }
 .ie-lte8 .tablesaw-bar .btn-selected {
-	background-color: #29abe2;
+	background-color: var(button-selected-background);
 	color: #fff;
 }
 .ie-lte8 .tablesaw-bar .btn-selected.ui-disabled,
@@ -80,8 +76,6 @@
 }
 .tablesaw-enhanced .tablesaw-bar .btn:not(.ui-disabled):active {
 	background-color: #ddd;
-	background-image: -webkit-linear-gradient( top, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
-	background-image: -moz-linear-gradient( top, rgba( 25,25,100,.35,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
 	background-image: linear-gradient( top, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
 }
 .ie-lte8 .tablesaw-bar .btn:active {
@@ -92,19 +86,19 @@
 }
 .tablesaw-enhanced .tablesaw-bar .btn:not(.ui-disabled):hover,
 .tablesaw-enhanced .tablesaw-bar .btn:not(.ui-disabled):focus {
-	color: #208de3;
+	color: var(button-interaction-text);
 	background-color: #fff;
 	outline: none;
 }
 .tablesaw-bar .btn:not(.ui-disabled):focus {
-	box-shadow: 0 0 .35em rgba(80,175,240,1) !important;
+	box-shadow: 0 0 .35em var(button-interaction-shadow) !important;
 }
 .tablesaw-bar .btn.btn-checkbox:not(.ui-disabled) input:focus+* {
-	color: #208de3;
+	color: var(button-interaction-text);
 }
 .ie-lte8 .tablesaw-bar .btn:hover,
 .ie-lte8 .tablesaw-bar .btn:focus {
-	color: #208de3;
+	color: var(button-interaction-text);
 	background-color: #fff;
 	border-color: #aaa;
 	outline: none;
@@ -214,8 +208,6 @@
 	height: 1.15em;
 	width: 1.15em;
 	background-color: #eee;
-	background-image: -webkit-linear-gradient( top, rgba( 0,0,0,.15 ) 0%, rgba( 255,255,255,0 ) 70% );
-	background-image: -moz-linear-gradient( top, rgba( 0,0,0,.15 ) 0%, rgba( 255,255,255,0 ) 70% );
 	background-image: linear-gradient( top, rgba( 0,0,0,.15 ) 0%, rgba( 255,255,255,0 ) 70% );
 	background-repeat: none;
 	border-radius: .25em;
@@ -264,17 +256,13 @@
 }
 
 .tablesaw-bar .btn-selected.btn-checkbox:after {
-	box-shadow: 0 1px 0 rgba(255,255,255,1), inset 0 1px 5px rgba(0,75,115,.45);
-	background-color: #34a3de;
+	box-shadow: 0 1px 0 rgba(255,255,255,1), inset 0 1px 5px var(button-selected-shadow);
+	background-color: var(button-checkbox-selected-background);
 	color: #fff;
 	background-size: 115% 115%;
 	background-position: -1px -1px;
 }
 
-.tablesaw-bar .btn-selected.btn-checkbox.theme-dream:after {
-	background-color: #f9c345;
-	box-shadow: inset 0 0 7px rgba(0,0,0,.25);
-}
 /* Themes */
 
 /* Simplified */
