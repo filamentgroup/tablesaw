@@ -35,7 +35,6 @@ module.exports = function(grunt) {
 			css: {
 				src: [
 					'src/tables.btnmarkup.css',
-					'src/tables.controlgroup.css',
 					'src/tables.css',
 					'src/tables.swipetoggle.css',
 					'src/tables.columntoggle.css',
@@ -107,11 +106,11 @@ module.exports = function(grunt) {
 				options: {
 					loadersnippet: 'grunticon.loader.js',
 					customselectors: {
-						"arrow-gray-down": [".tablesaw-bar .tablesaw-columntoggle-btnwrap > a", ".enhanced .icon-arrow-gray-down"],
+						"arrow-gray-down": [".tablesaw-bar .tablesaw-columntoggle-btnwrap > a.btn"],
 						"sort-ascending": [".sortable-head.sortable-ascending button:after"],
 						"sort-descending": [".sortable-head.sortable-descending button:after"],
-						"arrow-gray-right": [".tablesaw-bar .tablesaw-advance > .btn.right", ".enhanced .icon-arrow-gray-right"],
-						"arrow-gray-left": [".tablesaw-bar .tablesaw-advance > .btn.left", ".enhanced .icon-arrow-gray-left"],
+						"arrow-gray-right": [".tablesaw-bar .tablesaw-advance > .btn.right"],
+						"arrow-gray-left": [".tablesaw-bar .tablesaw-advance > .btn.left"],
 						"check": [".btn-selected.btn-checkbox:after"]
 					}
 				}

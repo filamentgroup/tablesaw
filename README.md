@@ -101,8 +101,6 @@ _(Nothing yet)_
 * Make the colors themeable
 * Tests
 * Add to bower
-* Extra CSS/JS in btnmarkup, controlgroup
-* Prune/cleanup non-scoped CSS
 * Clean up global event names (careful with overly generic names like `tablecreate`)
 * These docs suck
 * Add VanillaJS/non-jQuery version

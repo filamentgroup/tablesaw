@@ -12,23 +12,6 @@
 	display: inline-block;
 }
 
-.tablesaw-columntoggle-btnwrap.left {
-	float: left;
-}
-.left + .tablesaw {
-	float: left;
-}
-.left .btn.tablesaw-columntoggle-btn {
-	float: left;
-	background-position: 90% 50%;
-	width: auto;
-}
-.left .btn.tablesaw-columntoggle-btn span {
-	text-indent: 0;
-	margin-right: 2em;
-	color: #4a4a4a;
-}
-
 .tablesaw-columntoggle-btnwrap .dialog-content {
 	padding: 0;
 }
@@ -174,4 +157,28 @@
 	.tablesaw-columntoggle td.tablesaw-cell-visible {
 		display: table-cell;
 	}
+}
+
+/* Vertical Button Grouping (default) */
+.tablesaw-columntoggle-popup .btn-group {
+	margin: 0;
+	padding: 0;
+}
+.tablesaw-columntoggle-popup .btn-group .btn {
+	margin: 0;
+}
+.tablesaw-columntoggle-popup .btn-group > .btn {
+	margin-top: 0;
+	border-radius: 0;
+	border-top-width: 0;
+	width: 100%; 
+}
+.tablesaw-columntoggle-popup .btn-group > .btn:first-child {
+	border-top-width: 1px;
+	border-top-left-radius: .25em;
+	border-top-right-radius: .25em;
+}
+.tablesaw-columntoggle-popup .btn-group > .btn:last-child {
+	border-bottom-left-radius: .25em;
+	border-bottom-right-radius: .25em;
 }

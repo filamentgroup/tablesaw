@@ -322,7 +322,7 @@ table tbody td {
 	font-size: .8125em;
 	padding: .4em .7em .25em .7em;
 }
-.tablesaw-advance a.tablesaw-nav-btn {
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
 	*display: inline;
 	zoom: 1;
 	display: inline-block;
@@ -360,14 +360,16 @@ table tbody td {
 	margin-right: .5em;
 	text-transform:uppercase;
 }
-.tablesaw-bar .btn {
+.tablesaw-bar .btn,
+.enhanced .tablesaw-bar .btn {
 	margin-top: .5em;
 	margin-bottom: .5em;
 }
-.tablesaw-bar .btn-select {
+.tablesaw-bar .btn-select,
+.enhanced .tablesaw-bar .btn-select {
 	margin-bottom: 0;
 }
-.tablesaw-toolbar .btn {
+.tablesaw-bar .tablesaw-toolbar .btn {
 	margin-left: .4em;
 	margin-top: 0;
 	text-transform:uppercase;
@@ -378,13 +380,13 @@ table tbody td {
 	font-size: 1em;
 	padding-left: .3em;
 }
-.tablesaw-toolbar .btn-select {
+.tablesaw-bar .tablesaw-toolbar .btn-select {
 	min-width: 0;
 }
-.tablesaw-toolbar .btn-select:after {
+.tablesaw-bar .tablesaw-toolbar .btn-select:after {
 	padding-top: .9em;
 }
-.tablesaw-toolbar select {
+.tablesaw-bar .tablesaw-toolbar select {
 	color: #888;
 	text-transform: none;
 	background: transparent;
