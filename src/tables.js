@@ -26,6 +26,7 @@
 			create: "tablecreate",
 			destroy: "tabledestroy"
 		},
+		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
 		mode: "stack",
 		initSelector : "table",
@@ -229,6 +230,7 @@
 			$popup = $( "<div class='dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
 			$menu = $( "<div class='btn-group'></div>" );
 
+			var hasNonPersistentHeaders = false;
 			$(this.headers).not( "td" ).each( function() {
 				var $this = $( this ),
 					priority = $this.attr("data-priority"),
@@ -242,8 +244,14 @@
 						.trigger('enhance')
 						.children( 0 )
 						.data( "cells", $cells );
+
+					hasNonPersistentHeaders = true;
 				}
 			});
+
+			if( !hasNonPersistentHeaders ) {
+				$menu.append( '<label class="btn theme-simple">' + o.columnsDialogError + '</label>' );
+			}
 
 			$menu.find( '.btn' ).btn();
 			$menu.appendTo( $popup );
