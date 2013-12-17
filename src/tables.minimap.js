@@ -7,7 +7,7 @@
 
 	var MM = {
 		attr: {
-			init: 'data-tablesaw-minimap'
+			init: 'data-minimap'
 		}
 	};
 
@@ -23,7 +23,7 @@
 			$dotNav.append( '<li><i></i></li>' );
 		});
 
-		$btns.appendTo( $table.prev( '.ui-table-bar' ) );
+		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
 		function showMinimap( $table ) {
 			var mq = $table.attr( MM.attr.init );
@@ -58,7 +58,7 @@
 			.bind( "tabledestroy.minimap", function(){
 				var $t = $( this );
 
-				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
+				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
 				$t.unbind( ".minimap" );

@@ -10,17 +10,17 @@
 	var o = {
 		pluginName : "table",
 		classes : {
-			stackTable: "ui-table-stack",
-			cellLabels: "ui-table-cell-label",
-			popup: "ui-table-columntoggle-popup",
-			columnBtnContain: "ui-table-columntoggle-btnwrap tablesaw-advance",
-			columnBtn: "ui-table-columntoggle-btn ui-table-nav-btn",
-			priorityPrefix: "ui-table-priority-",
-			columnToggleTable: "ui-table-columntoggle",
-			collapsibleCell: "ui-table-cell-collapsible",
-			collapsibleRow: "ui-table-row-collapsible",
+			stackTable: "tablesaw-stack",
+			cellLabels: "tablesaw-cell-label",
+			popup: "tablesaw-columntoggle-popup",
+			columnBtnContain: "tablesaw-columntoggle-btnwrap tablesaw-advance",
+			columnBtn: "tablesaw-columntoggle-btn tablesaw-nav-btn",
+			priorityPrefix: "tablesaw-priority-",
+			columnToggleTable: "tablesaw-columntoggle",
+			collapsibleCell: "tablesaw-cell-collapsible",
+			collapsibleRow: "tablesaw-row-collapsible",
 			dialogClass: "",
-			toolbar: "ui-table-bar"
+			toolbar: "tablesaw-bar"
 		},
 		events: {
 			create: "tablecreate",
@@ -135,8 +135,8 @@
 			$t.removeClass( o.classes.columnToggleTable );
 			$t.find( 'th, td' ).each(function() {
 				var $cell = $( this );
-				$cell.removeClass( 'ui-table-cell-hidden' )
-					.removeClass( 'ui-table-cell-visible' );
+				$cell.removeClass( 'tablesaw-cell-hidden' )
+					.removeClass( 'tablesaw-cell-visible' );
 
 				this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
 			});
@@ -173,7 +173,7 @@
 			reverseHeaders.each(function(){
 				var $cells = $( this.cells ),
 					colstart = self.colstart,
-					hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " ui-table-cell-label-top",
+					hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
 					text = $(this).text();
 
 				if( text !== ""  ){
@@ -209,8 +209,8 @@
 					var checked = e.target.checked;
 
 					$( e.target ).data( "cells" )
-						.toggleClass( "ui-table-cell-hidden", !checked )
-						.toggleClass( "ui-table-cell-visible", checked );
+						.toggleClass( "tablesaw-cell-hidden", !checked )
+						.toggleClass( "tablesaw-cell-visible", checked );
 
 					$table.trigger( 'tablecolumns' );
 				};
@@ -266,7 +266,6 @@
 			$popup
 				.appendTo( $btnContain )
 				.dialog( true );
-
 
 			// refresh method
 

@@ -1,15 +1,15 @@
-.ui-table-modeswitch {
+.tablesaw-modeswitch {
 	clear: both;
 }
-.tablesaw-sortable-switch + .ui-table-modeswitch {
+.tablesaw-sortable-switch + .tablesaw-modeswitch {
 	border-top: 1px solid #eae8e6;
 }
 @media (min-width: 40em) {
-	.ui-table-modeswitch {
+	.tablesaw-modeswitch {
 		float: left;
 		clear: none;
 	}
-	.tablesaw-sortable-switch + .ui-table-modeswitch {
+	.tablesaw-sortable-switch + .tablesaw-modeswitch {
 		border-top: none;
 	}
 }

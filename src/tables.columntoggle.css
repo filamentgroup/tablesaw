@@ -3,63 +3,63 @@
 */
 
 /* see Gruntfile.js for grunticon selector */
-.btn.ui-table-columntoggle-btn {
+.btn.tablesaw-columntoggle-btn {
 	float: right;
 }
 
-.btn.ui-table-columntoggle-btn span {
+.btn.tablesaw-columntoggle-btn span {
 	text-indent: -9999px;
 	display: inline-block;
 }
 
-.ui-table-columntoggle-btnwrap.left {
+.tablesaw-columntoggle-btnwrap.left {
 	float: left;
 }
-.left + .ui-table {
+.left + .tablesaw {
 	float: left;
 }
-.left .btn.ui-table-columntoggle-btn {
+.left .btn.tablesaw-columntoggle-btn {
 	float: left;
 	background-position: 90% 50%;
 	width: auto;
 }
-.left .btn.ui-table-columntoggle-btn span {
+.left .btn.tablesaw-columntoggle-btn span {
 	text-indent: 0;
 	margin-right: 2em;
 	color: #4a4a4a;
 }
 
-.ui-table-columntoggle-btnwrap .dialog-content {
+.tablesaw-columntoggle-btnwrap .dialog-content {
 	padding: 0;
 }
-.left.ui-table-columntoggle-btnwrap .dialog-content {
+.left.tablesaw-columntoggle-btnwrap .dialog-content {
 	right: -4.9em;
 }
 
-.ui-table-columntoggle tbody td {
+.tablesaw-columntoggle tbody td {
 	line-height: 1.5;
 }
 
 
 /* Remove top/bottom margins around the fieldcontain on check list */
-.ui-table-columntoggle-popup fieldset {
+.tablesaw-columntoggle-popup fieldset {
 	margin:0;
 }
 
 /* Hide all prioritized columns by default */
 @media only all {
-	th.ui-table-priority-6,
-	td.ui-table-priority-6,
-	th.ui-table-priority-5,
-	td.ui-table-priority-5,
-	th.ui-table-priority-4,
-	td.ui-table-priority-4,
-	th.ui-table-priority-3,
-	td.ui-table-priority-3,
-	th.ui-table-priority-2,
-	td.ui-table-priority-2,
-	th.ui-table-priority-1,
-	td.ui-table-priority-1 {
+	th.tablesaw-priority-6,
+	td.tablesaw-priority-6,
+	th.tablesaw-priority-5,
+	td.tablesaw-priority-5,
+	th.tablesaw-priority-4,
+	td.tablesaw-priority-4,
+	th.tablesaw-priority-3,
+	td.tablesaw-priority-3,
+	th.tablesaw-priority-2,
+	td.tablesaw-priority-2,
+	th.tablesaw-priority-1,
+	td.tablesaw-priority-1 {
 		display: none;
 	}
 }
@@ -67,11 +67,11 @@
 .dialog-background-trans {
 	opacity: 0.0001;
 }
-.ui-table-columntoggle-btnwrap {
+.tablesaw-columntoggle-btnwrap {
 	position: relative;
 	float: right;
 }
-.ui-table-columntoggle-btnwrap .dialog-content {
+.tablesaw-columntoggle-btnwrap .dialog-content {
 	top: 0 !important;
 	right: 1em;
 	left: auto !important;
@@ -79,20 +79,20 @@
 	max-width: 18em;
 	margin: -.5em auto 0;
 }
-.ui-table-columntoggle-btnwrap .btn-group .btn.theme-simple:first-child {
+.tablesaw-columntoggle-btnwrap .btn-group .btn.theme-simple:first-child {
 	margin-top: 0;
 	border-top-right-radius: .5em;
 	border-top-left-radius: .5em;
 }
-.ui-table-columntoggle-btnwrap .btn-group .btn.theme-simple:last-child {
+.tablesaw-columntoggle-btnwrap .btn-group .btn.theme-simple:last-child {
 	border-bottom-right-radius: .5em;
 	border-bottom-left-radius: .5em;
 }
-.ui-table-columntoggle-btnwrap .btn-group .btn.theme-simple {
+.tablesaw-columntoggle-btnwrap .btn-group .btn.theme-simple {
 	margin-bottom: .1em;
 	margin-top: .1em;
 }
-.ui-table-columntoggle-btnwrap .dialog-content:focus {
+.tablesaw-columntoggle-btnwrap .dialog-content:focus {
 	outline-style: none;
 }
 .dialog-table-coltoggle {
@@ -103,75 +103,75 @@
 
 /* Show priority 1 at 320px (20em x 16px) */
 @media screen and (min-width: 20em) {
-	.ui-table-columntoggle th.ui-table-priority-1,
-	.ui-table-columntoggle td.ui-table-priority-1 {
+	.tablesaw-columntoggle th.tablesaw-priority-1,
+	.tablesaw-columntoggle td.tablesaw-priority-1 {
 		display: table-cell;
 	}
 }
 /* Show priority 2 at 480px (30em x 16px) */
 @media screen and (min-width: 30em) {
-	.ui-table-columntoggle th.ui-table-priority-2,
-	.ui-table-columntoggle td.ui-table-priority-2 {
+	.tablesaw-columntoggle th.tablesaw-priority-2,
+	.tablesaw-columntoggle td.tablesaw-priority-2 {
 		display: table-cell;
 	}
 }
 /* Show priority 3 at 640px (40em x 16px) */
 @media screen and (min-width: 40em) {
-	.ui-table-columntoggle th.ui-table-priority-3,
-	.ui-table-columntoggle td.ui-table-priority-3 {
+	.tablesaw-columntoggle th.tablesaw-priority-3,
+	.tablesaw-columntoggle td.tablesaw-priority-3 {
 		display: table-cell;
 	}
 
-	.ui-table-columntoggle tbody td {
+	.tablesaw-columntoggle tbody td {
 		line-height: 2;
 	}
 }
 /* Show priority 4 at 800px (50em x 16px) */
 @media screen and (min-width: 50em) {
-	.ui-table-columntoggle th.ui-table-priority-4,
-	.ui-table-columntoggle td.ui-table-priority-4 {
+	.tablesaw-columntoggle th.tablesaw-priority-4,
+	.tablesaw-columntoggle td.tablesaw-priority-4 {
 		display: table-cell;
 	}
 }
 /* Show priority 5 at 960px (60em x 16px) */
 @media screen and (min-width: 60em) {
-	.ui-table-columntoggle th.ui-table-priority-5,
-	.ui-table-columntoggle td.ui-table-priority-5 {
+	.tablesaw-columntoggle th.tablesaw-priority-5,
+	.tablesaw-columntoggle td.tablesaw-priority-5 {
 		display: table-cell;
 	}
 }
 /* Show priority 6 at 1,120px (70em x 16px) */
 @media screen and (min-width: 70em) {
-	.ui-table-columntoggle th.ui-table-priority-6,
-	.ui-table-columntoggle td.ui-table-priority-6 {
+	.tablesaw-columntoggle th.tablesaw-priority-6,
+	.tablesaw-columntoggle td.tablesaw-priority-6 {
 		display: table-cell;
 	}
 }
 
 @media only all {
-	.table-coltoggle-swipe .ui-table-cell-persist {
+	.table-coltoggle-swipe .tablesaw-cell-persist {
 		border-right: 1px solid #e4e1de;
 	}
-	.table-coltoggle-swipe .ui-table-cell-persist {
+	.table-coltoggle-swipe .tablesaw-cell-persist {
 		box-shadow: 3px 0 4px -1px #e4e1de;
 	}
-	.table-coltoggle-swipe.report-data  tbody .ui-table-cell-persist {
+	.table-coltoggle-swipe.report-data  tbody .tablesaw-cell-persist {
 		background-color: #f5f4f3;
 	}
-	.table-coltoggle-swipe.report-data  tbody tr:nth-child(even) .ui-table-cell-persist {
+	.table-coltoggle-swipe.report-data  tbody tr:nth-child(even) .tablesaw-cell-persist {
 		background-color: #efedec;
 	}
 	/* Unchecked manually: Always hide */
-	.table-coltoggle-swipe th.ui-table-cell-hidden,
-	.table-coltoggle-swipe td.ui-table-cell-hidden,
-	.ui-table-columntoggle th.ui-table-cell-hidden,
-	.ui-table-columntoggle td.ui-table-cell-hidden {
+	.table-coltoggle-swipe th.tablesaw-cell-hidden,
+	.table-coltoggle-swipe td.tablesaw-cell-hidden,
+	.tablesaw-columntoggle th.tablesaw-cell-hidden,
+	.tablesaw-columntoggle td.tablesaw-cell-hidden {
 		display: none;
 	}
 
 	/* Checked manually: Always show */
-	.ui-table-columntoggle th.ui-table-cell-visible,
-	.ui-table-columntoggle td.ui-table-cell-visible {
+	.tablesaw-columntoggle th.tablesaw-cell-visible,
+	.tablesaw-columntoggle td.tablesaw-cell-visible {
 		display: table-cell;
 	}
 }

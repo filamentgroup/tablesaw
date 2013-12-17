@@ -9,8 +9,8 @@
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
-			$prevBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
-			$nextBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
+			$prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
+			$nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
 			hideBtn = 'disabled',
 			persistWidths = 'tablesaw-fix-persist',
 			$headerCells = $table.find( "thead th" ),
@@ -26,7 +26,7 @@
 		});
 		$table.css( 'width', '' );
 
-		$btns.appendTo( $table.prev( '.ui-table-bar' ) );
+		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
 		$table.addClass( "table-coltoggle-swipe" );
 
@@ -40,15 +40,15 @@
 		}
 
 		function showColumn( headerCell ) {
-			$getCells( headerCell ).removeClass( 'ui-table-cell-hidden' );
+			$getCells( headerCell ).removeClass( 'tablesaw-cell-hidden' );
 		}
 
 		function hideColumn( headerCell ) {
-			$getCells( headerCell ).addClass( 'ui-table-cell-hidden' );
+			$getCells( headerCell ).addClass( 'tablesaw-cell-hidden' );
 		}
 
 		function persistColumn( headerCell ) {
-			$getCells( headerCell ).addClass( 'ui-table-cell-persist' );
+			$getCells( headerCell ).addClass( 'tablesaw-cell-persist' );
 		}
 
 		function isPersistent( headerCell ) {
@@ -72,7 +72,7 @@
 
 					// Don’t persist greedy columns (take up more than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
-						styles.push( prefix + ' .ui-table-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
+						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
 					}
 				}
 			});
@@ -218,7 +218,7 @@
 				var $t = $( this );
 
 				$t.removeClass( 'table-coltoggle-swipe' );
-				$t.prev( '.ui-table-bar' ).find( '.tablesaw-advance' ).remove();
+				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
 				$t.unbind( ".swipetoggle" );

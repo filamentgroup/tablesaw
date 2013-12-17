@@ -10,7 +10,7 @@
 				var $el = $( el );
 				if( $el.is( 'input, select' ) ) {
 					return $el.val();
-				} else if( $el.hasClass( 'ui-table-cell-label' ) ) {
+				} else if( $el.hasClass( 'tablesaw-cell-label' ) ) {
 					return;
 				}
 				return $.trim( $el.text() );
@@ -26,7 +26,7 @@
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: topLevelPluginName + "-switch",
-			tableToolbar: 'ui-table-toolbar'
+			tableToolbar: 'tablesaw-toolbar'
 		},
 		i18n = {
 			sort: 'Sort'
@@ -134,7 +134,7 @@
 							return html.join('');
 						});
 
-						var $toolbar = el.prev( '.ui-table-bar' ),
+						var $toolbar = el.prev( '.tablesaw-bar' ),
 							$firstChild = $toolbar.children().eq( 0 );
 
 						if( $firstChild.length ) {

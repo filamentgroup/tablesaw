@@ -8,8 +8,8 @@
 			excludeMode: 'data-mode-exclude'
 		},
 		classes: {
-			main: 'ui-table-modeswitch',
-			toolbar: 'ui-table-toolbar'
+			main: 'tablesaw-modeswitch',
+			toolbar: 'tablesaw-toolbar'
 		},
 		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		i18n: {
@@ -19,7 +19,7 @@
 		init: function( table ) {
 			var $table = $( table ),
 				ignoreMode = $table.attr( S.attributes.excludeMode ),
-				$toolbar = $table.prev( '.ui-table-bar' ),
+				$toolbar = $table.prev( '.tablesaw-bar' ),
 				modeVal = '',
 				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
 					var html = [ '<label>' + S.i18n.columns + ':' ],
@@ -60,7 +60,7 @@
 		onModeChange: function() {
 			var $t = $( this ),
 				$switcher = $t.closest( '.' + S.classes.main ),
-				$table = $t.closest( '.ui-table-bar' ).nextUntil( $table ).eq( 0 ),
+				$table = $t.closest( '.tablesaw-bar' ).nextUntil( $table ).eq( 0 ),
 				val = $t.val();
 
 			$switcher.remove();

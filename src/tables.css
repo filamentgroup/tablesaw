@@ -25,38 +25,38 @@ table tbody td {
 }
 
 
-.ui-table {
+.tablesaw {
 	border: 0;
 	border-collapse: collapse;
 	padding: 0;
 	width: 100%;
 }
-.ui-table a {
+.tablesaw a {
 	white-space: nowrap;
 	display: block;
 	overflow: hidden;
 }
-.ui-table .user-thumb {
+.tablesaw .user-thumb {
 	width: 32px;
 	height: 32px;
 	margin: .1em .6em 0 0;
 }
-.ui-table th,
-.ui-table td {
+.tablesaw th,
+.tablesaw td {
 	line-height: 1em;
 	text-align: left;
 	vertical-align: middle;
 }
-.ui-table td,
-.ui-table tbody th {
+.tablesaw td,
+.tablesaw tbody th {
 	vertical-align: middle;
 	font-size: 1.17em; /* 19px */
 }
-.ui-table td .btn,
-.ui-table tbody th .btn {
+.tablesaw td .btn,
+.tablesaw tbody th .btn {
 	margin:0;
 }
-.ui-table tbody th.group {
+.tablesaw tbody th.group {
 	font-family: sans-serif;
 	font-size:1em;
 	text-transform: uppercase;
@@ -69,7 +69,7 @@ table tbody td {
 	background-color:#f7f7f7;
 }
 
-.ui-table thead {
+.tablesaw thead {
 	border: 1px solid #e5e5e4;
 	position:relative;
 	background: #e2dfdc;
@@ -79,7 +79,7 @@ table tbody td {
 	background-image: -o-linear-gradient(top, #ffffff, #e2dfdc);
 	background-image: linear-gradient(to bottom, #ffffff, #e2dfdc);
 }
-.ui-table thead th {
+.tablesaw thead th {
 	position: relative;
 	padding: .6em .8em;
 	font-weight: 100;
@@ -88,7 +88,7 @@ table tbody td {
 	text-shadow: 0 1px 0 #fff;
 	text-align: left;
 }
-.ui-table thead tr:first-child th {
+.tablesaw thead tr:first-child th {
 	font-weight: normal;
 	padding-top: .9em;
 	padding-bottom: .7em;
@@ -96,7 +96,7 @@ table tbody td {
 	border-right: 1px solid #e4e1de;
 }
 
-.ui-table thead .group-top {
+.tablesaw thead .group-top {
 	background: #f7f3ed;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#f7f3ed));
 	background-image: -webkit-linear-gradient(top, #ffffff, #f7f3ed);
@@ -104,7 +104,7 @@ table tbody td {
 	background-image: -o-linear-gradient(top, #ffffff, #f7f3ed);
 	background-image: linear-gradient(to bottom, #ffffff, #f7f3ed);
 }
-.ui-table thead .group-bottom {
+.tablesaw thead .group-bottom {
 	background: #f7f3ed;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f3ed), to(#e2dfdc));
 	background-image: -webkit-linear-gradient(top, #f7f3ed, #e2dfdc);
@@ -114,14 +114,14 @@ table tbody td {
 }
 
 /* Table rows have a gray bottom stroke by default */ 
-.ui-table tbody tr {
+.tablesaw tbody tr {
 	border-bottom: 1px solid #dfdfdf;
 }
 /* Optional white row striping for dark tables */ 
-.ui-table.row-stripe-white tbody tr {
+.tablesaw.row-stripe-white tbody tr {
 	border-bottom: none;
 }
-.ui-table.row-stripe-white tbody tr:nth-child(odd) {
+.tablesaw.row-stripe-white tbody tr:nth-child(odd) {
 	background: #fff;
 }
 
@@ -129,13 +129,13 @@ table tbody td {
 .report-data tbody tr {
 	border: none;
 }
-.ui-table.report-data tbody td,
-.ui-table.report-data tbody th {
+.tablesaw.report-data tbody td,
+.tablesaw.report-data tbody th {
 	border-right: 1px solid #e6e6e6;
 	border-bottom: 0;
 }
-.ui-table.report-data tbody td:first-child,
-.ui-table.report-data tbody th:first-child {
+.tablesaw.report-data tbody td:first-child,
+.tablesaw.report-data tbody th:first-child {
 	border-left: 1px solid #e6e6e6;
 }
 .report-data tbody tr:nth-child(even) {
@@ -153,23 +153,23 @@ table tbody td {
 
 
 
-.ui-table td a {
+.tablesaw td a {
 	font-weight:bold;
 }
-.ui-table caption {
+.tablesaw caption {
 	text-align:left;
 	margin-bottom:1.4em;
 	opacity:50%;
 }
 
-.ui-table thead tr.th-groups th {
+.tablesaw thead tr.th-groups th {
 	font-family: sans-serif;
 	font-weight: bold;
 	color:#777;
 }
 
 /* Column color coding */
-.ui-table thead th .swatch {
+.tablesaw thead th .swatch {
 	width: 100%;
 	height: 4px;
 	display: block;
@@ -181,15 +181,15 @@ table tbody td {
 /*
  Styles for the table stack mode
 */
-.ui-table-stack td .ui-table-cell-label,
-.ui-table-stack th .ui-table-cell-label {
+.tablesaw-stack td .tablesaw-cell-label,
+.tablesaw-stack th .tablesaw-cell-label {
 	display: none;
 }
 
-.ui-table .nope {
+.tablesaw .nope {
 	position: relative;
 }
-.ui-table .error {
+.tablesaw .error {
 	outline: 1px solid #d22d2e;
 	background: #fbe8e8;
 }
@@ -197,26 +197,26 @@ table tbody td {
 /* Mobile first styles: Begin with the stacked presentation at narrow widths */ 
 @media only all {
 	/* Show the table cells as a block level element */ 
-	.ui-table-stack td,
-	.ui-table-stack th { 
+	.tablesaw-stack td,
+	.tablesaw-stack th { 
 		text-align: left;
 		display: block;
 	}
-	.ui-table-stack tr {
+	.tablesaw-stack tr {
 		clear: both;
 		display: table-row;
 	}
 	/* Make the label elements a percentage width */ 
-	.ui-table-stack td .ui-table-cell-label,
-	.ui-table-stack th .ui-table-cell-label { 
+	.tablesaw-stack td .tablesaw-cell-label,
+	.tablesaw-stack th .tablesaw-cell-label { 
 		display: block;
 		padding: 0 .6em 0 0;
 		min-width: 30%; 
 		display: inline-block; 
 	}
 	/* For grouped headers, have a different style to visually separate the levels by classing the first label in each col group */ 
-	.ui-table-stack th .ui-table-cell-label-top,
-	.ui-table-stack td .ui-table-cell-label-top {
+	.tablesaw-stack th .tablesaw-cell-label-top,
+	.tablesaw-stack td .tablesaw-cell-label-top {
 		display: block;
 		padding: .4em 0;
 		margin: .4em 0;
@@ -224,7 +224,7 @@ table tbody td {
 		font-size: .9em;
 		font-weight: normal;
 	}
-	.ui-table-cell-label {
+	.tablesaw-cell-label {
 		display: block;
 		font-size: .65em;
 		text-transform: uppercase;
@@ -232,23 +232,23 @@ table tbody td {
 		font-family: sans-serif;
 	}
 	/* Avoid double strokes when stacked */
-	.ui-table-stack tbody th.group {
+	.tablesaw-stack tbody th.group {
 		border-bottom: none;
 		margin-top:-1px;
 	}
 	/* Avoid double strokes when stacked */
-	.ui-table-stack th.group b.ui-table-cell-label {
+	.tablesaw-stack th.group b.tablesaw-cell-label {
 		display: none !important;
 	}
 
-	.ui-table-stack .ui-table-row-collapsible {
+	.tablesaw-stack .tablesaw-row-collapsible {
 		cursor: pointer;
 	}
-	.ui-table-stack .ui-table-row-collapsible .ui-table-cell-collapsible {
+	.tablesaw-stack .tablesaw-row-collapsible .tablesaw-cell-collapsible {
 		display: none;
 	}
 
-	.ui-table-stack .ui-table-row-collapsible.open .ui-table-cell-collapsible {
+	.tablesaw-stack .tablesaw-row-collapsible.open .tablesaw-cell-collapsible {
 		display: block;
 	}
 }
@@ -256,54 +256,54 @@ table tbody td {
 @media (max-width: 40em) {
 	/* Avoid double top borders when stacked.  */ 
 	table[data-mode="stack"] thead,
-	.ui-table.ui-table-stack thead {
+	.tablesaw.tablesaw-stack thead {
 		border-top: 0;
 	}
 	table[data-mode="stack"] thead td,
 	table[data-mode="stack"] thead th,
-	.ui-table-stack thead td,
-	.ui-table-stack thead th {
+	.tablesaw-stack thead td,
+	.tablesaw-stack thead th {
 		display: none;
 	}
 }
 
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */ 
 @media (min-width: 40em) {
-	.ui-table-stack tr {
+	.tablesaw-stack tr {
 		display: table-row;
 	}
 	/* Show the table header rows */ 
-	.ui-table-stack td,
-	.ui-table-stack th,
-	.ui-table-stack tbody th,
-	.ui-table-stack tbody td,
-	.ui-table-stack thead td,
-	.ui-table-stack thead th {
+	.tablesaw-stack td,
+	.tablesaw-stack th,
+	.tablesaw-stack tbody th,
+	.tablesaw-stack tbody td,
+	.tablesaw-stack thead td,
+	.tablesaw-stack thead th {
 		display: table-cell;
 		margin: 0;
 	}
 	/* Hide the labels in each cell */ 
-	.ui-table-stack td .ui-table-cell-label,
-	.ui-table-stack th .ui-table-cell-label { 
+	.tablesaw-stack td .tablesaw-cell-label,
+	.tablesaw-stack th .tablesaw-cell-label { 
 		display: none !important;
 	}
 
-	.ui-table-stack .ui-table-row-collapsible {
+	.tablesaw-stack .tablesaw-row-collapsible {
 		cursor: default;
 	}
 
-	.ui-table-stack .ui-table-row-collapsible.open .ui-table-cell-collapsible,
-	.ui-table-stack .ui-table-row-collapsible .ui-table-cell-collapsible {
+	.tablesaw-stack .tablesaw-row-collapsible.open .tablesaw-cell-collapsible,
+	.tablesaw-stack .tablesaw-row-collapsible .tablesaw-cell-collapsible {
 		display: none;
 	}
 
-	.ui-table td {
+	.tablesaw td {
 		line-height: 2em;
 	}
 }
 
 /* Column navigation buttons for swipe and columntoggle tables */
-.ui-table-bar .tablesaw-advance {
+.tablesaw-bar .tablesaw-advance {
 	position: relative;
 	top: -2.6em;
 }
@@ -322,7 +322,7 @@ table tbody td {
 	font-size: .8125em;
 	padding: .4em .7em .25em .7em;
 }
-.tablesaw-advance a.ui-table-nav-btn {
+.tablesaw-advance a.tablesaw-nav-btn {
 	*display: inline;
 	zoom: 1;
 	display: inline-block;
@@ -332,27 +332,27 @@ table tbody td {
 	background-position: 50% 50%;
 	margin-left: .5em;
 }
-.tablesaw-advance a.ui-table-nav-btn.disabled {
+.tablesaw-advance a.tablesaw-nav-btn.disabled {
 	opacity: .25;
 	cursor: default;
 	pointer-events: none;
 }
 
 /* Table Toolbar */
-.ui-table-bar {
+.tablesaw-bar {
 	clear: both;
 	font-family: sans-serif;
 }
-.ui-table-bar.mode-swipe,
-.ui-table-bar.mode-columntoggle {
+.tablesaw-bar.mode-swipe,
+.tablesaw-bar.mode-columntoggle {
 	margin-top: -2em;
 	position: relative;
 	top: 2em;
 }
-.ui-table-toolbar {
+.tablesaw-toolbar {
 	font-size: .875em;
 }
-.ui-table-toolbar label {
+.tablesaw-toolbar label {
 	padding: .5em 0;
 	clear: both;
 	display: block;
@@ -360,14 +360,14 @@ table tbody td {
 	margin-right: .5em;
 	text-transform:uppercase;
 }
-.ui-table-bar .btn {
+.tablesaw-bar .btn {
 	margin-top: .5em;
 	margin-bottom: .5em;
 }
-.ui-table-bar .btn-select {
+.tablesaw-bar .btn-select {
 	margin-bottom: 0;
 }
-.ui-table-toolbar .btn {
+.tablesaw-toolbar .btn {
 	margin-left: .4em;
 	margin-top: 0;
 	text-transform:uppercase;
@@ -378,21 +378,21 @@ table tbody td {
 	font-size: 1em;
 	padding-left: .3em;
 }
-.ui-table-toolbar .btn-select {
+.tablesaw-toolbar .btn-select {
 	min-width: 0;
 }
-.ui-table-toolbar .btn-select:after {
+.tablesaw-toolbar .btn-select:after {
 	padding-top: .9em;
 }
-.ui-table-toolbar select {
+.tablesaw-toolbar select {
 	color: #888;
 	text-transform: none;
 	background: transparent;
 }
-.ui-table-toolbar ~ table {
+.tablesaw-toolbar ~ table {
 	clear: both;
 }
-.ui-table-toolbar .a11y-sm {
+.tablesaw-toolbar .a11y-sm {
 	clip: rect(0 0 0 0);
 	height: 1px;
 	overflow: hidden;
@@ -400,7 +400,7 @@ table tbody td {
 	width: 1px;
 }
 @media (min-width: 24em) {
-	.ui-table-toolbar .a11y-sm {
+	.tablesaw-toolbar .a11y-sm {
 		clip: none;
 		height: auto;
 		width: auto;
@@ -409,15 +409,15 @@ table tbody td {
 	}
 }
 @media (min-width: 40em) {
-	.ui-table-bar.mode-swipe,
-	.ui-table-bar.mode-columntoggle {
+	.tablesaw-bar.mode-swipe,
+	.tablesaw-bar.mode-columntoggle {
 		margin-top: 0;
 		top: 0;
 	}
-	.ui-table-bar .tablesaw-advance {
+	.tablesaw-bar .tablesaw-advance {
 		position: static;
 	}
-	.ui-table-bar {
+	.tablesaw-bar {
 		margin-top: 0;
 		position: static;
 	}
