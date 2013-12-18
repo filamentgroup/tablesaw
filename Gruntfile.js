@@ -140,7 +140,7 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('src', ['jshint', 'qunit', 'concat', 'uglify', 'myth']);
+	grunt.registerTask('src', ['jshint', 'concat', 'qunit', 'uglify', 'myth']);
 	grunt.registerTask('default', ['src', 'grunticon:tablesaw', 'bytesize']);
 
 	// Deploy
