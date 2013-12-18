@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.0.1 - 2013-12-17
+/*! Tablesaw - v0.0.1 - 2013-12-18
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 ;(function( $ ) {
@@ -492,7 +492,7 @@
 
 		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
-		$table.addClass( "table-coltoggle-swipe" );
+		$table.addClass( "tablesaw-swipe" );
 
 		if( !tableId ) {
 			tableId = 'tableswipe-' + Math.round( Math.random() * 10000 );
@@ -681,7 +681,7 @@
 			.bind( "tablesawdestroy.swipetoggle", function(){
 				var $t = $( this );
 
-				$t.removeClass( 'table-coltoggle-swipe' );
+				$t.removeClass( 'tablesaw-swipe' );
 				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
