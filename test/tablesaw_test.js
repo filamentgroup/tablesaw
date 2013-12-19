@@ -101,6 +101,15 @@
 		ok( $table.hasClass( 'tablesaw-swipe' ), 'Has initialization class.' );
 	});
 
+	module( 'tablesaw Sortable without a Mode', {
+		setup: setup( 'data-sortable' )
+	});
+
+	test( 'Sortable still initializes without a data-mode', function() {
+		ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
+		ok( $table.find( '.sortable-head' ).length > 0, 'Header has sort class.' );
+	});
+
 	module( 'tablesaw Sortable', {
 		setup: setup( 'data-mode="columntoggle" data-sortable' )
 	});

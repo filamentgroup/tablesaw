@@ -26,7 +26,7 @@
 		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
 		mode: "stack",
-		initSelector : "table[data-mode]",
+		initSelector: "table[data-mode],table[data-sortable]",
 		columnBtnSide: "right"
 	},
 	methods = {
