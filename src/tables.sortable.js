@@ -175,7 +175,7 @@
 						var cells = [];
 						$.each( rows , function( i , r ){
 							cells.push({
-								cell: getSortValue( r.childNodes[ 2*colNum + 1 ] ),
+								cell: getSortValue( $( r ).children().get( colNum ) ),
 								rowNum: i
 							});
 						});
