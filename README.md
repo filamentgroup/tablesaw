@@ -86,18 +86,30 @@ All of the above options combined into a single table.
 
 ## Getting Started
 
+Use with [Respond.js](https://github.com/scottjehl/Respond) for IE8- support. The `columntoggle` mode requires the [Filament Group dialog](https://github.com/filamentgroup/dialog). Install all dependencies easily using bower:
+
+    bower install
+
 ```html
-<link rel="stylesheet" href="tablesaw.css"></script>
-<script src="jquery.js"></script>
+<link rel="stylesheet" href="bower_components/filament-dialog/dialog.css">
+<link rel="stylesheet" href="tablesaw.css">
+
+<!--[if lt IE 9]><script src="respond.min.js"></script><!--<![endif]-->
+<script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/filament-dialog/dialog.js"></script>
 <script src="tablesaw.js"></script>
 ```
 
+Next include the tablesaw icons in `src/icons` with your grunticon build and include the grunticon loader.
+
+Check out any of the demos above for complete working examples.
+
 ## Release History
-_(Nothing yet)_
 
 ## TODO
 
+* Add `data-minimap` example + docs
+* Add gifs
 * Generate a zip file that can be downloaded (includes minified/full sources, icons)
-* Tests
 * Add to bower
 * Add VanillaJS/non-jQuery version
