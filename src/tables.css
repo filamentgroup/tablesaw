@@ -141,17 +141,6 @@ table.tablesaw tbody td {
 	.tablesaw-stack th.group b.tablesaw-cell-label {
 		display: none !important;
 	}
-
-	.tablesaw-stack .tablesaw-row-collapsible {
-		cursor: pointer;
-	}
-	.tablesaw-stack .tablesaw-row-collapsible .tablesaw-cell-collapsible {
-		display: none;
-	}
-
-	.tablesaw-stack .tablesaw-row-collapsible.open .tablesaw-cell-collapsible {
-		display: block;
-	}
 }
 
 @media (max-width: 40em) {
@@ -188,16 +177,6 @@ table.tablesaw tbody td {
 	.tablesaw-stack th .tablesaw-cell-label { 
 		display: none !important;
 	}
-
-	.tablesaw-stack .tablesaw-row-collapsible {
-		cursor: default;
-	}
-
-	.tablesaw-stack .tablesaw-row-collapsible.open .tablesaw-cell-collapsible,
-	.tablesaw-stack .tablesaw-row-collapsible .tablesaw-cell-collapsible {
-		display: none;
-	}
-
 	.tablesaw td {
 		line-height: 2em;
 	}

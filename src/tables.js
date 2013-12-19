@@ -16,8 +16,6 @@
 			columnBtn: "tablesaw-columntoggle-btn tablesaw-nav-btn",
 			priorityPrefix: "tablesaw-priority-",
 			columnToggleTable: "tablesaw-columntoggle",
-			collapsibleCell: "tablesaw-cell-collapsible",
-			collapsibleRow: "tablesaw-row-collapsible",
 			dialogClass: "",
 			toolbar: "tablesaw-bar"
 		},
@@ -49,9 +47,6 @@
 				o.classes.dialogClass = $table.attr( "data-dialog-class" );
 			}
 
-			var thrs = this.querySelectorAll( "thead tr" ),
-				trs = this.querySelectorAll( "tbody tr" );
-
 			// Insert the toolbar
 			var $toolbar = $table.prev( '.' + o.classes.toolbar );
 			if( !$toolbar.length ) {
@@ -70,6 +65,7 @@
 			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
 			this.allHeaders = this.querySelectorAll( "th" );
 
+			var thrs = this.querySelectorAll( "thead tr" );
 			$( thrs ).each( function(){
 				var coltally = 0;
 
@@ -93,27 +89,8 @@
 				});
 			});
 
-			$( trs ).each( function(){
-				var row = $( this );
-				if( row.is( "[data-collapsible-row]" ) ){
-
-					row.addClass( o.classes.collapsibleRow );
-					row.on( "click" , _handleCollapse );
-
-					row.children().each( function(){
-						var cell = $( this );
-						if( cell.is( "[data-collapsible-cell]" ) ){
-							cell.addClass( o.classes.collapsibleCell );
-						}
-					});
-				}
-			});
-
-			if( o.mode === "stack" ){
-				$table[ o.pluginName ]( "stack", self );
-			}
-			else if ( o.mode === "columntoggle" ){
-				$table[ o.pluginName ]( "columntoggle", self );
+			if( o.mode === "stack" || o.mode === "columntoggle" ){
+				$table[ o.pluginName ]( o.mode, self );
 			}
 			$table.trigger( o.events.create, [ o.mode ] );
 		},
@@ -302,11 +279,6 @@
 				$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
 			});
 		}
-
-	},
-	_handleCollapse = function(){
-		var row = $( this );
-		row.toggleClass( "open" );
 	};
 
 	// Collection method.

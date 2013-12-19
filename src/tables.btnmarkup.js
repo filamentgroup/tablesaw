@@ -113,7 +113,6 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	// We don’t use autoenhance in tablesaw for buttons, yet.
 	$( document ).on( "enhance", function( e ) {
 		$( initSelector, e.target )[ pluginName ]();
 	});
