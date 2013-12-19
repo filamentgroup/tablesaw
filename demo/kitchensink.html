@@ -10,13 +10,21 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
 	<script src="../bower_components/jquery/jquery.js"></script>
 	<script src="../bower_components/filament-dialog/dialog.js"></script>
 	<script src="../dist/tablesaw.js"></script>
+
+	<script>
+	/* grunticon Stylesheet Loader | https://github.com/filamentgroup/grunticon | (c) 2012 Scott Jehl, Filament Group, Inc. | MIT license. */
+	window.grunticon=function(e){if(e&&3===e.length){var t=window,n=!(!t.document.createElementNS||!t.document.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect||!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image","1.1")||window.opera&&-1===navigator.userAgent.indexOf("Chrome")),o=function(o){var r=t.document.createElement("link"),a=t.document.getElementsByTagName("script")[0];r.rel="stylesheet",r.href=e[o&&n?0:o?1:2],a.parentNode.insertBefore(r,a)},r=new t.Image;r.onerror=function(){o(!1)},r.onload=function(){o(1===r.width&&1===r.height)},r.src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="}};
+			grunticon(["../dist/icons/icons.data.svg.css", "../dist/icons/icons.data.png.css", "../dist/icons/icons.fallback.css"]);
+		</script>
+	<noscript><link href="../dist/icons/icons.fallback.css" rel="stylesheet"></noscript>
 </head>
 <body>
 	<h3 class="docs">Sticky Headers, Swipe Mode, ModeSwitch, Minimap, Sortable, SortableSwitch</h3>
-	<table id="table2" class="ui-table stickyheaders" data-mode="swipe" data-sortable data-sortable-switch data-minimap data-mode-switch>
+	<table id="table2" class="tablesaw stickyheaders" data-mode="swipe" data-sortable data-sortable-switch data-minimap data-mode-switch>
 		<thead>
 			<tr>
 				<th data-sortable-col data-sortable-default-col data-priority="persist">Movie Title</th>
@@ -122,7 +130,7 @@
 	</table>
 
 	<h3 class="docs"><del>Sticky Headers</del>, Swipe Mode, <del>ModeSwitch</del>, Minimap, Sortable, SortableSwitch</h3>
-	<table id="table2" class="ui-table" data-mode="swipe" data-sortable data-sortable-switch data-minimap>
+	<table id="table2" class="tablesaw" data-mode="swipe" data-sortable data-sortable-switch data-minimap>
 		<thead>
 			<tr>
 				<th data-sortable-col data-sortable-default-col data-priority="persist">Movie Title</th>

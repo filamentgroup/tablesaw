@@ -1,37 +1,20 @@
-/*! Tablesaw - v0.1.0 - 2013-12-13
+/*! Tablesaw - v0.0.1 - 2013-12-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 ;(function( $ ) {
-	var TS = {
-		regex: {
-			dir: /tablesaw(\.min)?\.js/i
-		}
-	};
-
-	TS.dir = (function() {
-		var dir;
-
-		$( 'script' ).each(function() {
-			var attr = $( this ).attr( 'data-dist-dir' );
-			if( attr ) {
-				dir = attr;
-				return false;
-			} else if ( this.src && this.src.match( TS.regex.dir ) ) {
-				dir = this.src.replace( TS.regex.dir, '' );
-				return false;
-			}
-		});
-
-		return dir;
-	})();
-
-	window.TableSaw = TS;
-
 	// Cut the mustard
 	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
 		return;
 	} else {
-		$( document.documentElement ).addClass( 'enhanced' );
+		var div = document.createElement('div'),
+			all = div.getElementsByTagName('i'),
+			$doc = $( document.documentElement );
+
+		div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
+		if( all[ 0 ] ) {
+			$doc.addClass( 'ie-lte8' );
+		}
+		$doc.addClass( 'tablesaw-enhanced' );
 
 		// DOM-ready auto-init of plugins.
 		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
@@ -42,81 +25,33 @@
 
 })( jQuery );
 ;(function( $ ) {
-
-	// grunticon Stylesheet Loader | https://github.com/filamentgroup/grunticon | (c) 2012 Scott Jehl, Filament Group, Inc. | MIT license.
-	function grunticon( css ) {
-		// expects a css array with 3 items representing CSS paths to datasvg, datapng, urlpng
-		if( !css || css.length !== 3 ){
-			return;
-		}
-
-		// Thanks Modernizr & Erik Dahlstrom
-		var w = window,
-			svg = !!w.document.createElementNS && !!w.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect && !!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image", "1.1"),
-
-			loadCSS = function( data ){
-				var link = w.document.createElement( "link" ),
-					ref = w.document.getElementsByTagName( "script" )[ 0 ];
-
-				link.rel = "stylesheet";
-				link.href = css[ data && svg ? 0 : data ? 1 : 2 ];
-				ref.parentNode.insertBefore( link, ref );
-			},
-
-			// Thanks Modernizr
-			img = new w.Image();
-
-		img.onerror = function(){
-			loadCSS( false );
-		};
-
-		img.onload = function(){
-			loadCSS( img.width === 1 && img.height === 1 );
-		};
-
-		img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
-	}
-
-	$(function() {
-			grunticon( [ TableSaw.dir + "icons/icons.data.svg.css",
-				TableSaw.dir + "icons/icons.data.png.css",
-				TableSaw.dir + "icons/icons.fallback.css" ] );
-	});
-
-})( jQuery );
-(function( $ ) {
 	var o = {
 		pluginName : "table",
 		classes : {
-			reflowTable: "ui-table-reflow",
-			cellLabels: "ui-table-cell-label",
-			popup: "ui-table-columntoggle-popup",
-			columnBtnContain: "ui-table-columntoggle-btnwrap table-advance",
-			columnBtn: "ui-table-columntoggle-btn ui-table-nav-btn",
-			priorityPrefix: "ui-table-priority-",
-			columnToggleTable: "ui-table-columntoggle",
-			collapsibleCell: "ui-table-cell-collapsible",
-			collapsibleRow: "ui-table-row-collapsible",
+			stackTable: "tablesaw-stack",
+			cellLabels: "tablesaw-cell-label",
+			popup: "tablesaw-columntoggle-popup",
+			columnBtnContain: "tablesaw-columntoggle-btnwrap tablesaw-advance",
+			columnBtn: "tablesaw-columntoggle-btn tablesaw-nav-btn",
+			priorityPrefix: "tablesaw-priority-",
+			columnToggleTable: "tablesaw-columntoggle",
 			dialogClass: "",
-			toolbar: "ui-table-bar"
+			toolbar: "tablesaw-bar"
 		},
 		events: {
-			create: "tablecreate",
-			destroy: "tabledestroy"
+			create: "tablesawcreate",
+			destroy: "tablesawdestroy"
 		},
+		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
-		mode: "reflow",
-		initSelector : "table",
+		mode: "stack",
+		initSelector: "table[data-mode],table[data-sortable]",
 		columnBtnSide: "right"
 	},
 	methods = {
 		_create: function() {
 			var self = this,
 				$table = $(this);
-
-			if( $(this).is( "[data-exclude]" ) ) {
-				return;
-			}
 
 			// override the mode if defined (this could be broader if needed)
 			if( $(this).is( "[data-mode]" ) ){
@@ -130,9 +65,6 @@
 			if( $table.is( "[data-dialog-class]" ) ){
 				o.classes.dialogClass = $table.attr( "data-dialog-class" );
 			}
-
-			var thrs = this.querySelectorAll( "thead tr" ),
-				trs = this.querySelectorAll( "tbody tr" );
 
 			// Insert the toolbar
 			var $toolbar = $table.prev( '.' + o.classes.toolbar );
@@ -152,6 +84,7 @@
 			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
 			this.allHeaders = this.querySelectorAll( "th" );
 
+			var thrs = this.querySelectorAll( "thead tr" );
 			$( thrs ).each( function(){
 				var coltally = 0;
 
@@ -175,27 +108,8 @@
 				});
 			});
 
-			$( trs ).each( function(){
-				var row = $( this );
-				if( row.is( "[data-collapsible-row]" ) ){
-
-					row.addClass( o.classes.collapsibleRow );
-					row.on( "click" , _handleCollapse );
-
-					row.children().each( function(){
-						var cell = $( this );
-						if( cell.is( "[data-collapsible-cell]" ) ){
-							cell.addClass( o.classes.collapsibleCell );
-						}
-					});
-				}
-			});
-
-			if( o.mode === "reflow" ){
-				$table[ o.pluginName ]( "reflow", self );
-			}
-			else if ( o.mode === "columntoggle" ){
-				$table[ o.pluginName ]( "columntoggle", self );
+			if( o.mode === "stack" || o.mode === "columntoggle" ){
+				$table[ o.pluginName ]( o.mode, self );
 			}
 			$table.trigger( o.events.create, [ o.mode ] );
 		},
@@ -204,16 +118,16 @@
 			var $t = $( this );
 			$t.removeAttr( 'data-mode' );
 
-			// reflow
-			$t.removeClass( o.classes.reflowTable );
+			// stack
+			$t.removeClass( o.classes.stackTable );
 			$t.find( '.' + o.classes.cellLabels ).remove();
 
 			// columntoggle
 			$t.removeClass( o.classes.columnToggleTable );
 			$t.find( 'th, td' ).each(function() {
 				var $cell = $( this );
-				$cell.removeClass( 'ui-table-cell-hidden' )
-					.removeClass( 'ui-table-cell-visible' );
+				$cell.removeClass( 'tablesaw-cell-hidden' )
+					.removeClass( 'tablesaw-cell-visible' );
 
 				this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
 			});
@@ -231,12 +145,12 @@
 			$t.removeData( o.pluginName + 'active' );
 		},
 
-		reflow: function( self ) {
+		stack: function( self ) {
 			var table = this,
-				setClass = this.getAttribute( "class" ) + " " + o.classes.reflowTable;
+				setClass = this.getAttribute( "class" ) + " " + o.classes.stackTable;
 
-			// If it's not reflow mode, return here.
-			if( o.mode !== "reflow" ){
+			// If it's not stack mode, return here.
+			if( o.mode !== "stack" ){
 				return;
 			}
 
@@ -250,7 +164,7 @@
 			reverseHeaders.each(function(){
 				var $cells = $( this.cells ),
 					colstart = self.colstart,
-					hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " ui-table-cell-label-top",
+					hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
 					text = $(this).text();
 
 				if( text !== ""  ){
@@ -286,10 +200,10 @@
 					var checked = e.target.checked;
 
 					$( e.target ).data( "cells" )
-						.toggleClass( "ui-table-cell-hidden", !checked )
-						.toggleClass( "ui-table-cell-visible", checked );
+						.toggleClass( "tablesaw-cell-hidden", !checked )
+						.toggleClass( "tablesaw-cell-visible", checked );
 
-					$table.trigger( 'tablecolumns' );
+					$table.trigger( 'tablesawcolumns' );
 				};
 
 			// assign an id if there is none
@@ -307,6 +221,7 @@
 			$popup = $( "<div class='dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
 			$menu = $( "<div class='btn-group'></div>" );
 
+			var hasNonPersistentHeaders = false;
 			$(this.headers).not( "td" ).each( function() {
 				var $this = $( this ),
 					priority = $this.attr("data-priority"),
@@ -320,10 +235,16 @@
 						.trigger('enhance')
 						.children( 0 )
 						.data( "cells", $cells );
+
+					hasNonPersistentHeaders = true;
 				}
 			});
 
-			$menu.find( '.btn' ).btn();
+			if( !hasNonPersistentHeaders ) {
+				$menu.append( '<label class="btn theme-simple">' + o.columnsDialogError + '</label>' );
+			}
+
+			$menu.find( '.btn' ).tablesawbtn();
 			$menu.appendTo( $popup );
 
 			// bind change event listeners to inputs - TODO: move to a private method?
@@ -336,7 +257,6 @@
 			$popup
 				.appendTo( $btnContain )
 				.dialog( true );
-
 
 			// refresh method
 
@@ -378,11 +298,6 @@
 				$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
 			});
 		}
-
-	},
-	_handleCollapse = function(){
-		var row = $( this );
-		row.toggleClass( "open" );
 	};
 
 	// Collection method.
@@ -414,9 +329,9 @@
 
 }( jQuery ));
 
-(function( $ ) {
-	var pluginName = "btn",
-		initSelector = "." + pluginName,
+;(function( $ ) {
+	var pluginName = "tablesawbtn",
+		initSelector = ".btn",
 		activeClass = "btn-selected",
 		methods = {
 			_create: function(){
@@ -492,9 +407,7 @@
 				};
 
 				update( this, sel );
-console.log( this );
-				$( this ).bind( "change refresh", function( e ) {
-console.log( e.type );
+				$( this ).bind( "change refresh", function() {
 					update( this, sel );
 				});
 			}
@@ -524,22 +437,21 @@ console.log( e.type );
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	// Kick it off when `enhance` event is fired.
 	$( document ).on( "enhance", function( e ) {
 		$( initSelector, e.target )[ pluginName ]();
 	});
 
 }( jQuery ));
-(function( win, $, undefined ){
+;(function( win, $, undefined ){
 
 
 	function createSwipeTable( $table ){
 
-		var $btns = $( "<div class='table-advance'></div>" ),
-			$prevBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
-			$nextBtn = $( "<a href='#' class='ui-table-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
+		var $btns = $( "<div class='tablesaw-advance'></div>" ),
+			$prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
+			$nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
 			hideBtn = 'disabled',
-			persistWidths = 'table-fix-persist',
+			persistWidths = 'tablesaw-fix-persist',
 			$headerCells = $table.find( "thead th" ),
 			$headerCellsNoPersist = $headerCells.not( '[data-priority="persist"]' ),
 			headerWidths = [],
@@ -553,9 +465,9 @@ console.log( e.type );
 		});
 		$table.css( 'width', '' );
 
-		$btns.appendTo( $table.prev( '.ui-table-bar' ) );
+		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
-		$table.addClass( "table-coltoggle-swipe" );
+		$table.addClass( "tablesaw-swipe" );
 
 		if( !tableId ) {
 			tableId = 'tableswipe-' + Math.round( Math.random() * 10000 );
@@ -567,15 +479,15 @@ console.log( e.type );
 		}
 
 		function showColumn( headerCell ) {
-			$getCells( headerCell ).removeClass( 'ui-table-cell-hidden' );
+			$getCells( headerCell ).removeClass( 'tablesaw-cell-hidden' );
 		}
 
 		function hideColumn( headerCell ) {
-			$getCells( headerCell ).addClass( 'ui-table-cell-hidden' );
+			$getCells( headerCell ).addClass( 'tablesaw-cell-hidden' );
 		}
 
 		function persistColumn( headerCell ) {
-			$getCells( headerCell ).addClass( 'ui-table-cell-persist' );
+			$getCells( headerCell ).addClass( 'tablesaw-cell-persist' );
 		}
 
 		function isPersistent( headerCell ) {
@@ -599,7 +511,7 @@ console.log( e.type );
 
 					// Don’t persist greedy columns (take up more than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
-						styles.push( prefix + ' .ui-table-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
+						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
 					}
 				}
 			});
@@ -666,7 +578,7 @@ console.log( e.type );
 			});
 
 			unmaintainWidths();
-			$table.trigger( 'tablecolumns' );
+			$table.trigger( 'tablesawcolumns' );
 		}
 
 		function advance( fwd ){
@@ -686,7 +598,7 @@ console.log( e.type );
 				hideColumn( $headerCellsNoPersist.get( pair[ 0 ] ) );
 				showColumn( $headerCellsNoPersist.get( pair[ 1 ] ) );
 
-				$table.trigger( 'tablecolumns' );
+				$table.trigger( 'tablesawcolumns' );
 			}
 		}
 
@@ -731,21 +643,21 @@ console.log( e.type );
 					});
 
 			})
-			.bind( "tablecolumns.swipetoggle", function(){
+			.bind( "tablesawcolumns.swipetoggle", function(){
 				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
 				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
 			})
-			.bind( "tablenext.swipetoggle", function(){
+			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );
 			} )
-			.bind( "tableprev.swipetoggle", function(){
+			.bind( "tablesawprev.swipetoggle", function(){
 				advance( false );
 			} )
-			.bind( "tabledestroy.swipetoggle", function(){
+			.bind( "tablesawdestroy.swipetoggle", function(){
 				var $t = $( this );
 
-				$t.removeClass( 'table-coltoggle-swipe' );
-				$t.prev( '.ui-table-bar' ).find( '.table-advance' ).remove();
+				$t.removeClass( 'tablesaw-swipe' );
+				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
 				$t.unbind( ".swipetoggle" );
@@ -758,7 +670,7 @@ console.log( e.type );
 
 
 	// on tablecreate, init
-	$( document ).on( "tablecreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", "table", function( e, mode ){
 
 		var $table = $( this );
 		if( mode === 'swipe' ){
@@ -769,29 +681,29 @@ console.log( e.type );
 
 }( this, jQuery ));
 
-(function( $ ) {
+;(function( $ ) {
 	function getSortValue( cell ) {
 		return $.map( cell.childNodes, function( el ) {
 				var $el = $( el );
 				if( $el.is( 'input, select' ) ) {
 					return $el.val();
-				} else if( $el.hasClass( 'ui-table-cell-label' ) ) {
+				} else if( $el.hasClass( 'tablesaw-cell-label' ) ) {
 					return;
 				}
 				return $.trim( $el.text() );
 			}).join( '' );
 	}
 
-	var pluginName = "sortable",
+	var topLevelPluginName = "tablesaw-sortable",
+		pluginName = "sortable",
 		initSelector = "table[data-" + pluginName + "]",
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		classes = {
 			head: pluginName + "-head",
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
-			enhanced: pluginName + "-enhanced",
-			switcher: pluginName + "-switch",
-			tableToolbar: 'ui-table-toolbar'
+			switcher: topLevelPluginName + "-switch",
+			tableToolbar: 'tablesaw-toolbar'
 		},
 		i18n = {
 			sort: 'Sort'
@@ -806,7 +718,6 @@ console.log( e.type );
 					$( this )
 						.data( "init"+ pluginName, true )
 						.trigger( "beforecreate." + pluginName )
-						.addClass( classes.enhanced )
 						[ pluginName ]( "_init" , o )
 						.trigger( "create." + pluginName );
 				});
@@ -817,7 +728,7 @@ console.log( e.type );
 					$switcher;
 
 				var addClassToTable = function(){
-						el.addClass( pluginName );
+						el.addClass( topLevelPluginName );
 					},
 					addClassToHeads = function( h ){
 						$.each( h , function( i , v ){
@@ -846,15 +757,19 @@ console.log( e.type );
 
 						e.stopPropagation();
 						var head = $( this ).parent(),
-							v = e.data.col;
+							v = e.data.col,
+							newSortValue = heads.index( head );
+
 						clearOthers( head.siblings() );
 						if( head.hasClass( classes.descend ) ){
 							el[ pluginName ]( "sortBy" , v , true);
+							newSortValue += '_asc';
 						} else {
 							el[ pluginName ]( "sortBy" , v );
+							newSortValue += '_desc';
 						}
 						if( $switcher ) {
-							$switcher.find( 'select' ).val( heads.index( head ) ).trigger( 'refresh' );
+							$switcher.find( 'select' ).val( newSortValue ).trigger( 'refresh' );
 						}
 
 						e.preventDefault();
@@ -896,7 +811,7 @@ console.log( e.type );
 							return html.join('');
 						});
 
-						var $toolbar = el.prev( '.ui-table-bar' ),
+						var $toolbar = el.prev( '.tablesaw-bar' ),
 							$firstChild = $toolbar.children().eq( 0 );
 
 						if( $firstChild.length ) {
@@ -904,7 +819,7 @@ console.log( e.type );
 						} else {
 							$switcher.appendTo( $toolbar );
 						}
-						$switcher.find( '.btn' ).btn();
+						$switcher.find( '.btn' ).tablesawbtn();
 						$switcher.find( 'select' ).on( 'change', function() {
 							var val = $( this ).val().split( '_' ),
 								head = heads.eq( val[ 0 ] );
@@ -936,7 +851,7 @@ console.log( e.type );
 						var cells = [];
 						$.each( rows , function( i , r ){
 							cells.push({
-								cell: getSortValue( r.childNodes[ 2*colNum + 1 ] ),
+								cell: getSortValue( $( r ).children().get( colNum ) ),
 								rowNum: i
 							});
 						});
@@ -1029,7 +944,7 @@ console.log( e.type );
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	$( document ).on( "tablecreate", "table", function() {
+	$( document ).on( "tablesawcreate", "table", function() {
 		if( $( this ).is( initSelector ) ) {
 			$( this )[ pluginName ]();
 		}
@@ -1037,7 +952,7 @@ console.log( e.type );
 
 }( jQuery ));
 
-(function( win, $, undefined ){
+;(function( win, $, undefined ){
 
 	var MM = {
 		attr: {
@@ -1047,9 +962,9 @@ console.log( e.type );
 
 	function createMiniMap( $table ){
 
-		var $btns = $( '<div class="table-advance minimap">' ),
-			$dotNav = $( '<ul class="table-advance-dots">' ).appendTo( $btns ),
-			hideDot = 'table-advance-dots-hide',
+		var $btns = $( '<div class="tablesaw-advance minimap">' ),
+			$dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns ),
+			hideDot = 'tablesaw-advance-dots-hide',
 			$headerCells = $table.find( 'thead th' );
 
 		// populate dots
@@ -1057,7 +972,7 @@ console.log( e.type );
 			$dotNav.append( '<li><i></i></li>' );
 		});
 
-		$btns.appendTo( $table.prev( '.ui-table-bar' ) );
+		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
 		function showMinimap( $table ) {
 			var mq = $table.attr( MM.attr.init );
@@ -1086,13 +1001,13 @@ console.log( e.type );
 
 
 		$table
-			.bind( "tablecolumns.minimap", function(){
+			.bind( "tablesawcolumns.minimap", function(){
 				showHideNav();
 			})
-			.bind( "tabledestroy.minimap", function(){
+			.bind( "tablesawdestroy.minimap", function(){
 				var $t = $( this );
 
-				$t.prev( '.ui-table-bar' ).find( '.table-advance' ).remove();
+				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
 				$t.unbind( ".minimap" );
@@ -1102,7 +1017,7 @@ console.log( e.type );
 
 
 	// on tablecreate, init
-	$( document ).on( "tablecreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", "table", function( e, mode ){
 
 		var $table = $( this );
 		if( ( mode === 'swipe' || mode === 'columntoggle' ) && $table.is( '[ ' + MM.attr.init + ']' ) ){
@@ -1123,10 +1038,10 @@ console.log( e.type );
 			excludeMode: 'data-mode-exclude'
 		},
 		classes: {
-			main: 'ui-table-modeswitch',
-			toolbar: 'ui-table-toolbar'
+			main: 'tablesaw-modeswitch',
+			toolbar: 'tablesaw-toolbar'
 		},
-		modes: [ 'reflow', 'swipe', 'columntoggle' ],
+		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		i18n: {
 			modes: [ 'Stack', 'Swipe', 'Toggle' ],
 			columns: 'Col<span class="a11y-sm">umn</span>s'
@@ -1134,7 +1049,7 @@ console.log( e.type );
 		init: function( table ) {
 			var $table = $( table ),
 				ignoreMode = $table.attr( S.attributes.excludeMode ),
-				$toolbar = $table.prev( '.ui-table-bar' ),
+				$toolbar = $table.prev( '.tablesaw-bar' ),
 				modeVal = '',
 				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
 					var html = [ '<label>' + S.i18n.columns + ':' ],
@@ -1162,20 +1077,20 @@ console.log( e.type );
 					return html.join('');
 				});
 
-			var $otherToolbarItems = $toolbar.find( '.table-advance' ).eq( 0 );
+			var $otherToolbarItems = $toolbar.find( '.tablesaw-advance' ).eq( 0 );
 			if( $otherToolbarItems.length ) {
 				$switcher.insertBefore( $otherToolbarItems );
 			} else {
 				$switcher.appendTo( $toolbar );
 			}
 
-			$switcher.find( '.btn' ).btn();
+			$switcher.find( '.btn' ).tablesawbtn();
 			$switcher.find( 'select' ).bind( 'change', S.onModeChange );
 		},
 		onModeChange: function() {
 			var $t = $( this ),
 				$switcher = $t.closest( '.' + S.classes.main ),
-				$table = $t.closest( '.ui-table-bar' ).nextUntil( $table ).eq( 0 ),
+				$table = $t.closest( '.tablesaw-bar' ).nextUntil( $table ).eq( 0 ),
 				val = $t.val();
 
 			$switcher.remove();
@@ -1186,7 +1101,7 @@ console.log( e.type );
 		}
 	};
 
-	$( win.document ).on( "tablecreate", "table", function() {
+	$( win.document ).on( "tablesawcreate", "table", function() {
 		if( $( this ).is( S.selectors.init ) ) {
 			S.init( this );
 		}

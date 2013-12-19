@@ -10,19 +10,112 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
 	<script src="../bower_components/jquery/jquery.js"></script>
 	<script src="../bower_components/filament-dialog/dialog.js"></script>
 	<script src="../dist/tablesaw.js"></script>
+
+	<script>
+	/* grunticon Stylesheet Loader | https://github.com/filamentgroup/grunticon | (c) 2012 Scott Jehl, Filament Group, Inc. | MIT license. */
+	window.grunticon=function(e){if(e&&3===e.length){var t=window,n=!(!t.document.createElementNS||!t.document.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect||!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image","1.1")||window.opera&&-1===navigator.userAgent.indexOf("Chrome")),o=function(o){var r=t.document.createElement("link"),a=t.document.getElementsByTagName("script")[0];r.rel="stylesheet",r.href=e[o&&n?0:o?1:2],a.parentNode.insertBefore(r,a)},r=new t.Image;r.onerror=function(){o(!1)},r.onload=function(){o(1===r.width&&1===r.height)},r.src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="}};
+			grunticon(["../dist/icons/icons.data.svg.css", "../dist/icons/icons.data.png.css", "../dist/icons/icons.fallback.css"]);
+		</script>
+	<noscript><link href="../dist/icons/icons.fallback.css" rel="stylesheet"></noscript>
 </head>
 <body>
 	<h1>Mode Switch Table</h1>
-	<table id="table3" class="ui-table" data-mode="swipe" data-mode-switch data-minimap data-mode-exclude="columntoggle">
+	<table class="tablesaw" data-mode="swipe" data-mode-switch data-minimap>
 		<thead>
 			<tr>
-				<th data-sortable-col data-sortable-default-col>Rank</th>
-				<th data-sortable-col>Movie Title</th>
-				<th id="third" data-sortable-col>Year</th>
-				<th data-sortable-col><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+				<th data-priority="3">Rank</th>
+				<th data-priority="persist">Movie Title</th>
+				<th data-priority="2">Year</th>
+				<th data-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+				<th data-priority="4">Reviews</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>1</th>
+				<td><a href="http://en.wikipedia.org/wiki/Citizen_Kane" data-rel="external">Citizen Kane</a></td>
+				<td>1941</td>
+				<td>100%</td>
+				<td>74</td>
+			</tr>
+			<tr>
+				<th>2</th>
+				<td><a href="http://en.wikipedia.org/wiki/Casablanca_(film)" data-rel="external">Casablanca</a></td>
+				<td>1942</td>
+				<td>97%</td>
+				<td>64</td>
+			</tr>
+			<tr>
+				<th>3</th>
+				<td><a href="http://en.wikipedia.org/wiki/The_Godfather" data-rel="external">The Godfather</a></td>
+				<td>1972</td>
+				<td>97%</td>
+				<td>87</td>
+			</tr>
+			<tr>
+				<th>4</th>
+				<td><a href="http://en.wikipedia.org/wiki/Gone_with_the_Wind_(film)" data-rel="external">Gone with the Wind</a></td>
+				<td>1939</td>
+				<td>96%</td>
+				<td>87</td>
+			</tr>
+			<tr>
+				<th>5</th>
+				<td><a href="http://en.wikipedia.org/wiki/Lawrence_of_Arabia_(film)" data-rel="external">Lawrence of Arabia</a></td>
+				<td>1962</td>
+				<td>94%</td>
+				<td>87</td>
+			</tr>
+			<tr>
+				<th>6</th>
+				<td><a href="http://en.wikipedia.org/wiki/Dr._Strangelove" data-rel="external">Dr. Strangelove ...</a></td>
+				<td>1964</td>
+				<td>92%</td>
+				<td>74</td>
+			</tr>
+			<tr>
+				<th>7</th>
+				<td><a href="http://en.wikipedia.org/wiki/The_Graduate" data-rel="external">The Graduate</a></td>
+				<td>1967</td>
+				<td>91%</td>
+				<td>122</td>
+			</tr>
+			<tr>
+				<th>8</th>
+				<td><a href="http://en.wikipedia.org/wiki/The_Wizard_of_Oz_(1939_film)" data-rel="external">The Wizard of Oz</a></td>
+				<td>1939</td>
+				<td>90%</td>
+				<td>72</td>
+			</tr>
+			<tr>
+				<th>9</th>
+				<td><a href="http://en.wikipedia.org/wiki/Singin%27_in_the_Rain" data-rel="external">Singin' in the Rain</a></td>
+				<td>1952</td>
+				<td>89%</td>
+				<td>85</td>
+			</tr>
+			<tr>
+				<th>10</th>
+				<td class="title"><a href="http://en.wikipedia.org/wiki/Inception" data-rel="external">Inception</a></td>
+				<td>2010</td>
+				<td>84%</td>
+				<td>78</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h2>Exclude columntoggle Mode</h2>
+	<table class="tablesaw" data-mode="swipe" data-mode-switch data-minimap data-mode-exclude="columntoggle">
+		<thead>
+			<tr>
+				<th>Rank</th>
+				<th>Movie Title</th>
+				<th>Year</th>
+				<th><abbr title="Rotten Tomato Rating">Rating</abbr></th>
 				<th>Reviews</th>
 			</tr>
 		</thead>

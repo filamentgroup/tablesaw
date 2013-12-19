@@ -10,26 +10,34 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
 	<script src="../bower_components/jquery/jquery.js"></script>
 	<script src="../bower_components/filament-dialog/dialog.js"></script>
 	<script src="../dist/tablesaw.js"></script>
+
+	<script>
+	/* grunticon Stylesheet Loader | https://github.com/filamentgroup/grunticon | (c) 2012 Scott Jehl, Filament Group, Inc. | MIT license. */
+	window.grunticon=function(e){if(e&&3===e.length){var t=window,n=!(!t.document.createElementNS||!t.document.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect||!document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image","1.1")||window.opera&&-1===navigator.userAgent.indexOf("Chrome")),o=function(o){var r=t.document.createElement("link"),a=t.document.getElementsByTagName("script")[0];r.rel="stylesheet",r.href=e[o&&n?0:o?1:2],a.parentNode.insertBefore(r,a)},r=new t.Image;r.onerror=function(){o(!1)},r.onload=function(){o(1===r.width&&1===r.height)},r.src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="}};
+			grunticon(["../dist/icons/icons.data.svg.css", "../dist/icons/icons.data.png.css", "../dist/icons/icons.fallback.css"]);
+		</script>
+	<noscript><link href="../dist/icons/icons.fallback.css" rel="stylesheet"></noscript>
 </head>
 <body>
 	<h1>Swipe Table</h1>
 
-	<table class="ui-table" id="table2" data-mode="swipe">
+	<table class="tablesaw" data-mode="swipe">
 		<thead>
 			<tr>
 				<th data-priority="persist">Name</th>
-				<th data-priority="1">Rank</th>
-				<th data-priority="1">POS PPA ($)</th>
-				<th data-priority="2">POS TIP ($)</th>
-				<th data-priority="3">Flair (1&ndash;5)</th>
-				<th data-priority="3">Attitude (1&ndash;5)</th>
-				<th data-priority="4">On Time (%)</th>
-				<th data-priority="5">Seniority (1&ndash;5)</th>
-				<th data-priority="6">Charm (1&ndash;5)</th>
-				<th data-priority="6">Wit (1&ndash;5)</th>
+				<th>Rank</th>
+				<th>POS PPA ($)</th>
+				<th>POS TIP ($)</th>
+				<th>Flair (1&ndash;5)</th>
+				<th>Attitude (1&ndash;5)</th>
+				<th>On Time (%)</th>
+				<th>Seniority (1&ndash;5)</th>
+				<th>Charm (1&ndash;5)</th>
+				<th>Wit (1&ndash;5)</th>
 			</tr>
 		</thead>
 		<tbody>
