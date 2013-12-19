@@ -45,7 +45,7 @@
 	});
 
 	test( 'Initialization', function() {
-		ok( $table.hasClass( 'tablesaw-stack' ), 'Has initialization class.' );
+		ok( $table[ 0 ].className.indexOf( 'tablesaw-' ) === -1, 'Does not have initialization class.' );
 	});
 
 	module( 'tablesaw Stack', {

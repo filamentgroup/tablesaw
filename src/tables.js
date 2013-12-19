@@ -28,17 +28,13 @@
 		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
 		mode: "stack",
-		initSelector : "table",
+		initSelector : "table[data-mode]",
 		columnBtnSide: "right"
 	},
 	methods = {
 		_create: function() {
 			var self = this,
 				$table = $(this);
-
-			if( $(this).is( "[data-exclude]" ) ) {
-				return;
-			}
 
 			// override the mode if defined (this could be broader if needed)
 			if( $(this).is( "[data-mode]" ) ){
