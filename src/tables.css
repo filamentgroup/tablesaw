@@ -190,7 +190,6 @@ table.tablesaw tbody td {
 .tablesaw-advance .btn {
 	-webkit-appearance: none;
 	-moz-appearance: none;
-	appearance: none;
 	box-sizing: border-box;
 	text-shadow: 0 1px 0 #fff;
 	border-radius: .25em;
