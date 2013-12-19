@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.0.1 - 2013-12-18
+/*! Tablesaw - v0.0.1 - 2013-12-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 :root {
@@ -34,7 +34,6 @@
 
 	-webkit-appearance: none !important;
 	-moz-appearance: none !important;
-	appearance: none !important;
 
 	box-sizing: border-box;
 
@@ -439,17 +438,6 @@ table.tablesaw tbody td {
 	.tablesaw-stack th.group b.tablesaw-cell-label {
 		display: none !important;
 	}
-
-	.tablesaw-stack .tablesaw-row-collapsible {
-		cursor: pointer;
-	}
-	.tablesaw-stack .tablesaw-row-collapsible .tablesaw-cell-collapsible {
-		display: none;
-	}
-
-	.tablesaw-stack .tablesaw-row-collapsible.open .tablesaw-cell-collapsible {
-		display: block;
-	}
 }
 
 @media (max-width: 40em) {
@@ -486,16 +474,6 @@ table.tablesaw tbody td {
 	.tablesaw-stack th .tablesaw-cell-label { 
 		display: none !important;
 	}
-
-	.tablesaw-stack .tablesaw-row-collapsible {
-		cursor: default;
-	}
-
-	.tablesaw-stack .tablesaw-row-collapsible.open .tablesaw-cell-collapsible,
-	.tablesaw-stack .tablesaw-row-collapsible .tablesaw-cell-collapsible {
-		display: none;
-	}
-
 	.tablesaw td {
 		line-height: 2em;
 	}
@@ -509,7 +487,6 @@ table.tablesaw tbody td {
 .tablesaw-advance .btn {
 	-webkit-appearance: none;
 	-moz-appearance: none;
-	appearance: none;
 	box-sizing: border-box;
 	text-shadow: 0 1px 0 #fff;
 	border-radius: .25em;

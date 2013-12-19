@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.0.1 - 2013-12-18
+/*! Tablesaw - v0.0.1 - 2013-12-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2013 Zach Leatherman; Licensed MIT */
 ;(function( $ ) {
@@ -6,7 +6,15 @@
 	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
 		return;
 	} else {
-		$( document.documentElement ).addClass( 'tablesaw-enhanced' );
+		var div = document.createElement('div'),
+			all = div.getElementsByTagName('i'),
+			$doc = $( document.documentElement );
+
+		div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
+		if( all[ 0 ] ) {
+			$doc.addClass( 'ie-lte8' );
+		}
+		$doc.addClass( 'tablesaw-enhanced' );
 
 		// DOM-ready auto-init of plugins.
 		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
@@ -27,8 +35,6 @@
 			columnBtn: "tablesaw-columntoggle-btn tablesaw-nav-btn",
 			priorityPrefix: "tablesaw-priority-",
 			columnToggleTable: "tablesaw-columntoggle",
-			collapsibleCell: "tablesaw-cell-collapsible",
-			collapsibleRow: "tablesaw-row-collapsible",
 			dialogClass: "",
 			toolbar: "tablesaw-bar"
 		},
@@ -39,17 +45,13 @@
 		columnsDialogError: 'No eligible columns.',
 		columnBtnText: "Columns",
 		mode: "stack",
-		initSelector : "table",
+		initSelector: "table[data-mode],table[data-sortable]",
 		columnBtnSide: "right"
 	},
 	methods = {
 		_create: function() {
 			var self = this,
 				$table = $(this);
-
-			if( $(this).is( "[data-exclude]" ) ) {
-				return;
-			}
 
 			// override the mode if defined (this could be broader if needed)
 			if( $(this).is( "[data-mode]" ) ){
@@ -63,9 +65,6 @@
 			if( $table.is( "[data-dialog-class]" ) ){
 				o.classes.dialogClass = $table.attr( "data-dialog-class" );
 			}
-
-			var thrs = this.querySelectorAll( "thead tr" ),
-				trs = this.querySelectorAll( "tbody tr" );
 
 			// Insert the toolbar
 			var $toolbar = $table.prev( '.' + o.classes.toolbar );
@@ -85,6 +84,7 @@
 			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
 			this.allHeaders = this.querySelectorAll( "th" );
 
+			var thrs = this.querySelectorAll( "thead tr" );
 			$( thrs ).each( function(){
 				var coltally = 0;
 
@@ -108,27 +108,8 @@
 				});
 			});
 
-			$( trs ).each( function(){
-				var row = $( this );
-				if( row.is( "[data-collapsible-row]" ) ){
-
-					row.addClass( o.classes.collapsibleRow );
-					row.on( "click" , _handleCollapse );
-
-					row.children().each( function(){
-						var cell = $( this );
-						if( cell.is( "[data-collapsible-cell]" ) ){
-							cell.addClass( o.classes.collapsibleCell );
-						}
-					});
-				}
-			});
-
-			if( o.mode === "stack" ){
-				$table[ o.pluginName ]( "stack", self );
-			}
-			else if ( o.mode === "columntoggle" ){
-				$table[ o.pluginName ]( "columntoggle", self );
+			if( o.mode === "stack" || o.mode === "columntoggle" ){
+				$table[ o.pluginName ]( o.mode, self );
 			}
 			$table.trigger( o.events.create, [ o.mode ] );
 		},
@@ -317,11 +298,6 @@
 				$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
 			});
 		}
-
-	},
-	_handleCollapse = function(){
-		var row = $( this );
-		row.toggleClass( "open" );
 	};
 
 	// Collection method.
@@ -461,7 +437,6 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	// We don’t use autoenhance in tablesaw for buttons, yet.
 	$( document ).on( "enhance", function( e ) {
 		$( initSelector, e.target )[ pluginName ]();
 	});
@@ -876,7 +851,7 @@
 						var cells = [];
 						$.each( rows , function( i , r ){
 							cells.push({
-								cell: getSortValue( r.childNodes[ 2*colNum + 1 ] ),
+								cell: getSortValue( $( r ).children().get( colNum ) ),
 								rowNum: i
 							});
 						});
