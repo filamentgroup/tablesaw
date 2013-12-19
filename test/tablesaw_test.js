@@ -123,4 +123,45 @@
 		equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
 	});
 
+	test( 'Can sort numeric descending', function() {
+		var $sortButton = $table.find( '.sortable-head button' ).eq( 1 );
+
+		$sortButton.click();
+
+		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
+
+		$sortButton.click();
+
+		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
+	});
+
+	module( 'tablesaw Sortable Switcher', {
+		setup: setup( 'data-mode="columntoggle" data-sortable data-sortable-switch' )
+	});
+
+	test( 'Can sort descending with switcher', function() {
+		var previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
+			$switcher = $table.prev().find( 'select' ).eq( 0 );
+
+		$switcher.val( '0_desc' ).trigger( 'change' );
+
+		notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
+
+		$switcher.val( '0_asc' ).trigger( 'change' );
+
+		equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
+	});
+
+	test( 'Can sort numeric descending with switcher', function() {
+		var $switcher = $table.prev().find( 'select' ).eq( 0 );
+
+		$switcher.val( '1_desc' ).trigger( 'change' );
+
+		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
+
+		$switcher.val( '1_asc' ).trigger( 'change' );
+
+		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
+	});
+
 }(jQuery));
