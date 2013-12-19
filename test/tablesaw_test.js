@@ -20,28 +20,40 @@
 			throws(block, [expected], [message])
 	*/
 
-	var tableHtml = ['<table %s><thead><tr><th data-priority="1" data-sortable-col>Header</th><th data-sortable-col>Header</th></tr></thead>',
+	var tableHtml = [
+			'<table %s>',
+			'<thead>',
+				'<tr>',
+					'<th data-priority="1" data-sortable-col>Header</th>',
+					'<th data-sortable-col>Header</th>',
+				'</tr>',
+			'</thead>',
 			'<tbody>',
-			'<tr><td>Body Row 1</td><td>1</td></tr>',
-			'<tr><td>Body Row 2</td><td>2</td></tr>',
-			'<tr><td>Body Row 10</td><td>10</td></tr>',
-			'</tbody></table>'].join(''),
+				'<tr><td>Body Row 1</td><td>1</td></tr>',
+				'<tr><td>Body Row 2</td><td>2</td></tr>',
+				'<tr><td>Body Row 10</td><td>10</td></tr>',
+			'</tbody>',
+			'</table>'].join(''),
 		$fixture,
-		$table;
+		$table,
+		setup = function( tableAttributes ) {
+			return function() {
+				$fixture = $( '#qunit-fixture' );
+				// We use columntoggle here to make the cell html comparisons easier (stack adds elements to each cell)
+				$fixture.html( tableHtml.replace( /\%s/, tableAttributes ) );
+				$( document ).trigger( 'enhance.tablesaw' );
+
+				$table = $fixture.find( 'table' );
+			};
+		};
 
 	module( 'Global' );
 	test( 'Initialization', function() {
 		ok( $( 'html' ).hasClass( 'tablesaw-enhanced' ), 'Has initialization class.' );
 	});
 
-	module( 'tablesaw Default', {
-		setup: function() {
-			$fixture = $( '#qunit-fixture' );
-			$fixture.html( tableHtml.replace( /\%s/, '' ) );
-			$( document ).trigger( 'enhance.tablesaw' );
-
-			$table = $fixture.find( 'table' );
-		}
+	module( 'tablesaw is opt-in only, no default', {
+		setup: setup( '' )
 	});
 
 	test( 'Initialization', function() {
@@ -49,13 +61,7 @@
 	});
 
 	module( 'tablesaw Stack', {
-		setup: function() {
-			$fixture = $( '#qunit-fixture' );
-			$fixture.html( tableHtml.replace( /\%s/, 'data-mode="stack"' ) );
-			$( document ).trigger( 'enhance.tablesaw' );
-
-			$table = $fixture.find( 'table' );
-		}
+		setup: setup( 'data-mode="stack"' )
 	});
 
 	test( 'Initialization', function() {
@@ -63,13 +69,7 @@
 	});
 
 	module( 'tablesaw Column Toggle', {
-		setup: function() {
-			$fixture = $( '#qunit-fixture' );
-			$fixture.html( tableHtml.replace( /\%s/, 'data-mode="columntoggle"' ) );
-			$( document ).trigger( 'enhance.tablesaw' );
-
-			$table = $fixture.find( 'table' );
-		}
+		setup: setup( 'data-mode="columntoggle"' )
 	});
 
 	test( 'Initialization', function() {
@@ -94,13 +94,7 @@
 
 
 	module( 'tablesaw Swipe', {
-		setup: function() {
-			$fixture = $( '#qunit-fixture' );
-			$fixture.html( tableHtml.replace( /\%s/, 'data-mode="swipe"' ) );
-			$( document ).trigger( 'enhance.tablesaw' );
-
-			$table = $fixture.find( 'table' );
-		}
+		setup: setup( 'data-mode="swipe"' )
 	});
 
 	test( 'Initialization', function() {
@@ -108,14 +102,7 @@
 	});
 
 	module( 'tablesaw Sortable', {
-		setup: function() {
-			$fixture = $( '#qunit-fixture' );
-			// We use columntoggle here to make the cell html comparisons easier (stack adds elements to each cell)
-			$fixture.html( tableHtml.replace( /\%s/, 'data-mode="columntoggle" data-sortable' ) );
-			$( document ).trigger( 'enhance.tablesaw' );
-
-			$table = $fixture.find( 'table' );
-		}
+		setup: setup( 'data-mode="columntoggle" data-sortable' )
 	});
 
 	test( 'Initialization', function() {
