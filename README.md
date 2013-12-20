@@ -63,8 +63,6 @@ Use `data-minimap` to add a series of small dots to show which columns are curre
 
 ## Mode Switcher
 
-* [Mode Switcher Demo](http://filamentgroup.github.io/tablesaw/demo/modeswitch.html)
-
     <table data-mode-switch>
 
     <!-- With a different default mode -->
@@ -74,6 +72,8 @@ Use `data-minimap` to add a series of small dots to show which columns are curre
     <table data-mode-switch data-mode-exclude="columntoggle">
 
 ![](docs/mode-switch.gif)
+
+* [Mode Switcher Demo](http://filamentgroup.github.io/tablesaw/demo/modeswitch.html)
 
 ## Sortable
 
