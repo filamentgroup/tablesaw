@@ -173,4 +173,38 @@
 		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
 	});
 
+	module( 'tablesaw Mini Map', {
+		setup: setup( 'data-mode="columntoggle" data-minimap' )
+	});
+
+	test( 'Initialization', function() {
+		var $minimap = $table.prev().find( '.minimap' );
+		ok( $minimap.length, 'Minimap exists.' );
+		equal( $minimap.find( 'li' ).length, 2, 'Minimap has two dots.' );
+	});
+
+	module( 'tablesaw Mode Switch', {
+		setup: setup( 'data-mode="stack" data-mode-switch' )
+	});
+
+	test( 'Initialization', function() {
+		var $switcher = $table.prev().find( '.tablesaw-modeswitch' );
+		ok( $switcher.length, 'Mode Switcher exists.' );
+	});
+
+	test( 'Can switch to Swipe mode', function() {
+		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
+		ok( !$table.hasClass( 'tablesaw-swipe' ), 'Doesn’t have class.' );
+		$switcher.val( 'swipe' ).trigger( 'change' );
+		ok( $table.hasClass( 'tablesaw-swipe' ), 'Has class.' );
+	});
+
+	test( 'Can switch to Column Toggle mode', function() {
+		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
+		ok( !$table.hasClass( 'tablesaw-columntoggle' ), 'Doesn’t have class.' );
+		$switcher.val( 'columntoggle' ).trigger( 'change' );
+		ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has class.' );
+	});
+
+
 }(jQuery));
