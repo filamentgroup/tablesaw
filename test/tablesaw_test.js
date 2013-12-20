@@ -26,12 +26,25 @@
 				'<tr>',
 					'<th data-priority="1" data-sortable-col>Header</th>',
 					'<th data-sortable-col>Header</th>',
+					'<th>Header</th>',
+					'<th>Header</th>',
+					'<th>Header</th>',
+					'<th>Header</th>',
+					'<th data-priority="6">Header</th>',
 				'</tr>',
 			'</thead>',
 			'<tbody>',
-				'<tr><td>Body Row 1</td><td>1</td></tr>',
-				'<tr><td>Body Row 2</td><td>2</td></tr>',
-				'<tr><td>Body Row 10</td><td>10</td></tr>',
+				'<tr>',
+					'<td>Body Row 1</td>',
+					'<td>1</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+				'</tr>',
+				'<tr><td>Body Row 2</td><td>2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
+				'<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
 			'</tbody>',
 			'</table>'].join(''),
 		$fixture,
@@ -98,7 +111,23 @@
 	});
 
 	test( 'Initialization', function() {
+		var $buttons = $table.prev().find( '.tablesaw-nav-btn' );
 		ok( $table.hasClass( 'tablesaw-swipe' ), 'Has initialization class.' );
+		equal( $buttons.length, 2, 'Has buttons.' );
+	});
+
+	test( 'Navigate with buttons', function() {
+		var $buttons = $table.prev().find( '.tablesaw-nav-btn' ),
+			$prev = $buttons.filter( '.left' ),
+			$next = $buttons.filter( '.right' );
+
+		ok( $prev.is( '.disabled' ), 'Starts at far left, previous button disabled.' );
+		ok( !$next.is( '.disabled' ), 'Starts at far left, next button enabled.' );
+		ok( $table.find( 'tbody td:first-child' ).not( '.tablesaw-cell-hidden' ), 'First column is visible' );
+
+		$next.trigger( 'click' );
+		ok( !$prev.is( '.disabled' ), 'Previous button enabled.' );
+		ok( $table.find( 'tbody td:first-child' ).is( '.tablesaw-cell-hidden' ), 'First column is hidden after click' );
 	});
 
 	module( 'tablesaw Sortable without a Mode', {
@@ -175,6 +204,35 @@
 
 	module( 'tablesaw Mini Map', {
 		setup: setup( 'data-mode="columntoggle" data-minimap' )
+	});
+
+	test( 'Initialization', function() {
+		var $minimap = $table.prev().find( '.minimap' );
+		ok( $minimap.length, 'Minimap exists.' );
+		equal( $minimap.find( 'li' ).length, $table.find( 'tbody tr:eq(0) td' ).length, 'Minimap has same number of dots as columns.' );
+	});
+
+	module( 'tablesaw Mode Switch', {
+		setup: setup( 'data-mode="stack" data-mode-switch' )
+	});
+
+	test( 'Initialization', function() {
+		var $switcher = $table.prev().find( '.tablesaw-modeswitch' );
+		ok( $switcher.length, 'Mode Switcher exists.' );
+	});
+
+	test( 'Can switch to Swipe mode', function() {
+		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
+		ok( !$table.hasClass( 'tablesaw-swipe' ), 'Doesn’t have class.' );
+		$switcher.val( 'swipe' ).trigger( 'change' );
+		ok( $table.hasClass( 'tablesaw-swipe' ), 'Has class.' );
+	});
+
+	test( 'Can switch to Column Toggle mode', function() {
+		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
+		ok( !$table.hasClass( 'tablesaw-columntoggle' ), 'Doesn’t have class.' );
+		$switcher.val( 'columntoggle' ).trigger( 'change' );
+		ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has class.' );
 	});
 
 }(jQuery));
