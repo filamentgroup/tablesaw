@@ -6,7 +6,7 @@
 
 ;(function( $ ) {
 	// Cut the mustard
-	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
+	if( !( 'querySelector' in document ) || ( window.blackberry && !window.WebKitPoint ) || window.operamini ) {
 		return;
 	} else {
 		var div = document.createElement('div'),
