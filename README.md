@@ -78,6 +78,26 @@ Use `data-sortable-switch` to add a form element to choose the sort order.
 
 * [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
 
+## Mini Map
+
+Adds a series of small dots to show which columns are currently visible and which are hidden. Only available on `swipe` and `columntoggle` tables.
+
+### with Column Toggle
+
+    <table data-mode="columntoggle" data-minimap>
+
+![](docs/columntoggle-minimap.gif)
+
+* [Column Toggle Mini Map Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
+
+### with Swipe
+
+    <table data-mode="swipe" data-minimap>
+
+![](docs/swipe-minimap.gif)
+
+* [Swipe Mini Map Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
+
 ## Kitchen ~~Table~~ Sink
 
 All of the above options combined into a single table.
@@ -108,8 +128,6 @@ Check out any of the demos above for complete working examples.
 
 ## TODO
 
-* Add `data-minimap` example + docs
-* Add gifs
 * Generate a zip file that can be downloaded (includes minified/full sources, icons)
 * Add to bower
 * Add VanillaJS/non-jQuery version
