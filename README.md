@@ -10,6 +10,8 @@ The Stack Table stacks the table headers to a two column layout with headers on 
 
     <table data-mode="stack">
 
+![](docs/stack.gif)
+
 * [Stack Table Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html)
 
 ### Toggle
@@ -28,6 +30,13 @@ Table headers must have a `data-priority` attribute to be eligible to toggle. `d
     <th data-priority="5"><!-- Shows at (min-width: 60em) (960px) --></th>
     <th data-priority="6"><!-- Shows at (min-width: 70em) (1120px) --></th>
 
+#### Add a Mini Map
+
+    <table data-mode="columntoggle" data-minimap>
+
+![](docs/columntoggle-minimap.gif)
+
+
 * [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
 
 ### Swipe
@@ -40,7 +49,17 @@ Columns also respect the `data-priority="persist"` attribute.
 
     <th data-priority="persist"><!-- Always shows --></th>
 
+#### Add a Mini Map
+
+    <table data-mode="swipe" data-minimap>
+
+![](docs/swipe-minimap.gif)
+
 * [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
+
+## Mini Map
+
+Use `data-minimap` to add a series of small dots to show which columns are currently visible and which are hidden. Only available on `swipe` and `columntoggle` tables. Examples available above.
 
 ## Mode Switcher
 
@@ -53,6 +72,8 @@ Columns also respect the `data-priority="persist"` attribute.
 
     <!-- Exclude a mode from the switcher -->
     <table data-mode-switch data-mode-exclude="columntoggle">
+
+![](docs/mode-switch.gif)
 
 ## Sortable
 
@@ -77,26 +98,6 @@ Use `data-sortable-switch` to add a form element to choose the sort order.
     <table data-sortable data-sortable-switch>
 
 * [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
-
-## Mini Map
-
-Adds a series of small dots to show which columns are currently visible and which are hidden. Only available on `swipe` and `columntoggle` tables.
-
-### with Column Toggle
-
-    <table data-mode="columntoggle" data-minimap>
-
-![](docs/columntoggle-minimap.gif)
-
-* [Column Toggle Mini Map Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
-
-### with Swipe
-
-    <table data-mode="swipe" data-minimap>
-
-![](docs/swipe-minimap.gif)
-
-* [Swipe Mini Map Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
 
 ## Kitchen ~~Table~~ Sink
 
