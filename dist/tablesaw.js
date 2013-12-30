@@ -1,9 +1,9 @@
 /*! Tablesaw - v0.1.0 - 2013-12-20
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2013 Zach Leatherman; Licensed MIT */
+* Copyright (c) 2013 Filament Group c/o Zach Leatherman; Licensed MIT */
 ;(function( $ ) {
 	// Cut the mustard
-	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
+	if( !( 'querySelector' in document ) || ( window.blackberry && !window.WebKitPoint ) || window.operamini ) {
 		return;
 	} else {
 		var div = document.createElement('div'),
