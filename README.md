@@ -109,9 +109,13 @@ All of the above options combined into a single table.
 
 Use with [Respond.js](https://github.com/scottjehl/Respond) for IE8- support. The `columntoggle` mode requires the [Filament Group dialog](https://github.com/filamentgroup/dialog). Install all dependencies easily using bower:
 
-    `bower install` (if bower is installed globally) or
-		`./node_modules/.bin/bower install` (if bower is not installed
-globally)
+    `bower install`
+
+(if bower is installed globally) or
+
+    `./node_modules/.bin/bower install`
+
+(if bower is not installed globally)
 
 ```html
 <link rel="stylesheet" href="bower_components/filament-dialog/dialog.css">
