@@ -9,22 +9,22 @@ module.exports = function(grunt) {
 		banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
 			'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			'<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-			'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %> c/o <%= pkg.author.name %>;' +
+			'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>;' +
 			' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 		// Task configuration.
-		clean: {
-			files: ['dist']
-		},
+		clean: ['<%= concat.cssall.dest %>', '<%= concat.cssstack.dest %>'],
 		concat: {
 			options: {
 				banner: '<%= banner %>',
 				stripBanners: true
 			},
-			js: {
+			jsall: {
 				src: [
 					'src/tablesaw.js',
 					'src/tables.js',
+					'src/tables.stack.js',
 					'src/tables.btnmarkup.js',
+					'src/tables.columntoggle.js',
 					'src/tables.swipetoggle.js',
 					'src/tables.sortable.js',
 					'src/tables.minimap.js',
@@ -32,10 +32,20 @@ module.exports = function(grunt) {
 				],
 				dest: 'dist/<%= pkg.name %>.js'
 			},
-			css: {
+			jsstack: {
 				src: [
-					'src/tables.btnmarkup.css',
+					'src/tablesaw.js',
+					'src/tables.js',
+					'src/tables.stack.js'
+				],
+				dest: 'dist/<%= pkg.name %>.stackonly.js'
+			},
+			cssall: {
+				src: [
 					'src/tables.css',
+					'src/tables.toolbar.css',
+					'src/tables.skin.css',
+					'src/tables.stack.css',
 					'src/tables.swipetoggle.css',
 					'src/tables.columntoggle.css',
 					'src/tables.sortable.css',
@@ -43,16 +53,14 @@ module.exports = function(grunt) {
 					'src/tables.modeswitch.css'
 				],
 				dest: 'dist/<%= pkg.name %>.myth.css'
+			},
+			cssstack: {
+				src: [
+					'src/tables.css',
+					'src/tables.stack.css'
+				],
+				dest: 'dist/<%= pkg.name %>.stackonly.myth.css'
 			}
-		},
-		uglify: {
-			options: {
-				banner: '<%= banner %>'
-			},
-			dist: {
-				src: '<%= concat.js.dest %>',
-				dest: 'dist/<%= pkg.name %>.min.js'
-			},
 		},
 		qunit: {
 			files: ['test/**/*.html']
@@ -83,7 +91,7 @@ module.exports = function(grunt) {
 				tasks: ['jshint:gruntfile']
 			},
 			src: {
-				files: ['<%= concat.css.src %>', '<%= concat.js.src %>'],
+				files: ['<%= concat.cssall.src %>', '<%= concat.jsall.src %>'],
 				tasks: ['src']
 			},
 			icons: {
@@ -119,8 +127,14 @@ module.exports = function(grunt) {
 		bytesize: {
 			dist: {
 				src: [
-					'dist/tablesaw.css',
-					'dist/tablesaw.min.js'
+					'dist/<%= pkg.name %>.css',
+					'dist/<%= pkg.name %>.js'
+				]
+			},
+			stackonly: {
+				src: [
+					'dist/<%= pkg.name %>.stackonly.css',
+					'dist/<%= pkg.name %>.stackonly.js'
 				]
 			}
 		},
@@ -131,7 +145,8 @@ module.exports = function(grunt) {
 		myth: {
 			dist: {
 				files: {
-					'dist/<%= pkg.name %>.css': '<%= concat.css.dest %>'
+					'dist/<%= pkg.name %>.css': '<%= concat.cssall.dest %>',
+					'dist/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>'
 				}
 			}
 		}
@@ -140,8 +155,8 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('src', ['concat', 'uglify', 'myth']);
-	grunt.registerTask('default', ['jshint', 'src', 'grunticon:tablesaw', 'qunit', 'bytesize']);
+	grunt.registerTask('src', ['concat', 'myth']);
+	grunt.registerTask('default', ['jshint', 'src', 'clean', 'grunticon:tablesaw', 'qunit', 'bytesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);

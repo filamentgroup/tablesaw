@@ -300,3 +300,120 @@
 	border-top: none;
 	border-radius: 0;
 }
+
+/* Column navigation buttons for swipe and columntoggle tables */
+.tablesaw-bar .tablesaw-advance {
+	position: relative;
+	top: -2.6em;
+}
+.tablesaw-advance .btn {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	box-sizing: border-box;
+	text-shadow: 0 1px 0 #fff;
+	border-radius: .25em;
+}
+.tablesaw-advance .btn.btn-micro {
+	font-size: .8125em;
+	padding: .4em .7em .25em .7em;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
+	display: inline-block;
+	overflow: hidden;
+	width: 1.8em;
+	height: 1.8em;
+	background-position: 50% 50%;
+	margin-left: .5em;
+}
+.tablesaw-advance a.tablesaw-nav-btn.disabled {
+	opacity: .25;
+	cursor: default;
+	pointer-events: none;
+}
+
+/* Table Toolbar */
+.tablesaw-bar {
+	clear: both;
+	font-family: sans-serif;
+}
+.tablesaw-bar.mode-swipe,
+.tablesaw-bar.mode-columntoggle {
+	margin-top: -2em;
+	position: relative;
+	top: 2em;
+}
+.tablesaw-toolbar {
+	font-size: .875em;
+}
+.tablesaw-toolbar label {
+	padding: .5em 0;
+	clear: both;
+	display: block;
+	color: #888;
+	margin-right: .5em;
+	text-transform:uppercase;
+}
+.tablesaw-bar .btn,
+.tablesaw-enhanced .tablesaw-bar .btn {
+	margin-top: .5em;
+	margin-bottom: .5em;
+}
+.tablesaw-bar .btn-select,
+.tablesaw-enhanced .tablesaw-bar .btn-select {
+	margin-bottom: 0;
+}
+.tablesaw-bar .tablesaw-toolbar .btn {
+	margin-left: .4em;
+	margin-top: 0;
+	text-transform:uppercase;
+	border: none;
+	box-shadow: none;
+	background: transparent;
+	font-family: sans-serif;
+	font-size: 1em;
+	padding-left: .3em;
+}
+.tablesaw-bar .tablesaw-toolbar .btn-select {
+	min-width: 0;
+}
+.tablesaw-bar .tablesaw-toolbar .btn-select:after {
+	padding-top: .9em;
+}
+.tablesaw-bar .tablesaw-toolbar select {
+	color: #888;
+	text-transform: none;
+	background: transparent;
+}
+.tablesaw-toolbar ~ table {
+	clear: both;
+}
+.tablesaw-toolbar .a11y-sm {
+	clip: rect(0 0 0 0);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	width: 1px;
+}
+@media (min-width: 24em) {
+	.tablesaw-toolbar .a11y-sm {
+		clip: none;
+		height: auto;
+		width: auto;
+		position: static;
+		overflow: visible;
+	}
+}
+@media (min-width: 40em) {
+	.tablesaw-bar.mode-swipe,
+	.tablesaw-bar.mode-columntoggle {
+		margin-top: 0;
+		top: 0;
+	}
+	.tablesaw-bar .tablesaw-advance {
+		position: static;
+	}
+	.tablesaw-bar {
+		margin-top: 0;
+		position: static;
+	}
+}
