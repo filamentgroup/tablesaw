@@ -1,19 +1,20 @@
-/*! Tablesaw - v0.1.0 - 2013-12-20
+/*! Tablesaw - v0.1.1 - 2014-03-28
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2013 Zach Leatherman; Licensed MIT */
+* Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
+	var div = document.createElement('div'),
+		all = div.getElementsByTagName('i'),
+		$doc = $( document.documentElement );
+
+	div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
+	if( all[ 0 ] ) {
+		$doc.addClass( 'ie-lte8' );
+	}
+
 	// Cut the mustard
-	if( !( 'querySelector' in document ) || ( window.blackberry && window.WebKitPoint ) || window.operamini ) {
+	if( !( 'querySelector' in document ) || ( window.blackberry && !window.WebKitPoint ) || window.operamini ) {
 		return;
 	} else {
-		var div = document.createElement('div'),
-			all = div.getElementsByTagName('i'),
-			$doc = $( document.documentElement );
-
-		div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
-		if( all[ 0 ] ) {
-			$doc.addClass( 'ie-lte8' );
-		}
 		$doc.addClass( 'tablesaw-enhanced' );
 
 		// DOM-ready auto-init of plugins.
@@ -28,25 +29,14 @@
 	var o = {
 		pluginName : "table",
 		classes : {
-			stackTable: "tablesaw-stack",
-			cellLabels: "tablesaw-cell-label",
-			popup: "tablesaw-columntoggle-popup",
-			columnBtnContain: "tablesaw-columntoggle-btnwrap tablesaw-advance",
-			columnBtn: "tablesaw-columntoggle-btn tablesaw-nav-btn",
-			priorityPrefix: "tablesaw-priority-",
-			columnToggleTable: "tablesaw-columntoggle",
-			dialogClass: "",
 			toolbar: "tablesaw-bar"
 		},
 		events: {
 			create: "tablesawcreate",
 			destroy: "tablesawdestroy"
 		},
-		columnsDialogError: 'No eligible columns.',
-		columnBtnText: "Columns",
 		mode: "stack",
-		initSelector: "table[data-mode],table[data-sortable]",
-		columnBtnSide: "right"
+		initSelector: "table[data-mode],table[data-sortable]"
 	},
 	methods = {
 		_create: function() {
@@ -58,15 +48,8 @@
 				o.mode = $(this).attr( "data-mode" );
 			}
 
-			if( $table.is( "[data-column-btn-side]" ) ){
-				o.columnBtnSide = $table.attr( "data-column-btn-side" );
-			}
-
-			if( $table.is( "[data-dialog-class]" ) ){
-				o.classes.dialogClass = $table.attr( "data-dialog-class" );
-			}
-
 			// Insert the toolbar
+			// TODO move this into a separate component
 			var $toolbar = $table.prev( '.' + o.classes.toolbar );
 			if( !$toolbar.length ) {
 				$toolbar = $( '<div>' )
@@ -78,13 +61,9 @@
 				$toolbar.addClass( 'mode-' + o.mode );
 			}
 
-			// Expose headers and allHeaders properties on the widget
-			// headers references the THs within the first TR in the table
-			this.headers = $table.find( "tr:first > th" );
-			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
-			this.allHeaders = this.querySelectorAll( "th" );
-
-			var thrs = this.querySelectorAll( "thead tr" );
+			// Add header cells
+			var colstart,
+				thrs = this.querySelectorAll( "thead tr" );
 			$( thrs ).each( function(){
 				var coltally = 0;
 
@@ -92,7 +71,7 @@
 					var span = parseInt( this.getAttribute( "colspan" ), 10 ),
 						sel = ":nth-child(" + ( coltally + 1 ) + ")";
 
-					self.colstart = coltally + 1;
+					colstart = coltally + 1;
 
 					if( span ){
 						for( var k = 0; k < span - 1; k++ ){
@@ -108,29 +87,12 @@
 				});
 			});
 
-			if( o.mode === "stack" || o.mode === "columntoggle" ){
-				$table[ o.pluginName ]( o.mode, self );
-			}
-			$table.trigger( o.events.create, [ o.mode ] );
+			$table.trigger( o.events.create, [ o.mode, colstart ] );
 		},
 
 		destroy: function() {
 			var $t = $( this );
 			$t.removeAttr( 'data-mode' );
-
-			// stack
-			$t.removeClass( o.classes.stackTable );
-			$t.find( '.' + o.classes.cellLabels ).remove();
-
-			// columntoggle
-			$t.removeClass( o.classes.columnToggleTable );
-			$t.find( 'th, td' ).each(function() {
-				var $cell = $( this );
-				$cell.removeClass( 'tablesaw-cell-hidden' )
-					.removeClass( 'tablesaw-cell-visible' );
-
-				this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
-			});
 
 			// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
 			$t.prev( '.' + o.classes.toolbar ).each(function() {
@@ -140,163 +102,9 @@
 			$( window ).off( 'resize.' + $t.attr( 'id' ) );
 
 			// other plugins
-			$t.trigger( o.events.destroy );
+			$t.trigger( o.events.destroy, [ o.mode ] );
 
 			$t.removeData( o.pluginName + 'active' );
-		},
-
-		stack: function( self ) {
-			var table = this,
-				setClass = this.getAttribute( "class" ) + " " + o.classes.stackTable;
-
-			// If it's not stack mode, return here.
-			if( o.mode !== "stack" ){
-				return;
-			}
-
-			table.setAttribute( "class", setClass );
-
-			// get headers in reverse order so that top-level headers are appended last
-
-			var reverseHeaders = $( this.allHeaders );
-
-			// create the hide/show toggles
-			reverseHeaders.each(function(){
-				var $cells = $( this.cells ),
-					colstart = self.colstart,
-					hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-					text = $(this).text();
-
-				if( text !== ""  ){
-
-					if( hierarchyClass ){
-						var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
-							filter = "";
-
-						if( iteration ){
-							filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
-						}
-						$cells.filter( filter ).prepend( "<b class='" + o.classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
-					}
-					else {
-						$cells.prepend( "<b class='" + o.classes.cellLabels + "'>" + text + "</b>"  );
-					}
-				}
-			});
-		},
-
-		columntoggle: function(){
-
-
-			var tableId,
-				id,
-				$menuButton,
-				$popup,
-				$menu,
-				$btnContain,
-				$table = $( this ),
-				self = this,
-				menuInputChange = function(e) {
-					var checked = e.target.checked;
-
-					$( e.target ).data( "cells" )
-						.toggleClass( "tablesaw-cell-hidden", !checked )
-						.toggleClass( "tablesaw-cell-visible", checked );
-
-					$table.trigger( 'tablesawcolumns' );
-				};
-
-			// assign an id if there is none
-			if ( !$table.attr( "id" ) ) {
-				$table.attr( "id", o.pluginName + "-" + Math.round( Math.random() * 10000 ) );
-			}
-
-			$table.addClass( o.classes.columnToggleTable );
-
-			tableId = $table.attr( "id" );
-			id = tableId + "-popup";
-			$btnContain = $( "<div class='" + o.classes.columnBtnContain + " " + o.columnBtnSide + " " + o.classes.dialogClass + "'></div>" );
-			$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + o.classes.columnBtn +"' data-popup-link>" +
-											"<span>" + o.columnBtnText + "</span></a>" );
-			$popup = $( "<div class='dialog-table-coltoggle " + o.classes.popup + "' id='" + id + "'></div>" );
-			$menu = $( "<div class='btn-group'></div>" );
-
-			var hasNonPersistentHeaders = false;
-			$(this.headers).not( "td" ).each( function() {
-				var $this = $( this ),
-					priority = $this.attr("data-priority"),
-					$cells = $this.add( this.cells );
-
-				if( priority && priority !== "persist" ) {
-					$cells.addClass( o.classes.priorityPrefix + priority );
-
-					$("<label class='btn btn-check btn-checkbox btn-selected theme-simple'><input type='checkbox' checked>" + $this.text() + "</label>" )
-						.appendTo( $menu )
-						.trigger('enhance')
-						.children( 0 )
-						.data( "cells", $cells );
-
-					hasNonPersistentHeaders = true;
-				}
-			});
-
-			if( !hasNonPersistentHeaders ) {
-				$menu.append( '<label class="btn theme-simple">' + o.columnsDialogError + '</label>' );
-			}
-
-			$menu.find( '.btn' ).tablesawbtn();
-			$menu.appendTo( $popup );
-
-			// bind change event listeners to inputs - TODO: move to a private method?
-			$menu.on( "change", menuInputChange );
-
-			$menuButton.appendTo( $btnContain );
-
-			$btnContain.appendTo( $table.prev( '.' + o.classes.toolbar ) );
-
-			$popup
-				.appendTo( $btnContain )
-				.dialog( true );
-
-			// refresh method
-
-			$(window).on( "resize." + tableId, function(){
-				$table[ o.pluginName ]( "refreshToggle", self );
-			} );
-
-			$.extend( this, {
-				_menu: $menu,
-				_menuInputChange: menuInputChange
-			});
-
-			$(this)[ o.pluginName ]( "refreshToggle", self );
-		},
-
-		refreshPriority: function(){
-			$(this.headers).not( "td" ).each( function() {
-				var $this = $( this ),
-					priority = $this.attr("data-priority"),
-					$cells = $this.add( this.cells );
-
-				if( priority && priority !== "persist" ) {
-					$cells.addClass( o.classes.priorityPrefix + priority );
-				} else {
-					$cells.each(function() {
-						// remove all priority classes.
-						this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
-					});
-				}
-			});
-		},
-
-		refreshToggle: function(){
-			this._menu.find( "input" ).each( function() {
-				var $this = $( this );
-
-				this.checked = $this.data( "cells" ).eq( 0 ).css( "display" ) === "table-cell";
-
-				$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
-			});
 		}
 	};
 
@@ -329,6 +137,79 @@
 
 }( jQuery ));
 
+;(function( win, $, undefined ){
+
+	var Stack = function( element ) {
+
+		this.$table = $( element );
+
+		this.classes = {
+			stackTable: "tablesaw-stack",
+			cellLabels: "tablesaw-cell-label"
+		};
+
+		// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
+		this.allHeaders = this.$table.find( "th" );
+
+		this.$table.data( 'tablesaw-stack', this );
+	};
+
+	Stack.prototype.init = function( colstart ) {
+		this.$table.addClass( this.classes.stackTable );
+
+		// get headers in reverse order so that top-level headers are appended last
+
+		var reverseHeaders = $( this.allHeaders );
+
+		// create the hide/show toggles
+		var self = this;
+
+		reverseHeaders.each(function(){
+			var $cells = $( this.cells ),
+				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
+				text = $(this).text();
+
+			if( text !== ""  ){
+
+				if( hierarchyClass ){
+					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
+						filter = "";
+
+					if( iteration ){
+						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
+					}
+					$cells.filter( filter ).prepend( "<b class='" + self.classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
+				}
+				else {
+					$cells.prepend( "<b class='" + self.classes.cellLabels + "'>" + text + "</b>"  );
+				}
+			}
+		});
+	};
+
+	Stack.prototype.destroy = function() {
+		this.$table.removeClass( this.classes.stackTable );
+		this.$table.find( '.' + this.classes.cellLabels ).remove();
+	};
+
+	// on tablecreate, init
+	$( document ).on( "tablesawcreate", "table", function( e, mode, colstart ){
+		if( mode === 'stack' ){
+			var table = new Stack( this );
+			table.init( colstart );
+		}
+
+	} );
+
+	$( document ).on( "tablesawdestroy", "table", function( e, mode ){
+
+		if( mode === 'stack' ){
+			$( this ).data( 'tablesaw-stack' ).destroy();
+		}
+
+	} );
+
+}( this, jQuery ));
 ;(function( $ ) {
 	var pluginName = "tablesawbtn",
 		initSelector = ".btn",
@@ -442,6 +323,170 @@
 	});
 
 }( jQuery ));
+;(function( win, $, undefined ){
+
+	var ColumnToggle = function( element ) {
+
+		this.pluginName = 'table';
+		this.$table = $( element );
+
+		this.classes = {
+			columnToggleTable: 'tablesaw-columntoggle',
+			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
+			dialogClass: this.$table.attr( 'data-dialog-class' ) || '',
+			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn',
+			columnBtnSide: this.$table.attr( 'data-column-btn-side' ) || 'right',
+			popup: 'tablesaw-columntoggle-popup',
+			priorityPrefix: 'tablesaw-priority-',
+			// TODO duplicate class, also in tables.js
+			toolbar: 'tablesaw-bar'
+		};
+
+		this.i18n = {
+			columnBtnText: 'Columns',
+			columnsDialogError: 'No eligible columns.'
+		};
+
+		// Expose headers and allHeaders properties on the widget
+		// headers references the THs within the first TR in the table
+		this.headers = this.$table.find( 'tr:first > th' );
+
+		this.$table.data( 'tablesaw-coltoggle', this );
+	};
+
+	ColumnToggle.prototype.init = function() {
+
+		var tableId,
+			id,
+			$menuButton,
+			$popup,
+			$menu,
+			$btnContain,
+			self = this;
+
+		// assign an id if there is none
+		if ( !this.$table.attr( "id" ) ) {
+			this.$table.attr( "id", this.pluginName + "-" + Math.round( Math.random() * 10000 ) );
+		}
+
+		this.$table.addClass( this.classes.columnToggleTable );
+
+		tableId = this.$table.attr( "id" );
+		id = tableId + "-popup";
+		$btnContain = $( "<div class='" + this.classes.columnBtnContain + " " + this.classes.columnBtnSide + " " + this.classes.dialogClass + "'></div>" );
+		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
+										"<span>" + this.i18n.columnBtnText + "</span></a>" );
+		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
+		$menu = $( "<div class='btn-group'></div>" );
+
+		var hasNonPersistentHeaders = false;
+		$( this.headers ).not( "td" ).each( function() {
+			var $this = $( this ),
+				priority = $this.attr("data-priority"),
+				$cells = $this.add( this.cells );
+
+			if( priority && priority !== "persist" ) {
+				$cells.addClass( self.classes.priorityPrefix + priority );
+
+				$("<label class='btn btn-check btn-checkbox btn-selected theme-simple'><input type='checkbox' checked>" + $this.text() + "</label>" )
+					.appendTo( $menu )
+					.trigger('enhance')
+					.children( 0 )
+					.data( "cells", $cells );
+
+				hasNonPersistentHeaders = true;
+			}
+		});
+
+		if( !hasNonPersistentHeaders ) {
+			$menu.append( '<label class="btn theme-simple">' + this.i18n.columnsDialogError + '</label>' );
+		}
+
+		$menu.find( '.btn' ).tablesawbtn();
+		$menu.appendTo( $popup );
+
+		// bind change event listeners to inputs - TODO: move to a private method?
+		$menu.on( "change", function(e) {
+			var checked = e.target.checked;
+
+			$( e.target ).data( "cells" )
+				.toggleClass( "tablesaw-cell-hidden", !checked )
+				.toggleClass( "tablesaw-cell-visible", checked );
+
+			self.$table.trigger( 'tablesawcolumns' );
+		});
+
+		$menuButton.appendTo( $btnContain );
+		$btnContain.appendTo( this.$table.prev( '.' + this.classes.toolbar ) );
+		$popup
+			.appendTo( $btnContain )
+			.dialog( true );
+
+		this.$menu = $menu;
+
+		$(window).on( "resize." + tableId, function(){
+			self.refreshToggle();
+		} );
+
+		this.refreshToggle();
+	};
+
+	ColumnToggle.prototype.refreshToggle = function() {
+		this.$menu.find( "input" ).each( function() {
+			var $this = $( this );
+
+			this.checked = $this.data( "cells" ).eq( 0 ).css( "display" ) === "table-cell";
+
+			$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
+		});
+	};
+
+	ColumnToggle.prototype.refreshPriority = function(){
+		var self = this;
+		$(this.headers).not( "td" ).each( function() {
+			var $this = $( this ),
+				priority = $this.attr("data-priority"),
+				$cells = $this.add( this.cells );
+
+			if( priority && priority !== "persist" ) {
+				$cells.addClass( self.classes.priorityPrefix + priority );
+			} else {
+				$cells.each(function() {
+					// remove all priority classes.
+					this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
+				});
+			}
+		});
+	};
+
+	ColumnToggle.prototype.destroy = function() {
+		this.$table.removeClass( this.classes.columnToggleTable );
+		this.$table.find( 'th, td' ).each(function() {
+			var $cell = $( this );
+			$cell.removeClass( 'tablesaw-cell-hidden' )
+				.removeClass( 'tablesaw-cell-visible' );
+
+			this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
+		});
+	};
+
+	// on tablecreate, init
+	$( document ).on( "tablesawcreate", "table", function( e, mode ){
+
+		if( mode === 'columntoggle' ){
+			var table = new ColumnToggle( this );
+			table.init();
+		}
+
+	} );
+
+	$( document ).on( "tablesawdestroy", "table", function( e, mode ){
+		if( mode === 'columntoggle' ){
+			$( this ).data( 'tablesaw-coltoggle' ).destroy();
+		}
+	} );
+
+}( this, jQuery ));
 ;(function( win, $, undefined ){
 
 
@@ -941,6 +986,7 @@
 		}
 		return $(this);
 	};
+
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
