@@ -14,6 +14,10 @@ The Stack Table stacks the table headers to a two column layout with headers on 
 
 * [Stack Table Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html)
 
+If you only want to use the Stack Table and don’t want all the extra features below (save yourself some bytes), Tablesaw provides a Stack-Only version.
+
+* [Stack-Only Table Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
+
 ### Toggle
 
 The Column Toggle Table allows the user to select which columns they want to be visible.
@@ -107,7 +111,31 @@ All of the above options combined into a single table.
 
 ## Getting Started
 
-Use with [Respond.js](https://github.com/scottjehl/Respond) for IE8- support. The `columntoggle` mode requires the [Filament Group dialog](https://github.com/filamentgroup/dialog). Install all dependencies easily using bower:
+TableSaw requires [Respond.js](https://github.com/scottjehl/Respond) for IE8- support.
+
+### Using Stack-Only TableSaw
+
+As shown above, we provide a Stack-mode-only package of TableSaw. It’s a barebones version that doesn’t include any of the other features above.
+
+```html
+<link rel="stylesheet" href="tablesaw.css">
+<!--[if lt IE 9]><script src="respond.min.js"></script><!--<![endif]-->
+<script src="tablesaw.js"></script>
+```
+
+And then:
+
+```html
+<table class="tablesaw" data-mode="stack">
+```
+
+Check out [the Stack-Only demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html) to see a working example.
+
+### The Full TableSaw 
+
+If you want the other modes, it’ll take a little bit more configuration.
+
+The `columntoggle` mode requires the [Filament Group dialog](https://github.com/filamentgroup/dialog). Install all dependencies easily using bower:
 
     `bower install`
 
@@ -131,10 +159,8 @@ Next include the tablesaw icons in `src/icons` with your grunticon build and inc
 
 Check out any of the demos above for complete working examples.
 
-## Release History
-
 ## TODO
 
-* Generate a zip file that can be downloaded (includes minified/full sources, icons)
+* Generate a zip file that can be downloaded (includes full sources, icons)
 * Add to bower
 * Add VanillaJS/non-jQuery version
