@@ -986,7 +986,6 @@
 		}
 		return $(this);
 	};
-
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
