@@ -137,11 +137,11 @@ If you want the other modes, it’ll take a little bit more configuration.
 
 The `columntoggle` mode requires the [Filament Group dialog](https://github.com/filamentgroup/dialog). Install all dependencies easily using bower:
 
-    `bower install`
+    bower install
 
 (if bower is installed globally) or
 
-    `./node_modules/.bin/bower install`
+    ./node_modules/.bin/bower install
 
 (if bower is not installed globally)
 
