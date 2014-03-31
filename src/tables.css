@@ -13,12 +13,9 @@ table.tablesaw {
 	border: 0;
 	padding: 0;
 }
-.tablesaw tbody th,
-.tablesaw tbody td {
-	padding: .4em 0 .3em .6em;
-}
-.tablesaw thead th {
-	padding: .6em .8em;
+.tablesaw th,
+.tablesaw td {
+	padding: .5em .7em;
 }
 .tablesaw thead tr:first-child th {
 	padding-top: .9em;

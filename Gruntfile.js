@@ -57,7 +57,6 @@ module.exports = function(grunt) {
 			cssstack: {
 				src: [
 					'src/tables.css',
-					'src/tables.skin.css',
 					'src/tables.stack.css'
 				],
 				dest: 'dist/<%= pkg.name %>.stackonly.myth.css'

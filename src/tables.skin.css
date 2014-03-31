@@ -56,3 +56,17 @@ table.tablesaw thead td {
 	margin-bottom:1.4em;
 	opacity:50%;
 }
+
+/* Stack */
+.tablesaw-cell-label-top {
+	text-transform: uppercase;
+	font-size: .9em;
+	font-weight: normal;
+}
+
+.tablesaw-cell-label {
+	font-size: .65em;
+	text-transform: uppercase;
+	color: #888;
+	font-family: sans-serif;
+}
