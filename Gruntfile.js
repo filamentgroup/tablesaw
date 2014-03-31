@@ -155,8 +155,8 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('src', ['concat', 'myth']);
-	grunt.registerTask('default', ['jshint', 'src', 'clean', 'grunticon:tablesaw', 'qunit', 'bytesize']);
+	grunt.registerTask('src', ['concat', 'myth', 'clean']);
+	grunt.registerTask('default', ['jshint', 'src', 'grunticon:tablesaw', 'qunit', 'bytesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);
