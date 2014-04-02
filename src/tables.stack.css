@@ -53,7 +53,7 @@
 	}
 }
 
-@media (max-width: 40em) {
+@media (max-width: 39.9375em) {
 	/* Avoid double top borders when stacked.  */
 	table[data-mode="stack"] thead,
 	.tablesaw.tablesaw-stack thead {
