@@ -44,7 +44,6 @@
 	}
 	/* Avoid double strokes when stacked */
 	.tablesaw-stack tbody th.group {
-		border-bottom: none;
 		margin-top:-1px;
 	}
 	/* Avoid double strokes when stacked */
@@ -54,13 +53,6 @@
 }
 
 @media (max-width: 39.9375em) {
-	/* Avoid double top borders when stacked.  */
-	table[data-mode="stack"] thead,
-	.tablesaw.tablesaw-stack thead {
-		border-top: 0;
-	}
-	table[data-mode="stack"] thead td,
-	table[data-mode="stack"] thead th,
 	.tablesaw-stack thead td,
 	.tablesaw-stack thead th {
 		display: none;
@@ -75,8 +67,6 @@
 	/* Show the table header rows */
 	.tablesaw-stack td,
 	.tablesaw-stack th,
-	.tablesaw-stack tbody th,
-	.tablesaw-stack tbody td,
 	.tablesaw-stack thead td,
 	.tablesaw-stack thead th {
 		display: table-cell;
@@ -86,8 +76,5 @@
 	.tablesaw-stack td .tablesaw-cell-label,
 	.tablesaw-stack th .tablesaw-cell-label {
 		display: none !important;
-	}
-	.tablesaw td {
-		line-height: 2em;
 	}
 }

@@ -70,3 +70,9 @@ table.tablesaw thead td {
 	color: #888;
 	font-family: sans-serif;
 }
+
+@media (min-width: 40em) {
+	.tablesaw td {
+		line-height: 2em;
+	}
+}
