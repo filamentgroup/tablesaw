@@ -40,7 +40,6 @@ Table headers must have a `data-priority` attribute to be eligible to toggle. `d
 
 ![](docs/columntoggle-minimap.gif)
 
-
 * [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
 
 ### Swipe
@@ -126,10 +125,29 @@ As shown above, we provide a Stack-mode-only package of TableSaw. It’s a bareb
 And then:
 
 ```html
-<table class="tablesaw" data-mode="stack">
+<table class="tablesaw tablesaw-stack" data-mode="stack">
 ```
 
 Check out [the Stack-Only demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html) to see a working example.
+
+### Using Stack-Only TableSaw SCSS Mixin
+
+To easily customize the breakpoint at which the stack table switches, use the SCSS mixin.  First, include the `tablesaw.stackonly.scss` file instead of `tablesaw.stackonly.css` in your SASS. Then, use a parent selector on your table.
+
+```html
+<div class="my-parent-selector">
+    <table class="tablesaw" data-mode="stack">
+```
+
+Include the mixin like so:
+
+```scss
+.my-parent-selector {
+  @include tablesaw-stack( 50em );
+}
+```
+
+The argument to `tablesaw-stack` is the breakpoint at which the table will switch from columns to stacked.
 
 ### The Full TableSaw 
 

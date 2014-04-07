@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 			'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>;' +
 			' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 		// Task configuration.
-		clean: ['<%= concat.cssall.dest %>', '<%= concat.cssstack.dest %>'],
+		clean: ['dist/tmp/'],
 		concat: {
 			options: {
 				banner: '<%= banner %>',
@@ -52,14 +52,29 @@ module.exports = function(grunt) {
 					'src/tables.minimap.css',
 					'src/tables.modeswitch.css'
 				],
-				dest: 'dist/<%= pkg.name %>.myth.css'
+				dest: 'dist/tmp/<%= pkg.name %>.myth.css'
 			},
 			cssstack: {
 				src: [
 					'src/tables.css',
+					'src/tables.stack.css',
+					'src/tables.stack-default-breakpoint.css'
+				],
+				dest: 'dist/tmp/<%= pkg.name %>.stackonly.myth.css'
+			},
+			cssstackmixinpre: {
+				src: [
+					'src/tables.css',
 					'src/tables.stack.css'
 				],
-				dest: 'dist/<%= pkg.name %>.stackonly.myth.css'
+				dest: 'dist/tmp/<%= pkg.name %>.stackonly.myth.scss'
+			},
+			cssstackmixinpost: {
+				src: [
+					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss',
+					'src/tables.stack-mixin.scss'
+				],
+				dest: 'dist/<%= pkg.name %>.stackonly.scss'
 			}
 		},
 		qunit: {
@@ -146,7 +161,8 @@ module.exports = function(grunt) {
 			dist: {
 				files: {
 					'dist/<%= pkg.name %>.css': '<%= concat.cssall.dest %>',
-					'dist/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>'
+					'dist/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>',
+					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>'
 				}
 			}
 		}
@@ -155,7 +171,10 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('src', ['concat', 'myth', 'clean']);
+	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
+	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
+	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean']);
+
 	grunt.registerTask('default', ['jshint', 'src', 'grunticon:tablesaw', 'qunit', 'bytesize']);
 
 	// Deploy
