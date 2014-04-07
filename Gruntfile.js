@@ -46,6 +46,7 @@ module.exports = function(grunt) {
 					'src/tables.toolbar.css',
 					'src/tables.skin.css',
 					'src/tables.stack.css',
+					'src/tables.stack-default-breakpoint.css',
 					'src/tables.swipetoggle.css',
 					'src/tables.columntoggle.css',
 					'src/tables.sortable.css',
