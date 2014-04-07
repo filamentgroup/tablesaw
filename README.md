@@ -8,7 +8,7 @@ A set of plugins for responsive tables.
 
 The Stack Table stacks the table headers to a two column layout with headers on the left when the viewport width is less than `40em` (`640px`).
 
-    <table data-mode="stack">
+    <table class="tablesaw tablesaw-stack" data-mode="stack">
 
 ![](docs/stack.gif)
 
