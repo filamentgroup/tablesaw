@@ -3,6 +3,12 @@
   .tablesaw-stack thead th {
     display: none;
   }
+  .tablesaw-stack tbody td,
+  .tablesaw-stack tbody th {
+    clear: left;
+    float: left;
+    width: 100%;
+  }
 }
 
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */

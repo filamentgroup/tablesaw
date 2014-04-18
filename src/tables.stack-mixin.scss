@@ -5,6 +5,12 @@
   .tablesaw-stack thead th {
     display: none;
   }
+  .tablesaw-stack tbody td,
+  .tablesaw-stack tbody th {
+    clear: left;
+    float: left;
+    width: 100%;
+  }
 }
 
 @mixin tablesaw-stack-min {

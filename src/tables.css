@@ -15,6 +15,10 @@ table.tablesaw {
 }
 .tablesaw th,
 .tablesaw td {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
 	padding: .5em .7em;
 }
 .tablesaw thead tr:first-child th {
