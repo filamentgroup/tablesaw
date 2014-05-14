@@ -2,7 +2,7 @@
   "name": "qunitjs",
   "title": "QUnit",
   "description": "An easy-to-use JavaScript Unit Testing framework.",
-  "version": "1.12.0",
+  "version": "1.11.0",
   "author": {
     "name": "jQuery Foundation and other contributors",
     "url": "https://github.com/jquery/qunit/blob/master/AUTHORS.txt"
@@ -29,15 +29,9 @@
     "jquery"
   ],
   "main": "qunit/qunit.js",
-  "scripts": {
-    "test": "grunt"
-  },
   "devDependencies": {
-    "grunt": "~0.4.0",
-    "grunt-contrib-jshint": "~0.2.0",
-    "grunt-contrib-qunit": "~0.2.0",
-    "grunt-contrib-watch": "~0.3.0",
-    "grunt-git-authors": "~1.2.0",
-    "testswarm": "~1.0.1"
+    "grunt": "0.3.x",
+    "grunt-git-authors": "1.0.0",
+    "testswarm": "1.0.0-alpha"
   }
 }

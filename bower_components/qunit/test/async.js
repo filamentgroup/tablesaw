@@ -1,6 +1,6 @@
 QUnit.start();
 
-test("just a test", function( assert ) {
+test("just a test", function() {
 	expect(1);
-	assert.ok(true);
+	ok(true);
 });

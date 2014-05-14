@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.1 - 2014-03-28
+/*! Tablesaw - v0.1.2 - 2014-05-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -20,13 +20,12 @@ table.tablesaw {
   padding: 0;
 }
 
-.tablesaw tbody th,
-.tablesaw tbody td {
-  padding: .4em 0 .3em .6em;
-}
-
-.tablesaw thead th {
-  padding: .6em .8em;
+.tablesaw th,
+.tablesaw td {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: .5em .7em;
 }
 
 .tablesaw thead tr:first-child th {
@@ -34,69 +33,10 @@ table.tablesaw {
   padding-bottom: .7em;
 }
 
-
-
-table.tablesaw tbody th {
-  font-weight: bold;
-}
-
-table.tablesaw thead th,
-table.tablesaw thead td {
-  color: #444;
-  font-size: .9em;
-}
-
-.tablesaw th,
-.tablesaw td {
-  line-height: 1em;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.tablesaw td,
-.tablesaw tbody th {
-  vertical-align: middle;
-  font-size: 1.17em;
-  /* 19px */
-}
-
-.tablesaw td .btn,
-.tablesaw tbody th .btn {
-  margin: 0;
-}
-
-.tablesaw thead {
-  border: 1px solid #e5e5e4;
-  background: #e2dfdc;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#e2dfdc));
-  background-image: -webkit-linear-gradient(top, #fff, #e2dfdc);
-  background-image: linear-gradient(to bottom, #fff, #e2dfdc);
-}
-
-.tablesaw thead th {
-  font-weight: 100;
-  color: #777;
-  text-transform: uppercase;
-  text-shadow: 0 1px 0 #fff;
-  text-align: left;
-}
-
-.tablesaw thead tr:first-child th {
-  font-weight: normal;
-  font-family: sans-serif;
-  border-right: 1px solid #e4e1de;
-}
-
 /* Table rows have a gray bottom stroke by default */
 
-.tablesaw tbody tr {
+.tablesaw-stack tbody tr {
   border-bottom: 1px solid #dfdfdf;
-}
-
-.tablesaw caption {
-  text-align: left;
-  margin-bottom: 1.4em;
-  opacity: 50%;
 }
 
 .tablesaw-stack td .tablesaw-cell-label,
@@ -137,23 +77,15 @@ table.tablesaw thead td {
     display: block;
     padding: .4em 0;
     margin: .4em 0;
-    text-transform: uppercase;
-    font-size: .9em;
-    font-weight: normal;
   }
 
   .tablesaw-cell-label {
     display: block;
-    font-size: .65em;
-    text-transform: uppercase;
-    color: #888;
-    font-family: sans-serif;
   }
 
   /* Avoid double strokes when stacked */
 
   .tablesaw-stack tbody th.group {
-    border-bottom: none;
     margin-top: -1px;
   }
 
@@ -164,19 +96,17 @@ table.tablesaw thead td {
   }
 }
 
-@media (max-width: 40em) {
-  /* Avoid double top borders when stacked.  */
-
-  table[data-mode="stack"] thead,
-  .tablesaw.tablesaw-stack thead {
-    border-top: 0;
-  }
-
-  table[data-mode="stack"] thead td,
-  table[data-mode="stack"] thead th,
+@media (max-width: 39.9375em) {
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
     display: none;
+  }
+
+  .tablesaw-stack tbody td,
+  .tablesaw-stack tbody th {
+    clear: left;
+    float: left;
+    width: 100%;
   }
 }
 
@@ -191,8 +121,6 @@ table.tablesaw thead td {
 
   .tablesaw-stack td,
   .tablesaw-stack th,
-  .tablesaw-stack tbody th,
-  .tablesaw-stack tbody td,
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
     display: table-cell;
@@ -204,9 +132,5 @@ table.tablesaw thead td {
   .tablesaw-stack td .tablesaw-cell-label,
   .tablesaw-stack th .tablesaw-cell-label {
     display: none !important;
-  }
-
-  .tablesaw td {
-    line-height: 2em;
   }
 }

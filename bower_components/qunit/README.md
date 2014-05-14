@@ -1,8 +1,7 @@
-[![Build Status](http://jenkins.jquery.com/job/QUnit/badge/icon)](http://jenkins.jquery.com/job/QUnit/)
+[QUnit](http://qunitjs.com) - A JavaScript Unit Testing framework.
+================================
 
-# [QUnit](http://qunitjs.com) - A JavaScript Unit Testing Framework.
-
-QUnit is a powerful, easy-to-use, JavaScript unit testing framework. It's used by the jQuery
+QUnit is a powerful, easy-to-use, JavaScript test suite. It's used by the jQuery
 project to test its code and plugins but is capable of testing any generic
 JavaScript code (and even capable of testing JavaScript code on the server-side).
 
@@ -24,7 +23,8 @@ If you are interested in helping developing QUnit, you are in the right place.
 For related discussions, visit the
 [QUnit and Testing forum](http://forum.jquery.com/qunit-and-testing).
 
-## Development
+Development
+-----------
 
 To submit patches, fork the repository, create a branch for the change. Then implement
 the change, run `grunt` to lint and test it, then commit, push and create a pull request.
@@ -35,16 +35,16 @@ to the issue number you're addressing.
 To run `grunt`, you need `node` and `npm`, then `npm install grunt -g`. That gives you a global
 grunt binary. For additional grunt tasks, also run `npm install`.
 
-## Releases
+Releases
+--------
 
-Install git-extras and run `git changelog` to update History.md. Clean up the
-changelog, removing merge commits or whitespace cleanups.
-
+Install git-extras and run `git changelog` to update History.md.
 Update qunit/qunit.js|css and package.json to the release version, commit and
-tag (Put the 'v' in front of the tag, e.g. `v1.8.0`), update them again to
-the next version, commit and push commits and tags:
+tag, update them again to the next version, commit and push commits and tags
+(`git push --tags origin master`).
 
-	git push --tags origin master
+Put the 'v' in front of the tag, e.g. `v1.8.0`. Clean up the changelog, removing merge commits
+or whitespace cleanups.
 
 To upload to code.jquery.com (replace $version accordingly), ssh to code.origin.jquery.com:
 

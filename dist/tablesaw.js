@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.1 - 2014-03-28
+/*! Tablesaw - v0.1.2 - 2014-05-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -26,151 +26,167 @@
 
 })( jQuery );
 ;(function( $ ) {
-	var o = {
-		pluginName : "table",
-		classes : {
+	var pluginName = "table",
+		classes = {
 			toolbar: "tablesaw-bar"
 		},
-		events: {
+		events = {
 			create: "tablesawcreate",
 			destroy: "tablesawdestroy"
 		},
-		mode: "stack",
-		initSelector: "table[data-mode],table[data-sortable]"
-	},
-	methods = {
-		_create: function() {
-			var self = this,
-				$table = $(this);
+		defaultMode = "stack",
+		initSelector = "table[data-mode],table[data-sortable]";
 
-			// override the mode if defined (this could be broader if needed)
-			if( $(this).is( "[data-mode]" ) ){
-				o.mode = $(this).attr( "data-mode" );
-			}
+	var Table = function( element ) {
+		if( !element ) {
+			throw new Error( "Tablesaw requires an element." );
+		}
 
-			// Insert the toolbar
-			// TODO move this into a separate component
-			var $toolbar = $table.prev( '.' + o.classes.toolbar );
-			if( !$toolbar.length ) {
-				$toolbar = $( '<div>' )
-					.addClass( o.classes.toolbar )
-					.insertBefore( $table );
-			}
+		this.table = element;
+		this.$table = $( element );
 
-			if( o.mode ) {
-				$toolbar.addClass( 'mode-' + o.mode );
-			}
+		this.mode = this.$table.attr( "data-mode" ) || defaultMode;
 
-			// Add header cells
-			var colstart,
-				thrs = this.querySelectorAll( "thead tr" );
-			$( thrs ).each( function(){
-				var coltally = 0;
+		this.init();
+	};
 
-				$( this ).children().each( function(){
-					var span = parseInt( this.getAttribute( "colspan" ), 10 ),
-						sel = ":nth-child(" + ( coltally + 1 ) + ")";
+	Table.prototype.init = function() {
+		// assign an id if there is none
+		if ( !this.$table.attr( "id" ) ) {
+			this.$table.attr( "id", pluginName + "-" + Math.round( Math.random() * 10000 ) );
+		}
 
-					colstart = coltally + 1;
+		this.createToolbar();
 
-					if( span ){
-						for( var k = 0; k < span - 1; k++ ){
-							coltally++;
-							sel += ", :nth-child(" + ( coltally + 1 ) + ")";
-						}
+		// Add header cells
+		var colstart,
+			thrs = this.table.querySelectorAll( "thead tr" ),
+			self = this;
+
+		$( thrs ).each( function(){
+			var coltally = 0;
+
+			$( this ).children().each( function(){
+				var span = parseInt( this.getAttribute( "colspan" ), 10 ),
+					sel = ":nth-child(" + ( coltally + 1 ) + ")";
+
+				colstart = coltally + 1;
+
+				if( span ){
+					for( var k = 0; k < span - 1; k++ ){
+						coltally++;
+						sel += ", :nth-child(" + ( coltally + 1 ) + ")";
 					}
+				}
 
-					// Store "cells" data on header as a reference to all cells in the same column as this TH
-					this.cells = $( self ).find("tr").not($( thrs ).eq(0)).not(this).children(sel);
-					coltally++;
+				// Store "cells" data on header as a reference to all cells in the same column as this TH
+				this.cells = self.$table.find("tr").not( $( thrs ).eq( 0 ) ).not( this ).children( sel );
+				coltally++;
 
-				});
 			});
+		});
 
-			$table.trigger( o.events.create, [ o.mode, colstart ] );
-		},
+		this.$table.trigger( events.create, [ this.mode, colstart ] );
+	};
 
-		destroy: function() {
-			var $t = $( this );
-			$t.removeAttr( 'data-mode' );
+	Table.prototype.createToolbar = function() {
+		// Insert the toolbar
+		// TODO move this into a separate component
+		var $toolbar = this.$table.prev( '.' + classes.toolbar );
+		if( !$toolbar.length ) {
+			$toolbar = $( '<div>' )
+				.addClass( classes.toolbar )
+				.insertBefore( this.$table );
+		}
+		this.$toolbar = $toolbar;
 
-			// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
-			$t.prev( '.' + o.classes.toolbar ).each(function() {
-				this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
-			});
-
-			$( window ).off( 'resize.' + $t.attr( 'id' ) );
-
-			// other plugins
-			$t.trigger( o.events.destroy, [ o.mode ] );
-
-			$t.removeData( o.pluginName + 'active' );
+		if( this.mode ) {
+			this.$toolbar.addClass( 'mode-' + this.mode );
 		}
 	};
 
+	Table.prototype.destroy = function() {
+		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
+		this.$table.prev( '.' + classes.toolbar ).each(function() {
+			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
+		});
+
+		$( window ).off( 'resize.' + this.$table.attr( 'id' ) );
+
+		// other plugins
+		this.$table.trigger( events.destroy, [ this.mode ] );
+
+		this.$table.removeAttr( 'data-mode' );
+
+		this.$table.removeData( pluginName );
+	};
+
 	// Collection method.
-	$.fn[ o.pluginName ] = function( arrg, a, b, c ) {
-		return this.each(function() {
+	$.fn[ pluginName ] = function() {
+		return this.each( function() {
+			var $t = $( this );
 
-			// if it's a method
-			if( arrg && typeof( arrg ) === "string" ){
-				return $.fn[ o.pluginName ].prototype[ arrg ].call( this, a, b, c );
+			if( $t.data( pluginName ) ){
+				return;
 			}
 
-			// don't re-init
-			if( $( this ).data( o.pluginName + "active" ) ){
-				return $( this );
-			}
-
-			// otherwise, init
-			$( this ).data( o.pluginName + "active", true );
-			$.fn[ o.pluginName ].prototype._create.call( this );
+			var table = new Table( this );
+			$t.data( pluginName, table );
 		});
 	};
 
-	// add methods
-	$.extend( $.fn[ o.pluginName ].prototype, methods );
-
 	$( document ).on( "enhance.tablesaw", function( e ) {
-		$( e.target ).find( o.initSelector )[ o.pluginName ]();
+		$( e.target ).find( initSelector )[ pluginName ]();
 	});
 
 }( jQuery ));
 
 ;(function( win, $, undefined ){
 
+	var classes = {
+		stackTable: 'tablesaw-stack',
+		cellLabels: 'tablesaw-cell-label'
+	};
+
+	var data = {
+		obj: 'tablesaw-stack'
+	};
+
+	var attrs = {
+		labelless: 'data-no-labels'
+	};
+
 	var Stack = function( element ) {
 
 		this.$table = $( element );
 
-		this.classes = {
-			stackTable: "tablesaw-stack",
-			cellLabels: "tablesaw-cell-label"
-		};
+		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
 
-		// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
-		this.allHeaders = this.$table.find( "th" );
+		if( !this.labelless ) {
+			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
+			this.allHeaders = this.$table.find( "th" );
+		}
 
-		this.$table.data( 'tablesaw-stack', this );
+		this.$table.data( data.obj, this );
 	};
 
 	Stack.prototype.init = function( colstart ) {
-		this.$table.addClass( this.classes.stackTable );
+		this.$table.addClass( classes.stackTable );
+
+		if( this.labelless ) {
+			return;
+		}
 
 		// get headers in reverse order so that top-level headers are appended last
-
 		var reverseHeaders = $( this.allHeaders );
 
 		// create the hide/show toggles
-		var self = this;
-
 		reverseHeaders.each(function(){
 			var $cells = $( this.cells ),
 				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
 				text = $(this).text();
 
-			if( text !== ""  ){
-
+			if( text !== "" ){
 				if( hierarchyClass ){
 					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
 						filter = "";
@@ -178,18 +194,17 @@
 					if( iteration ){
 						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
 					}
-					$cells.filter( filter ).prepend( "<b class='" + self.classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
-				}
-				else {
-					$cells.prepend( "<b class='" + self.classes.cellLabels + "'>" + text + "</b>"  );
+					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
+				} else {
+					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + text + "</b>"  );
 				}
 			}
 		});
 	};
 
 	Stack.prototype.destroy = function() {
-		this.$table.removeClass( this.classes.stackTable );
-		this.$table.find( '.' + this.classes.cellLabels ).remove();
+		this.$table.removeClass( classes.stackTable );
+		this.$table.find( '.' + classes.cellLabels ).remove();
 	};
 
 	// on tablecreate, init
@@ -204,7 +219,7 @@
 	$( document ).on( "tablesawdestroy", "table", function( e, mode ){
 
 		if( mode === 'stack' ){
-			$( this ).data( 'tablesaw-stack' ).destroy();
+			$( this ).data( data.obj ).destroy();
 		}
 
 	} );
@@ -327,7 +342,6 @@
 
 	var ColumnToggle = function( element ) {
 
-		this.pluginName = 'table';
 		this.$table = $( element );
 
 		this.classes = {
@@ -363,11 +377,6 @@
 			$menu,
 			$btnContain,
 			self = this;
-
-		// assign an id if there is none
-		if ( !this.$table.attr( "id" ) ) {
-			this.$table.attr( "id", this.pluginName + "-" + Math.round( Math.random() * 10000 ) );
-		}
 
 		this.$table.addClass( this.classes.columnToggleTable );
 
@@ -1139,7 +1148,7 @@
 				val = $t.val();
 
 			$switcher.remove();
-			$table.table( 'destroy' );
+			$table.data( 'table' ).destroy();
 
 			$table.attr( 'data-mode', val );
 			$table.table();

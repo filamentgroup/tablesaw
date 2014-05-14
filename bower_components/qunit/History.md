@@ -1,30 +1,3 @@
-1.12.0 / 2013-06-21
-===================
-
-  * Add a deprecation comment to QUnit.reset. Partial fix for #354
-  * Fix mis-match between moduleStart and moduleDone events
-  * Removed jQuery.trim optimization. Fixes #424.
-  * Use a local setTimeout reference, add separate unit test suite for that. Fixes #432 - Using a setTimeout stub can stop test suite from continuing. Closes gh-433
-  * Added CONTRIBUTING.md.
-  * Moved 'addons/themes/nv' to 'Krinkle/qunit-theme-nv.git'
-  * Moved 'addons/themes/ninja' to 'Krinkle/qunit-theme-ninja.git'
-  * Moved 'addons/themes/gabe' to 'Krinkle/qunit-theme-gabe.git'
-  * Moved 'addons/canvas' to 'JamesMGreene/qunit-assert-canvas.git'. Tree: https://github.com/JamesMGreene/qunit-assert-canvas/tree/v1.0.0
-  * Moved 'addons/close-enough' to 'JamesMGreene/qunit-assert-close.git'. Tree: https://github.com/JamesMGreene/qunit-assert-close/tree/v1.0.0
-  * Moved 'addons/step' to 'JamesMGreene/qunit-assert-step.git'. Tree: https://github.com/JamesMGreene/qunit-assert-step/tree/v1.0.0
-  * Canvas plugin: Show how to test with images. Closes gh-438.
-  * Clear filter and testNumber when choosing a module. Fixes #442.
-  * Deprecate QUnit.current_testEnvironment in favour of config.current.testEnvironment.
-  * assert.ok: Message shouldn't be undefined in 'log' event.
-  * Emit moduleStart before testStart even if test isn't in a module.
-  * PhantomJS plugin: Added optional timeout. Closes #415.
-  * PhantomJS plugin: Include stack trace for all failed tests. Closes #416.
-  * Moved 'addons/composite' to 'jquery/qunit-composite.git'. Tree: https://github.com/jquery/qunit-composite/tree/v1.0.0 Fixes #419.
-  * Moved 'addons/junitlogger' to 'jquery/qunit-reporter-junit.git'.
-  * Sort the module names so we no longer rely on implicit ordering. Fixes #391. Closes gh-392
-  * JUnitLogger: Add a `name` property to the test run. Closes gh-389
-  * Improve circular reference logic in equiv - Fixes #397
-
 1.11.0 / 2013-01-20
 ==================
 
@@ -79,11 +52,11 @@
   * added jsdoc for QUnit.assert functions
   * Styling: radius to 5px and small pass/error border, remove inner shadow
   * Move checkboxes into toolbar and give them labels and descriptions (as tooltip). Fixes #274 - Improve urlFilter API and UI
-  * Where we receive no exception in throws() use a relevant message.
+  * Where we recieve no exception in throws() use a relevant message.
   * Also make module filter case-insensitive. Follow-up to #252
   * Banner: Link should ignore "testNumber" and "module". Fixes #270
   * Rename assert.raises to assert.throws. Fixes #267
-  * Change package.json name property to 'qunitjs' to avoid conflict with node-qunit; will publish next release to npm
+  * Change package.json name property to 'qunitjs' to avoid conflicht with node-qunit; will publish next release to npm
 
 1.8.0 / 2012-06-14
 ==================
@@ -114,7 +87,7 @@
 
   * Save stack for each test, use that for failed expect() results, points at the line where test() was called. Fixes #209
   * Prefix test-output id and ignore that in noglobals check. Fixes #212
-  * Only check for an exports object to detect a CommonJS environment. Fixes #237 - Incompatibility with require.js
+  * Only check for an exports object to detect a CommonJS enviroment. Fixes #237 - Incompatibility with require.js
   * Add testswarm integration as grunt task
   * Added padding on URL config checkboxes.
   * Cleanup composite addon: Use callback registration instead of overwriting them. Set the correct src on rerun link (and dblclick). Remove the composite test itself, as that was a crazy hack not worth maintaining
@@ -135,7 +108,7 @@
 ==================
 
   * Prefix test-related session-storage items to make removal more specific. Fixes #213 - Keep hide-passed state when clearing session storage
-  * Update grunt.js with separate configs for qunit.js and grunt.js, also add tests but disable for now, not passing yet. Add grunt to devDependencies
+  * Update grunt.js with seperate configs for qunit.js and grunt.js, also add tests but disable for now, not passing yet. Add grunt to devDependencies
   * typo
   * Cleanup grunt.js, no need for the banner
   * Fix lint errors and some formatting issues. Use QUnit.pushFailure for noglobals and global error handler.
@@ -166,11 +139,11 @@
   * Set fixed dimensions for #qunit-fixture. Fixes #114
   * Extend nodejs test runner to check for stacktrace output, twice
   * Extend nodejs test runner to check for stacktrace output
-  * Generate more base markup, but allow the user to exclude that completely or choose their own. Fixes #127
+  * Generate more base markup, but allow the user to exclude that completelty or choose their own. Fixes #127
   * Add a simple test file to check basic nodejs integration works
   * Check for global object to find setTimeout in node
   * Fix CommonJS export by assigning QUnit to module.exports.
-  * Remove the testEnvironmentArg to test(). Most obscure, never used anywhere. test() is still heavily overloaded with argument shifting, this makes it a little more sane. Fixes #172
+  * Remove the testEnviromentArg to test(). Most obscure, never used anywhere. test() is still heavily overloaded with argument shifting, this makes it a little more sane. Fixes #172
   * Serialize expected and actual values only when test fails. Speeds up output of valid tests, especially for lots of large objects. Fixes #183
   * Fix sourceFromsTacktrace to get the right line in Firefox. Shift the 'error' line away in Chrome to get a match.
   * Fix references to test/deepEqual.js
@@ -182,7 +155,7 @@
   * Some cleanup in theme addons
   * Update headers
   * Update nv.html, add gabe theme based on https://github.com/jquery/qunit/pull/188
-  * Experimental custom theme based on https://github.com/jquery/qunit/pull/62 by NV
+  * Experiemental custom theme based on https://github.com/jquery/qunit/pull/62 by NV
   * Replace deprecated same and equals aliases with placeholders that just throw errors, providing a hint at what to use instead. Rename test file to match that.
   * Can't rely on outerHTML for Firefox < 11. Use cloneNode instead.
   * Merge remote branch 'conzett/master'
@@ -239,9 +212,9 @@
   * Add-on: New assertion-type: step()
   * added parameter to start and stop allowing a user to increment/decrement the semaphore more than once per call
   * Update readmes with .md extension for GitHub to render them as markdown
-  * Update close-enough addon to include readme and match (new) naming conventions
+  * Update close-enough addon to include readme and match (new) naming convetions
   * Merge remote branch 'righi/close-enough-addon'
-  * Canvas addon: Update file references
+  * Canvas addon: Update file referneces
   * Update canvas addon: Rename files and add README
   * Merge remote branch 'wwalser/composite'
   * Fix #142 - Backslash characters in messages should not be escaped
@@ -293,8 +266,8 @@
   * Prepend module name to sessionStorage keys to avoid conflicts
   * Store filter-tests only when checked
   * Write to sessionStorage only bad tests
-  * Moved QUnit.url() definition after QUnit properties are merged into the global scope. Fixes #93 - QUnit url/extend function breaking urls in jQuery ajax test component
-  * Add a "Rerun" link to each test to replace the dblclick (still supported, for now).
+  * Moved QUnit.url() defintion after QUnit properties are merged into the global scope. Fixes #93 - QUnit url/extend function breaking urls in jQuery ajax test component
+  * Add a "Rerun" link to each test to replce the dblclick (still supported, for now).
   * Fixed the regex for parsing the name of a test when double clicking to filter.
   * Merge remote branch 'scottgonzalez/url'
   * Added checkboxes to show which flags are currently on and allow toggling them.
@@ -307,9 +280,9 @@
   * Position test results above test list, making it visible without ever having to scroll. Create a placeholder to avoid pushing down results later.
   * Don't check for existing qunit-testresult element, it gets killed on init anyway.
   * Added URL flag ?notrycatch (ala ?noglobals) for debugging exceptions. Won't try/catch test code, giving better debugging changes on the original exceptions. Fixes #72
-  * Always show qunit-toolbar (if at all specified), persist checkbox via sessionStorage. Fixes #47
+  * Always show quni-toolbar (if at all specified), persist checkbox via sessionStorage. Fixes #47
   * Use non-html testname for calls to fail(). Fixes #77
-  * Overhaul of QUnit.callbacks. Consistent single argument with related properties, with additional runtime property for QUnit.done
+  * Overhaul of QUnit.callbacks. Consistent single argument with related properties, with additonal runtime property for QUnit.done
   * Extended test/logs.html to capture more of the callbacks.
   * Fixed moduleStart/Done callbacks. Added test/logs.html to test these callbacks. To be extended.
   * Update copyright and license header. Fixes #61
@@ -319,11 +292,11 @@
   * Added two tests for previous QUnit.raises behaviour. For #69
   * add optional 2. arg to QUnit.raises #69.
   * fix references inside Complex Instances Nesting to what was originally intended.
-  * Qualify calls to ok() in raises() for compatibility with CLI environments.
+  * Qualify calls to ok() in raises() for compability with CLI enviroments.
   * Fix done() handling, check for blocking, not block property
   * Fix moduleStart/Done and done callbacks.
   * Replacing sessionStorage test with the one from Modernizr/master (instead of current release). Here's hoping it'll work for some time.
-  * Updated test for availability of sessionStorage, based on test from Modernizr. Fixes #64
+  * Updated test for availibility of sessionStorage, based on test from Modernizr. Fixes #64
   * Defer test execution when previous run passed, persisted via sessionStorage. Fixes #49
   * Refactored module handling and queuing to enable selective defer of test runs.
   * Move assertions property from config to Test
@@ -370,7 +343,7 @@
   * Ammending previous commit: Remove jQuery-core specific resets (will be replaced within jQuery testsuite). Fixes issue #19 - QUnit.reset() removes global jQuery ajax event handlers
   * Remove jQuery-core specific resets (will be replaced within jQuery testsuite). Fixes issue #19 - QUnit.reset() removes global jQuery ajax event handlers
   * Cleaning up rubble from the previous commit.
-  * Added raises assertion, reusing some of kensnyder's code.
+  * Added raises assertion, reusing some of kennsnyder's code.
   * Merged kensnyder's object detection code. Original message: Streamlined object detection and exposed QUnit.objectType as a function.
   * Fixed some bad formatting.
   * Move various QUnit properties below the globals-export to avoid init becoming a global method. Fixes issue #11 - Remove 'init' function from a global namespace
@@ -480,7 +453,7 @@
   * Reverted the noglobals changed from QUnit - causing chaos in the jQuery test suite.
   * qunit: removed noglobals flag, instead always check for globals after teardown; if a test has to introduce a global "myVar", use delete window.myVar in teardown or at the end of a test
   * qunit: don't child selectors when IE should behave nicely, too
-  * qunit: improvement for the test-scope: create a new object and call setup, the test, and teardown in the scope of that object - allows you to provide test fixtures to each test without messing with global data; kudos to Martin Häcker for the contribution
+  * qunit: improvment for the test-scope: create a new object and call setup, the test, and teardown in the scope of that object - allows you to provide test fixtures to each test without messing with global data; kudos to Martin Häcker for the contribution
   * qunit: added missing semicolons
   * qunit: fixed a semicolon, that should have been a comma
   * QUnit: implemented error handling for Opera as proposed by #3628
@@ -504,9 +477,9 @@
   * QUnit: optional timeout argument for stop, while making tests undetermined, useful for debugging
   * QUnit: added toolbar with "hide passed tests" checkbox to help focus on failed tests
   * QUnit: minor output formatting
-  * QUnit: adding same-assertion for a recursive comparison of primitive values, arrays  and objects, thanks to Philippe Rathé for the contribution, including tests
-  * QUnit: adding same-assertion for a recursive comparison of primitive values, arrays  and objects, thanks to Philippe Rathé for the contribution, including tests
-  * QUnit: adding same-assertion for a recursive comparison of primitive values, arrays  and objects, thanks to Philippe Rathé for the contribution, including tests
+  * QUnit: adding same-assertion for a recursive comparsion of primite values, arrays  and objects, thanks to Philippe Rathé for the contribution, including tests
+  * QUnit: adding same-assertion for a recursive comparsion of primite values, arrays  and objects, thanks to Philippe Rathé for the contribution, including tests
+  * QUnit: adding same-assertion for a recursive comparsion of primite values, arrays  and objects, thanks to Philippe Rathé for the contribution, including tests
   * qunit: use window.load to initialize tests, allowing other code to run on document-ready before starting to run tests
   * qunit: allow either setup or teardown, instead of both or nothing
   * qunit: make everything private by default, expose only public API; removed old timeout-option (non-deterministic, disabled for a long time anyway); use local $ reference instead of global jQuery reference; minor code cleanup (var config instead of _config; queue.shift instead of slice)

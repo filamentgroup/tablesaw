@@ -3,7 +3,7 @@ A PhantomJS-powered headless test runner, providing basic console output for QUn
 
 ### Usage ###
 ```bash
-  phantomjs runner.js [url-of-your-qunit-testsuite] [timeout-in-seconds]
+  phantomjs runner.js [url-of-your-qunit-testsuite]
 ```
 
 ### Example ###
@@ -13,4 +13,4 @@ A PhantomJS-powered headless test runner, providing basic console output for QUn
 
 ### Notes ###
  - Requires [PhantomJS](http://phantomjs.org/) 1.6+ (1.7+ recommended).
- - If you're using Grunt, you should take a look at its [qunit task](https://github.com/gruntjs/grunt-contrib-qunit).
+ - If you're using Grunt, you should take a look at its [qunit task](https://github.com/gruntjs/grunt/blob/master/docs/task_qunit.md).

@@ -11,25 +11,22 @@
  *   phantomjs runner.js http://localhost/qunit/test/index.html
  */
 
+/*jshint latedef:false */
 /*global phantom:false, require:false, console:false, window:false, QUnit:false */
 
 (function() {
 	'use strict';
 
-	var url, page, timeout,
-		args = require('system').args;
+	var args = require('system').args;
 
 	// arg[0]: scriptName, args[1...]: arguments
-	if (args.length < 2 || args.length > 3) {
-		console.error('Usage:\n  phantomjs runner.js [url-of-your-qunit-testsuite] [timeout-in-seconds]');
+	if (args.length !== 2) {
+		console.error('Usage:\n  phantomjs runner.js [url-of-your-qunit-testsuite]');
 		phantom.exit(1);
 	}
 
-	url = args[1];
-	page = require('webpage').create();
-	if (args[2] !== undefined) {
-		timeout = parseInt(args[2], 10);
-	}
+	var url = args[1],
+		page = require('webpage').create();
 
 	// Route `console.log()` calls from within the Page context to the main Phantom context (i.e. current `this`)
 	page.onConsoleMessage = function(msg) {
@@ -67,21 +64,13 @@
 				phantom.exit(1);
 			}
 
-			// Set a timeout on the test running, otherwise tests with async problems will hang forever
-			if (typeof timeout === 'number') {
-				setTimeout(function() {
-					console.error('The specified timeout of ' + timeout + ' seconds has expired. Aborting...');
-					phantom.exit(1);
-				}, timeout * 1000);
-			}
-
 			// Do nothing... the callback mechanism will handle everything!
 		}
 	});
 
 	function addLogging() {
 		window.document.addEventListener('DOMContentLoaded', function() {
-			var currentTestAssertions = [];
+			var current_test_assertions = [];
 
 			QUnit.log(function(details) {
 				var response;
@@ -99,13 +88,12 @@
 					}
 
 					response += 'expected: ' + details.expected + ', but was: ' + details.actual;
+					if (details.source) {
+						response += "\n" + details.source;
+					}
 				}
 
-				if (details.source) {
-					response += "\n" + details.source;
-				}
-
-				currentTestAssertions.push('Failed assertion: ' + response);
+				current_test_assertions.push('Failed assertion: ' + response);
 			});
 
 			QUnit.testDone(function(result) {
@@ -116,12 +104,12 @@
 				if (result.failed) {
 					console.log('Test failed: ' + name);
 
-					for (i = 0, len = currentTestAssertions.length; i < len; i++) {
-						console.log('    ' + currentTestAssertions[i]);
+					for (i = 0, len = current_test_assertions.length; i < len; i++) {
+						console.log('    ' + current_test_assertions[i]);
 					}
 				}
 
-				currentTestAssertions.length = 0;
+				current_test_assertions.length = 0;
 			});
 
 			QUnit.done(function(result) {
