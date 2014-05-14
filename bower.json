@@ -9,7 +9,7 @@
 		"**/.*"
 	],
 	"dependencies": {
-		"jquery": ">=1.9.1 <2.0.0",
+		"jquery": ">=1.9.1",
 		"filament-dialog": ">=0.1.1",
 		"respond": "~1.4.2",
 		"qunit": "1.11.0"

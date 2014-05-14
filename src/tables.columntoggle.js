@@ -9,7 +9,6 @@
 
 	var ColumnToggle = function( element ) {
 
-		this.pluginName = 'table';
 		this.$table = $( element );
 
 		this.classes = {
@@ -45,11 +44,6 @@
 			$menu,
 			$btnContain,
 			self = this;
-
-		// assign an id if there is none
-		if ( !this.$table.attr( "id" ) ) {
-			this.$table.attr( "id", this.pluginName + "-" + Math.round( Math.random() * 10000 ) );
-		}
 
 		this.$table.addClass( this.classes.columnToggleTable );
 

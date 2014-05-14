@@ -71,7 +71,7 @@
 				val = $t.val();
 
 			$switcher.remove();
-			$table.table( 'destroy' );
+			$table.data( 'table' ).destroy();
 
 			$table.attr( 'data-mode', val );
 			$table.table();

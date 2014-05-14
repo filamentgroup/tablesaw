@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 			},
 			jsall: {
 				src: [
-					'src/tablesaw.js',
+					'src/tables-init.js',
 					'src/tables.js',
 					'src/tables.stack.js',
 					'src/tables.btnmarkup.js',
