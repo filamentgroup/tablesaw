@@ -34,7 +34,7 @@ module.exports = function(grunt) {
 			},
 			jsstack: {
 				src: [
-                    'src/tables-init.js',
+					'src/tables-init.js',
 					'src/tablesaw.js',
 					'src/tables.js',
 					'src/tables.stack.js'
