@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.2 - 2014-05-14
+/*! Tablesaw - v0.1.2 - 2014-05-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -561,9 +561,9 @@
 			$headerCells.each(function( index ) {
 				var width;
 				if( isPersistent( this ) ) {
-					width = $( this ).width();
+					width = $( this ).outerWidth();
 
-					// Don’t persist greedy columns (take up more than 75% of table width)
+					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
 						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
 					}
