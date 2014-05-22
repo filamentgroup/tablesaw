@@ -192,9 +192,3 @@ The `columntoggle` mode requires the [Filament Group dialog](https://github.com/
 Next include the tablesaw icons in `src/icons` with your grunticon build and include the grunticon loader.
 
 Check out any of the demos above for complete working examples.
-
-## TODO
-
-* Generate a zip file that can be downloaded (includes full sources, icons)
-* Add to bower
-* Add VanillaJS/non-jQuery version
