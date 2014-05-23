@@ -1,4 +1,4 @@
-# Tablesaw
+# Tablesaw [![Build Status](https://img.shields.io/travis/filamentgroup/tablesaw/master.svg)](https://travis-ci.org/filamentgroup/tablesaw)
 
 [![Filament Group](http://filamentgroup.com/images/fg-logo-positive-sm-crop.png) ](http://www.filamentgroup.com/)
 
@@ -186,6 +186,7 @@ The `columntoggle` mode requires the [Filament Group dialog](https://github.com/
 <!--[if lt IE 9]><script src="respond.min.js"></script><!--<![endif]-->
 <script src="bower_components/jquery/jquery.js"></script>
 <script src="bower_components/filament-dialog/dialog.js"></script>
+<script src="bower_components/filament-dialog/dialog-init.js"></script>
 <script src="tablesaw.js"></script>
 ```
 
