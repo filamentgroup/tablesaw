@@ -6,13 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>TableSaw Column Toggle Table</title>
 
-	<link rel="stylesheet" href="../bower_components/filament-dialog/dialog.css">
+	<link rel="stylesheet" href="../bower_components/filament-dialog/dist/dialog.css">
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 
-	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><![endif]-->
 	<script src="../bower_components/jquery/dist/jquery.js"></script>
-	<script src="../bower_components/filament-dialog/dialog.js"></script>
+	<script src="../bower_components/filament-dialog/dist/dialog.build.js"></script>
 	<script src="../dist/tablesaw.js"></script>
 
 	<script>
@@ -23,7 +23,10 @@
 	<noscript><link href="../dist/icons/icons.fallback.css" rel="stylesheet"></noscript>
 </head>
 <body>
-	<h1>Column Toggle Table</h1>
+	<div class="header">
+		<a href="http://filamentgroup.com/"><h1 id="fg-logo">Filament Group</h1></a>
+	</div>
+	<h2>Column Toggle Table</h2>
 	<p>The Column Toggle Table allows the user to select which columns they want to be visible.</p>
 	<table class="tablesaw" data-mode="columntoggle">
 		<thead>

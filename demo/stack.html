@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 
-	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><![endif]-->
 	<script src="../bower_components/jquery/dist/jquery.js"></script>
 	<script src="../bower_components/filament-dialog/dialog.js"></script>
 	<script src="../dist/tablesaw.js"></script>
@@ -23,7 +23,10 @@
 	<noscript><link href="../dist/icons/icons.fallback.css" rel="stylesheet"></noscript>
 </head>
 <body>
-	<h1>Stack Table</h1>
+	<div class="header">
+		<a href="http://filamentgroup.com/"><h1 id="fg-logo">Filament Group</h1></a>
+	</div>
+	<h2>Stack Table</h2>
 	<p>The Stack Table stacks the table headers to a two column layout with headers on the left. Resize your viewport to across the 40em (640px) breakpoint to see the change.</p>
 	<table class="tablesaw" data-mode="stack">
 		<thead>
