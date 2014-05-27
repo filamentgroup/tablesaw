@@ -173,6 +173,7 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
+	grunt.registerTask('travis', ['jshint', 'qunit']);
 	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean']);
