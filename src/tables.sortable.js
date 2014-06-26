@@ -188,7 +188,7 @@
 								if( parseInt( a.cell , 10 )){
 									return parseInt( a.cell , 10 ) - parseInt( b.cell, 10 );
 								} else {
-									return a.cell > b.cell ? 1 : -1;
+									return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
 								}
 							};
 						} else {
@@ -196,7 +196,7 @@
 								if( parseInt( a.cell , 10 )){
 									return parseInt( b.cell , 10 ) - parseInt( a.cell, 10 );
 								} else {
-									return a.cell < b.cell ? 1 : -1;
+									return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
 								}
 							};
 						}
