@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.3 - 2014-05-27
+/*! Tablesaw - v0.1.4 - 2014-06-26
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -918,7 +918,7 @@
 								if( parseInt( a.cell , 10 )){
 									return parseInt( a.cell , 10 ) - parseInt( b.cell, 10 );
 								} else {
-									return a.cell > b.cell ? 1 : -1;
+									return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
 								}
 							};
 						} else {
@@ -926,7 +926,7 @@
 								if( parseInt( a.cell , 10 )){
 									return parseInt( b.cell , 10 ) - parseInt( a.cell, 10 );
 								} else {
-									return a.cell < b.cell ? 1 : -1;
+									return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
 								}
 							};
 						}
