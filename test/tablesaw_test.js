@@ -45,6 +45,7 @@
 				'</tr>',
 				'<tr><td>Body Row 2</td><td>2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
 				'<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
+				'<tr><td>body row 3</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
 			'</tbody>',
 			'</table>'].join(''),
 		$fixture,
@@ -96,6 +97,13 @@
 		$table.prev().find( '.tablesaw-columntoggle-btn' ).click();
 
 		ok( $fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog visible after button click' );
+
+		var $curtain = $( '.dialog-background-open' );
+		ok( $curtain.length, 'Curtain visible.' );
+
+		// close dialog
+		$curtain.click();
+		ok( $curtain.is( '.dialog-background-open' ), 'Curtain not visible after click.' );
 	});
 
 	test( 'Toggle Column', function() {
@@ -171,6 +179,18 @@
 		$sortButton.click();
 
 		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
+	});
+
+	test( 'Sort is case insensitive', function() {
+		var previousText = "body row 3",
+			$sortButton = $table.find( '.sortable-head button' ).eq( 0 );
+
+		$sortButton.click();
+		equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).text(), previousText, previousText + ' is in the first row (descending)' );
+
+		$sortButton.click();
+		equal( $table.find( 'tbody tr:eq(3) td:eq(0)' ).text(), previousText, previousText + ' is in the third row (ascending)' );
+
 	});
 
 	module( 'tablesaw Sortable Switcher', {

@@ -1,5 +1,6 @@
-dialog
-======
+# dialog
+
+[![Filament Group](http://filamentgroup.com/images/fg-logo-positive-sm-crop.png) ](http://www.filamentgroup.com/)
 
 Just a simple, minimal, Responsive jQuery dialog with typical interactivity
 
@@ -13,7 +14,7 @@ The dialog itself is an element with a class of dialog.  It'll auto-initialize o
 ### Full typical markup
 
 ````
-Dialog: 
+Dialog:
 <div class="dialog" id="mydialog">
 	<p>This is a dialog</p>
 	<a href="#mydialog-btn" class="dialog-close">Close</a>
@@ -43,7 +44,7 @@ Link to dialog:
 
 Once open, the dialog can be closed via back button, escape key, clicking or tapping the overlay screen (if styled to be visible).
 
-You can also add a close link by adding a link with a class of `dialog-close`. 
+You can also add a close link by adding a link with a class of `dialog-close`.
 
 ````
 <div class="dialog" id="mydialog">
@@ -55,7 +56,7 @@ You can also add a close link by adding a link with a class of `dialog-close`.
 Rather than a null `#` href, we find it's nice to link back to the link that opened the dialog, just in case the user scrolled away from that place while the dialog was open. You can do this by giving the opener link an `id` attribute and linking to that ID from the close link:
 
 ````
-Dialog: 
+Dialog:
 <div class="dialog" id="mydialog">
 	<p>This is a dialog</p>
 	<a href="#mydialog-btn" class="dialog-close">Close</a>
@@ -82,13 +83,7 @@ You can open and close the dialog via JavaScript by triggering an open or close 
 
 ````
 open:
-$( "#mydialog" ).trigger( "open" );
+$( "#mydialog" ).trigger( "dialog-open" );
 close:
-$( "#mydialog" ).trigger( "close" );
+$( "#mydialog" ).trigger( "dialog-close" );
 ````
-
-
-
-
-
-

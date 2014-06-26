@@ -1,0 +1,182 @@
+/* Logo */
+.header {
+	background: #247201 url(http://filamentgroup.com/images/headerbg-new.jpg) no-repeat bottom left;
+}
+#fg-logo {
+	text-indent: -9999px;
+	margin: 0 auto;
+	width: 287px;
+	height: 52px;
+	background-image: url(http://filamentgroup.com/images/fg-logo-icon.png);
+}
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5){
+	#fg-logo {
+		background-size: 287px 52px;
+		background-image: url(http://filamentgroup.com/images/fg-logo-icon-lrg.png);
+	}
+}
+/* Demo styles */
+body {
+	font-family: sans-serif;
+	font-size: 100%;
+}
+.docs-main {
+	margin: 1em auto;
+	max-width: 46em;
+}
+label {
+	display: block;
+	margin: 1em 0;
+}
+input,
+textarea {
+	display: block;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+
+	margin-top: .4em;
+	padding: .6em;
+	font-size: 100%;
+}
+
+.menu {
+	background-color: white;
+	box-sizing: border-box;
+	border: 1px solid black;
+	width: 10em;
+}
+
+.menu ul, .menu ol {
+	list-style: none;
+	padding: 5px;
+	margin: 0;
+}
+
+.menu-selected {
+	color: white;
+	background-color: #aaa;
+}
+
+input {
+	box-sizing: border-box;
+	width: 10em;
+}
+
+h1.docs,
+h2.docs,
+h3.docs,
+h4.docs,
+h5.docs {
+	font-weight: 500;
+	margin: 1em 0;
+	text-transform: none;
+	color: #000;
+	clear: both;
+}
+
+h1.docs { font-size: 2.8em; margin-top: .1em; text-transform: uppercase; }
+h2.docs { font-size: 2.2em; margin-top: 1.5em; border-top:1px solid #ddd; padding-top: .6em; float:none; }
+h3.docs { font-size: 1.6em; margin-top: 1.5em; margin-bottom: .5em; }
+h4.docs { font-size: 1.4em; margin-top: 1.5em; }
+
+p.docs,
+p.docs-intro,
+ol.docs,
+ul.docs,
+p.docs-note,
+dl.docs {
+	margin: 1em 0;
+	font-size: 1em;
+}
+
+ul.docs,
+ol.docs {
+	padding-bottom: .5em;
+}
+ol.docs li,
+ul.docs li {
+	margin-bottom: 8px;
+}
+ul.docs ul,
+ol.docs ul {
+	padding-top: 8px;
+}
+.docs code {
+	font-size: 1.1em;
+}
+
+p.docs strong {
+	font-weight: bold;
+}
+
+.docs-note {
+	background-color: #FFFAA4;
+}
+.docs-note p,
+.docs-note pre,
+p.docs-note {
+	padding: .5em;
+	margin: 0;
+}
+
+
+/**
+ * prism.js default theme for JavaScript, CSS and HTML
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: black;
+	text-shadow: 0 1px white;
+	font-family: Consolas, Monaco, 'Andale Mono', monospace;
+	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	font-size: 0.8em;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+@media print {
+	code[class*="language-"],
+	pre[class*="language-"] {
+		text-shadow: none;
+	}
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	background: #f5f2f0;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+}
+
+pre[class*="language-"] {
+	padding: 1em;
+	margin: 0;
+	margin-bottom: 1em;
+}
+

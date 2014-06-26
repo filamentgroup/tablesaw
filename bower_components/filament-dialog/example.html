@@ -1,39 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dialog Example</title>
-  <script src="bower_components/jquery/jquery.js"></script>
-  <script src="dialog.js"></script>
-  <script src="dialog-linker.js"></script>
-  <link rel="stylesheet" href="dialog.css">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Dialog Example</title>
+	<script src="bower_components/jquery/jquery.js"></script>
+	<script src="src/dialog.js"></script>
+	<script src="src/dialog-init.js"></script>
+	<script src="src/dialog-linker.js"></script>
+	<link rel="stylesheet" href="docs.css">
+	<link rel="stylesheet" href="src/dialog.css">
 </head>
-<body>
-	
-<p>
-  <a href="#mydialog" id="mydialog-btn">Open Dialog</a>
-</p>
+<body class="docs">
+	<div class="header">
+		<a href="http://filamentgroup.com/"><h1 id="fg-logo">Filament Group</h1></a>
+	</div>
+
+	<div class="docs-main">
+
+<pre><code>
+&lt;p class="docs"&gt;
+  &lt;a href="#mydialog" id="mydialog-btn"&gt;Open Dialog&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;div class="dialog" id="mydialog"&gt;
+  &lt;p&gt;This is a dialog&lt;/p&gt;
+  &lt;a href="#mydialog-btn" class="dialog-close"&gt;Close&lt;/a&gt;
+&lt;/div&gt;
+</code></pre>
+
+		<p class="docs">
+			<a href="#mydialog" id="mydialog-btn">Open Dialog</a>
+		</p>
 
 
-  <div class="dialog" id="mydialog">
-    <p>This is a dialog</p>
-    <a href="#mydialog-btn" class="dialog-close">Close</a>
-  </div>
+		<div class="dialog" id="mydialog">
+			<p>This is a dialog</p>
+			<a href="#mydialog-btn" class="dialog-close">Close</a>
+		</div>
 
-<p>
-  <a href="#mytransparentdialog" id="mytransparentdialog-btn">Open Dialog with Transparent Background</a>
-</p>
+<pre><code>
+&lt;p class="docs"&gt;
+  &lt;a href="#mytransparentdialog" id="mytransparentdialog-btn"&gt;Open Dialog with Transparent Background&lt;/a&gt;
+&lt;/p&gt;
+
+&lt;div class="dialog" id="mytransparentdialog" data-transbg&gt;
+  &lt;p&gt;This is a dialog with a transparent background&lt;/p&gt;
+  &lt;a href="#mytransparentdialog-btn" class="dialog-close"&gt;Close&lt;/a&gt;
+&lt;/div&gt;
+</code></pre>
+
+		<p class="docs">
+			<a href="#mytransparentdialog" id="mytransparentdialog-btn">Open Dialog with Transparent Background</a>
+		</p>
 
 
-  <div class="dialog" id="mytransparentdialog" data-transbg>
-    <p>This is a dialog</p>
-    <a href="#mytransparentdialog-btn" class="dialog-close">Close</a>
-  </div>
-	
-<p>
-  <a href="example-external.html" data-dialog-link>Open Ajax Dialog</a>
-</p>
+		<div class="dialog" id="mytransparentdialog" data-transbg>
+			<p>This is a dialog with a transparent background</p>
+			<a href="#mytransparentdialog-btn" class="dialog-close">Close</a>
+		</div>
 
+<pre><code>
+&lt;p class="docs"&gt;
+  &lt;a href="example-external.html" data-dialog-link&gt;Open Ajax Dialog&lt;/a&gt;
+&lt;/p&gt;
+</code></pre>
+		<p class="docs">
+			<a href="example-external.html" data-dialog-link>Open Ajax Dialog</a>
+		</p>
+	</div>
 </body>
 </html>
