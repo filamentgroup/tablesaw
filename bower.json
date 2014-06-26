@@ -3,7 +3,8 @@
 	"version": "0.1.3",
 	"main": [
 		"dist/tablesaw.js",
-		"dist/tablesaw.css"
+		"dist/tablesaw.css",
+		"dist/icons/**"
 	],
 	"ignore": [
 		"**/.*"
