@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.4 - 2014-06-26
+/*! Tablesaw - v0.1.5 - 2014-07-03
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -32,7 +32,8 @@
 		},
 		events = {
 			create: "tablesawcreate",
-			destroy: "tablesawdestroy"
+			destroy: "tablesawdestroy",
+			refresh: "tablesawrefresh"
 		},
 		defaultMode = "stack",
 		initSelector = "table[data-mode],table[data-sortable]";
@@ -58,7 +59,12 @@
 
 		this.createToolbar();
 
-		// Add header cells
+		var colstart = this._initCells();
+
+		this.$table.trigger( events.create, [ this.mode, colstart ] );
+	};
+
+	Table.prototype._initCells = function() {
 		var colstart,
 			thrs = this.table.querySelectorAll( "thead tr" ),
 			self = this;
@@ -82,11 +88,16 @@
 				// Store "cells" data on header as a reference to all cells in the same column as this TH
 				this.cells = self.$table.find("tr").not( $( thrs ).eq( 0 ) ).not( this ).children( sel );
 				coltally++;
-
 			});
 		});
 
-		this.$table.trigger( events.create, [ this.mode, colstart ] );
+		return colstart;
+	};
+
+	Table.prototype.refresh = function() {
+		this._initCells();
+
+		this.$table.trigger( events.refresh );
 	};
 
 	Table.prototype.createToolbar = function() {
