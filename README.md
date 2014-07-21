@@ -193,3 +193,5 @@ The `columntoggle` mode requires the [Filament Group dialog](https://github.com/
 Next include the tablesaw icons in `src/icons` with your grunticon build and include the grunticon loader.
 
 Check out any of the demos above for complete working examples.
+
+## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
