@@ -11,7 +11,7 @@
 	],
 	"dependencies": {
 		"jquery": ">=1.9.1",
-		"filament-dialog": "~0.1.3",
+		"filament-dialog": "~0.1.4",
 		"respond": "~1.4.2"
 	},
 	"devDependencies": {
