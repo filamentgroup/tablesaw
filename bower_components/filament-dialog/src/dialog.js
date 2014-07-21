@@ -20,8 +20,9 @@
 
 	var Dialog = w.componentNamespace.Dialog = function( element ){
 		this.$el = $( element );
-		this.$background =
-			$( doc.createElement('div') ).addClass( cl.bkgd ).appendTo( "body");
+		this.$background = !this.$el.is( '[data-nobg]' ) ?
+			$( doc.createElement('div') ).addClass( cl.bkgd ).appendTo( "body") :
+			$( [] );
 		this.hash = this.$el.attr( "id" ) + "-dialog";
 
 		this.isOpen = false;
@@ -31,7 +32,9 @@
 
 	Dialog.events = ev = {
 		open: pluginName + "-open",
-		close: pluginName + "-close"
+		opened: pluginName + "-opened",
+		close: pluginName + "-close",
+		closed: pluginName + "-closed"
 	};
 
 	Dialog.classes = cl = {
@@ -55,7 +58,9 @@
 	};
 
 	Dialog.prototype.open = function( e ) {
-		this.$background[ 0 ].style.height = Math.max( docElem.scrollHeight, docElem.clientHeight ) + "px";
+		if( this.$background.length ) {
+			this.$background[ 0 ].style.height = Math.max( docElem.scrollHeight, docElem.clientHeight ) + "px";
+		}
 		this.$el.addClass( cl.open );
 		this.$background.addClass( cl.bkgdOpen );
 		this._setBackgroundTransparency();
@@ -77,7 +82,7 @@
 		}
 		this.$el[ 0 ].focus();
 
-		this.$el.trigger( cl.opened );
+		this.$el.trigger( ev.opened );
 	};
 
 	Dialog.prototype._setBackgroundTransparency = function() {
@@ -106,6 +111,6 @@
 
 		this.isOpen = false;
 
-		this.$el.trigger( cl.closed );
+		this.$el.trigger( ev.closed );
 	};
 }( this, jQuery ));

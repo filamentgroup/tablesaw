@@ -6,6 +6,8 @@ Just a simple, minimal, Responsive jQuery dialog with typical interactivity
 
 Demo page here: http://filamentgroup.github.com/dialog/example.html
 
+[![Build Status](https://travis-ci.org/filamentgroup/dialog.svg)](https://travis-ci.org/filamentgroup/dialog)
+
 ## How-to
 
 The dialog itself is an element with a class of dialog.  It'll auto-initialize on dom-ready.

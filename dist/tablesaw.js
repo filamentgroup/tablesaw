@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.5 - 2014-07-03
+/*! Tablesaw - v0.1.5 - 2014-07-21
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -239,7 +239,6 @@
 ;(function( $ ) {
 	var pluginName = "tablesawbtn",
 		initSelector = ".btn",
-		activeClass = "btn-selected",
 		methods = {
 			_create: function(){
 				return $( this ).each(function() {
@@ -251,43 +250,14 @@
 			},
 			_init: function(){
 				var oEl = $( this ),
-					disabled = this.disabled !== undefined && this.disabled !== false,
-					input = this.getElementsByTagName( "input" )[ 0 ],
 					sel = this.getElementsByTagName( "select" )[ 0 ];
 
-				if( input ) {
-					$( this )
-						.addClass( "btn-" + input.type )
-						[ pluginName ]( "_formbtn", input );
-				}
 				if( sel ) {
 					$( this )
 						.addClass( "btn-select" )
 						[ pluginName ]( "_select", sel );
 				}
-				if( disabled ) {
-					oEl.addClass( "ui-disabled" );
-				}
 				return oEl;
-			},
-			_formbtn: function( input ) {
-				var active = function( el, input ) {
-					if( input.type === "radio" && input.checked ) {
-						var group = input.getAttribute( "name" );
-
-						$( "[name='" + group + "']" ).each(function() {
-							$( this ).parent().removeClass( activeClass );
-						});
-						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
-					} else if ( input.type === "checkbox" ) {
-						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
-					}
-				};
-
-				active( $( this ), input );
-				$( this ).bind("click", function() {
-					active( $( this ), input );
-				});
 			},
 			_select: function( sel ) {
 				var update = function( oEl, sel ) {
@@ -408,9 +378,8 @@
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
 
-				$("<label class='btn btn-check btn-checkbox btn-selected theme-simple'><input type='checkbox' checked>" + $this.text() + "</label>" )
+				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
 					.appendTo( $menu )
-					.trigger('enhance')
 					.children( 0 )
 					.data( "cells", $cells );
 
@@ -419,10 +388,9 @@
 		});
 
 		if( !hasNonPersistentHeaders ) {
-			$menu.append( '<label class="btn theme-simple">' + this.i18n.columnsDialogError + '</label>' );
+			$menu.append( '<label>' + this.i18n.columnsDialogError + '</label>' );
 		}
 
-		$menu.find( '.btn' ).tablesawbtn();
 		$menu.appendTo( $popup );
 
 		// bind change event listeners to inputs - TODO: move to a private method?
@@ -456,8 +424,6 @@
 			var $this = $( this );
 
 			this.checked = $this.data( "cells" ).eq( 0 ).css( "display" ) === "table-cell";
-
-			$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
 		});
 	};
 
