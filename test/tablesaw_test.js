@@ -53,7 +53,8 @@
 				'</tr>',
 				'<tr><td>Body Row 2</td><td>2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
 				'<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
-				'<tr><td>body row 3</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
+				'<tr><td>body row 4</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
+				'<tr><td>Body Row 1.2</td><td>1.2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
 			'</tbody>',
 			'</table>'].join(''),
 		$fixture,
@@ -196,15 +197,28 @@
 		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
 	});
 
+	test( 'Sort works with floats', function() {
+		var previousText = "Body Row 1.2",
+			$sortButton = $table.find( '.sortable-head button' ).eq( 0 ),
+			rows = $table.find( 'tbody tr' ).length;
+
+		$sortButton.click();
+		equal( $table.find( 'tbody tr:eq(' + (rows - 2 ) + ') td:eq(0)' ).text(), previousText, previousText + ' is in row ' + ( rows - 2 ) + ' of ' + rows + ' (descending)' );
+
+		$sortButton.click();
+		equal( $table.find( 'tbody tr:eq(1) td:eq(0)' ).text(), previousText, previousText + ' is in the second row (ascending)' );
+
+	});
+
 	test( 'Sort is case insensitive', function() {
-		var previousText = "body row 3",
+		var previousText = "body row 4",
 			$sortButton = $table.find( '.sortable-head button' ).eq( 0 );
 
 		$sortButton.click();
 		equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).text(), previousText, previousText + ' is in the first row (descending)' );
 
 		$sortButton.click();
-		equal( $table.find( 'tbody tr:eq(3) td:eq(0)' ).text(), previousText, previousText + ' is in the third row (ascending)' );
+		equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).text(), previousText, previousText + ' is in the third row (ascending)' );
 
 	});
 

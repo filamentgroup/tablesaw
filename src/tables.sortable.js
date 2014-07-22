@@ -169,7 +169,7 @@
 			getTableRows: function(){
 				return $( this ).find( "tbody tr" );
 			},
-			sortRows: function( rows , colNum , ascending ){
+			sortRows: function( rows , colNum , ascending, col ){
 				var cells, fn, sorted;
 				var getCells = function( rows ){
 						var cells = [];
@@ -181,20 +181,21 @@
 						});
 						return cells;
 					},
-					getSortFxn = function( ascending ){
-						var fn;
+					getSortFxn = function( ascending, forceNumeric ){
+						var fn,
+							regex = /[^\d\.]/g;
 						if( ascending ){
 							fn = function( a , b ){
-								if( parseInt( a.cell , 10 )){
-									return parseInt( a.cell , 10 ) - parseInt( b.cell, 10 );
+								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+									return parseFloat( a.cell.replace( regex, '' ) ) - parseFloat( b.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
 								}
 							};
 						} else {
 							fn = function( a , b ){
-								if( parseInt( a.cell , 10 )){
-									return parseInt( b.cell , 10 ) - parseInt( a.cell, 10 );
+								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+									return parseFloat( b.cell.replace( regex, '' ) ) - parseFloat( a.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
 								}
@@ -212,7 +213,7 @@
 					};
 
 				cells = getCells( rows );
-				fn = getSortFxn( ascending );
+				fn = getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
@@ -233,18 +234,14 @@
 					c.addClass( classes.descend );
 				}
 			},
-			notify: function(){
-				//TODO
-			},
 			sortBy: function( col , ascending ){
 				var el = $( this ), colNum, rows;
 
 				colNum = el[ pluginName ]( "getColumnNumber" , col );
 				rows = el[ pluginName ]( "getTableRows" );
-				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending );
+				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending, col );
 				el[ pluginName ]( "replaceTableRows" , rows );
 				el[ pluginName ]( "makeColDefault" , col , ascending );
-				el[ pluginName ]( "notify" );
 			}
 		};
 
