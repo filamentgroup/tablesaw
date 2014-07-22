@@ -180,37 +180,30 @@
 
 		$table
 			.bind( "touchstart.swipetoggle", function( e ){
-				var origin = ( e.touches || e.originalEvent.touches )[ 0 ].pageX,
+				var originX = ( e.touches || e.originalEvent.touches )[ 0 ].pageX,
+					originY = ( e.touches || e.originalEvent.touches )[ 0 ].pageY,
 					x,
+					y,
 					drag;
-
-				$table.addClass( "table-noanimate" );
 
 				$( this )
 					.bind( "touchmove", function( e ){
 						x = ( e.touches || e.originalEvent.touches )[ 0 ].pageX;
-						drag = x - origin;
-						if( drag < -30 ){
-							drag = -30;
-						}
-						if( drag > 30 ){
-							drag = 30;
-						}
+						y = ( e.touches || e.originalEvent.touches )[ 0 ].pageY;
 
-						//$table.css( { "position": "relative", "left": drag + "px" } );
+						if( Math.abs( x - originX ) > 15 && Math.abs( y - originY ) < 20 ) {
+							e.preventDefault();
+						}
 					})
 					.bind( "touchend.swipetoggle", function(){
-						if( x - origin < 15 ){
+						if( x - originX < 15 ){
 							advance( true );
 						}
-						if( x - origin > -15 ){
+						if( x - originX > -15 ){
 							advance( false );
 						}
 
 						$( this ).unbind( "touchmove touchend" );
-						$table.removeClass( "table-noanimate" );
-						//$table.css( "left", "0" );
-
 					});
 
 			})
