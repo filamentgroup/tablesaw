@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.5 - 2014-07-21
+/*! Tablesaw - v0.1.5 - 2014-07-22
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -65,7 +65,6 @@ table.tablesaw {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   border-radius: .25em;
-  opacity: 1;
 }
 
 .tablesaw-enhanced .tablesaw-bar a.btn {
@@ -122,6 +121,7 @@ table.tablesaw {
 
 .tablesaw-bar .btn-select select {
   opacity: 0;
+  filter: alpha(opacity=0);
   display: inline-block;
   color: transparent;
 }
@@ -130,10 +130,6 @@ table.tablesaw {
   background: #fff;
   color: #000;
   font-family: sans-serif;
-}
-
-.ie-lte8 .tablesaw-bar .btn-select select {
-  filter: alpha(opacity=0);
 }
 
 .tablesaw-enhanced .tablesaw-bar .btn.btn-select {
@@ -249,6 +245,7 @@ table.tablesaw {
 
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
   opacity: .25;
+  filter: alpha(opacity=25);
   cursor: default;
   pointer-events: none;
 }
@@ -419,7 +416,8 @@ table.tablesaw thead td {
 .tablesaw caption {
   text-align: left;
   margin-bottom: 1.4em;
-  opacity: 50%;
+  opacity: .5;
+  filter: alpha(opacity=50);
 }
 
 /* Stack */
@@ -619,7 +617,7 @@ table.tablesaw thead td {
 
 /* Show priority 1 at 320px (20em x 16px) */
 
-@media screen and (min-width: 20em) {
+@media (min-width: 20em) {
   .tablesaw-columntoggle th.tablesaw-priority-1,
   .tablesaw-columntoggle td.tablesaw-priority-1 {
     display: table-cell;
@@ -628,7 +626,7 @@ table.tablesaw thead td {
 
 /* Show priority 2 at 480px (30em x 16px) */
 
-@media screen and (min-width: 30em) {
+@media (min-width: 30em) {
   .tablesaw-columntoggle th.tablesaw-priority-2,
   .tablesaw-columntoggle td.tablesaw-priority-2 {
     display: table-cell;
@@ -637,7 +635,7 @@ table.tablesaw thead td {
 
 /* Show priority 3 at 640px (40em x 16px) */
 
-@media screen and (min-width: 40em) {
+@media (min-width: 40em) {
   .tablesaw-columntoggle th.tablesaw-priority-3,
   .tablesaw-columntoggle td.tablesaw-priority-3 {
     display: table-cell;
@@ -650,7 +648,7 @@ table.tablesaw thead td {
 
 /* Show priority 4 at 800px (50em x 16px) */
 
-@media screen and (min-width: 50em) {
+@media (min-width: 50em) {
   .tablesaw-columntoggle th.tablesaw-priority-4,
   .tablesaw-columntoggle td.tablesaw-priority-4 {
     display: table-cell;
@@ -659,7 +657,7 @@ table.tablesaw thead td {
 
 /* Show priority 5 at 960px (60em x 16px) */
 
-@media screen and (min-width: 60em) {
+@media (min-width: 60em) {
   .tablesaw-columntoggle th.tablesaw-priority-5,
   .tablesaw-columntoggle td.tablesaw-priority-5 {
     display: table-cell;
@@ -668,7 +666,7 @@ table.tablesaw thead td {
 
 /* Show priority 6 at 1,120px (70em x 16px) */
 
-@media screen and (min-width: 70em) {
+@media (min-width: 70em) {
   .tablesaw-columntoggle th.tablesaw-priority-6,
   .tablesaw-columntoggle td.tablesaw-priority-6 {
     display: table-cell;
@@ -808,6 +806,7 @@ table.tablesaw thead td {
 
 .tablesaw-advance-dots-hide {
   opacity: .25;
+  filter: alpha(opacity=25);
   cursor: default;
   pointer-events: none;
 }
