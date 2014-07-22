@@ -648,37 +648,30 @@
 
 		$table
 			.bind( "touchstart.swipetoggle", function( e ){
-				var origin = ( e.touches || e.originalEvent.touches )[ 0 ].pageX,
+				var originX = ( e.touches || e.originalEvent.touches )[ 0 ].pageX,
+					originY = ( e.touches || e.originalEvent.touches )[ 0 ].pageY,
 					x,
+					y,
 					drag;
-
-				$table.addClass( "table-noanimate" );
 
 				$( this )
 					.bind( "touchmove", function( e ){
 						x = ( e.touches || e.originalEvent.touches )[ 0 ].pageX;
-						drag = x - origin;
-						if( drag < -30 ){
-							drag = -30;
-						}
-						if( drag > 30 ){
-							drag = 30;
-						}
+						y = ( e.touches || e.originalEvent.touches )[ 0 ].pageY;
 
-						//$table.css( { "position": "relative", "left": drag + "px" } );
+						if( Math.abs( x - originX ) > 15 && Math.abs( y - originY ) < 20 ) {
+							e.preventDefault();
+						}
 					})
 					.bind( "touchend.swipetoggle", function(){
-						if( x - origin < 15 ){
+						if( x - originX < 15 ){
 							advance( true );
 						}
-						if( x - origin > -15 ){
+						if( x - originX > -15 ){
 							advance( false );
 						}
 
 						$( this ).unbind( "touchmove touchend" );
-						$table.removeClass( "table-noanimate" );
-						//$table.css( "left", "0" );
-
 					});
 
 			})
@@ -884,7 +877,7 @@
 			getTableRows: function(){
 				return $( this ).find( "tbody tr" );
 			},
-			sortRows: function( rows , colNum , ascending ){
+			sortRows: function( rows , colNum , ascending, col ){
 				var cells, fn, sorted;
 				var getCells = function( rows ){
 						var cells = [];
@@ -896,20 +889,21 @@
 						});
 						return cells;
 					},
-					getSortFxn = function( ascending ){
-						var fn;
+					getSortFxn = function( ascending, forceNumeric ){
+						var fn,
+							regex = /[^\d\.]/g;
 						if( ascending ){
 							fn = function( a , b ){
-								if( parseInt( a.cell , 10 )){
-									return parseInt( a.cell , 10 ) - parseInt( b.cell, 10 );
+								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+									return parseFloat( a.cell.replace( regex, '' ) ) - parseFloat( b.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
 								}
 							};
 						} else {
 							fn = function( a , b ){
-								if( parseInt( a.cell , 10 )){
-									return parseInt( b.cell , 10 ) - parseInt( a.cell, 10 );
+								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+									return parseFloat( b.cell.replace( regex, '' ) ) - parseFloat( a.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
 								}
@@ -927,7 +921,7 @@
 					};
 
 				cells = getCells( rows );
-				fn = getSortFxn( ascending );
+				fn = getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
@@ -948,18 +942,14 @@
 					c.addClass( classes.descend );
 				}
 			},
-			notify: function(){
-				//TODO
-			},
 			sortBy: function( col , ascending ){
 				var el = $( this ), colNum, rows;
 
 				colNum = el[ pluginName ]( "getColumnNumber" , col );
 				rows = el[ pluginName ]( "getTableRows" );
-				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending );
+				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending, col );
 				el[ pluginName ]( "replaceTableRows" , rows );
 				el[ pluginName ]( "makeColDefault" , col , ascending );
-				el[ pluginName ]( "notify" );
 			}
 		};
 
