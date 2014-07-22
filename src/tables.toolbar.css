@@ -45,7 +45,6 @@
 	-webkit-font-smoothing: antialiased;
 
 	border-radius: .25em;
-	opacity: 1;
 }
 .tablesaw-enhanced .tablesaw-bar a.btn {
 	color: var(button-text);
@@ -92,6 +91,7 @@
 }
 .tablesaw-bar .btn-select select {
 	opacity: 0;
+	filter: alpha(opacity=0);
 	display:inline-block;
 	color: transparent;
 }
@@ -99,10 +99,6 @@
 	background: #fff;
 	color: #000;
 	font-family: sans-serif;
-}
-
-.ie-lte8 .tablesaw-bar .btn-select select {
-	filter: alpha(opacity=0);
 }
 .tablesaw-enhanced .tablesaw-bar .btn.btn-select {
 	color:#4d4d4d;
@@ -203,6 +199,7 @@
 }
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
 	opacity: .25;
+	filter: alpha(opacity=25);
 	cursor: default;
 	pointer-events: none;
 }
