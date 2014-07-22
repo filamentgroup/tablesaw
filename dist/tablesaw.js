@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.5 - 2014-07-03
+/*! Tablesaw - v0.1.5 - 2014-07-22
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -239,7 +239,6 @@
 ;(function( $ ) {
 	var pluginName = "tablesawbtn",
 		initSelector = ".btn",
-		activeClass = "btn-selected",
 		methods = {
 			_create: function(){
 				return $( this ).each(function() {
@@ -251,43 +250,14 @@
 			},
 			_init: function(){
 				var oEl = $( this ),
-					disabled = this.disabled !== undefined && this.disabled !== false,
-					input = this.getElementsByTagName( "input" )[ 0 ],
 					sel = this.getElementsByTagName( "select" )[ 0 ];
 
-				if( input ) {
-					$( this )
-						.addClass( "btn-" + input.type )
-						[ pluginName ]( "_formbtn", input );
-				}
 				if( sel ) {
 					$( this )
 						.addClass( "btn-select" )
 						[ pluginName ]( "_select", sel );
 				}
-				if( disabled ) {
-					oEl.addClass( "ui-disabled" );
-				}
 				return oEl;
-			},
-			_formbtn: function( input ) {
-				var active = function( el, input ) {
-					if( input.type === "radio" && input.checked ) {
-						var group = input.getAttribute( "name" );
-
-						$( "[name='" + group + "']" ).each(function() {
-							$( this ).parent().removeClass( activeClass );
-						});
-						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
-					} else if ( input.type === "checkbox" ) {
-						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
-					}
-				};
-
-				active( $( this ), input );
-				$( this ).bind("click", function() {
-					active( $( this ), input );
-				});
 			},
 			_select: function( sel ) {
 				var update = function( oEl, sel ) {
@@ -408,9 +378,8 @@
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
 
-				$("<label class='btn btn-check btn-checkbox btn-selected theme-simple'><input type='checkbox' checked>" + $this.text() + "</label>" )
+				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
 					.appendTo( $menu )
-					.trigger('enhance')
 					.children( 0 )
 					.data( "cells", $cells );
 
@@ -419,14 +388,13 @@
 		});
 
 		if( !hasNonPersistentHeaders ) {
-			$menu.append( '<label class="btn theme-simple">' + this.i18n.columnsDialogError + '</label>' );
+			$menu.append( '<label>' + this.i18n.columnsDialogError + '</label>' );
 		}
 
-		$menu.find( '.btn' ).tablesawbtn();
 		$menu.appendTo( $popup );
 
 		// bind change event listeners to inputs - TODO: move to a private method?
-		$menu.on( "change", function(e) {
+		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
 			var checked = e.target.checked;
 
 			$( e.target ).data( "cells" )
@@ -456,8 +424,6 @@
 			var $this = $( this );
 
 			this.checked = $this.data( "cells" ).eq( 0 ).css( "display" ) === "table-cell";
-
-			$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
 		});
 	};
 
@@ -521,7 +487,9 @@
 			$headerCellsNoPersist = $headerCells.not( '[data-priority="persist"]' ),
 			headerWidths = [],
 			$head = $( document.head || 'head' ),
-			tableId = $table.attr( 'id' );
+			tableId = $table.attr( 'id' ),
+			// TODO switch this to an nth-child feature test
+			isIE8 = $( 'html' ).is( '.ie-lte8' );
 
 		// Calculate initial widths
 		$table.css('width', 'auto');
@@ -583,7 +551,7 @@
 
 			unmaintainWidths();
 			$table.addClass( persistWidths );
-			$head.append( $( '<style>' ).attr( 'id', tableId + '-persist' ).html( styles.join( "\n" ) ) );
+			$head.append( $( '<style>' + styles.join( "\n" ) + '</style>' ).attr( 'id', tableId + '-persist' ) );
 		}
 
 		function getNext(){
@@ -592,13 +560,15 @@
 
 			$headerCellsNoPersist.each(function( i ) {
 				var $t = $( this ),
-					isHidden = $t.css( "display" ) === "none";
+					isHidden = $t.css( "display" ) === "none" || $t.is( ".tablesaw-cell-hidden" );
 
 				if( !isHidden && !checkFound ) {
 					checkFound = true;
 					next[ 0 ] = i;
-				} else if( isHidden && checkFound && !next[ 1 ] ) {
+				} else if( isHidden && checkFound ) {
 					next[ 1 ] = i;
+
+					return false;
 				}
 			});
 
@@ -642,7 +612,9 @@
 
 			});
 
-			unmaintainWidths();
+			if( !isIE8 ) {
+				unmaintainWidths();
+			}
 			$table.trigger( 'tablesawcolumns' );
 		}
 
@@ -658,7 +630,9 @@
 					}
 				}
 
-				maintainWidths();
+				if( !isIE8 ) {
+					maintainWidths();
+				}
 
 				hideColumn( $headerCellsNoPersist.get( pair[ 0 ] ) );
 				showColumn( $headerCellsNoPersist.get( pair[ 1 ] ) );
