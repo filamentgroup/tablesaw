@@ -30,6 +30,10 @@
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
+					'<th>Header</th>',
+					'<th>Header</th>',
+					'<th>Header</th>',
+					'<th>Header</th>',
 					'<th data-priority="6">Header</th>',
 				'</tr>',
 			'</thead>',
@@ -42,10 +46,14 @@
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>This column text is designed to make the columns really wide.</td>',
 				'</tr>',
-				'<tr><td>Body Row 2</td><td>2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
-				'<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
-				'<tr><td>body row 3</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
+				'<tr><td>Body Row 2</td><td>2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
+				'<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
+				'<tr><td>body row 3</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>',
 			'</tbody>',
 			'</table>'].join(''),
 		$fixture,
@@ -107,10 +115,17 @@
 	});
 
 	test( 'Toggle Column', function() {
-		$table.prev().find( '.tablesaw-columntoggle-btn' ).click()
+		var $cell = $table.find( 'tbody td' ).eq( 0 );
+
+		strictEqual( $cell.is( '.tablesaw-cell-hidden' ), false, 'First cell is visible before checkbox unchecked' );
+
+		$table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
 			.next().find( ':checkbox' ).trigger( 'click' );
 
-		ok( !$table.find( 'tbody td' ).eq( 0 ).is( ':visible' ), 'First cell is hidden after checkbox unchecked' );
+		// close dialog
+		$( '.dialog-background-open' ).click();
+
+		strictEqual( $cell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
 	});
 
 

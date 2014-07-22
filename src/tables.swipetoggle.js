@@ -92,13 +92,15 @@
 
 			$headerCellsNoPersist.each(function( i ) {
 				var $t = $( this ),
-					isHidden = $t.css( "display" ) === "none";
+					isHidden = $t.css( "display" ) === "none" || $t.is( ".tablesaw-cell-hidden" );
 
 				if( !isHidden && !checkFound ) {
 					checkFound = true;
 					next[ 0 ] = i;
-				} else if( isHidden && checkFound && !next[ 1 ] ) {
+				} else if( isHidden && checkFound ) {
 					next[ 1 ] = i;
+
+					return false;
 				}
 			});
 
