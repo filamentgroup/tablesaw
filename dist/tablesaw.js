@@ -651,8 +651,7 @@
 				var originX = ( e.touches || e.originalEvent.touches )[ 0 ].pageX,
 					originY = ( e.touches || e.originalEvent.touches )[ 0 ].pageY,
 					x,
-					y,
-					drag;
+					y;
 
 				$( this )
 					.bind( "touchmove", function( e ){
