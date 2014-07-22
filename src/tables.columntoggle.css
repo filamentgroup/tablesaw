@@ -13,7 +13,7 @@
 }
 
 .tablesaw-columntoggle-btnwrap .dialog-content {
-	padding: 0;
+	padding: .5em;
 }
 .tablesaw-columntoggle tbody td {
 	line-height: 1.5;
@@ -55,19 +55,6 @@
 	max-width: 18em;
 	margin: -.5em auto 0;
 }
-.tablesaw-columntoggle-btnwrap .btn-group .btn.theme-simple:first-child {
-	margin-top: 0;
-	border-top-right-radius: .5em;
-	border-top-left-radius: .5em;
-}
-.tablesaw-columntoggle-btnwrap .btn-group .btn.theme-simple:last-child {
-	border-bottom-right-radius: .5em;
-	border-bottom-left-radius: .5em;
-}
-.tablesaw-columntoggle-btnwrap .btn-group .btn.theme-simple {
-	margin-bottom: .1em;
-	margin-top: .1em;
-}
 .tablesaw-columntoggle-btnwrap .dialog-content:focus {
 	outline-style: none;
 }
@@ -78,21 +65,21 @@
 /* Preset breakpoints if "" class added to table */
 
 /* Show priority 1 at 320px (20em x 16px) */
-@media screen and (min-width: 20em) {
+@media (min-width: 20em) {
 	.tablesaw-columntoggle th.tablesaw-priority-1,
 	.tablesaw-columntoggle td.tablesaw-priority-1 {
 		display: table-cell;
 	}
 }
 /* Show priority 2 at 480px (30em x 16px) */
-@media screen and (min-width: 30em) {
+@media (min-width: 30em) {
 	.tablesaw-columntoggle th.tablesaw-priority-2,
 	.tablesaw-columntoggle td.tablesaw-priority-2 {
 		display: table-cell;
 	}
 }
 /* Show priority 3 at 640px (40em x 16px) */
-@media screen and (min-width: 40em) {
+@media (min-width: 40em) {
 	.tablesaw-columntoggle th.tablesaw-priority-3,
 	.tablesaw-columntoggle td.tablesaw-priority-3 {
 		display: table-cell;
@@ -103,21 +90,21 @@
 	}
 }
 /* Show priority 4 at 800px (50em x 16px) */
-@media screen and (min-width: 50em) {
+@media (min-width: 50em) {
 	.tablesaw-columntoggle th.tablesaw-priority-4,
 	.tablesaw-columntoggle td.tablesaw-priority-4 {
 		display: table-cell;
 	}
 }
 /* Show priority 5 at 960px (60em x 16px) */
-@media screen and (min-width: 60em) {
+@media (min-width: 60em) {
 	.tablesaw-columntoggle th.tablesaw-priority-5,
 	.tablesaw-columntoggle td.tablesaw-priority-5 {
 		display: table-cell;
 	}
 }
 /* Show priority 6 at 1,120px (70em x 16px) */
-@media screen and (min-width: 70em) {
+@media (min-width: 70em) {
 	.tablesaw-columntoggle th.tablesaw-priority-6,
 	.tablesaw-columntoggle td.tablesaw-priority-6 {
 		display: table-cell;
@@ -147,26 +134,10 @@
 	}
 }
 
-/* Vertical Button Grouping (default) */
-.tablesaw-columntoggle-popup .btn-group {
-	margin: 0;
-	padding: 0;
+.tablesaw-columntoggle-popup .btn-group > label {
+	display: block;
+	padding: .2em 0;
 }
-.tablesaw-columntoggle-popup .btn-group .btn {
-	margin: 0;
-}
-.tablesaw-columntoggle-popup .btn-group > .btn {
-	margin-top: 0;
-	border-radius: 0;
-	border-top-width: 0;
-	width: 100%; 
-}
-.tablesaw-columntoggle-popup .btn-group > .btn:first-child {
-	border-top-width: 1px;
-	border-top-left-radius: .25em;
-	border-top-right-radius: .25em;
-}
-.tablesaw-columntoggle-popup .btn-group > .btn:last-child {
-	border-bottom-left-radius: .25em;
-	border-bottom-right-radius: .25em;
+.tablesaw-columntoggle-popup .btn-group > label input {
+	margin-right: .8em;
 }

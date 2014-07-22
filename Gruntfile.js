@@ -135,8 +135,7 @@ module.exports = function(grunt) {
 						"sort-ascending": [".tablesaw-sortable .sortable-head.sortable-ascending button:after"],
 						"sort-descending": [".tablesaw-sortable .sortable-head.sortable-descending button:after"],
 						"arrow-gray-right": [".tablesaw-bar .tablesaw-advance > .btn.right"],
-						"arrow-gray-left": [".tablesaw-bar .tablesaw-advance > .btn.left"],
-						"check": [".tablesaw-bar .btn-selected.btn-checkbox:after"]
+						"arrow-gray-left": [".tablesaw-bar .tablesaw-advance > .btn.left"]
 					}
 				}
 			}

@@ -8,7 +8,6 @@
 ;(function( $ ) {
 	var pluginName = "tablesawbtn",
 		initSelector = ".btn",
-		activeClass = "btn-selected",
 		methods = {
 			_create: function(){
 				return $( this ).each(function() {
@@ -20,43 +19,14 @@
 			},
 			_init: function(){
 				var oEl = $( this ),
-					disabled = this.disabled !== undefined && this.disabled !== false,
-					input = this.getElementsByTagName( "input" )[ 0 ],
 					sel = this.getElementsByTagName( "select" )[ 0 ];
 
-				if( input ) {
-					$( this )
-						.addClass( "btn-" + input.type )
-						[ pluginName ]( "_formbtn", input );
-				}
 				if( sel ) {
 					$( this )
 						.addClass( "btn-select" )
 						[ pluginName ]( "_select", sel );
 				}
-				if( disabled ) {
-					oEl.addClass( "ui-disabled" );
-				}
 				return oEl;
-			},
-			_formbtn: function( input ) {
-				var active = function( el, input ) {
-					if( input.type === "radio" && input.checked ) {
-						var group = input.getAttribute( "name" );
-
-						$( "[name='" + group + "']" ).each(function() {
-							$( this ).parent().removeClass( activeClass );
-						});
-						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
-					} else if ( input.type === "checkbox" ) {
-						el[ input.checked ? "addClass" : "removeClass" ]( activeClass );
-					}
-				};
-
-				active( $( this ), input );
-				$( this ).bind("click", function() {
-					active( $( this ), input );
-				});
 			},
 			_select: function( sel ) {
 				var update = function( oEl, sel ) {

@@ -64,9 +64,8 @@
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
 
-				$("<label class='btn btn-check btn-checkbox btn-selected theme-simple'><input type='checkbox' checked>" + $this.text() + "</label>" )
+				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
 					.appendTo( $menu )
-					.trigger('enhance')
 					.children( 0 )
 					.data( "cells", $cells );
 
@@ -75,14 +74,13 @@
 		});
 
 		if( !hasNonPersistentHeaders ) {
-			$menu.append( '<label class="btn theme-simple">' + this.i18n.columnsDialogError + '</label>' );
+			$menu.append( '<label>' + this.i18n.columnsDialogError + '</label>' );
 		}
 
-		$menu.find( '.btn' ).tablesawbtn();
 		$menu.appendTo( $popup );
 
 		// bind change event listeners to inputs - TODO: move to a private method?
-		$menu.on( "change", function(e) {
+		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
 			var checked = e.target.checked;
 
 			$( e.target ).data( "cells" )
@@ -112,8 +110,6 @@
 			var $this = $( this );
 
 			this.checked = $this.data( "cells" ).eq( 0 ).css( "display" ) === "table-cell";
-
-			$this.parent()[ this.checked ? "addClass" : "removeClass" ]( "btn-selected" );
 		});
 	};
 
