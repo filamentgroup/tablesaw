@@ -19,7 +19,9 @@
 			$headerCellsNoPersist = $headerCells.not( '[data-priority="persist"]' ),
 			headerWidths = [],
 			$head = $( document.head || 'head' ),
-			tableId = $table.attr( 'id' );
+			tableId = $table.attr( 'id' ),
+			// TODO switch this to an nth-child feature test
+			isIE8 = $( 'html' ).is( '.ie-lte8' );
 
 		// Calculate initial widths
 		$table.css('width', 'auto');
@@ -81,7 +83,7 @@
 
 			unmaintainWidths();
 			$table.addClass( persistWidths );
-			$head.append( $( '<style>' ).attr( 'id', tableId + '-persist' ).html( styles.join( "\n" ) ) );
+			$head.append( $( '<style>' + styles.join( "\n" ) + '</style>' ).attr( 'id', tableId + '-persist' ) );
 		}
 
 		function getNext(){
@@ -140,7 +142,9 @@
 
 			});
 
-			unmaintainWidths();
+			if( !isIE8 ) {
+				unmaintainWidths();
+			}
 			$table.trigger( 'tablesawcolumns' );
 		}
 
@@ -156,7 +160,9 @@
 					}
 				}
 
-				maintainWidths();
+				if( !isIE8 ) {
+					maintainWidths();
+				}
 
 				hideColumn( $headerCellsNoPersist.get( pair[ 0 ] ) );
 				showColumn( $headerCellsNoPersist.get( pair[ 1 ] ) );
