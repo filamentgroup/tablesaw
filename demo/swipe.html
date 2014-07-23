@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 
-	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><![endif]-->
 	<script src="../bower_components/jquery/dist/jquery.js"></script>
 	<script src="../bower_components/filament-dialog/dist/dialog.build.js"></script>
 	<script src="../dist/tablesaw.js"></script>
@@ -23,350 +23,366 @@
 	<noscript><link href="../dist/icons/icons.fallback.css" rel="stylesheet"></noscript>
 </head>
 <body>
-	<h1>Swipe Table</h1>
+	<div class="demo-header">
+		<div class="company">
+			<img src="http://filamentgroup.com/images/fg-logo-positive-sm-crop.png">
+		</div>
+		<div class="details">
+			<h1 class="description-container">Demo of <span class="repo-name">Tablesaw</span>
+				<span class="description">A group of plugins for responsive tables.</span>
+			</h1>
+			<ul class="outbound-links">
+				<li><a href="https://github.com/filamentgroup/tablesaw">Code</a></li>
+				<li><a href="https://github.com/filamentgroup/tablesaw/issues">Issues</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="docs-main">
+		<h2>Swipe Table</h2>
 
-	<table class="tablesaw" data-mode="swipe">
-		<thead>
-			<tr>
-				<th data-priority="persist">Name</th>
-				<th>Rank</th>
-				<th>Money</th>
-				<th>Money</th>
-				<th>A (1&ndash;5)</th>
-				<th>B (1&ndash;5)</th>
-				<th>C (%)</th>
-				<th>D (1&ndash;5)</th>
-				<th>E (1&ndash;5)</th>
-				<th>F (1&ndash;5)</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Amanda
-					</a>
-				</th>
-				<td class="current-ranking">1</td>
-				<td>19.45</td>
-				<td>18.72</td>
-				<td>5</td>
-				<td>5</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Dave
-					</a>
-				</th>
-				<td>2</td>
-				<td>36.32</td>
-				<td>20.52</td>
-				<td>4</td>
-				<td>3</td>
-				<td>87</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kristen
-					</a>
-				</th>
-				<td>3</td>
-				<td>35.23</td>
-				<td>21.36</td>
-				<td>2</td>
-				<td>5</td>
-				<td>89</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-		</tbody>
-	</table>
+		<table class="tablesaw" data-mode="swipe">
+			<thead>
+				<tr>
+					<th data-priority="persist">Name</th>
+					<th>Rank</th>
+					<th>Money</th>
+					<th>Money</th>
+					<th>A (1&ndash;5)</th>
+					<th>B (1&ndash;5)</th>
+					<th>C (%)</th>
+					<th>D (1&ndash;5)</th>
+					<th>E (1&ndash;5)</th>
+					<th>F (1&ndash;5)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Amanda
+						</a>
+					</th>
+					<td class="current-ranking">1</td>
+					<td>19.45</td>
+					<td>18.72</td>
+					<td>5</td>
+					<td>5</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Dave
+						</a>
+					</th>
+					<td>2</td>
+					<td>36.32</td>
+					<td>20.52</td>
+					<td>4</td>
+					<td>3</td>
+					<td>87</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kristen
+						</a>
+					</th>
+					<td>3</td>
+					<td>35.23</td>
+					<td>21.36</td>
+					<td>2</td>
+					<td>5</td>
+					<td>89</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+			</tbody>
+		</table>
 
-	<h2>Swipe Table with Mini Map</h2>
+		<h3>Swipe Table with Mini Map</h3>
 
-	<table class="tablesaw" data-mode="swipe" data-minimap>
-		<thead>
-			<tr>
-				<th data-priority="persist">Name</th>
-				<th>Rank</th>
-				<th>Money</th>
-				<th>Money</th>
-				<th>A (1&ndash;5)</th>
-				<th>B (1&ndash;5)</th>
-				<th>C (%)</th>
-				<th>D (1&ndash;5)</th>
-				<th>E (1&ndash;5)</th>
-				<th>F (1&ndash;5)</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Amanda
-					</a>
-				</th>
-				<td class="current-ranking">1</td>
-				<td>19.45</td>
-				<td>18.72</td>
-				<td>5</td>
-				<td>5</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Dave
-					</a>
-				</th>
-				<td>2</td>
-				<td>36.32</td>
-				<td>20.52</td>
-				<td>4</td>
-				<td>3</td>
-				<td>87</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kristen
-					</a>
-				</th>
-				<td>3</td>
-				<td>35.23</td>
-				<td>21.36</td>
-				<td>2</td>
-				<td>5</td>
-				<td>89</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-			<tr>
-				<th class="ranked-name">
-					<a href="#">
-						Kenny
-					</a>
-				</th>
-				<td>4</td>
-				<td>34.65</td>
-				<td>27.15</td>
-				<td>4</td>
-				<td>4</td>
-				<td>98</td>
-				<td>5</td>
-				<td>4</td>
-				<td>3</td>
-			</tr>
-		</tbody>
-	</table>
+		<table class="tablesaw" data-mode="swipe" data-minimap>
+			<thead>
+				<tr>
+					<th data-priority="persist">Name</th>
+					<th>Rank</th>
+					<th>Money</th>
+					<th>Money</th>
+					<th>A (1&ndash;5)</th>
+					<th>B (1&ndash;5)</th>
+					<th>C (%)</th>
+					<th>D (1&ndash;5)</th>
+					<th>E (1&ndash;5)</th>
+					<th>F (1&ndash;5)</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Amanda
+						</a>
+					</th>
+					<td class="current-ranking">1</td>
+					<td>19.45</td>
+					<td>18.72</td>
+					<td>5</td>
+					<td>5</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Dave
+						</a>
+					</th>
+					<td>2</td>
+					<td>36.32</td>
+					<td>20.52</td>
+					<td>4</td>
+					<td>3</td>
+					<td>87</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kristen
+						</a>
+					</th>
+					<td>3</td>
+					<td>35.23</td>
+					<td>21.36</td>
+					<td>2</td>
+					<td>5</td>
+					<td>89</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+				<tr>
+					<th class="ranked-name">
+						<a href="#">
+							Kenny
+						</a>
+					</th>
+					<td>4</td>
+					<td>34.65</td>
+					<td>27.15</td>
+					<td>4</td>
+					<td>4</td>
+					<td>98</td>
+					<td>5</td>
+					<td>4</td>
+					<td>3</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>

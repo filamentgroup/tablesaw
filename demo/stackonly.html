@@ -9,38 +9,54 @@
 	<link rel="stylesheet" href="../dist/tablesaw.stackonly.css">
 	<link rel="stylesheet" href="demo.css">
 
-	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><![endif]-->
 	<script src="../bower_components/jquery/dist/jquery.js"></script>
 	<script src="../dist/tablesaw.stackonly.js"></script>
 </head>
 <body>
-	<h1>(Only the) Stack Table</h1>
-	<p>If you only want to use the Stack Table and don’t want all the extra features and modes packaged with the full Tablesaw (save yourself some bytes), we do provide a Stack-Only version shown below.</p>
-	<p>The Stack Table stacks the table headers to a two column layout with headers on the left. Resize your viewport to across the 40em (640px) breakpoint to see the change.</p>
-	<table class="tablesaw tablesaw-stack" data-mode="stack">
-		<thead>
-			<tr>
-				<th>Skill</th>
-				<th>Last Entry</th>
-				<th>Alphabet</th>
-				<th>More Alphabet</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>Bartender</td>
-				<td>May 2, 1:34p John K.</td>
-				<td>A, B, C, D</td>
-				<td>E, F, G, H</td>
-			</tr>
-			<tr>
-				<td>Host</td>
-				<td>May 11, 12:45a</td>
-				<td>A, B, C, D</td>
-				<td>E, F, G, H</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="demo-header">
+		<div class="company">
+			<img src="http://filamentgroup.com/images/fg-logo-positive-sm-crop.png">
+		</div>
+		<div class="details">
+			<h1 class="description-container">Demo of <span class="repo-name">Tablesaw</span>
+				<span class="description">A group of plugins for responsive tables.</span>
+			</h1>
+			<ul class="outbound-links">
+				<li><a href="https://github.com/filamentgroup/tablesaw">Code</a></li>
+				<li><a href="https://github.com/filamentgroup/tablesaw/issues">Issues</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="docs-main">
+		<h2>(Only the) Stack Table</h2>
+		<p>If you only want to use the Stack Table and don’t want all the extra features and modes packaged with the full Tablesaw (save yourself some bytes), we do provide a Stack-Only version shown below.</p>
+		<p>The Stack Table stacks the table headers to a two column layout with headers on the left. Resize your viewport to across the 40em (640px) breakpoint to see the change.</p>
+		<table class="tablesaw tablesaw-stack" data-mode="stack">
+			<thead>
+				<tr>
+					<th>Skill</th>
+					<th>Last Entry</th>
+					<th>Alphabet</th>
+					<th>More Alphabet</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Bartender</td>
+					<td>May 2, 1:34p John K.</td>
+					<td>A, B, C, D</td>
+					<td>E, F, G, H</td>
+				</tr>
+				<tr>
+					<td>Host</td>
+					<td>May 11, 12:45a</td>
+					<td>A, B, C, D</td>
+					<td>E, F, G, H</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 </body>
 </html>
