@@ -94,7 +94,7 @@ Use `data-minimap` to add a series of small dots to show which columns are curre
 
 ## Sortable
 
-Allows sorting on columns.
+The “sortable” option allows the user to sort the the table data by clicking on the table headers. Since all the columns may not be visible on smaller breakpoints (or not there at all if using the “stack” table mode), relying solely on the column headers to choose the table sort isn’t practical. To address this, there is an optional `data-sortable-switch` attribute on the table that adds a select menu auto-populated with the names of each column in the table with options for choosing ascending or descending sort direction. Data options on table headers can be used to control which columns are sortable (`data-sortable-col`) and the default sort order (`data-sortable-default-col`).
 
 ```html
 <table data-sortable>
@@ -112,9 +112,11 @@ Allows sorting on columns.
     ...
 ```
 
-Use `data-sortable-switch` to add a form element to choose the sort order.
+Use `data-sortable-switch` to add a select form element to manually choose the sort order.
 
     <table data-sortable data-sortable-switch>
+
+![](docs/sortable.png)
 
 * [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
 
