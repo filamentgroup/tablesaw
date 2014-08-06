@@ -197,3 +197,7 @@ Next include the tablesaw icons in `src/icons` with your grunticon build and inc
 Check out any of the demos above for complete working examples.
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+
+## Building the Project Locally
+
+Run `npm install`, then `bower install`, then `grunt` to build the project files into the `dist` folder.
