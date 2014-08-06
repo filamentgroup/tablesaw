@@ -9,11 +9,13 @@
 	<link rel="stylesheet" href="../bower_components/filament-dialog/dist/dialog.css">
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
+	<link rel="stylesheet" href="/demo-head/demohead.css">
 
-	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
+	<!--[if lt IE 9]><script src="../bower_components/respond/dest/respond.min.js"></script><![endif]-->
 	<script src="../bower_components/jquery/dist/jquery.js"></script>
 	<script src="../bower_components/filament-dialog/dist/dialog.build.js"></script>
 	<script src="../dist/tablesaw.js"></script>
+	<script src="/demo-head/loadfont.js"></script>
 
 	<script>
 	/* grunticon Stylesheet Loader | https://github.com/filamentgroup/grunticon | (c) 2012 Scott Jehl, Filament Group, Inc. | MIT license. */
@@ -23,174 +25,203 @@
 	<noscript><link href="../dist/icons/icons.fallback.css" rel="stylesheet"></noscript>
 </head>
 <body>
-	<h1>Mode Switch Table</h1>
-	<table class="tablesaw" data-mode="swipe" data-mode-switch data-minimap>
-		<thead>
-			<tr>
-				<th data-priority="3">Rank</th>
-				<th data-priority="persist">Movie Title</th>
-				<th data-priority="2">Year</th>
-				<th data-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
-				<th data-priority="4">Reviews</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>1</th>
-				<td><a href="http://en.wikipedia.org/wiki/Citizen_Kane" data-rel="external">Citizen Kane</a></td>
-				<td>1941</td>
-				<td>100%</td>
-				<td>74</td>
-			</tr>
-			<tr>
-				<th>2</th>
-				<td><a href="http://en.wikipedia.org/wiki/Casablanca_(film)" data-rel="external">Casablanca</a></td>
-				<td>1942</td>
-				<td>97%</td>
-				<td>64</td>
-			</tr>
-			<tr>
-				<th>3</th>
-				<td><a href="http://en.wikipedia.org/wiki/The_Godfather" data-rel="external">The Godfather</a></td>
-				<td>1972</td>
-				<td>97%</td>
-				<td>87</td>
-			</tr>
-			<tr>
-				<th>4</th>
-				<td><a href="http://en.wikipedia.org/wiki/Gone_with_the_Wind_(film)" data-rel="external">Gone with the Wind</a></td>
-				<td>1939</td>
-				<td>96%</td>
-				<td>87</td>
-			</tr>
-			<tr>
-				<th>5</th>
-				<td><a href="http://en.wikipedia.org/wiki/Lawrence_of_Arabia_(film)" data-rel="external">Lawrence of Arabia</a></td>
-				<td>1962</td>
-				<td>94%</td>
-				<td>87</td>
-			</tr>
-			<tr>
-				<th>6</th>
-				<td><a href="http://en.wikipedia.org/wiki/Dr._Strangelove" data-rel="external">Dr. Strangelove ...</a></td>
-				<td>1964</td>
-				<td>92%</td>
-				<td>74</td>
-			</tr>
-			<tr>
-				<th>7</th>
-				<td><a href="http://en.wikipedia.org/wiki/The_Graduate" data-rel="external">The Graduate</a></td>
-				<td>1967</td>
-				<td>91%</td>
-				<td>122</td>
-			</tr>
-			<tr>
-				<th>8</th>
-				<td><a href="http://en.wikipedia.org/wiki/The_Wizard_of_Oz_(1939_film)" data-rel="external">The Wizard of Oz</a></td>
-				<td>1939</td>
-				<td>90%</td>
-				<td>72</td>
-			</tr>
-			<tr>
-				<th>9</th>
-				<td><a href="http://en.wikipedia.org/wiki/Singin%27_in_the_Rain" data-rel="external">Singin' in the Rain</a></td>
-				<td>1952</td>
-				<td>89%</td>
-				<td>85</td>
-			</tr>
-			<tr>
-				<th>10</th>
-				<td class="title"><a href="http://en.wikipedia.org/wiki/Inception" data-rel="external">Inception</a></td>
-				<td>2010</td>
-				<td>84%</td>
-				<td>78</td>
-			</tr>
-		</tbody>
-	</table>
+	<div class="demo-header">
+		<div class="company">
+			<img src="http://filamentgroup.com/images/fg-logo-positive-sm-crop.png">
+		</div>
+		<div class="details">
+			<h1 class="description-container">Demo of <span class="repo-name">Tablesaw</span>
+				<span class="description">A group of plugins for responsive tables.</span>
+			</h1>
+			<ul class="outbound-links">
+				<li><a href="https://github.com/filamentgroup/tablesaw">Code</a></li>
+				<li><a href="https://github.com/filamentgroup/tablesaw/issues">Issues</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="nav-container">
+		<div class="docs-globalnav">
+			<nav class="docs-nav">
+			<a href="kitchensink.html">Kitchen Sink</a>
+			<a href="modeswitch.html" class="current">Mode Switch</a>
+			<a href="sort.html">Sortable</a>
+			<a href="stack.html">Stack</a>
+			<a href="stackonly.html">Stack Only</a>
+			<a href="swipe.html">Swipe Table</a>
+			<a href="toggle.html">Toggle</a>
+			</nav>
+		</div>
+	</div>
+	<div class="docs-main">
+		<h2>Mode Switch Table</h2>
+		<table class="tablesaw" data-mode="swipe" data-mode-switch data-minimap>
+			<thead>
+				<tr>
+					<th data-priority="3">Rank</th>
+					<th data-priority="persist">Movie Title</th>
+					<th data-priority="2">Year</th>
+					<th data-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+					<th data-priority="4">Reviews</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>1</th>
+					<td><a href="http://en.wikipedia.org/wiki/Citizen_Kane" data-rel="external">Citizen Kane</a></td>
+					<td>1941</td>
+					<td>100%</td>
+					<td>74</td>
+				</tr>
+				<tr>
+					<th>2</th>
+					<td><a href="http://en.wikipedia.org/wiki/Casablanca_(film)" data-rel="external">Casablanca</a></td>
+					<td>1942</td>
+					<td>97%</td>
+					<td>64</td>
+				</tr>
+				<tr>
+					<th>3</th>
+					<td><a href="http://en.wikipedia.org/wiki/The_Godfather" data-rel="external">The Godfather</a></td>
+					<td>1972</td>
+					<td>97%</td>
+					<td>87</td>
+				</tr>
+				<tr>
+					<th>4</th>
+					<td><a href="http://en.wikipedia.org/wiki/Gone_with_the_Wind_(film)" data-rel="external">Gone with the Wind</a></td>
+					<td>1939</td>
+					<td>96%</td>
+					<td>87</td>
+				</tr>
+				<tr>
+					<th>5</th>
+					<td><a href="http://en.wikipedia.org/wiki/Lawrence_of_Arabia_(film)" data-rel="external">Lawrence of Arabia</a></td>
+					<td>1962</td>
+					<td>94%</td>
+					<td>87</td>
+				</tr>
+				<tr>
+					<th>6</th>
+					<td><a href="http://en.wikipedia.org/wiki/Dr._Strangelove" data-rel="external">Dr. Strangelove ...</a></td>
+					<td>1964</td>
+					<td>92%</td>
+					<td>74</td>
+				</tr>
+				<tr>
+					<th>7</th>
+					<td><a href="http://en.wikipedia.org/wiki/The_Graduate" data-rel="external">The Graduate</a></td>
+					<td>1967</td>
+					<td>91%</td>
+					<td>122</td>
+				</tr>
+				<tr>
+					<th>8</th>
+					<td><a href="http://en.wikipedia.org/wiki/The_Wizard_of_Oz_(1939_film)" data-rel="external">The Wizard of Oz</a></td>
+					<td>1939</td>
+					<td>90%</td>
+					<td>72</td>
+				</tr>
+				<tr>
+					<th>9</th>
+					<td><a href="http://en.wikipedia.org/wiki/Singin%27_in_the_Rain" data-rel="external">Singin' in the Rain</a></td>
+					<td>1952</td>
+					<td>89%</td>
+					<td>85</td>
+				</tr>
+				<tr>
+					<th>10</th>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Inception" data-rel="external">Inception</a></td>
+					<td>2010</td>
+					<td>84%</td>
+					<td>78</td>
+				</tr>
+			</tbody>
+		</table>
 
-	<h2>Exclude columntoggle Mode</h2>
-	<table class="tablesaw" data-mode="swipe" data-mode-switch data-minimap data-mode-exclude="columntoggle">
-		<thead>
-			<tr>
-				<th>Rank</th>
-				<th>Movie Title</th>
-				<th>Year</th>
-				<th><abbr title="Rotten Tomato Rating">Rating</abbr></th>
-				<th>Reviews</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>1</th>
-				<td><a href="http://en.wikipedia.org/wiki/Citizen_Kane" data-rel="external">Citizen Kane</a></td>
-				<td>1941</td>
-				<td>100%</td>
-				<td>74</td>
-			</tr>
-			<tr>
-				<th>2</th>
-				<td><a href="http://en.wikipedia.org/wiki/Casablanca_(film)" data-rel="external">Casablanca</a></td>
-				<td>1942</td>
-				<td>97%</td>
-				<td>64</td>
-			</tr>
-			<tr>
-				<th>3</th>
-				<td><a href="http://en.wikipedia.org/wiki/The_Godfather" data-rel="external">The Godfather</a></td>
-				<td>1972</td>
-				<td>97%</td>
-				<td>87</td>
-			</tr>
-			<tr>
-				<th>4</th>
-				<td><a href="http://en.wikipedia.org/wiki/Gone_with_the_Wind_(film)" data-rel="external">Gone with the Wind</a></td>
-				<td>1939</td>
-				<td>96%</td>
-				<td>87</td>
-			</tr>
-			<tr>
-				<th>5</th>
-				<td><a href="http://en.wikipedia.org/wiki/Lawrence_of_Arabia_(film)" data-rel="external">Lawrence of Arabia</a></td>
-				<td>1962</td>
-				<td>94%</td>
-				<td>87</td>
-			</tr>
-			<tr>
-				<th>6</th>
-				<td><a href="http://en.wikipedia.org/wiki/Dr._Strangelove" data-rel="external">Dr. Strangelove ...</a></td>
-				<td>1964</td>
-				<td>92%</td>
-				<td>74</td>
-			</tr>
-			<tr>
-				<th>7</th>
-				<td><a href="http://en.wikipedia.org/wiki/The_Graduate" data-rel="external">The Graduate</a></td>
-				<td>1967</td>
-				<td>91%</td>
-				<td>122</td>
-			</tr>
-			<tr>
-				<th>8</th>
-				<td><a href="http://en.wikipedia.org/wiki/The_Wizard_of_Oz_(1939_film)" data-rel="external">The Wizard of Oz</a></td>
-				<td>1939</td>
-				<td>90%</td>
-				<td>72</td>
-			</tr>
-			<tr>
-				<th>9</th>
-				<td><a href="http://en.wikipedia.org/wiki/Singin%27_in_the_Rain" data-rel="external">Singin' in the Rain</a></td>
-				<td>1952</td>
-				<td>89%</td>
-				<td>85</td>
-			</tr>
-			<tr>
-				<th>10</th>
-				<td class="title"><a href="http://en.wikipedia.org/wiki/Inception" data-rel="external">Inception</a></td>
-				<td>2010</td>
-				<td>84%</td>
-				<td>78</td>
-			</tr>
-		</tbody>
-	</table>
+		<h2>Exclude columntoggle Mode</h2>
+		<table class="tablesaw" data-mode="swipe" data-mode-switch data-minimap data-mode-exclude="columntoggle">
+			<thead>
+				<tr>
+					<th>Rank</th>
+					<th>Movie Title</th>
+					<th>Year</th>
+					<th><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+					<th>Reviews</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>1</th>
+					<td><a href="http://en.wikipedia.org/wiki/Citizen_Kane" data-rel="external">Citizen Kane</a></td>
+					<td>1941</td>
+					<td>100%</td>
+					<td>74</td>
+				</tr>
+				<tr>
+					<th>2</th>
+					<td><a href="http://en.wikipedia.org/wiki/Casablanca_(film)" data-rel="external">Casablanca</a></td>
+					<td>1942</td>
+					<td>97%</td>
+					<td>64</td>
+				</tr>
+				<tr>
+					<th>3</th>
+					<td><a href="http://en.wikipedia.org/wiki/The_Godfather" data-rel="external">The Godfather</a></td>
+					<td>1972</td>
+					<td>97%</td>
+					<td>87</td>
+				</tr>
+				<tr>
+					<th>4</th>
+					<td><a href="http://en.wikipedia.org/wiki/Gone_with_the_Wind_(film)" data-rel="external">Gone with the Wind</a></td>
+					<td>1939</td>
+					<td>96%</td>
+					<td>87</td>
+				</tr>
+				<tr>
+					<th>5</th>
+					<td><a href="http://en.wikipedia.org/wiki/Lawrence_of_Arabia_(film)" data-rel="external">Lawrence of Arabia</a></td>
+					<td>1962</td>
+					<td>94%</td>
+					<td>87</td>
+				</tr>
+				<tr>
+					<th>6</th>
+					<td><a href="http://en.wikipedia.org/wiki/Dr._Strangelove" data-rel="external">Dr. Strangelove ...</a></td>
+					<td>1964</td>
+					<td>92%</td>
+					<td>74</td>
+				</tr>
+				<tr>
+					<th>7</th>
+					<td><a href="http://en.wikipedia.org/wiki/The_Graduate" data-rel="external">The Graduate</a></td>
+					<td>1967</td>
+					<td>91%</td>
+					<td>122</td>
+				</tr>
+				<tr>
+					<th>8</th>
+					<td><a href="http://en.wikipedia.org/wiki/The_Wizard_of_Oz_(1939_film)" data-rel="external">The Wizard of Oz</a></td>
+					<td>1939</td>
+					<td>90%</td>
+					<td>72</td>
+				</tr>
+				<tr>
+					<th>9</th>
+					<td><a href="http://en.wikipedia.org/wiki/Singin%27_in_the_Rain" data-rel="external">Singin' in the Rain</a></td>
+					<td>1952</td>
+					<td>89%</td>
+					<td>85</td>
+				</tr>
+				<tr>
+					<th>10</th>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Inception" data-rel="external">Inception</a></td>
+					<td>2010</td>
+					<td>84%</td>
+					<td>78</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>
