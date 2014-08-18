@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.6 - 2014-07-23
+/*! Tablesaw - v0.1.7 - 2014-08-18
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -156,7 +156,8 @@
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
-		cellLabels: 'tablesaw-cell-label'
+		cellLabels: 'tablesaw-cell-label',
+        cellContentLabels: 'tablesaw-cell-content'
 	};
 
 	var data = {
@@ -207,6 +208,7 @@
 					}
 					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
 				} else {
+					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
 					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + text + "</b>"  );
 				}
 			}
@@ -216,6 +218,7 @@
 	Stack.prototype.destroy = function() {
 		this.$table.removeClass( classes.stackTable );
 		this.$table.find( '.' + classes.cellLabels ).remove();
+		this.$table.find( '.' + classes.cellContentLabels ).remove();
 	};
 
 	// on tablecreate, init

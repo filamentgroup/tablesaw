@@ -9,6 +9,13 @@
     float: left;
     width: 100%;
   }
+  .tablesaw-cell-label {
+    vertical-align: top;
+  }
+  .tablesaw-cell-content {
+    max-width: 67%;
+    display: inline-block;
+  }
 }
 
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */
