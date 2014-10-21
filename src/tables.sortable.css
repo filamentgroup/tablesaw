@@ -37,6 +37,12 @@
 	position: absolute;
 	right: .5em;
 }
+.tablesaw-sortable .sortable-head.sortable-ascending button:after {
+	content: "↑";
+}
+.tablesaw-sortable .sortable-head.sortable-descending button:after {
+	content: "↓";
+}
 
 .tablesaw-sortable .not-applicable:after {
 	content: "--";

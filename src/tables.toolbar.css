@@ -196,12 +196,16 @@
 	height: 1.8em;
 	background-position: 50% 50%;
 	margin-left: .5em;
+	font-family: serif;
+	font-weight: bold;
+	text-indent: -1px;
 }
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
 	opacity: .25;
 	filter: alpha(opacity=25);
 	cursor: default;
 	pointer-events: none;
+	color: #000;
 }
 
 /* Table Toolbar */
