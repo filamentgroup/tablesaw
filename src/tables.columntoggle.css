@@ -21,6 +21,18 @@
 
 
 /* Remove top/bottom margins around the fieldcontain on check list */
+.tablesaw-columntoggle-popup {
+	display: none;
+}
+.tablesaw-columntoggle-popup.visible {
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background-color: #fff;
+	padding: .5em .8em;
+	box-shadow: 0 1px 2px #777;
+}
 .tablesaw-columntoggle-popup fieldset {
 	margin:0;
 }
@@ -134,9 +146,19 @@
 	}
 }
 
+.tablesaw-columntoggle-popup label.close {
+	display: block;
+	cursor: pointer;
+	text-align: right;
+	color: #777;
+	text-transform: uppercase;
+	font-size: .8125em;
+	margin-bottom: .6em;
+}
 .tablesaw-columntoggle-popup .btn-group > label {
 	display: block;
 	padding: .2em 0;
+	white-space: nowrap;
 }
 .tablesaw-columntoggle-popup .btn-group > label input {
 	margin-right: .8em;
