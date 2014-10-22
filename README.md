@@ -136,7 +136,7 @@ As shown above, we provide a Stack-mode-only package of TableSaw. It’s a bareb
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
-<!--[if lt IE 9]><script src="respond.min.js"></script><!--<![endif]-->
+<!--[if lt IE 9]><script src="dependencies/respond.js"></script><!--<![endif]-->
 <script src="tablesaw.js"></script>
 ```
 
@@ -171,26 +171,33 @@ The argument to `tablesaw-stack` is the breakpoint at which the table will switc
 
 If you want the other modes, it’ll take a little bit more configuration.
 
-The `columntoggle` mode requires the [Filament Group dialog](https://github.com/filamentgroup/dialog). Install all dependencies easily using bower:
+The `columntoggle` mode requires the [Filament Group dialog](https://github.com/filamentgroup/dialog).
+
+```html
+<link rel="stylesheet" href="dependencies/dialog.css">
+<link rel="stylesheet" href="tablesaw.css">
+
+<!--[if lt IE 9]><script src="dependencies/respond.js"></script><!--<![endif]-->
+<script src="dependencies/jquery.js"></script>
+<script src="dependencies/dialog.js"></script>
+<script src="tablesaw.js"></script>
+```
+
+Or, if you use Bower to manage your dependencies (and bower is installed globally):
 
     bower install
-
-(if bower is installed globally) or
-
-    ./node_modules/.bin/bower install
-
-(if bower is not installed globally)
 
 ```html
 <link rel="stylesheet" href="bower_components/filament-dialog/dialog.css">
 <link rel="stylesheet" href="tablesaw.css">
 
-<!--[if lt IE 9]><script src="respond.min.js"></script><!--<![endif]-->
+<!--[if lt IE 9]><script src="bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
 <script src="bower_components/jquery/jquery.js"></script>
 <script src="bower_components/filament-dialog/dialog.js"></script>
 <script src="bower_components/filament-dialog/dialog-init.js"></script>
 <script src="tablesaw.js"></script>
 ```
+
 Check out any of the demos above for complete working examples.
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
