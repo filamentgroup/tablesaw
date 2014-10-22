@@ -13,6 +13,24 @@ module.exports = function(grunt) {
 			' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 		// Task configuration.
 		clean: ['dist/tmp/'],
+		copy: {
+			jquery: {
+				src: 'bower_components/jquery/dist/jquery.js',
+				dest: 'dist/dependencies/jquery.js'
+			},
+			respond: {
+				src: 'bower_components/respond/dest/respond.src.js',
+				dest: 'dist/dependencies/respond.js'
+			},
+			jsdialog: {
+				src: 'bower_components/filament-dialog/dist/dialog.build.js',
+				dest: 'dist/dependencies/dialog.js'
+			},
+			cssdialog: {
+				src: 'bower_components/filament-dialog/dist/dialog.css',
+				dest: 'dist/dependencies/dialog.css'
+			}
+		},
 		concat: {
 			options: {
 				banner: '<%= banner %>',
@@ -39,7 +57,7 @@ module.exports = function(grunt) {
 					'src/tables.js',
 					'src/tables.stack.js'
 				],
-				dest: 'dist/<%= pkg.name %>.stackonly.js'
+				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.js'
 			},
 			cssall: {
 				src: [
@@ -76,7 +94,7 @@ module.exports = function(grunt) {
 					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss',
 					'src/tables.stack-mixin.scss'
 				],
-				dest: 'dist/<%= pkg.name %>.stackonly.scss'
+				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.scss'
 			}
 		},
 		qunit: {
@@ -125,8 +143,8 @@ module.exports = function(grunt) {
 			},
 			stackonly: {
 				src: [
-					'dist/<%= pkg.name %>.stackonly.css',
-					'dist/<%= pkg.name %>.stackonly.js'
+					'dist/stackonly/<%= pkg.name %>.stackonly.css',
+					'dist/stackonly/<%= pkg.name %>.stackonly.js'
 				]
 			}
 		},
@@ -138,7 +156,7 @@ module.exports = function(grunt) {
 			dist: {
 				files: {
 					'dist/<%= pkg.name %>.css': '<%= concat.cssall.dest %>',
-					'dist/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>',
+					'dist/stackonly/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>',
 					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>'
 				}
 			}
@@ -151,7 +169,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('travis', ['jshint', 'qunit']);
 	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
-	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean']);
+	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'copy', 'clean']);
 
 	grunt.registerTask('default', ['jshint', 'src', 'qunit', 'bytesize']);
 
