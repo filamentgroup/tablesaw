@@ -15,7 +15,7 @@
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
 			dialogClass: this.$table.attr( 'data-dialog-class' ) || '',
-			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn',
+			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
 			columnBtnSide: this.$table.attr( 'data-column-btn-side' ) || 'right',
 			popup: 'tablesaw-columntoggle-popup',
 			priorityPrefix: 'tablesaw-priority-',
@@ -51,7 +51,7 @@
 		id = tableId + "-popup";
 		$btnContain = $( "<div class='" + this.classes.columnBtnContain + " " + this.classes.columnBtnSide + " " + this.classes.dialogClass + "'></div>" );
 		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
-										"▾<span>" + this.i18n.columnBtnText + "</span></a>" );
+										"<span>" + this.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
 

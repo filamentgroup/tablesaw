@@ -120,12 +120,12 @@
 }
 
 .tablesaw-bar .btn.btn-small {
-	font-size: 17px;
+	font-size: 1.0625em;
 	line-height: 19px;
 	padding: .3em 1em .3em 1em;
 }
 .tablesaw-bar .btn.btn-micro {
-	font-size: 13px;
+	font-size: .8125em;
 	padding: .4em .7em .25em .7em;
 }
 
@@ -187,7 +187,7 @@
 }
 .tablesaw-advance .btn.btn-micro {
 	font-size: .8125em;
-	padding: .4em .7em .25em .7em;
+	padding: .3em .7em .25em .7em;
 }
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
 	display: inline-block;
@@ -196,16 +196,43 @@
 	height: 1.8em;
 	background-position: 50% 50%;
 	margin-left: .5em;
-	font-family: serif;
-	font-weight: bold;
-	text-indent: -1px;
+	position: relative;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before {
+	content: "\0020";
+	overflow: hidden;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before {
+	left: .5em;
+	top: .65em;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid #808080;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before {
+	top: .45em;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before {
+	left: .6em;
+	border-right: 5px solid #808080;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before {
+	left: .7em;
+	border-left: 5px solid #808080;
 }
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
 	opacity: .25;
 	filter: alpha(opacity=25);
 	cursor: default;
 	pointer-events: none;
-	color: #000;
 }
 
 /* Table Toolbar */
