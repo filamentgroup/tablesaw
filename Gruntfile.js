@@ -21,14 +21,6 @@ module.exports = function(grunt) {
 			respond: {
 				src: 'bower_components/respond/dest/respond.src.js',
 				dest: 'dist/dependencies/respond.js'
-			},
-			jsdialog: {
-				src: 'bower_components/filament-dialog/dist/dialog.build.js',
-				dest: 'dist/dependencies/dialog.js'
-			},
-			cssdialog: {
-				src: 'bower_components/filament-dialog/dist/dialog.css',
-				dest: 'dist/dependencies/dialog.css'
 			}
 		},
 		concat: {
