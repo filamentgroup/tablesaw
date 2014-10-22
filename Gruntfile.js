@@ -160,6 +160,20 @@ module.exports = function(grunt) {
 					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>'
 				}
 			}
+		},
+		compress: {
+			main: {
+				options: {
+					archive: 'dist/tablesaw-<%= pkg.version %>.zip',
+					mode: 'zip',
+					pretty: true
+				},
+				files: [
+					{expand: true, cwd: 'dist/', src: ['*'], dest: 'tablesaw/'},
+					{expand: true, cwd: 'dist/', src: ['dependencies/*'], dest: 'tablesaw/'},
+					{expand: true, cwd: 'dist/', src: ['stackonly/*'], dest: 'tablesaw/'}
+				]
+			}
 		}
 	});
 
