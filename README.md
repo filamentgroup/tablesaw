@@ -193,8 +193,7 @@ Or, if you use Bower to manage your dependencies (and bower is installed globall
 
 <!--[if lt IE 9]><script src="bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
 <script src="bower_components/jquery/jquery.js"></script>
-<script src="bower_components/filament-dialog/dialog.js"></script>
-<script src="bower_components/filament-dialog/dialog-init.js"></script>
+<script src="bower_components/filament-dialog/dist/dialog.min.js"></script>
 <script src="tablesaw.js"></script>
 ```
 
