@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.6 - 2014-07-23
+/*! Tablesaw - v0.1.7 - 2014-10-22
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -154,13 +154,13 @@ table.tablesaw {
 }
 
 .tablesaw-bar .btn.btn-small {
-  font-size: 17px;
+  font-size: 1.0625em;
   line-height: 19px;
   padding: .3em 1em .3em 1em;
 }
 
 .tablesaw-bar .btn.btn-micro {
-  font-size: 13px;
+  font-size: .8125em;
   padding: .4em .7em .25em .7em;
 }
 
@@ -231,7 +231,7 @@ table.tablesaw {
 
 .tablesaw-advance .btn.btn-micro {
   font-size: .8125em;
-  padding: .4em .7em .25em .7em;
+  padding: .3em .7em .25em .7em;
 }
 
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
@@ -241,6 +241,42 @@ table.tablesaw {
   height: 1.8em;
   background-position: 50% 50%;
   margin-left: .5em;
+  position: relative;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before {
+  content: "\0020";
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before {
+  left: .5em;
+  top: .65em;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #808080;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before {
+  top: .45em;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before {
+  left: .6em;
+  border-right: 5px solid #808080;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before {
+  left: .7em;
+  border-left: 5px solid #808080;
 }
 
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
@@ -752,6 +788,14 @@ table.tablesaw thead td {
   content: "\0020";
   position: absolute;
   right: .5em;
+}
+
+.tablesaw-sortable .sortable-head.sortable-ascending button:after {
+  content: "↑";
+}
+
+.tablesaw-sortable .sortable-head.sortable-descending button:after {
+  content: "↓";
 }
 
 .tablesaw-sortable .not-applicable:after {
