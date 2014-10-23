@@ -22,6 +22,10 @@ If you only want to use the Stack Table and don’t want all the extra features 
 
 * [Stack-Only Table Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
 
+#### Opt out of inline labels
+
+To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-no-labels>`; on a per-row basis, use `<tr data-no-labels>`.
+
 ### Toggle
 
 The Column Toggle Table allows the user to select which columns they want to be visible.
