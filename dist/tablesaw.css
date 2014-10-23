@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.7 - 2014-10-22
+/*! Tablesaw - v0.1.7 - 2014-10-23
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -246,7 +246,8 @@ table.tablesaw {
 
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before,
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before {
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.up:before {
   content: "\0020";
   overflow: hidden;
   width: 0;
@@ -260,6 +261,14 @@ table.tablesaw {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 5px solid #808080;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.up:before {
+  left: .5em;
+  top: .65em;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #808080;
 }
 
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
@@ -604,6 +613,23 @@ table.tablesaw thead td {
 
 /* Remove top/bottom margins around the fieldcontain on check list */
 
+.tablesaw-columntoggle-popup {
+  display: none;
+}
+
+.tablesaw-columntoggle-btnwrap.visible .tablesaw-columntoggle-popup {
+  display: block;
+  position: absolute;
+  top: 2em;
+  right: 0;
+  background-color: #fff;
+  padding: .5em .8em;
+  border: 1px solid #ccc;
+  -webkit-box-shadow: 0 1px 2px #ccc;
+  box-shadow: 0 1px 2px #ccc;
+  border-radius: .2em;
+}
+
 .tablesaw-columntoggle-popup fieldset {
   margin: 0;
 }
@@ -643,10 +669,6 @@ table.tablesaw thead td {
 
 .tablesaw-columntoggle-btnwrap .dialog-content:focus {
   outline-style: none;
-}
-
-.dialog-table-coltoggle {
-  border-radius: .5em;
 }
 
 /* Preset breakpoints if "" class added to table */
@@ -739,6 +761,7 @@ table.tablesaw thead td {
 .tablesaw-columntoggle-popup .btn-group > label {
   display: block;
   padding: .2em 0;
+  white-space: nowrap;
 }
 
 .tablesaw-columntoggle-popup .btn-group > label input {

@@ -21,6 +21,20 @@
 
 
 /* Remove top/bottom margins around the fieldcontain on check list */
+.tablesaw-columntoggle-popup {
+	display: none;
+}
+.tablesaw-columntoggle-btnwrap.visible .tablesaw-columntoggle-popup {
+	display: block;
+	position: absolute;
+	top: 2em;
+	right: 0;
+	background-color: #fff;
+	padding: .5em .8em;
+	border: 1px solid #ccc;
+	box-shadow: 0 1px 2px #ccc;
+	border-radius: .2em;
+}
 .tablesaw-columntoggle-popup fieldset {
 	margin:0;
 }
@@ -57,9 +71,6 @@
 }
 .tablesaw-columntoggle-btnwrap .dialog-content:focus {
 	outline-style: none;
-}
-.dialog-table-coltoggle {
-	border-radius: .5em;
 }
 
 /* Preset breakpoints if "" class added to table */
@@ -137,6 +148,7 @@
 .tablesaw-columntoggle-popup .btn-group > label {
 	display: block;
 	padding: .2em 0;
+	white-space: nowrap;
 }
 .tablesaw-columntoggle-popup .btn-group > label input {
 	margin-right: .8em;

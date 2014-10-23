@@ -106,13 +106,6 @@
 		$table.prev().find( '.tablesaw-columntoggle-btn' ).click();
 
 		ok( $fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog visible after button click' );
-
-		var $curtain = $( '.dialog-background-open' );
-		ok( $curtain.length, 'Curtain visible.' );
-
-		// close dialog
-		$curtain.click();
-		ok( $curtain.is( '.dialog-background-open' ), 'Curtain not visible after click.' );
 	});
 
 	test( 'Toggle Column', function() {
@@ -124,7 +117,7 @@
 			.next().find( ':checkbox' ).trigger( 'click' );
 
 		// close dialog
-		$( '.dialog-background-open' ).click();
+		$( '.tablesaw-columntoggle-popup .close' ).click();
 
 		strictEqual( $cell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
 	});
