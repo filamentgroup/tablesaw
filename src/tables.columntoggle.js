@@ -97,11 +97,11 @@
 			$btnContain.addClass( 'visible' );
 			$menuButton.removeClass( 'down' ).addClass( 'up' );
 
-			$( document ).unbind( 'click.tablesaw', closePopup );
+			$( document ).unbind( 'click.' + tableId, closePopup );
 
 			window.clearTimeout( closeTimeout );
 			closeTimeout = window.setTimeout(function() {
-				$( document ).one( 'click.tablesaw', closePopup );
+				$( document ).one( 'click.' + tableId, closePopup );
 			}, 15 );
 		}
 
@@ -111,12 +111,12 @@
 				return;
 			}
 
-			$( document ).unbind( 'click.tablesaw' );
+			$( document ).unbind( 'click.' + tableId );
 			$menuButton.removeClass( 'up' ).addClass( 'down' );
 			$btnContain.removeClass( 'visible' );
 		}
 
-		$menuButton.on( "click", function( event ) {
+		$menuButton.on( "click.tablesaw", function( event ) {
 			event.preventDefault();
 
 			if( !$btnContain.is( ".visible" ) ) {
@@ -132,7 +132,7 @@
 
 		$(window).on( "resize." + tableId, function(){
 			self.refreshToggle();
-		} );
+		});
 
 		this.refreshToggle();
 	};
@@ -164,6 +164,9 @@
 	};
 
 	ColumnToggle.prototype.destroy = function() {
+		// table toolbars, document and window .tableId events
+		// removed in parent tables.js destroy method
+
 		this.$table.removeClass( this.classes.columnToggleTable );
 		this.$table.find( 'th, td' ).each(function() {
 			var $cell = $( this );
