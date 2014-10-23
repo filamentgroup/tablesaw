@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.7 - 2014-10-23
+/*! Tablesaw - v0.1.8 - 2014-10-23
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -124,7 +124,9 @@
 			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
 		});
 
-		$( window ).off( 'resize.' + this.$table.attr( 'id' ) );
+		var tableId = this.$table.attr( 'id' );
+		$( document ).unbind( "." + tableId );
+		$( window ).unbind( "." + tableId );
 
 		// other plugins
 		this.$table.trigger( events.destroy, [ this.mode ] );
