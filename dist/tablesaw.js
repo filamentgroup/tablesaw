@@ -530,6 +530,10 @@
 			// TODO switch this to an nth-child feature test
 			isIE8 = $( 'html' ).is( '.ie-lte8' );
 
+		if( !$headerCells.length ) {
+			throw new Error( "tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?" );
+		}
+
 		// Calculate initial widths
 		$table.css('width', 'auto');
 		$headerCells.each(function() {
