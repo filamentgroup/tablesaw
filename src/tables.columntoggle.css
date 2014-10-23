@@ -24,14 +24,16 @@
 .tablesaw-columntoggle-popup {
 	display: none;
 }
-.tablesaw-columntoggle-popup.visible {
+.tablesaw-columntoggle-btnwrap.visible .tablesaw-columntoggle-popup {
 	display: block;
 	position: absolute;
-	top: 0;
+	top: 2em;
 	right: 0;
 	background-color: #fff;
 	padding: .5em .8em;
-	box-shadow: 0 1px 2px #777;
+	border: 1px solid #ccc;
+	box-shadow: 0 1px 2px #ccc;
+	border-radius: .2em;
 }
 .tablesaw-columntoggle-popup fieldset {
 	margin:0;
@@ -69,9 +71,6 @@
 }
 .tablesaw-columntoggle-btnwrap .dialog-content:focus {
 	outline-style: none;
-}
-.dialog-table-coltoggle {
-	border-radius: .5em;
 }
 
 /* Preset breakpoints if "" class added to table */
@@ -146,15 +145,6 @@
 	}
 }
 
-.tablesaw-columntoggle-popup label.close {
-	display: block;
-	cursor: pointer;
-	text-align: right;
-	color: #777;
-	text-transform: uppercase;
-	font-size: .8125em;
-	margin-bottom: .6em;
-}
 .tablesaw-columntoggle-popup .btn-group > label {
 	display: block;
 	padding: .2em 0;

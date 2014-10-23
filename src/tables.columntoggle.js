@@ -14,7 +14,6 @@
 		this.classes = {
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
-			dialogClass: this.$table.attr( 'data-dialog-class' ) || '',
 			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
 			columnBtnSide: this.$table.attr( 'data-column-btn-side' ) || 'right',
 			popup: 'tablesaw-columntoggle-popup',
@@ -24,7 +23,6 @@
 		};
 
 		this.i18n = {
-			close: 'Close',
 			columnBtnText: 'Columns',
 			columnsDialogError: 'No eligible columns.'
 		};
@@ -50,10 +48,10 @@
 
 		tableId = this.$table.attr( "id" );
 		id = tableId + "-popup";
-		$btnContain = $( "<div class='" + this.classes.columnBtnContain + " " + this.classes.columnBtnSide + " " + this.classes.dialogClass + "'></div>" );
+		$btnContain = $( "<div class='" + this.classes.columnBtnContain + " " + this.classes.columnBtnSide + "'></div>" );
 		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
 										"<span>" + this.i18n.columnBtnText + "</span></a>" );
-		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'><label class='close'>" + this.i18n.close + "</label></div>" );
+		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
 
 		var hasNonPersistentHeaders = false;
@@ -94,28 +92,38 @@
 		$menuButton.appendTo( $btnContain );
 		$btnContain.appendTo( this.$table.prev( '.' + this.classes.toolbar ) );
 
-		function closePopup() {
-			$( document ).unbind( 'click.tablesaw' );
-			$popup.removeClass( 'visible' );
+		var closeTimeout;
+		function openPopup() {
+			$btnContain.addClass( 'visible' );
+			$menuButton.removeClass( 'down' ).addClass( 'up' );
+
+			$( document ).unbind( 'click.tablesaw', closePopup );
+
+			window.clearTimeout( closeTimeout );
+			closeTimeout = window.setTimeout(function() {
+				$( document ).one( 'click.tablesaw', closePopup );
+			}, 15 );
 		}
 
-		$popup.on( "click", function( event ) {
-			if( $( event.target ).is( "label.close" ) ) {
-				closePopup();
+		function closePopup( event ) {
+			// Click came from inside the popup, ignore.
+			if( event && $( event.target ).closest( "." + self.classes.popup ).length ) {
+				return;
 			}
-			event.stopPropagation();
-		});
+
+			$( document ).unbind( 'click.tablesaw' );
+			$menuButton.removeClass( 'up' ).addClass( 'down' );
+			$btnContain.removeClass( 'visible' );
+		}
 
 		$menuButton.on( "click", function( event ) {
 			event.preventDefault();
 
-			$popup.addClass( 'visible' );
-
-			window.setTimeout(function() {
-				$( document ).one( 'click.tablesaw', function() {
-					closePopup();
-				});
-			}, 15 );
+			if( !$btnContain.is( ".visible" ) ) {
+				openPopup();
+			} else {
+				closePopup();
+			}
 		});
 
 		$popup.appendTo( $btnContain );

@@ -200,7 +200,8 @@
 }
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before,
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before {
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before,
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.up:before {
 	content: "\0020";
 	overflow: hidden;
 	width: 0;
@@ -213,6 +214,13 @@
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
 	border-top: 5px solid #808080;
+}
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.up:before {
+	left: .5em;
+	top: .65em;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid #808080;
 }
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before {
