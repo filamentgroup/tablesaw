@@ -178,18 +178,18 @@
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
 
-		if( mode === 'columntoggle' ){
-			var table = new ColumnToggle( this );
+		if( Tablesaw.mode === 'columntoggle' ){
+			var table = new ColumnToggle( Tablesaw.table );
 			table.init();
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", "table", function( e, mode ){
-		if( mode === 'columntoggle' ){
-			$( this ).data( 'tablesaw-coltoggle' ).destroy();
+	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
+		if( Tablesaw === 'columntoggle' ){
+			$( Tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
 		}
 	} );
 
