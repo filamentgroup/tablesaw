@@ -292,10 +292,12 @@
 		console.log(testCell);
 
 		//not sure how to better test this
-		if(window.innerWidth < 640)
+		if(window.innerWidth < 640){
 			ok( testCell.is(':hidden'));
-		else
+		}
+		else{
 			ok( testCell.is(':visible'));
+		}
 	});
 
 }(jQuery));
