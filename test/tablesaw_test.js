@@ -277,4 +277,25 @@
 		ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has class.' );
 	});
 
+	module( 'tablesaw Stack Hide Empty', {
+		setup: function(){
+				$fixture = $( '#qunit-fixture' );
+				$fixture.html( tableHtml.replace( /\%s/, 'data-mode="stack" data-hide-empty' ) );
+				$('table tbody tr:eq(3) td:eq(4)', $fixture).html('');
+				$( document ).trigger( 'enhance.tablesaw' );		
+		}
+	});
+
+	test( 'Empty cells are hidden', function() {
+		$fixture = $( '#qunit-fixture' );
+		var testCell = $fixture.find( 'table tbody tr:eq(3) td:eq(4)' );
+		console.log(testCell);
+
+		//not sure how to better test this
+		if(window.innerWidth < 640)
+			ok( testCell.is(':hidden'));
+		else
+			ok( testCell.is(':visible'));
+	});
+
 }(jQuery));
