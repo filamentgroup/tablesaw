@@ -109,6 +109,10 @@ table.tablesaw {
     float: left;
     width: 100%;
   }
+  .tablesaw-stack td:empty,
+  .tablesaw-stack th:empty {
+    display: none;
+  }
 }
 
 @mixin tablesaw-stack-min {
