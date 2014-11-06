@@ -217,6 +217,7 @@
 				$nextBtn[ canNext ? "removeClass" : "addClass" ]( hideBtn );
 				
 				$(this)[(canPrev || canNext) ? "addClass" : "removeClass"]('columns_hidden');
+				$('.tablesaw-bar')[(canPrev || canNext) ? "addClass" : "removeClass"]('columns_hidden');
 			})
 			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );
