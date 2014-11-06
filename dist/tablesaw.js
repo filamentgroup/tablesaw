@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.8 - 2014-10-23
+/*! Tablesaw - v0.1.8 - 2014-11-05
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -508,7 +508,7 @@
 	} );
 
 	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
-		if( Tablesaw === 'columntoggle' ){
+		if( Tablesaw.mode === 'columntoggle' ){
 			$( Tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
 		}
 	} );
@@ -720,8 +720,13 @@
 
 			})
 			.bind( "tablesawcolumns.swipetoggle", function(){
-				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
-				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
+				var canPrev = canAdvance( getPrev() );
+				var canNext = canAdvance( getNext() );
+				$prevBtn[ canPrev ? "removeClass" : "addClass" ]( hideBtn );
+				$nextBtn[ canNext ? "removeClass" : "addClass" ]( hideBtn );
+				
+				$(this)[(canPrev || canNext) ? "addClass" : "removeClass"]('columns_hidden');
+				$('.tablesaw-bar')[(canPrev || canNext) ? "addClass" : "removeClass"]('columns_hidden');
 			})
 			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );
