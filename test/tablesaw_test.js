@@ -24,8 +24,8 @@
 			'<table %s>',
 			'<thead>',
 				'<tr>',
-					'<th data-priority="1" data-sortable-col>Header</th>',
-					'<th data-sortable-col>Header</th>',
+					'<th data-priority="1" data-sortable-tablesaw-col>Header</th>',
+					'<th data-sortable-tablesaw-col>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -148,26 +148,26 @@
 	});
 
 	module( 'tablesaw Sortable without a Mode', {
-		setup: setup( 'data-sortable' )
+		setup: setup( 'data-sortable-tablesaw' )
 	});
 
 	test( 'Sortable still initializes without a data-mode', function() {
 		ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
-		ok( $table.find( '.sortable-head' ).length > 0, 'Header has sort class.' );
+		ok( $table.find( '.sortable-tablesaw-head' ).length > 0, 'Header has sort class.' );
 	});
 
 	module( 'tablesaw Sortable', {
-		setup: setup( 'data-mode="columntoggle" data-sortable' )
+		setup: setup( 'data-mode="columntoggle" data-sortable-tablesaw' )
 	});
 
 	test( 'Initialization', function() {
 		ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
-		ok( $table.find( '.sortable-head' ).length > 0, 'Header has sort class.' );
+		ok( $table.find( '.sortable-tablesaw-head' ).length > 0, 'Header has sort class.' );
 	});
 
 	test( 'Can sort descending', function() {
 		var previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
-			$sortButton = $table.find( '.sortable-head button' ).eq( 0 );
+			$sortButton = $table.find( '.sortable-tablesaw-head button' ).eq( 0 );
 
 		$sortButton.click();
 
@@ -179,7 +179,7 @@
 	});
 
 	test( 'Can sort numeric descending', function() {
-		var $sortButton = $table.find( '.sortable-head button' ).eq( 1 );
+		var $sortButton = $table.find( '.sortable-tablesaw-head button' ).eq( 1 );
 
 		$sortButton.click();
 
@@ -192,7 +192,7 @@
 
 	test( 'Sort works with floats', function() {
 		var previousText = "Body Row 1.2",
-			$sortButton = $table.find( '.sortable-head button' ).eq( 0 ),
+			$sortButton = $table.find( '.sortable-tablesaw-head button' ).eq( 0 ),
 			rows = $table.find( 'tbody tr' ).length;
 
 		$sortButton.click();
@@ -205,7 +205,7 @@
 
 	test( 'Sort is case insensitive', function() {
 		var previousText = "body row 4",
-			$sortButton = $table.find( '.sortable-head button' ).eq( 0 );
+			$sortButton = $table.find( '.sortable-tablesaw-head button' ).eq( 0 );
 
 		$sortButton.click();
 		equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).text(), previousText, previousText + ' is in the first row (descending)' );
@@ -216,7 +216,7 @@
 	});
 
 	module( 'tablesaw Sortable Switcher', {
-		setup: setup( 'data-mode="columntoggle" data-sortable data-sortable-switch' )
+		setup: setup( 'data-mode="columntoggle" data-sortable-tablesaw data-sortable-tablesaw-switch' )
 	});
 
 	test( 'Can sort descending with switcher', function() {

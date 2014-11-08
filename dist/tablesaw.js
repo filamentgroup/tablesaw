@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.8 - 2014-11-05
+/*! Tablesaw - v0.1.8 - 2014-11-07
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -38,7 +38,7 @@
 			refresh: "tablesawrefresh"
 		},
 		defaultMode = "stack",
-		initSelector = "table[data-mode],table[data-sortable]";
+		initSelector = "table[data-mode],table[data-sortable-tablesaw]";
 
 	var Table = function( element ) {
 		if( !element ) {
@@ -775,7 +775,7 @@
 	}
 
 	var topLevelPluginName = "tablesaw-sortable",
-		pluginName = "sortable",
+		pluginName = "sortable-tablesaw",
 		initSelector = "table[data-" + pluginName + "]",
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		classes = {
@@ -905,7 +905,7 @@
 								head = heads.eq( val[ 0 ] );
 
 							clearOthers( head.siblings() );
-							el.sortable( 'sortBy', head.get( 0 ), val[ 1 ] === 'asc' );
+							el[ pluginName ]( 'sortBy', head.get( 0 ), val[ 1 ] === 'asc' );
 						});
 					};
 

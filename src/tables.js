@@ -16,7 +16,7 @@
 			refresh: "tablesawrefresh"
 		},
 		defaultMode = "stack",
-		initSelector = "table[data-mode],table[data-sortable]";
+		initSelector = "table[data-mode],table[data-sortable-tablesaw]";
 
 	var Table = function( element ) {
 		if( !element ) {

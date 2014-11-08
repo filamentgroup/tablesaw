@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.8 - 2014-10-23
+/*! Tablesaw - v0.1.8 - 2014-11-07
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -38,7 +38,7 @@
 			refresh: "tablesawrefresh"
 		},
 		defaultMode = "stack",
-		initSelector = "table[data-mode],table[data-sortable]";
+		initSelector = "table[data-mode],table[data-sortable-tablesaw]";
 
 	var Table = function( element ) {
 		if( !element ) {
