@@ -246,6 +246,7 @@
 }
 .tablesaw-toolbar {
 	font-size: .875em;
+	float: left;
 }
 .tablesaw-toolbar label {
 	padding: .5em 0;

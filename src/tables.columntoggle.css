@@ -1,12 +1,6 @@
 /*
  Styles for the table columntoggle mode
 */
-
-/* see Gruntfile.js for grunticon selector */
-.btn.tablesaw-columntoggle-btn {
-	float: right;
-}
-
 .btn.tablesaw-columntoggle-btn span {
 	text-indent: -9999px;
 	display: inline-block;
@@ -58,10 +52,6 @@
 	}
 }
 
-.tablesaw-columntoggle-btnwrap {
-	position: relative;
-	float: right;
-}
 .tablesaw-columntoggle-btnwrap .dialog-content {
 	top: 0 !important;
 	right: 1em;

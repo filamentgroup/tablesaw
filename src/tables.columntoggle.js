@@ -15,7 +15,6 @@
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
 			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
-			columnBtnSide: this.$table.attr( 'data-column-btn-side' ) || 'right',
 			popup: 'tablesaw-columntoggle-popup',
 			priorityPrefix: 'tablesaw-priority-',
 			// TODO duplicate class, also in tables.js
@@ -48,7 +47,7 @@
 
 		tableId = this.$table.attr( "id" );
 		id = tableId + "-popup";
-		$btnContain = $( "<div class='" + this.classes.columnBtnContain + " " + this.classes.columnBtnSide + "'></div>" );
+		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
 		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
 										"<span>" + this.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );

@@ -51,13 +51,3 @@
 .tablesaw-sortable .not-applicable span {
 	display: none;
 }
-
-.tablesaw-sortable-switch {
-	float: left;
-	width: 100%;
-}
-@media (min-width: 40em) {
-	.tablesaw-sortable-switch {
-		width: auto;
-	}
-}
