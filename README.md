@@ -197,6 +197,10 @@ Or, if you use Bower to manage your dependencies (and bower is installed globall
 
 Check out any of the demos above for complete working examples.
 
+### Using Bare TableSaw 
+
+If you would like the full functionality of the TableSaw plugin. but don't want the plugin's default table styles, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file.
+
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
 ## Building the Project Locally

@@ -65,6 +65,20 @@ module.exports = function(grunt) {
 				],
 				dest: 'dist/tmp/<%= pkg.name %>.myth.css'
 			},
+			cssbare: {
+				src: [
+					'src/tables.css',
+					'src/tables.toolbar.css',
+					'src/tables.stack.css',
+					'src/tables.stack-default-breakpoint.css',
+					'src/tables.swipetoggle.css',
+					'src/tables.columntoggle.css',
+					'src/tables.sortable.css',
+					'src/tables.minimap.css',
+					'src/tables.modeswitch.css'
+				],
+				dest: 'dist/tmp/<%= pkg.name %>.bare.myth.css'
+			},
 			cssstack: {
 				src: [
 					'src/tables.css',
@@ -132,6 +146,12 @@ module.exports = function(grunt) {
 					'dist/<%= pkg.name %>.js'
 				]
 			},
+			bare: {
+				src: [
+					'dist/bare/<%= pkg.name %>.bare.css',
+					'dist/<%= pkg.name %>.js'
+				]
+			},
 			stackonly: {
 				src: [
 					'dist/stackonly/<%= pkg.name %>.stackonly.css',
@@ -147,6 +167,7 @@ module.exports = function(grunt) {
 			dist: {
 				files: {
 					'dist/<%= pkg.name %>.css': '<%= concat.cssall.dest %>',
+					'dist/bare/<%= pkg.name %>.bare.css': '<%= concat.cssbare.dest %>',
 					'dist/stackonly/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>',
 					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>'
 				}
@@ -162,7 +183,8 @@ module.exports = function(grunt) {
 				files: [
 					{expand: true, cwd: 'dist/', src: ['*'], dest: 'tablesaw/'},
 					{expand: true, cwd: 'dist/', src: ['dependencies/*'], dest: 'tablesaw/'},
-					{expand: true, cwd: 'dist/', src: ['stackonly/*'], dest: 'tablesaw/'}
+					{expand: true, cwd: 'dist/', src: ['stackonly/*'], dest: 'tablesaw/'},
+					{expand: true, cwd: 'dist/', src: ['bare/*'], dest: 'tablesaw/'}
 				]
 			}
 		}
@@ -172,7 +194,7 @@ module.exports = function(grunt) {
 
 	// Default task.
 	grunt.registerTask('travis', ['jshint', 'qunit']);
-	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
+	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'copy', 'clean']);
 
