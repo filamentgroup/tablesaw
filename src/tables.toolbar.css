@@ -174,10 +174,6 @@
 }
 
 /* Column navigation buttons for swipe and columntoggle tables */
-.tablesaw-bar .tablesaw-advance {
-	position: relative;
-	top: -2.6em;
-}
 .tablesaw-advance .btn {
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -248,12 +244,6 @@
 	clear: both;
 	font-family: sans-serif;
 }
-.tablesaw-bar.mode-swipe,
-.tablesaw-bar.mode-columntoggle {
-	margin-top: -2em;
-	position: relative;
-	top: 2em;
-}
 .tablesaw-toolbar {
 	font-size: .875em;
 }
@@ -313,19 +303,5 @@
 		width: auto;
 		position: static;
 		overflow: visible;
-	}
-}
-@media (min-width: 40em) {
-	.tablesaw-bar.mode-swipe,
-	.tablesaw-bar.mode-columntoggle {
-		margin-top: 0;
-		top: 0;
-	}
-	.tablesaw-bar .tablesaw-advance {
-		position: static;
-	}
-	.tablesaw-bar {
-		margin-top: 0;
-		position: static;
 	}
 }
