@@ -1,6 +1,6 @@
 {
 	"name": "filament-tablesaw",
-	"version": "0.1.8",
+	"version": "1.0.0",
 	"main": [
 		"dist/tablesaw.js",
 		"dist/tablesaw.css",
