@@ -11,6 +11,13 @@
     float: left;
     width: 100%;
   }
+  .tablesaw-cell-label {
+    vertical-align: top;
+  }
+  .tablesaw-cell-content {
+    max-width: 67%;
+    display: inline-block;
+  }
 }
 
 @mixin tablesaw-stack-min {
