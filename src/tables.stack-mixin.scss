@@ -18,6 +18,10 @@
     max-width: 67%;
     display: inline-block;
   }
+  .tablesaw-stack td:empty,
+  .tablesaw-stack th:empty {
+    display: none;
+  }
 }
 
 @mixin tablesaw-stack-min {
