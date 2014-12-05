@@ -27,7 +27,8 @@
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: topLevelPluginName + "-switch",
-			tableToolbar: 'tablesaw-toolbar'
+			tableToolbar: 'tablesaw-toolbar',
+			sortButton: topLevelPluginName + "-btn"
 		},
 		i18n = {
 			sort: 'Sort'
@@ -61,7 +62,7 @@
 					},
 					makeHeadsActionable = function( h , fn ){
 						$.each( h , function( i , v ){
-							var b = $( "<button />" );
+							var b = $( "<button class='" + classes.sortButton + "'/>" );
 							b.bind( "click" , { col: v } , fn );
 							$( v ).wrapInner( b );
 						});
