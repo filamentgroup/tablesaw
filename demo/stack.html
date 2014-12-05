@@ -9,6 +9,11 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="/demo-head/demohead.css">
+	<style>
+	.democolwidth {
+		width: 150px;
+	}
+	</style>
 
 	<!--[if lt IE 9]><script src="../dist/dependencies/respond.js"></script><![endif]-->
 	<script src="../dist/dependencies/jquery.js"></script>
@@ -47,11 +52,11 @@
 	<div class="docs-main">
 		<h2>Stack Table</h2>
 		<p>The Stack Table stacks the table headers to a two column layout with headers on the left. Resize your viewport to across the 40em (640px) breakpoint to see the change.</p>
-		<table class="tablesaw" data-mode="stack">
+		<table class="tablesaw" data-tablesaw-mode="stack">
 			<thead>
 				<tr>
 					<th>Skill</th>
-					<th>Last Entry</th>
+					<th class="democolwidth">Last Entry</th>
 					<th>Alphabet</th>
 					<th>More Alphabet</th>
 					<th>Longcat</th>
@@ -60,14 +65,14 @@
 			<tbody>
 				<tr>
 					<td>Bartender</td>
-					<td>May 2, 1:34p John K.</td>
+					<td class="democolwidth">May 2, 1:34p John K.</td>
 					<td>A, B, C, D</td>
 					<td>E, F, G, H</td>
 					<td>This row has a lot of content. This row has a lot of content. This row has a lot of content. This row has a lot of content. This row has a lot of content. This row has a lot of content.</td>
 				</tr>
 				<tr>
 					<td>Host</td>
-					<td>May 11, 12:45a</td>
+					<td class="democolwidth">May 11, 12:45a</td>
 					<td>A, B, C, D</td>
 					<td>E, F, G, H</td>
 					<td>This row has a lot of content. This row has a lot of content. This row has a lot of content. This row has a lot of content. This row has a lot of content. This row has a lot of content.</td>
