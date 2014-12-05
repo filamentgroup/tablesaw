@@ -228,13 +228,8 @@
 
 			})
 			.bind( "tablesawcolumns.swipetoggle", function(){
-				var canPrev = canAdvance( getPrev() );
-				var canNext = canAdvance( getNext() );
-				$prevBtn[ canPrev ? "removeClass" : "addClass" ]( hideBtn );
-				$nextBtn[ canNext ? "removeClass" : "addClass" ]( hideBtn );
-				
-				$(this)[(canPrev || canNext) ? "addClass" : "removeClass"]('columns_hidden');
-				$('.tablesaw-bar')[(canPrev || canNext) ? "addClass" : "removeClass"]('columns_hidden');
+				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
+				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
 			})
 			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );

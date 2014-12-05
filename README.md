@@ -101,14 +101,14 @@ Use `data-minimap` to add a series of small dots to show which columns are curre
 The “sortable” option allows the user to sort the the table data by clicking on the table headers. Since all the columns may not be visible on smaller breakpoints (or not there at all if using the “stack” table mode), relying solely on the column headers to choose the table sort isn’t practical. To address this, there is an optional `data-sortable-switch` attribute on the table that adds a select menu auto-populated with the names of each column in the table with options for choosing ascending or descending sort direction. Data options on table headers can be used to control which columns are sortable (`data-sortable-col`) and the default sort order (`data-sortable-default-col`).
 
 ```html
-<table data-sortable-tablesaw>
+<table data-tablesaw-sortable>
     <thead>
         <tr>
             <!-- Default column -->
-            <th data-sortable-tablesaw-col data-sortable-default-col>Rank</th>
-            <th data-sortable-tablesaw-col>Movie Title</th>
-            <th data-sortable-tablesaw-col>Year</th>
-            <th data-sortable-tablesaw-col><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+            <th data-tablesaw-sortable-col data-sortable-default-col>Rank</th>
+            <th data-tablesaw-sortable-col>Movie Title</th>
+            <th data-tablesaw-sortable-col>Year</th>
+            <th data-tablesaw-sortable-col><abbr title="Rotten Tomato Rating">Rating</abbr></th>
             <!-- Unsortable column -->
             <th>Reviews</th>
         </tr>
@@ -116,7 +116,7 @@ The “sortable” option allows the user to sort the the table data by clicking
     ...
 ```
 
-Use `data-sortable-tablesaw-switch` to add a select form element to manually choose the sort order.
+Use `data-tablesaw-sortable-switch` to add a select form element to manually choose the sort order.
 
     <table data-sortable data-sortable-switch>
 
