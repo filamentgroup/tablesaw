@@ -19,7 +19,7 @@
 	}
 
 	var topLevelPluginName = "tablesaw-sortable",
-		pluginName = "sortable",
+		pluginName = "sortable-tablesaw",
 		initSelector = "table[data-" + pluginName + "]",
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		classes = {
@@ -150,7 +150,7 @@
 								head = heads.eq( val[ 0 ] );
 
 							clearOthers( head.siblings() );
-							el.sortable( 'sortBy', head.get( 0 ), val[ 1 ] === 'asc' );
+							el[ pluginName ]( 'sortBy', head.get( 0 ), val[ 1 ] === 'asc' );
 						});
 					};
 

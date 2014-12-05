@@ -8,17 +8,17 @@
 	padding-right: 1.6em;
 	vertical-align: top;
 }
-.tablesaw-sortable th.sortable-head,
-.tablesaw-sortable tr:first-child th.sortable-head {
+.tablesaw-sortable th.sortable-tablesaw-head,
+.tablesaw-sortable tr:first-child th.sortable-tablesaw-head {
 	padding: 0;
 }
-.tablesaw-sortable th.sortable-head button {
+.tablesaw-sortable th.sortable-tablesaw-head button {
 	padding-top: .9em;
 	padding-bottom: .7em;
 	padding-left: .6em;
 	padding-right: 1.6em;
 }
-.tablesaw-sortable .sortable-head button {
+.tablesaw-sortable .sortable-tablesaw-head button {
 	min-width: 100%;
 	color: inherit;
 	background: transparent;
@@ -29,18 +29,18 @@
 	text-transform: inherit;
 	position: relative;
 }
-.tablesaw-sortable .sortable-head.sortable-ascending button:after,
-.tablesaw-sortable .sortable-head.sortable-descending button:after {
+.tablesaw-sortable .sortable-tablesaw-head.sortable-tablesaw-ascending button:after,
+.tablesaw-sortable .sortable-tablesaw-head.sortable-tablesaw-descending button:after {
 	width: 7px;
 	height: 10px;
 	content: "\0020";
 	position: absolute;
 	right: .5em;
 }
-.tablesaw-sortable .sortable-head.sortable-ascending button:after {
+.tablesaw-sortable .sortable-tablesaw-head.sortable-tablesaw-ascending button:after {
 	content: "↑";
 }
-.tablesaw-sortable .sortable-head.sortable-descending button:after {
+.tablesaw-sortable .sortable-tablesaw-head.sortable-tablesaw-descending button:after {
 	content: "↓";
 }
 
