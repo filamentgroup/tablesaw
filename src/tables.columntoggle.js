@@ -153,11 +153,6 @@
 
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
-			} else {
-				$cells.each(function() {
-					// remove all priority classes.
-					this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
-				});
 			}
 		});
 	};
