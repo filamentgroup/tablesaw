@@ -127,25 +127,42 @@
 		function fakeBreakpoints() {
 			var extraPaddingPixels = 20,
 				containerWidth = $table.parent().width(),
-				sum = 0;
+				persist = [],
+				sum = 0,
+				sums = [],
+				visibleNonPersistantCount = $headerCells.length;
 
 			$headerCells.each(function( index ) {
 				var $t = $( this ),
 					isPersist = $t.is( '[data-priority="persist"]' );
-				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
 
-				if( isPersist ) {
+				persist.push( isPersist );
+
+				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+				sums.push( sum );
+
+				// is persistent or is hidden
+				if( isPersist || sum > containerWidth ) {
+					visibleNonPersistantCount--;
+				}
+			});
+
+			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
+
+			$headerCells.each(function( index ) {
+				if( persist[ index ] ) {
+
 					// for visual box-shadow
 					persistColumn( this );
 					return;
 				}
 
-				if( sum > containerWidth ) {
-					hideColumn( this );
-				} else {
+				if( sums[ index ] <= containerWidth || needsNonPersistentColumn ) {
+					needsNonPersistentColumn = false;
 					showColumn( this );
+				} else {
+					hideColumn( this );
 				}
-
 			});
 
 			if( !isIE8 ) {
