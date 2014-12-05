@@ -289,7 +289,6 @@
 	test( 'Empty cells are hidden', function() {
 		$fixture = $( '#qunit-fixture' );
 		var testCell = $fixture.find( 'table tbody tr:eq(3) td:eq(4)' );
-		console.log(testCell);
 
 		//not sure how to better test this
 		if(window.innerWidth < 640){
