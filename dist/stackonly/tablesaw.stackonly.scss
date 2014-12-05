@@ -1,7 +1,7 @@
-/*! Tablesaw - v0.1.8 - 2014-12-03
+/*! Tablesaw - v0.1.8 - 2014-12-05
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
-/*! Tablesaw - v0.1.8 - 2014-12-03
+/*! Tablesaw - v0.1.8 - 2014-12-05
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -69,7 +69,7 @@ table.tablesaw {
   .tablesaw-stack th .tablesaw-cell-label {
     display: block;
     padding: 0 .6em 0 0;
-    min-width: 30%;
+    width: 30%;
     display: inline-block;
   }
 
@@ -108,6 +108,17 @@ table.tablesaw {
     clear: left;
     float: left;
     width: 100%;
+  }
+  .tablesaw-cell-label {
+    vertical-align: top;
+  }
+  .tablesaw-cell-content {
+    max-width: 67%;
+    display: inline-block;
+  }
+  .tablesaw-stack td:empty,
+  .tablesaw-stack th:empty {
+    display: none;
   }
 }
 

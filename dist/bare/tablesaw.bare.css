@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.8 - 2014-12-03
+/*! Tablesaw - v0.1.8 - 2014-12-05
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -214,11 +214,6 @@ table.tablesaw {
 
 /* Column navigation buttons for swipe and columntoggle tables */
 
-.tablesaw-bar .tablesaw-advance {
-  position: relative;
-  top: -2.6em;
-}
-
 .tablesaw-advance .btn {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -302,15 +297,9 @@ table.tablesaw {
   font-family: sans-serif;
 }
 
-.tablesaw-bar.mode-swipe,
-.tablesaw-bar.mode-columntoggle {
-  margin-top: -2em;
-  position: relative;
-  top: 2em;
-}
-
 .tablesaw-toolbar {
   font-size: .875em;
+  float: left;
 }
 
 .tablesaw-toolbar label {
@@ -382,23 +371,6 @@ table.tablesaw {
   }
 }
 
-@media (min-width: 40em) {
-  .tablesaw-bar.mode-swipe,
-  .tablesaw-bar.mode-columntoggle {
-    margin-top: 0;
-    top: 0;
-  }
-
-  .tablesaw-bar .tablesaw-advance {
-    position: static;
-  }
-
-  .tablesaw-bar {
-    margin-top: 0;
-    position: static;
-  }
-}
-
 /* Table rows have a gray bottom stroke by default */
 
 .tablesaw-stack tbody tr {
@@ -432,7 +404,7 @@ table.tablesaw {
   .tablesaw-stack th .tablesaw-cell-label {
     display: block;
     padding: 0 .6em 0 0;
-    min-width: 30%;
+    width: 30%;
     display: inline-block;
   }
 
@@ -474,6 +446,20 @@ table.tablesaw {
     float: left;
     width: 100%;
   }
+
+  .tablesaw-cell-label {
+    vertical-align: top;
+  }
+
+  .tablesaw-cell-content {
+    max-width: 67%;
+    display: inline-block;
+  }
+
+  .tablesaw-stack td:empty,
+  .tablesaw-stack th:empty {
+    display: none;
+  }
 }
 
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */
@@ -503,12 +489,6 @@ table.tablesaw {
 
 .tablesaw-fix-persist {
   table-layout: fixed;
-}
-
-/* see Gruntfile.js for grunticon selector */
-
-.btn.tablesaw-columntoggle-btn {
-  float: right;
 }
 
 .btn.tablesaw-columntoggle-btn span {
@@ -565,11 +545,6 @@ table.tablesaw {
   .tablesaw-columntoggle td.tablesaw-priority-1 {
     display: none;
   }
-}
-
-.tablesaw-columntoggle-btnwrap {
-  position: relative;
-  float: right;
 }
 
 .tablesaw-columntoggle-btnwrap .dialog-content {
@@ -744,19 +719,7 @@ table.tablesaw {
   display: none;
 }
 
-.tablesaw-sortable-switch {
-  float: left;
-  width: 100%;
-}
-
-@media (min-width: 40em) {
-  .tablesaw-sortable-switch {
-    width: auto;
-  }
-}
-
 .tablesaw-advance {
-  display: block;
   float: right;
 }
 
@@ -790,23 +753,4 @@ table.tablesaw {
   filter: alpha(opacity=25);
   cursor: default;
   pointer-events: none;
-}
-
-.tablesaw-modeswitch {
-  clear: both;
-}
-
-.tablesaw-sortable-switch + .tablesaw-modeswitch {
-  border-top: 1px solid #eae8e6;
-}
-
-@media (min-width: 40em) {
-  .tablesaw-modeswitch {
-    float: left;
-    clear: none;
-  }
-
-  .tablesaw-sortable-switch + .tablesaw-modeswitch {
-    border-top: none;
-  }
 }

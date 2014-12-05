@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.8 - 2014-12-03
+/*! Tablesaw - v0.1.8 - 2014-12-05
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -160,7 +160,8 @@
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
-		cellLabels: 'tablesaw-cell-label'
+		cellLabels: 'tablesaw-cell-label',
+		cellContentLabels: 'tablesaw-cell-content'
 	};
 
 	var data = {
@@ -168,7 +169,8 @@
 	};
 
 	var attrs = {
-		labelless: 'data-no-labels'
+		labelless: 'data-no-labels',
+		hideempty: 'data-hide-empty'
 	};
 
 	var Stack = function( element ) {
@@ -176,6 +178,7 @@
 		this.$table = $( element );
 
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
+		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
 
 		if( !this.labelless ) {
 			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
@@ -194,16 +197,20 @@
 
 		// get headers in reverse order so that top-level headers are appended last
 		var reverseHeaders = $( this.allHeaders );
-
+		var hideempty = this.hideempty;
+		
 		// create the hide/show toggles
 		reverseHeaders.each(function(){
-			var $cells = $( this.cells ).filter(function() {
-					return !$( this ).parent().is( "[" + attrs.labelless + "]" );
+			var $t = $( this ),
+				$cells = $( this.cells ).filter(function() {
+					return !$( this ).parent().is( "[" + attrs.labelless + "]" ) && ( !hideempty || !$( this ).is( ":empty" ) );
 				}),
 				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-				text = $(this).text();
+				// TODO reduce coupling with sortable
+				$sortableButton = $t.find( ".tablesaw-sortable-btn" ),
+				html = $sortableButton.length ? $sortableButton.html() : $t.html();
 
-			if( text !== "" ){
+			if( html !== "" ){
 				if( hierarchyClass ){
 					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
 						filter = "";
@@ -211,9 +218,10 @@
 					if( iteration ){
 						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
 					}
-					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
+					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + html + "</b>"  );
 				} else {
-					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + text + "</b>"  );
+					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + html + "</b>"  );
 				}
 			}
 		});
@@ -222,6 +230,7 @@
 	Stack.prototype.destroy = function() {
 		this.$table.removeClass( classes.stackTable );
 		this.$table.find( '.' + classes.cellLabels ).remove();
+		this.$table.find( '.' + classes.cellContentLabels ).remove();
 	};
 
 	// on tablecreate, init
@@ -335,7 +344,6 @@
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
 			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
-			columnBtnSide: this.$table.attr( 'data-column-btn-side' ) || 'right',
 			popup: 'tablesaw-columntoggle-popup',
 			priorityPrefix: 'tablesaw-priority-',
 			// TODO duplicate class, also in tables.js
@@ -368,7 +376,7 @@
 
 		tableId = this.$table.attr( "id" );
 		id = tableId + "-popup";
-		$btnContain = $( "<div class='" + this.classes.columnBtnContain + " " + this.classes.columnBtnSide + "'></div>" );
+		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
 		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
 										"<span>" + this.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
@@ -636,25 +644,42 @@
 		function fakeBreakpoints() {
 			var extraPaddingPixels = 20,
 				containerWidth = $table.parent().width(),
-				sum = 0;
+				persist = [],
+				sum = 0,
+				sums = [],
+				visibleNonPersistantCount = $headerCells.length;
 
 			$headerCells.each(function( index ) {
 				var $t = $( this ),
 					isPersist = $t.is( '[data-priority="persist"]' );
-				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
 
-				if( isPersist ) {
+				persist.push( isPersist );
+
+				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+				sums.push( sum );
+
+				// is persistent or is hidden
+				if( isPersist || sum > containerWidth ) {
+					visibleNonPersistantCount--;
+				}
+			});
+
+			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
+
+			$headerCells.each(function( index ) {
+				if( persist[ index ] ) {
+
 					// for visual box-shadow
 					persistColumn( this );
 					return;
 				}
 
-				if( sum > containerWidth ) {
-					hideColumn( this );
-				} else {
+				if( sums[ index ] <= containerWidth || needsNonPersistentColumn ) {
+					needsNonPersistentColumn = false;
 					showColumn( this );
+				} else {
+					hideColumn( this );
 				}
-
 			});
 
 			if( !isIE8 ) {
@@ -778,7 +803,8 @@
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: topLevelPluginName + "-switch",
-			tableToolbar: 'tablesaw-toolbar'
+			tableToolbar: 'tablesaw-toolbar',
+			sortButton: topLevelPluginName + "-btn"
 		},
 		i18n = {
 			sort: 'Sort'
@@ -812,7 +838,7 @@
 					},
 					makeHeadsActionable = function( h , fn ){
 						$.each( h , function( i , v ){
-							var b = $( "<button />" );
+							var b = $( "<button class='" + classes.sortButton + "'/>" );
 							b.bind( "click" , { col: v } , fn );
 							$( v ).wrapInner( b );
 						});
