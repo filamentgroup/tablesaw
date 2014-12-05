@@ -61,8 +61,7 @@ module.exports = function(grunt) {
 					'src/tables.swipetoggle.css',
 					'src/tables.columntoggle.css',
 					'src/tables.sortable.css',
-					'src/tables.minimap.css',
-					'src/tables.modeswitch.css'
+					'src/tables.minimap.css'
 				],
 				dest: 'dist/tmp/<%= pkg.name %>.myth.css'
 			},
