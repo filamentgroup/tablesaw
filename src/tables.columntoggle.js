@@ -16,7 +16,6 @@
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
 			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
 			popup: 'tablesaw-columntoggle-popup',
-			// TODO combine this with the regex below
 			priorityPrefix: 'tablesaw-priority-',
 			// TODO duplicate class, also in tables.js
 			toolbar: 'tablesaw-bar'
@@ -157,7 +156,7 @@
 			} else {
 				$cells.each(function() {
 					// remove all priority classes.
-					this.className = this.className.replace( /\btablesaw\-priority\-\d\b/g, '' );
+					this.className = this.className.replace( /\bui\-table\-priority\-\d\b/g, '' );
 				});
 			}
 		});
