@@ -9,7 +9,7 @@
 
 	var MM = {
 		attr: {
-			init: 'data-minimap'
+			init: 'data-tablesaw-minimap'
 		}
 	};
 

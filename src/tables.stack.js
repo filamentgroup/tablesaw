@@ -18,8 +18,8 @@
 	};
 
 	var attrs = {
-		labelless: 'data-no-labels',
-		hideempty: 'data-hide-empty'
+		labelless: 'data-tablesaw-no-labels',
+		hideempty: 'data-tablesaw-hide-empty'
 	};
 
 	var Stack = function( element ) {

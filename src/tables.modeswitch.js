@@ -9,10 +9,10 @@
 
 	var S = {
 		selectors: {
-			init: 'table[data-mode-switch]'
+			init: 'table[data-tablesaw-mode-switch]'
 		},
 		attributes: {
-			excludeMode: 'data-mode-exclude'
+			excludeMode: 'data-tablesaw-mode-exclude'
 		},
 		classes: {
 			main: 'tablesaw-modeswitch',
@@ -30,7 +30,7 @@
 				modeVal = '',
 				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
 					var html = [ '<label>' + S.i18n.columns + ':' ],
-						dataMode = $table.attr( 'data-mode' ),
+						dataMode = $table.attr( 'data-tablesaw-mode' ),
 						isSelected;
 
 					html.push( '<span class="btn btn-small">&#160;<select>' );
@@ -73,7 +73,7 @@
 			$switcher.remove();
 			$table.data( 'table' ).destroy();
 
-			$table.attr( 'data-mode', val );
+			$table.attr( 'data-tablesaw-mode', val );
 			$table.table();
 		}
 	};

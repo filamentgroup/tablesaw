@@ -24,7 +24,7 @@
 			'<table %s>',
 			'<thead>',
 				'<tr>',
-					'<th data-priority="1" data-tablesaw-sortable-col>Header</th>',
+					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
 					'<th data-tablesaw-sortable-col>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -34,7 +34,7 @@
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
-					'<th data-priority="6">Header</th>',
+					'<th data-tablesaw-priority="6">Header</th>',
 				'</tr>',
 			'</thead>',
 			'<tbody>',
@@ -84,7 +84,7 @@
 	});
 
 	module( 'tablesaw Stack', {
-		setup: setup( 'data-mode="stack"' )
+		setup: setup( 'data-tablesaw-mode="stack"' )
 	});
 
 	test( 'Initialization', function() {
@@ -92,7 +92,7 @@
 	});
 
 	module( 'tablesaw Column Toggle', {
-		setup: setup( 'data-mode="columntoggle"' )
+		setup: setup( 'data-tablesaw-mode="columntoggle"' )
 	});
 
 	test( 'Initialization', function() {
@@ -124,7 +124,7 @@
 
 
 	module( 'tablesaw Swipe', {
-		setup: setup( 'data-mode="swipe"' )
+		setup: setup( 'data-tablesaw-mode="swipe"' )
 	});
 
 	test( 'Initialization', function() {
@@ -151,13 +151,13 @@
 		setup: setup( 'data-tablesaw-sortable' )
 	});
 
-	test( 'Sortable still initializes without a data-mode', function() {
+	test( 'Sortable still initializes without a data-tablesaw-mode', function() {
 		ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
 		ok( $table.find( '.tablesaw-sortable-head' ).length > 0, 'Header has sort class.' );
 	});
 
 	module( 'tablesaw Sortable', {
-		setup: setup( 'data-mode="columntoggle" data-tablesaw-sortable' )
+		setup: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable' )
 	});
 
 	test( 'Initialization', function() {
@@ -216,7 +216,7 @@
 	});
 
 	module( 'tablesaw Sortable Switcher', {
-		setup: setup( 'data-mode="columntoggle" data-tablesaw-sortable data-tablesaw-sortable-switch' )
+		setup: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable data-tablesaw-sortable-switch' )
 	});
 
 	test( 'Can sort descending with switcher', function() {
@@ -245,7 +245,7 @@
 	});
 
 	module( 'tablesaw Mini Map', {
-		setup: setup( 'data-mode="columntoggle" data-minimap' )
+		setup: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-minimap' )
 	});
 
 	test( 'Initialization', function() {
@@ -255,7 +255,7 @@
 	});
 
 	module( 'tablesaw Mode Switch', {
-		setup: setup( 'data-mode="stack" data-mode-switch' )
+		setup: setup( 'data-tablesaw-mode="stack" data-tablesaw-mode-switch' )
 	});
 
 	test( 'Initialization', function() {
@@ -280,7 +280,7 @@
 	module( 'tablesaw Stack Hide Empty', {
 		setup: function(){
 				$fixture = $( '#qunit-fixture' );
-				$fixture.html( tableHtml.replace( /\%s/, 'data-mode="stack" data-hide-empty' ) );
+				$fixture.html( tableHtml.replace( /\%s/, 'data-tablesaw-mode="stack" data-tablesaw-hide-empty' ) );
 				$('table tbody tr:eq(3) td:eq(4)', $fixture).html('');
 				$( document ).trigger( 'enhance.tablesaw' );		
 		}

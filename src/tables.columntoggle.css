@@ -6,6 +6,9 @@
 	display: inline-block;
 }
 
+.tablesaw-columntoggle-btnwrap {
+	position: relative; /* for dialog positioning */
+}
 .tablesaw-columntoggle-btnwrap .dialog-content {
 	padding: .5em;
 }
