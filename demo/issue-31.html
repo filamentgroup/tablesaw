@@ -6,14 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>TableSaw Stack Table</title>
 
-	<link rel="stylesheet" href="../dist/stackonly/tablesaw.stackonly.css">
-	<link rel="stylesheet" href="demo.css">
-	<link rel="stylesheet" href="/demo-head/demohead.css">
+	<link rel="stylesheet" href="../dist/tablesaw.css">
 
 	<!--[if lt IE 9]><script src="../dist/dependencies/respond.js"></script><![endif]-->
 	<script src="../dist/dependencies/jquery.js"></script>
-	<script src="../dist/stackonly/tablesaw.stackonly.js"></script>
-	<script src="/demo-head/loadfont.js"></script>
+	<script src="../dist/tablesaw.js"></script>
 </head>
 <body>
 	<div class="demo-header">
@@ -36,8 +33,8 @@
 			<a href="kitchensink.html">Kitchen Sink</a>
 			<a href="modeswitch.html">Mode Switch</a>
 			<a href="sort.html">Sortable</a>
-			<a href="stack.html">Stack</a>
-			<a href="stackonly.html" class="current">Stack Only</a>
+			<a href="stack.html" class="current">Stack</a>
+			<a href="stackonly.html">Stack Only</a>
 			<a href="swipe.html">Swipe Table</a>
 			<a href="toggle.html">Toggle</a>
 			<a href="bare.html">Bare</a>
@@ -45,10 +42,9 @@
 		</div>
 	</div>
 	<div class="docs-main">
-		<h2>(Only the) Stack Table</h2>
-		<p>If you only want to use the Stack Table and don’t want all the extra features and modes packaged with the full Tablesaw (save yourself some bytes), we do provide a Stack-Only version shown below.</p>
+		<h2>Stack Table</h2>
 		<p>The Stack Table stacks the table headers to a two column layout with headers on the left. Resize your viewport to across the 40em (640px) breakpoint to see the change.</p>
-		<table class="tablesaw tablesaw-stack" data-mode="stack">
+		<table class="tablesaw" data-mode="stack">
 			<thead>
 				<tr>
 					<th>Skill</th>
@@ -57,6 +53,14 @@
 					<th>More Alphabet</th>
 				</tr>
 			</thead>
+			<tfoot>
+				<tr data-no-labels>
+					<td>Footer</td>
+					<td>May 11, 12:45a</td>
+					<td>A, B, C, D</td>
+					<td>E, F, G, H</td>
+				</tr>
+			</tfoot>
 			<tbody>
 				<tr>
 					<td>Bartender</td>

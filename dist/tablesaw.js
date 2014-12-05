@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.7 - 2014-10-22
+/*! Tablesaw - v0.1.8 - 2014-12-05
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -63,7 +63,7 @@
 
 		var colstart = this._initCells();
 
-		this.$table.trigger( events.create, [ this.mode, colstart ] );
+		this.$table.trigger( events.create, [ this, colstart ] );
 	};
 
 	Table.prototype._initCells = function() {
@@ -124,10 +124,12 @@
 			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
 		});
 
-		$( window ).off( 'resize.' + this.$table.attr( 'id' ) );
+		var tableId = this.$table.attr( 'id' );
+		$( document ).unbind( "." + tableId );
+		$( window ).unbind( "." + tableId );
 
 		// other plugins
-		this.$table.trigger( events.destroy, [ this.mode ] );
+		this.$table.trigger( events.destroy, [ this ] );
 
 		this.$table.removeAttr( 'data-mode' );
 
@@ -158,7 +160,8 @@
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
-		cellLabels: 'tablesaw-cell-label'
+		cellLabels: 'tablesaw-cell-label',
+		cellContentLabels: 'tablesaw-cell-content'
 	};
 
 	var data = {
@@ -166,7 +169,8 @@
 	};
 
 	var attrs = {
-		labelless: 'data-no-labels'
+		labelless: 'data-no-labels',
+		hideempty: 'data-hide-empty'
 	};
 
 	var Stack = function( element ) {
@@ -174,6 +178,7 @@
 		this.$table = $( element );
 
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
+		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
 
 		if( !this.labelless ) {
 			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
@@ -192,14 +197,20 @@
 
 		// get headers in reverse order so that top-level headers are appended last
 		var reverseHeaders = $( this.allHeaders );
-
+		var hideempty = this.hideempty;
+		
 		// create the hide/show toggles
 		reverseHeaders.each(function(){
-			var $cells = $( this.cells ),
+			var $t = $( this ),
+				$cells = $( this.cells ).filter(function() {
+					return !$( this ).parent().is( "[" + attrs.labelless + "]" ) && ( !hideempty || !$( this ).is( ":empty" ) );
+				}),
 				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-				text = $(this).text();
+				// TODO reduce coupling with sortable
+				$sortableButton = $t.find( ".tablesaw-sortable-btn" ),
+				html = $sortableButton.length ? $sortableButton.html() : $t.html();
 
-			if( text !== "" ){
+			if( html !== "" ){
 				if( hierarchyClass ){
 					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
 						filter = "";
@@ -207,9 +218,10 @@
 					if( iteration ){
 						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
 					}
-					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
+					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + html + "</b>"  );
 				} else {
-					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + text + "</b>"  );
+					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + html + "</b>"  );
 				}
 			}
 		});
@@ -218,21 +230,22 @@
 	Stack.prototype.destroy = function() {
 		this.$table.removeClass( classes.stackTable );
 		this.$table.find( '.' + classes.cellLabels ).remove();
+		this.$table.find( '.' + classes.cellContentLabels ).remove();
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", "table", function( e, mode, colstart ){
-		if( mode === 'stack' ){
-			var table = new Stack( this );
+	$( document ).on( "tablesawcreate", function( e, Tablesaw, colstart ){
+		if( Tablesaw.mode === 'stack' ){
+			var table = new Stack( Tablesaw.table );
 			table.init( colstart );
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", "table", function( e, mode ){
+	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
 
-		if( mode === 'stack' ){
-			$( this ).data( data.obj ).destroy();
+		if( Tablesaw.mode === 'stack' ){
+			$( Tablesaw.table ).data( data.obj ).destroy();
 		}
 
 	} );
@@ -330,9 +343,7 @@
 		this.classes = {
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
-			dialogClass: this.$table.attr( 'data-dialog-class' ) || '',
 			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
-			columnBtnSide: this.$table.attr( 'data-column-btn-side' ) || 'right',
 			popup: 'tablesaw-columntoggle-popup',
 			priorityPrefix: 'tablesaw-priority-',
 			// TODO duplicate class, also in tables.js
@@ -365,7 +376,7 @@
 
 		tableId = this.$table.attr( "id" );
 		id = tableId + "-popup";
-		$btnContain = $( "<div class='" + this.classes.columnBtnContain + " " + this.classes.columnBtnSide + " " + this.classes.dialogClass + "'></div>" );
+		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
 		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
 										"<span>" + this.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
@@ -408,15 +419,48 @@
 
 		$menuButton.appendTo( $btnContain );
 		$btnContain.appendTo( this.$table.prev( '.' + this.classes.toolbar ) );
-		$popup
-			.appendTo( $btnContain )
-			.dialog( true );
+
+		var closeTimeout;
+		function openPopup() {
+			$btnContain.addClass( 'visible' );
+			$menuButton.removeClass( 'down' ).addClass( 'up' );
+
+			$( document ).unbind( 'click.' + tableId, closePopup );
+
+			window.clearTimeout( closeTimeout );
+			closeTimeout = window.setTimeout(function() {
+				$( document ).one( 'click.' + tableId, closePopup );
+			}, 15 );
+		}
+
+		function closePopup( event ) {
+			// Click came from inside the popup, ignore.
+			if( event && $( event.target ).closest( "." + self.classes.popup ).length ) {
+				return;
+			}
+
+			$( document ).unbind( 'click.' + tableId );
+			$menuButton.removeClass( 'up' ).addClass( 'down' );
+			$btnContain.removeClass( 'visible' );
+		}
+
+		$menuButton.on( "click.tablesaw", function( event ) {
+			event.preventDefault();
+
+			if( !$btnContain.is( ".visible" ) ) {
+				openPopup();
+			} else {
+				closePopup();
+			}
+		});
+
+		$popup.appendTo( $btnContain );
 
 		this.$menu = $menu;
 
 		$(window).on( "resize." + tableId, function(){
 			self.refreshToggle();
-		} );
+		});
 
 		this.refreshToggle();
 	};
@@ -448,6 +492,9 @@
 	};
 
 	ColumnToggle.prototype.destroy = function() {
+		// table toolbars, document and window .tableId events
+		// removed in parent tables.js destroy method
+
 		this.$table.removeClass( this.classes.columnToggleTable );
 		this.$table.find( 'th, td' ).each(function() {
 			var $cell = $( this );
@@ -459,18 +506,18 @@
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
 
-		if( mode === 'columntoggle' ){
-			var table = new ColumnToggle( this );
+		if( Tablesaw.mode === 'columntoggle' ){
+			var table = new ColumnToggle( Tablesaw.table );
 			table.init();
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", "table", function( e, mode ){
-		if( mode === 'columntoggle' ){
-			$( this ).data( 'tablesaw-coltoggle' ).destroy();
+	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
+		if( Tablesaw.mode === 'columntoggle' ){
+			$( Tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
 		}
 	} );
 
@@ -492,6 +539,10 @@
 			tableId = $table.attr( 'id' ),
 			// TODO switch this to an nth-child feature test
 			isIE8 = $( 'html' ).is( '.ie-lte8' );
+
+		if( !$headerCells.length ) {
+			throw new Error( "tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?" );
+		}
 
 		// Calculate initial widths
 		$table.css('width', 'auto');
@@ -593,25 +644,42 @@
 		function fakeBreakpoints() {
 			var extraPaddingPixels = 20,
 				containerWidth = $table.parent().width(),
-				sum = 0;
+				persist = [],
+				sum = 0,
+				sums = [],
+				visibleNonPersistantCount = $headerCells.length;
 
 			$headerCells.each(function( index ) {
 				var $t = $( this ),
 					isPersist = $t.is( '[data-priority="persist"]' );
-				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
 
-				if( isPersist ) {
+				persist.push( isPersist );
+
+				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+				sums.push( sum );
+
+				// is persistent or is hidden
+				if( isPersist || sum > containerWidth ) {
+					visibleNonPersistantCount--;
+				}
+			});
+
+			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
+
+			$headerCells.each(function( index ) {
+				if( persist[ index ] ) {
+
 					// for visual box-shadow
 					persistColumn( this );
 					return;
 				}
 
-				if( sum > containerWidth ) {
-					hideColumn( this );
-				} else {
+				if( sums[ index ] <= containerWidth || needsNonPersistentColumn ) {
+					needsNonPersistentColumn = false;
 					showColumn( this );
+				} else {
+					hideColumn( this );
 				}
-
 			});
 
 			if( !isIE8 ) {
@@ -703,11 +771,10 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
 
-		var $table = $( this );
-		if( mode === 'swipe' ){
-			createSwipeTable( $table );
+		if( Tablesaw.mode === 'swipe' ){
+			createSwipeTable( Tablesaw.$table );
 		}
 
 	} );
@@ -736,7 +803,8 @@
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: topLevelPluginName + "-switch",
-			tableToolbar: 'tablesaw-toolbar'
+			tableToolbar: 'tablesaw-toolbar',
+			sortButton: topLevelPluginName + "-btn"
 		},
 		i18n = {
 			sort: 'Sort'
@@ -770,7 +838,7 @@
 					},
 					makeHeadsActionable = function( h , fn ){
 						$.each( h , function( i , v ){
-							var b = $( "<button />" );
+							var b = $( "<button class='" + classes.sortButton + "'/>" );
 							b.bind( "click" , { col: v } , fn );
 							$( v ).wrapInner( b );
 						});
@@ -974,9 +1042,9 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	$( document ).on( "tablesawcreate", "table", function() {
-		if( $( this ).is( initSelector ) ) {
-			$( this )[ pluginName ]();
+	$( document ).on( "tablesawcreate", function( e, Tablesaw ) {
+		if( Tablesaw.$table.is( initSelector ) ) {
+			Tablesaw.$table[ pluginName ]();
 		}
 	});
 
@@ -1047,11 +1115,10 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", "table", function( e, mode ){
+	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
 
-		var $table = $( this );
-		if( ( mode === 'swipe' || mode === 'columntoggle' ) && $table.is( '[ ' + MM.attr.init + ']' ) ){
-			createMiniMap( $table );
+		if( ( Tablesaw.mode === 'swipe' || Tablesaw.mode === 'columntoggle' ) && Tablesaw.$table.is( '[ ' + MM.attr.init + ']' ) ){
+			createMiniMap( Tablesaw.$table );
 		}
 
 	} );
@@ -1131,9 +1198,9 @@
 		}
 	};
 
-	$( win.document ).on( "tablesawcreate", "table", function() {
-		if( $( this ).is( S.selectors.init ) ) {
-			S.init( this );
+	$( win.document ).on( "tablesawcreate", function( e, Tablesaw ) {
+		if( Tablesaw.$table.is( S.selectors.init ) ) {
+			S.init( Tablesaw.table );
 		}
 	});
 

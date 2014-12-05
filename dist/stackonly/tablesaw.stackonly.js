@@ -1,4 +1,4 @@
-/*! Tablesaw - v0.1.7 - 2014-10-22
+/*! Tablesaw - v0.1.8 - 2014-12-05
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -63,7 +63,7 @@
 
 		var colstart = this._initCells();
 
-		this.$table.trigger( events.create, [ this.mode, colstart ] );
+		this.$table.trigger( events.create, [ this, colstart ] );
 	};
 
 	Table.prototype._initCells = function() {
@@ -124,10 +124,12 @@
 			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
 		});
 
-		$( window ).off( 'resize.' + this.$table.attr( 'id' ) );
+		var tableId = this.$table.attr( 'id' );
+		$( document ).unbind( "." + tableId );
+		$( window ).unbind( "." + tableId );
 
 		// other plugins
-		this.$table.trigger( events.destroy, [ this.mode ] );
+		this.$table.trigger( events.destroy, [ this ] );
 
 		this.$table.removeAttr( 'data-mode' );
 
@@ -158,7 +160,8 @@
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
-		cellLabels: 'tablesaw-cell-label'
+		cellLabels: 'tablesaw-cell-label',
+		cellContentLabels: 'tablesaw-cell-content'
 	};
 
 	var data = {
@@ -166,7 +169,8 @@
 	};
 
 	var attrs = {
-		labelless: 'data-no-labels'
+		labelless: 'data-no-labels',
+		hideempty: 'data-hide-empty'
 	};
 
 	var Stack = function( element ) {
@@ -174,6 +178,7 @@
 		this.$table = $( element );
 
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
+		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
 
 		if( !this.labelless ) {
 			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
@@ -192,14 +197,20 @@
 
 		// get headers in reverse order so that top-level headers are appended last
 		var reverseHeaders = $( this.allHeaders );
-
+		var hideempty = this.hideempty;
+		
 		// create the hide/show toggles
 		reverseHeaders.each(function(){
-			var $cells = $( this.cells ),
+			var $t = $( this ),
+				$cells = $( this.cells ).filter(function() {
+					return !$( this ).parent().is( "[" + attrs.labelless + "]" ) && ( !hideempty || !$( this ).is( ":empty" ) );
+				}),
 				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-				text = $(this).text();
+				// TODO reduce coupling with sortable
+				$sortableButton = $t.find( ".tablesaw-sortable-btn" ),
+				html = $sortableButton.length ? $sortableButton.html() : $t.html();
 
-			if( text !== "" ){
+			if( html !== "" ){
 				if( hierarchyClass ){
 					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
 						filter = "";
@@ -207,9 +218,10 @@
 					if( iteration ){
 						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
 					}
-					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + text + "</b>"  );
+					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + html + "</b>"  );
 				} else {
-					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + text + "</b>"  );
+					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + html + "</b>"  );
 				}
 			}
 		});
@@ -218,21 +230,22 @@
 	Stack.prototype.destroy = function() {
 		this.$table.removeClass( classes.stackTable );
 		this.$table.find( '.' + classes.cellLabels ).remove();
+		this.$table.find( '.' + classes.cellContentLabels ).remove();
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", "table", function( e, mode, colstart ){
-		if( mode === 'stack' ){
-			var table = new Stack( this );
+	$( document ).on( "tablesawcreate", function( e, Tablesaw, colstart ){
+		if( Tablesaw.mode === 'stack' ){
+			var table = new Stack( Tablesaw.table );
 			table.init( colstart );
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", "table", function( e, mode ){
+	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
 
-		if( mode === 'stack' ){
-			$( this ).data( data.obj ).destroy();
+		if( Tablesaw.mode === 'stack' ){
+			$( Tablesaw.table ).data( data.obj ).destroy();
 		}
 
 	} );
