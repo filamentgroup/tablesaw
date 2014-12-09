@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.0 - 2014-12-05
+/*! Tablesaw - v1.0.1 - 2014-12-09
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -458,6 +458,17 @@ table.tablesaw thead td {
   }
 }
 
+@media only all {
+  .tablesaw-swipe .tablesaw-cell-persist {
+    border-right: 1px solid #e4e1de;
+  }
+
+  .tablesaw-swipe .tablesaw-cell-persist {
+    -webkit-box-shadow: 3px 0 4px -1px #e4e1de;
+    box-shadow: 3px 0 4px -1px #e4e1de;
+  }
+}
+
 /* Table rows have a gray bottom stroke by default */
 
 .tablesaw-stack tbody tr {
@@ -713,15 +724,6 @@ table.tablesaw thead td {
 }
 
 @media only all {
-  .tablesaw-swipe .tablesaw-cell-persist {
-    border-right: 1px solid #e4e1de;
-  }
-
-  .tablesaw-swipe .tablesaw-cell-persist {
-    -webkit-box-shadow: 3px 0 4px -1px #e4e1de;
-    box-shadow: 3px 0 4px -1px #e4e1de;
-  }
-
   /* Unchecked manually: Always hide */
 
   .tablesaw-swipe th.tablesaw-cell-hidden,
