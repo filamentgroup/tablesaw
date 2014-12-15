@@ -1,3 +1,5 @@
+/*global Tablesaw:true */
+
 /*
 * tablesaw: A set of plugins for responsive tables
 * Stack and Column Toggle tables
@@ -5,7 +7,6 @@
 * MIT License
 */
 
-var Tablesaw;
 if( typeof Tablesaw === "undefined" ) {
 	Tablesaw = {};
 }

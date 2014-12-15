@@ -227,7 +227,7 @@
 							e.preventDefault();
 						}
 					})
-					.bind( "touchend.swipetoggle", function( e ){
+					.bind( "touchend.swipetoggle", function(){
 						if( x - originX < -1 * config.horizontalThreshold ){
 							advance( true );
 						}
