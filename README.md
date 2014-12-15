@@ -76,6 +76,21 @@ Columns also respect the `data-tablesaw-priority="persist"` attribute.
 
 * [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
 
+#### Advanced: Configure Swipe Thresholds
+
+Add a Tablesaw `config` object after including the Tablesaw JavaScript.
+
+```js
+Tablesaw.config = {
+  swipe: {
+    horizontalThreshold: 15,
+    verticalThreshold: 20
+  }
+};
+```
+
+* [Configure Swipe Threshold Demo](http://filamentgroup.github.io/tablesaw/demo/swipe-config.html)
+
 ## Mini Map
 
 Use `data-tablesaw-minimap` to add a series of small dots to show which columns are currently visible and which are hidden. Only available on `swipe` and `columntoggle` tables. Examples available above.

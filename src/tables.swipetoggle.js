@@ -7,6 +7,14 @@
 
 ;(function( win, $, undefined ){
 
+	$.extend( Tablesaw.config, {
+		swipe: {
+			horizontalThreshold: 15,
+			verticalThreshold: 30
+		}
+	});
+
+	var config = Tablesaw.config.swipe;
 
 	function createSwipeTable( $table ){
 
@@ -199,27 +207,31 @@
 			e.preventDefault();
 		});
 
+		function getCoord( event, key ) {
+			return ( event.touches || event.originalEvent.touches )[ 0 ][ key ];
+		}
+
 		$table
 			.bind( "touchstart.swipetoggle", function( e ){
-				var originX = ( e.touches || e.originalEvent.touches )[ 0 ].pageX,
-					originY = ( e.touches || e.originalEvent.touches )[ 0 ].pageY,
+				var originX = getCoord( e, 'pageX' ),
+					originY = getCoord( e, 'pageY' ),
 					x,
 					y;
 
 				$( this )
 					.bind( "touchmove", function( e ){
-						x = ( e.touches || e.originalEvent.touches )[ 0 ].pageX;
-						y = ( e.touches || e.originalEvent.touches )[ 0 ].pageY;
+						x = getCoord( e, 'pageX' );
+						y = getCoord( e, 'pageY' );
 
-						if( Math.abs( x - originX ) > 15 && Math.abs( y - originY ) < 20 ) {
+						if( Math.abs( x - originX ) > config.horizontalThreshold && Math.abs( y - originY ) < config.verticalThreshold ) {
 							e.preventDefault();
 						}
 					})
-					.bind( "touchend.swipetoggle", function(){
-						if( x - originX < 15 ){
+					.bind( "touchend.swipetoggle", function( e ){
+						if( x - originX < -1 * config.horizontalThreshold ){
 							advance( true );
 						}
-						if( x - originX > -15 ){
+						if( x - originX > config.horizontalThreshold ){
 							advance( false );
 						}
 

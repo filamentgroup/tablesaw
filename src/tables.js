@@ -5,6 +5,14 @@
 * MIT License
 */
 
+var Tablesaw;
+if( typeof Tablesaw === "undefined" ) {
+	Tablesaw = {};
+}
+if( !Tablesaw.config ) {
+	Tablesaw.config = {};
+}
+
 ;(function( $ ) {
 	var pluginName = "table",
 		classes = {
