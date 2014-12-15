@@ -79,7 +79,9 @@
 	Stack.prototype.destroy = function() {
 		this.$table.removeClass( classes.stackTable );
 		this.$table.find( '.' + classes.cellLabels ).remove();
-		this.$table.find( '.' + classes.cellContentLabels ).remove();
+		this.$table.find( '.' + classes.cellContentLabels ).each(function() {
+			$( this ).replaceWith( this.childNodes );
+		});
 	};
 
 	// on tablecreate, init
