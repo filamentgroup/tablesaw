@@ -77,3 +77,12 @@ table.tablesaw thead td {
 		line-height: 2em;
 	}
 }
+
+@media only all {
+	.tablesaw-swipe .tablesaw-cell-persist {
+		border-right: 1px solid #e4e1de;
+	}
+	.tablesaw-swipe .tablesaw-cell-persist {
+		box-shadow: 3px 0 4px -1px #e4e1de;
+	}
+}
