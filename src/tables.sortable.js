@@ -186,7 +186,7 @@
 					},
 					getSortFxn = function( ascending, forceNumeric ){
 						var fn,
-							regex = /[^\d\.]/g;
+							regex = /[^\-\+\d\.]/g;
 						if( ascending ){
 							fn = function( a , b ){
 								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
