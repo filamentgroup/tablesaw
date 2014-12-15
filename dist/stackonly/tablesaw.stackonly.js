@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.1 - 2014-12-09
+/*! Tablesaw - v1.0.1 - 2014-12-15
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -27,6 +27,20 @@
 	}
 
 })( jQuery );
+/*
+* tablesaw: A set of plugins for responsive tables
+* Stack and Column Toggle tables
+* Copyright (c) 2013 Filament Group, Inc.
+* MIT License
+*/
+
+if( typeof Tablesaw === "undefined" ) {
+	Tablesaw = {};
+}
+if( !Tablesaw.config ) {
+	Tablesaw.config = {};
+}
+
 ;(function( $ ) {
 	var pluginName = "table",
 		classes = {
@@ -230,7 +244,9 @@
 	Stack.prototype.destroy = function() {
 		this.$table.removeClass( classes.stackTable );
 		this.$table.find( '.' + classes.cellLabels ).remove();
-		this.$table.find( '.' + classes.cellContentLabels ).remove();
+		this.$table.find( '.' + classes.cellContentLabels ).each(function() {
+			$( this ).replaceWith( this.childNodes );
+		});
 	};
 
 	// on tablecreate, init
