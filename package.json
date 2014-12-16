@@ -32,18 +32,20 @@
     "jquery": "*"
   },
   "devDependencies": {
+    "bower": "~1.3.8",
+    "grunt": "~0.4.2",
+    "grunt-bytesize": "~0.1.1",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-compress": "~0.12.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.7.0",
+    "grunt-contrib-cssmin": "^0.10.0",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-qunit": "~0.2.0",
-    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "~0.4.0",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt": "~0.4.2",
-    "matchdep": "~0.1.2",
-    "grunt-bytesize": "~0.1.1",
     "grunt-gh-pages": "~0.9.0",
-    "bower": "~1.3.8",
     "grunt-myth": "~0.1.0",
-    "grunt-contrib-copy": "~0.7.0",
-    "grunt-contrib-compress": "~0.12.0"
+    "matchdep": "~0.1.2"
   }
 }

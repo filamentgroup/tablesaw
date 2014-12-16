@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 			'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>;' +
 			' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 		// Task configuration.
-		clean: ['dist/tmp/'],
+		clean: ['dist/tmp/', 'dist/**/*.min.*'],
 		copy: {
 			jquery: {
 				src: 'bower_components/jquery/dist/jquery.js',
@@ -139,23 +139,31 @@ module.exports = function(grunt) {
 				tasks: ['jshint:test', 'qunit']
 			},
 		},
+		uglify: {
+			js: {
+				files: {
+					'dist/<%= pkg.name %>.min.js': [ 'dist/<%= pkg.name %>.js' ],
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.js' ]
+				}
+			}
+		},
+		cssmin: {
+			css: {
+				files: {
+					'dist/<%= pkg.name %>.min.css': [ 'dist/<%= pkg.name %>.css' ],
+					'dist/bare/<%= pkg.name %>.bare.min.css': [ 'dist/bare/<%= pkg.name %>.bare.css' ],
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.css': [ 'dist/stackonly/<%= pkg.name %>.stackonly.css' ]
+				}
+			}
+		},
 		bytesize: {
 			dist: {
 				src: [
-					'dist/<%= pkg.name %>.css',
-					'dist/<%= pkg.name %>.js'
-				]
-			},
-			bare: {
-				src: [
-					'dist/bare/<%= pkg.name %>.bare.css',
-					'dist/<%= pkg.name %>.js'
-				]
-			},
-			stackonly: {
-				src: [
-					'dist/stackonly/<%= pkg.name %>.stackonly.css',
-					'dist/stackonly/<%= pkg.name %>.stackonly.js'
+					'dist/<%= pkg.name %>.min.css',
+					'dist/<%= pkg.name %>.min.js',
+					'dist/bare/<%= pkg.name %>.bare.min.css',
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.css',
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.js'
 				]
 			}
 		},
@@ -197,8 +205,9 @@ module.exports = function(grunt) {
 	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'copy', 'clean']);
+	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean']);
 
-	grunt.registerTask('default', ['jshint', 'src', 'qunit', 'bytesize']);
+	grunt.registerTask('default', ['jshint', 'src', 'qunit', 'filesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);
