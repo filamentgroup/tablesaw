@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.1 - 2014-12-15
+/*! Tablesaw - v1.0.2 - 2014-12-16
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 
@@ -432,9 +432,17 @@ table.tablesaw thead td {
 
 .tablesaw caption {
   text-align: left;
-  margin-bottom: 1.4em;
+  margin-bottom: 0;
   opacity: .5;
   filter: alpha(opacity=50);
+  line-height: 2.4;
+}
+
+@media (min-width: 25em) {
+  .tablesaw caption {
+    margin-bottom: .6em;
+    line-height: 1.2;
+  }
 }
 
 /* Stack */
