@@ -32,7 +32,7 @@ The Column Toggle Table allows the user to select which columns they want to be 
 
     <table data-tablesaw-mode="columntoggle">
 
-Table headers must have a `data-tablesaw-priority` attribute to be eligible to toggle. `data-tablesaw-priority` is a numeric value from 1 to 6, which determine default breakpoints at which a column will show. As of first release, the defaults are:
+Table headers must have a `data-tablesaw-priority` attribute to be eligible to toggle. `data-tablesaw-priority` is a numeric value from 1 to 6, which determine default breakpoints at which a column will show. The breakpoint defaults are:
 
 ```html
 <th data-tablesaw-priority="persist"><!-- Not eligible for toggle, always shows --></th>
@@ -43,6 +43,8 @@ Table headers must have a `data-tablesaw-priority` attribute to be eligible to t
 <th data-tablesaw-priority="5"><!-- Shows at (min-width: 60em) (960px) --></th>
 <th data-tablesaw-priority="6"><!-- Shows at (min-width: 70em) (1120px) --></th>
 ```
+
+Keep in mind that the priorities are not exclusive—multiple columns can reuse the same priority value.
 
 #### Add a Mini Map
 
