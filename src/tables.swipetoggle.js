@@ -77,7 +77,7 @@
 		}
 
 		function maintainWidths() {
-			var prefix = '#' + tableId + ' ',
+			var prefix = '#' + tableId + '.tablesaw-swipe ',
 				styles = [],
 				tableWidth = $table.width();
 
