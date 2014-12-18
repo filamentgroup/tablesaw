@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.2 - 2014-12-16
+/*! Tablesaw - v1.0.2 - 2014-12-17
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2014 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -605,7 +605,7 @@ if( !Tablesaw.config ) {
 		}
 
 		function maintainWidths() {
-			var prefix = '#' + tableId + ' ',
+			var prefix = '#' + tableId + '.tablesaw-swipe ',
 				styles = [],
 				tableWidth = $table.width();
 
