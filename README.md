@@ -216,7 +216,13 @@ Check out any of the demos above for complete working examples.
 
 ### Using Bare TableSaw 
 
-If you would like the full functionality of the TableSaw plugin. but don't want the plugin's default table styles, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file.
+Tablesaw is designed to be a drop-in solution, providing table styles as well as responsive table functionality.
+
+If you would like the full functionality of the TableSaw plugin. but the plugin's default table styles don't fit in with your project, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file for a much lighter default style which is significantly easier to customize.
+
+To see what all TableSaw functionality looks like with this alternate stylesheet applied.
+
+* [Bare CSS Demo](http://filamentgroup.github.io/tablesaw/demo/bare.html)
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
