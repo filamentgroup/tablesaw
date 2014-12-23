@@ -28,3 +28,27 @@ body {
 		background-image: url(http://filamentgroup.com/images/fg-logo-icon-lrg.png);
 	}
 }
+
+/* Customized Demo CSS for our Demo Tables */
+.tablesaw-columntoggle td.title a,
+.tablesaw-swipe td.title a {
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 10em;
+	max-width: 40vw;
+}
+@media (min-width: 40em) {
+	td.title {
+		max-width: 12em;
+	}
+	.tablesaw-stack td.title a {
+		display: block;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 10em;
+		max-width: 40vw;
+	}
+}

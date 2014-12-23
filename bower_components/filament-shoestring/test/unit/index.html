@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>shoestring Test Suite</title>
+	<link rel="stylesheet" href="qunit/qunit.css" media="screen">
+	<script src="qunit/qunit.js"></script>
+	<link href="test.css" rel="stylesheet" />
+	<script src="../../dist/shoestring-dev.js"></script>
+	<script>
+	QUnit.config.reorder = false;
+	QUnit.config.testTimeout = 4000;
+	</script>
+	<script src="core.js"></script>
+	<script src="extensions.js"></script>
+</head>
+<body>
+
+	<style>
+		#qunit-fixture .css {
+			width: 200px;
+			margin-right: 20px;
+			box-sizing: border-box;
+		}
+
+		#qunit-fixture .height {
+			height: 200px;
+		}
+	</style>
+
+	<div id="qunit"></div>
+	<div id="qunit-fixture">
+		<div class="constructor-selector"></div>
+		<div class="add-class"></div>
+		<div class="after"></div>
+		<div class="append"></div>
+		<div class="attr"></div>
+		<div class="before"></div>
+		<div class="clone"></div>
+		<div class="closest">
+			<div class="parent second">
+				<div class="parent first">
+					<div class="child"></div>
+				</div>
+			</div>
+
+			<div class="parent">
+				<div class="second-child"></div>
+			</div>
+		</div>
+
+		<div class="css"></div>
+		<div class="othercss"></div>
+
+		<div class="filter"></div>
+		<div class="find">
+			<div class="parent">
+				<div class="child1"></div>
+				<div class="child2"></div>
+			</div>
+		</div>
+
+		<div class="height">
+			height
+		</div>
+
+		<div class="html">
+			<div class="old"></div>
+			<div class="new"></div>
+		</div>
+
+		<div class="index">
+			<div class="first"></div>
+			<div class="second"></div>
+		</div>
+
+		<div class="next">
+			<div class="first"></div>
+			<div class="second"></div>
+			<div class="third"></div>
+		</div>
+
+		<div class="not">
+			<div class="is-not"></div>
+			<div class="is-not"></div>
+			<div class="is-not"></div>
+			<div class="is-so"></div>
+			<div class="is-not"></div>
+		</div>
+
+		<div class="parent">
+			<div class="child">
+			</div>
+
+			<div class="child">
+			</div>
+		</div>
+
+		<div class="parents">
+			<div class="first-parent">
+				<div class="child">
+				</div>
+			</div>
+
+			<div class="second-parent">
+				<div class="child">
+				</div>
+			</div>
+		</div>
+
+		<div class="prepend">
+		</div>
+
+		<div class="prev">
+			<div class="first"></div>
+			<div class="second"></div>
+			<div class="third"></div>
+		</div>
+
+		<div class="prevall">
+			<div class="first"></div>
+			<div class="second"></div>
+			<div class="third"></div>
+		</div>
+
+		<div class="prop"></div>
+
+		<div class="remove-attr" data-foo="bar"></div>
+		<div class="remove-class foo"></div>
+		<div class="remove-prop"></div>
+		<div class="replace-with"></div>
+		<div class="replace-with-multiple"></div>
+
+		<div class="serialize"></div>
+
+		<style>
+			#qunit-fixture .width {
+			  width: 200px;
+			}
+		</style>
+		<div class="width">
+			width
+		</div>
+
+		<div class="wrap-inner">
+			<div class="inner"></div>
+		</div>
+
+		<div class="testel">
+			<div class="testel-2"></div>
+		</div>
+		<div class="testel-2"></div>
+		<div class="add"></div>
+	</div>
+</body>
+</html>
