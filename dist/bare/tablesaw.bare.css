@@ -1,6 +1,6 @@
-/*! Tablesaw - v1.0.2 - 2014-12-17
+/*! Tablesaw - v1.0.2 - 2015-01-26
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2014 Filament Group; Licensed MIT */
+* Copyright (c) 2015 Filament Group; Licensed MIT */
 
 table.tablesaw {
   empty-cells: show;
@@ -491,6 +491,15 @@ table.tablesaw {
   table-layout: fixed;
 }
 
+@media only all {
+  /* Unchecked manually: Always hide */
+
+  .tablesaw-swipe th.tablesaw-cell-hidden,
+  .tablesaw-swipe td.tablesaw-cell-hidden {
+    display: none;
+  }
+}
+
 .btn.tablesaw-columntoggle-btn span {
   text-indent: -9999px;
   display: inline-block;
@@ -628,8 +637,6 @@ table.tablesaw {
 @media only all {
   /* Unchecked manually: Always hide */
 
-  .tablesaw-swipe th.tablesaw-cell-hidden,
-  .tablesaw-swipe td.tablesaw-cell-hidden,
   .tablesaw-columntoggle th.tablesaw-cell-hidden,
   .tablesaw-columntoggle td.tablesaw-cell-hidden {
     display: none;

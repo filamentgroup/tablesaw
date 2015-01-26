@@ -1,6 +1,6 @@
-/*! Tablesaw - v1.0.2 - 2014-12-17
+/*! Tablesaw - v1.0.2 - 2015-01-26
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2014 Filament Group; Licensed MIT */
+* Copyright (c) 2015 Filament Group; Licensed MIT */
 ;(function( $ ) {
 	var div = document.createElement('div'),
 		all = div.getElementsByTagName('i'),
@@ -542,8 +542,6 @@ if( !Tablesaw.config ) {
 		}
 	});
 
-	var config = Tablesaw.config.swipe;
-
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
@@ -660,7 +658,16 @@ if( !Tablesaw.config ) {
 			return pair[ 1 ] > -1 && pair[ 1 ] < $headerCellsNoPersist.length;
 		}
 
+		function matchesMedia() {
+			var matchMedia = $table.attr( "data-tablesaw-swipe-media" );
+			return !matchMedia || ( "matchMedia" in win ) && win.matchMedia( matchMedia ).matches;
+		}
+
 		function fakeBreakpoints() {
+			if( !matchesMedia() ) {
+				return;
+			}
+
 			var extraPaddingPixels = 20,
 				containerWidth = $table.parent().width(),
 				persist = [],
@@ -746,23 +753,31 @@ if( !Tablesaw.config ) {
 					x,
 					y;
 
+				$( win ).off( "resize", fakeBreakpoints );
+
 				$( this )
 					.bind( "touchmove", function( e ){
 						x = getCoord( e, 'pageX' );
 						y = getCoord( e, 'pageY' );
-
-						if( Math.abs( x - originX ) > config.horizontalThreshold && Math.abs( y - originY ) < config.verticalThreshold ) {
+						var cfg = Tablesaw.config.swipe;
+						if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
 							e.preventDefault();
 						}
 					})
 					.bind( "touchend.swipetoggle", function(){
-						if( x - originX < -1 * config.horizontalThreshold ){
-							advance( true );
-						}
-						if( x - originX > config.horizontalThreshold ){
-							advance( false );
+						var cfg = Tablesaw.config.swipe;
+						if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
+							if( x - originX < -1 * cfg.horizontalThreshold ){
+								advance( true );
+							}
+							if( x - originX > cfg.horizontalThreshold ){
+								advance( false );
+							}
 						}
 
+						window.setTimeout(function() {
+							$( win ).on( "resize", fakeBreakpoints );
+						}, 300);
 						$( this ).unbind( "touchmove touchend" );
 					});
 
