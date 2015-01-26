@@ -14,8 +14,6 @@
 		}
 	});
 
-	var config = Tablesaw.config.swipe;
-
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
@@ -222,16 +220,17 @@
 					.bind( "touchmove", function( e ){
 						x = getCoord( e, 'pageX' );
 						y = getCoord( e, 'pageY' );
-
-						if( Math.abs( x - originX ) > config.horizontalThreshold && Math.abs( y - originY ) < config.verticalThreshold ) {
+						var cfg = Tablesaw.config.swipe;
+						if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
 							e.preventDefault();
 						}
 					})
 					.bind( "touchend.swipetoggle", function(){
-						if( x - originX < -1 * config.horizontalThreshold ){
+						var cfg = Tablesaw.config.swipe;
+						if( x - originX < -1 * cfg.horizontalThreshold ){
 							advance( true );
 						}
-						if( x - originX > config.horizontalThreshold ){
+						if( x - originX > cfg.horizontalThreshold ){
 							advance( false );
 						}
 
