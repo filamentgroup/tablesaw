@@ -216,6 +216,8 @@
 					x,
 					y;
 
+				$( win ).off( "resize", fakeBreakpoints );
+
 				$( this )
 					.bind( "touchmove", function( e ){
 						x = getCoord( e, 'pageX' );
@@ -227,13 +229,18 @@
 					})
 					.bind( "touchend.swipetoggle", function(){
 						var cfg = Tablesaw.config.swipe;
-						if( x - originX < -1 * cfg.horizontalThreshold ){
-							advance( true );
-						}
-						if( x - originX > cfg.horizontalThreshold ){
-							advance( false );
+						if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
+							if( x - originX < -1 * cfg.horizontalThreshold ){
+								advance( true );
+							}
+							if( x - originX > cfg.horizontalThreshold ){
+								advance( false );
+							}
 						}
 
+						window.setTimeout(function() {
+							$( win ).on( "resize", fakeBreakpoints );
+						}, 300);
 						$( this ).unbind( "touchmove touchend" );
 					});
 
