@@ -1,0 +1,320 @@
+table
+{
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+
+button
+{
+    border: 1px solid #ccc;
+}
+
+.tablesaw.averages .tablesaw-cell-persist
+{
+    white-space: nowrap;
+    text-align: center;
+    width: 80px !important;
+    max-width: 100px !important;
+}
+
+.tablesaw-bar .tablesaw-advance > .btn.left, .icon-arrow-gray-left
+{
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%3Csvg%20version%3D%221.1%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20%20width%3D%227.5px%22%20height%3D%2211.2px%22%20viewBox%3D%220%200%207.5%2011.2%22%20enable-background%3D%22new%200%200%207.5%2011.2%22%20xml%3Aspace%3D%22preserve%22%3E%3Cg%3E%20%20%20%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23808080%22%20stroke-width%3D%222.2691%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-miterlimit%3D%2210%22%20points%3D%22%20%206.3%2C1.1%201.1%2C5.9%206.3%2C10.1%20%20%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+}
+
+.tablesaw-bar .tablesaw-advance > .btn.right, .icon-arrow-gray-right
+{
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%3Csvg%20version%3D%221.1%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%20%20width%3D%227.5px%22%20height%3D%2211.2px%22%20viewBox%3D%220%200%207.5%2011.2%22%20enable-background%3D%22new%200%200%207.5%2011.2%22%20xml%3Aspace%3D%22preserve%22%3E%3Cg%3E%20%20%20%3Cpolyline%20fill%3D%22none%22%20stroke%3D%22%23808080%22%20stroke-width%3D%222.2691%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-miterlimit%3D%2210%22%20points%3D%22%20%201.1%2C1.1%206.3%2C5.9%201.1%2C10.1%20%20%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+}
+
+.highlightti td
+{
+    border-bottom-color: #ccc !important;
+    border-right-color: #ccc !important;
+    font-weight: bold;
+    background: #EDEDED !important;
+}
+
+.favorite td
+{
+    background: #C5DBE0 !important;
+    border-right-color: #99B7C0 !important;
+    border-bottom-color: #99B7C0 !important;
+}
+
+.favorite-item td
+{
+    background: #EDF3F5 !important;
+    border-right-color: #C5DBE0 !important;
+    border-bottom-color: #C5DBE0 !important;
+    color: #637c85 !important;
+    font-style: italic;
+}
+
+table.tablesaw
+{
+    table-layout: fixed;
+    empty-cells: show;
+    max-width: 100%;
+    width: 100%;
+}
+
+.tablesaw-swipe .wide
+{
+    width: 158px;
+    min-width: 158px;
+}
+
+.tablesaw.averages .width-fixed,
+.tablesaw.averages .width-fixed button
+{
+    width: 93px;
+    min-width: 93px !important;
+    max-width: none !important;
+}
+
+.tablesaw {
+    width: 100%;
+    visibility: hidden;
+}
+
+.tablesaw.tablesaw-swipe
+{
+    visibility: visible !important;
+}
+
+.tablesaw-bar .left
+{
+    float: none;
+}
+
+.tablesaw-bar
+{
+    min-height: 58px;
+}
+
+.tablesaw
+{
+    border: 0;
+    padding: 0;
+}
+
+.tablesaw th,
+.tablesaw td
+{
+    color: #000;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.tablesaw td
+{
+    background: #fff;
+    line-height: 22px;
+    padding: 7px 9px;
+    border-right: 1px solid #dcdcdc;
+}
+
+.tablesaw .width-fixed,
+.tablesaw .width-fixed button
+{
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.tablesaw .width-fixed-double
+{
+    overflow: hidden;
+}
+
+.tablesaw-enhanced .tablesaw-bar .btn {
+    border: 1px solid #ccc;
+    background: none;
+    background-color: #fafafa;
+    -webkit-box-shadow: 0 1px 0 rgba(255,255,255,1);
+    box-shadow: 0 1px 0 rgba(255,255,255,1);
+    color: #4a4a4a;
+    clear: both;
+    cursor: pointer;
+    display: block;
+    margin: 0;
+    padding: .5em .85em .4em .85em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: capitalize;
+    text-shadow: 0 1px 0 #fff;
+    width: 100%;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba( 255,255,255,.1 )), color-stop(50%, rgba( 255,255,255,.1 )), color-stop(55%, rgba( 170,170,170,.1 )), to(rgba( 120,120,120,.15 )));
+    background-image: -webkit-linear-gradient(top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100%);
+    background-image: linear-gradient( top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    border-radius: .25em;
+    opacity: 1;
+}
+
+.tablesaw-bar .tablesaw-advance {
+    position: relative;
+    top: -2.6em;
+}
+
+.tablesaw-advance .btn {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-shadow: 0 1px 0 #fff;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
+    display: inline-block;
+    overflow: hidden;
+    width: 70px;
+    height: 70px;
+    background-position: 50% 50%;
+    background-size: 50%;
+    margin-left: 30px;
+}
+
+.tablesaw-advance a.tablesaw-nav-btn.disabled {
+    opacity: .25;
+    cursor: default;
+    pointer-events: none;
+}
+
+.tablesaw-bar {
+    clear: both;
+}
+
+.tablesaw-bar.mode-swipe {
+    margin-top: -2em;
+    position: relative;
+    top: 2em;
+}
+
+.tablesaw-bar .btn,
+.tablesaw-enhanced .tablesaw-bar .btn {
+    margin-top: 9px;
+    margin-bottom: 6px;
+}
+
+.tablesaw-bar.mode-swipe {
+    top: 0;
+    margin: 15px 30px;
+}
+
+.tablesaw-bar .tablesaw-advance {
+    position: static;
+}
+
+.tablesaw-bar {
+    margin-top: 0;
+    position: static;
+}
+
+.tablesaw thead
+{
+    border: 1px solid #e5e5e4;
+    background: #fff;
+}
+
+.tablesaw thead tr:first-child th
+{
+    font-weight: normal;
+    border-right: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.tablesaw th:last-child,
+.tablesaw td:last-child
+{
+    border-right: none !important;
+}
+
+.tablesaw tbody td
+{
+    vertical-align: middle;
+    border-bottom: 1px solid #DCDCDC;
+}
+
+.tablesaw-swipe .tablesaw-cell-persist
+{
+    border-right: 1px solid #dcdcdc;
+    overflow: hidden;
+}
+
+.tablesaw-swipe .tablesaw-cell-persist
+{
+    -webkit-box-shadow: 3px 0 4px -1px #dcdcdc;
+    box-shadow: 3px 0 4px -1px #dcdcdc;
+}
+
+.tablesaw-swipe th.tablesaw-cell-hidden,
+.tablesaw-swipe td.tablesaw-cell-hidden
+{
+    display: none;
+}
+
+.tablesaw-sortable,
+.tablesaw-sortable thead,
+.tablesaw-sortable thead tr,
+.tablesaw-sortable thead tr th {
+    position: relative;
+}
+
+.tablesaw-sortable th.sortable-head span
+{
+    width: 100px;
+    display: block;
+    text-align: left;
+    overflow: hidden;
+    transform: rotate(-52deg);
+}
+
+.tablesaw td.number
+{
+    padding-left: 16px;
+    padding-right: 17px;
+    text-align: right;
+}
+
+.tablesaw-sortable .sortable-head button
+{
+    height: 100px;
+    width: 100%;
+    min-width: 100%;
+    color: inherit;
+    background: transparent;
+    padding: 0;
+    text-align: left;
+    font: inherit;
+    text-transform: inherit;
+    position: relative;
+}
+
+.tablesaw th.number,
+.tablesaw th.number button,
+.tablesaw-sortable .sortable-head.number button
+{
+    text-align: left;
+}
+
+.tablesaw-sortable .width-fixed.sortable-head.sortable-ascending,
+.tablesaw-sortable .width-fixed.sortable-head.sortable-descending
+{
+    background: #338BB1 !important;
+    color: #ffffff !important;
+}
+
+.tablesaw-advance {
+    display: block;
+    float: right;
+}
