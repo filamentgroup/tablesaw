@@ -987,16 +987,18 @@ if( !Tablesaw.config ) {
 				return $( this ).find( "tbody tr" );
 			},
 			sortRows: function( rows , colNum , ascending, col ){
-				var cells, fn, sorted;
+				var cellValues, fn, sorted, cells = [];
 				var getCells = function( rows ){
-						var cells = [];
+						var tempCellValues = [];
 						$.each( rows , function( i , r ){
-							cells.push({
+                            var cell = $( r ).children().get( colNum );
+                            cells.push(cell);
+                            tempCellValues.push({
 								cell: getSortValue( $( r ).children().get( colNum ) ),
 								rowNum: i
 							});
 						});
-						return cells;
+						return tempCellValues;
 					},
 					getSortFxn = function( ascending, forceNumeric ){
 						var fn,
@@ -1029,9 +1031,13 @@ if( !Tablesaw.config ) {
 						return newRows;
 					};
 
-				cells = getCells( rows );
+                cellValues = getCells( rows );
 				fn = getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
-				sorted = cells.sort( fn );
+				sorted = cellValues.sort( fn );
+                $('td.sorted-column').removeClass('sorted-column');
+                $.each(cells, function (index, value) {
+                    value.className = 'sorted-column';
+                });
 				rows = applyToRows( sorted , rows );
 				return rows;
 			},
