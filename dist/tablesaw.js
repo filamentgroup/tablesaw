@@ -1,6 +1,6 @@
-/*! Tablesaw - v1.0.2 - 2014-12-23
+/*! Tablesaw - v1.0.2 - 2015-01-27
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2014 Filament Group; Licensed MIT */
+* Copyright (c) 2015 Filament Group; Licensed MIT */
 ;(function( $ ) {
 	var div = document.createElement('div'),
 		all = div.getElementsByTagName('i'),
@@ -542,8 +542,6 @@ if( !Tablesaw.config ) {
 		}
 	});
 
-	var config = Tablesaw.config.swipe;
-
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
@@ -564,11 +562,12 @@ if( !Tablesaw.config ) {
 		}
 
 		// Calculate initial widths
+		var initialWidth = $table.css( 'width' );
 		$table.css('width', 'auto');
 		$headerCells.each(function() {
 			headerWidths.push( $( this ).outerWidth() );
 		});
-		$table.css( 'width', '' );
+		$table.css( 'width', initialWidth );
 
 		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
@@ -660,9 +659,18 @@ if( !Tablesaw.config ) {
 			return pair[ 1 ] > -1 && pair[ 1 ] < $headerCellsNoPersist.length;
 		}
 
+		function matchesMedia() {
+			var matchMedia = $table.attr( "data-tablesaw-swipe-media" );
+			return !matchMedia || ( "matchMedia" in win ) && win.matchMedia( matchMedia ).matches;
+		}
+
 		function fakeBreakpoints() {
+			if( !matchesMedia() ) {
+				return;
+			}
+
 			var extraPaddingPixels = 20,
-				containerWidth = $table.parent().width(),
+				tableWidth = $table.width(),
 				persist = [],
 				sum = 0,
 				sums = [],
@@ -678,7 +686,7 @@ if( !Tablesaw.config ) {
 				sums.push( sum );
 
 				// is persistent or is hidden
-				if( isPersist || sum > containerWidth ) {
+				if( isPersist || sum > tableWidth ) {
 					visibleNonPersistantCount--;
 				}
 			});
@@ -693,7 +701,7 @@ if( !Tablesaw.config ) {
 					return;
 				}
 
-				if( sums[ index ] <= containerWidth || needsNonPersistentColumn ) {
+				if( sums[ index ] <= tableWidth || needsNonPersistentColumn ) {
 					needsNonPersistentColumn = false;
 					showColumn( this );
 				} else {
@@ -746,23 +754,31 @@ if( !Tablesaw.config ) {
 					x,
 					y;
 
+				$( win ).off( "resize", fakeBreakpoints );
+
 				$( this )
 					.bind( "touchmove", function( e ){
 						x = getCoord( e, 'pageX' );
 						y = getCoord( e, 'pageY' );
-
-						if( Math.abs( x - originX ) > config.horizontalThreshold && Math.abs( y - originY ) < config.verticalThreshold ) {
+						var cfg = Tablesaw.config.swipe;
+						if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
 							e.preventDefault();
 						}
 					})
 					.bind( "touchend.swipetoggle", function(){
-						if( x - originX < -1 * config.horizontalThreshold ){
-							advance( true );
-						}
-						if( x - originX > config.horizontalThreshold ){
-							advance( false );
+						var cfg = Tablesaw.config.swipe;
+						if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
+							if( x - originX < -1 * cfg.horizontalThreshold ){
+								advance( true );
+							}
+							if( x - originX > cfg.horizontalThreshold ){
+								advance( false );
+							}
 						}
 
+						window.setTimeout(function() {
+							$( win ).on( "resize", fakeBreakpoints );
+						}, 300);
 						$( this ).unbind( "touchmove touchend" );
 					});
 
@@ -1015,7 +1031,9 @@ if( !Tablesaw.config ) {
 					};
 
 				cells = getCells( rows );
-				fn = getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
+				var customFn = $( col ).data( 'tablesaw-sort' );
+				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
+					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
