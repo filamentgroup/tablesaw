@@ -20,8 +20,8 @@
 		},
 		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		i18n: {
-			modes: [ 'Stack', 'Swipe', 'Toggle' ],
-			columns: 'Col<span class="a11y-sm">umn</span>s'
+			modes: [ '<%= modeswitch.stack %>', '<%= modeswitch.swipe %>', '<%= modeswitch.columntoggle %>' ],
+			columns: '<%= modeswitch.columns %>'
 		},
 		init: function( table ) {
 			var $table = $( table ),

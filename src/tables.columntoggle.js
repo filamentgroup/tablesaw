@@ -22,8 +22,8 @@
 		};
 
 		this.i18n = {
-			columnBtnText: 'Columns',
-			columnsDialogError: 'No eligible columns.'
+			columnBtnText: '<%= columntoggle.buttonText %>',
+			columnsDialogError: '<%= columntoggle.dialogError %>'
 		};
 
 		// Expose headers and allHeaders properties on the widget

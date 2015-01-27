@@ -33,7 +33,7 @@
 			sortButton: pluginName + "-btn"
 		},
 		i18n = {
-			sort: 'Sort'
+			sort: '<%= sort.label %>'
 		},
 		methods = {
 			_create: function( o ){
