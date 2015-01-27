@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.2 - 2015-01-26
+/*! Tablesaw - v1.0.2 - 2015-01-27
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -562,11 +562,12 @@ if( !Tablesaw.config ) {
 		}
 
 		// Calculate initial widths
+		var initialWidth = $table.css( 'width' );
 		$table.css('width', 'auto');
 		$headerCells.each(function() {
 			headerWidths.push( $( this ).outerWidth() );
 		});
-		$table.css( 'width', '' );
+		$table.css( 'width', initialWidth );
 
 		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
@@ -669,7 +670,7 @@ if( !Tablesaw.config ) {
 			}
 
 			var extraPaddingPixels = 20,
-				containerWidth = $table.parent().width(),
+				tableWidth = $table.width(),
 				persist = [],
 				sum = 0,
 				sums = [],
@@ -685,7 +686,7 @@ if( !Tablesaw.config ) {
 				sums.push( sum );
 
 				// is persistent or is hidden
-				if( isPersist || sum > containerWidth ) {
+				if( isPersist || sum > tableWidth ) {
 					visibleNonPersistantCount--;
 				}
 			});
@@ -700,7 +701,7 @@ if( !Tablesaw.config ) {
 					return;
 				}
 
-				if( sums[ index ] <= containerWidth || needsNonPersistentColumn ) {
+				if( sums[ index ] <= tableWidth || needsNonPersistentColumn ) {
 					needsNonPersistentColumn = false;
 					showColumn( this );
 				} else {
@@ -1030,7 +1031,9 @@ if( !Tablesaw.config ) {
 					};
 
 				cells = getCells( rows );
-				fn = getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
+				var customFn = $( col ).data( 'tablesaw-sort' );
+				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
+					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
