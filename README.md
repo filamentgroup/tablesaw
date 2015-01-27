@@ -160,6 +160,7 @@ $( "#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
         }
     };
 });
+```
 
 ## Kitchen ~~Table~~ Sink
 
