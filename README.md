@@ -124,8 +124,8 @@ The “sortable” option allows the user to sort the the table data by clicking
             <!-- Default column -->
             <th data-tablesaw-sortable-col data-tablesaw-sortable-default-col>Rank</th>
             <th data-tablesaw-sortable-col>Movie Title</th>
-            <th data-tablesaw-sortable-col>Year</th>
-            <th data-tablesaw-sortable-col><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+            <th data-tablesaw-sortable-col data-sortable-numeric>Year</th>
+            <th data-tablesaw-sortable-col data-sortable-numeric><abbr title="Rotten Tomato Rating">Rating</abbr></th>
             <!-- Unsortable column -->
             <th>Reviews</th>
         </tr>
@@ -140,6 +140,26 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 ![](docs/sortable.png)
 
 * [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
+
+We also provide the option to specify Custom Sort functions on individual columns ([working example](http://filamentgroup.github.io/tablesaw/demo/sort-custom.html)). In the contrived example below, we want to sort full dates (e.g. `12/02/2014`) just on the year.
+
+```
+$( "#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
+    // return a function
+    return function( a, b ) {
+        // use a.cell and b.cell for cell values
+        var dateA = a.cell.split( "/" ),
+            dateB = b.cell.split( "/" ),
+            yearA = parseInt( dateA[ 2 ], 10 ),
+            yearB = parseInt( dateB[ 2 ], 10 );
+
+        if( ascending ) {
+            return yearA > yearB;
+        } else { // descending
+            return yearA < yearB;
+        }
+    };
+});
 
 ## Kitchen ~~Table~~ Sink
 

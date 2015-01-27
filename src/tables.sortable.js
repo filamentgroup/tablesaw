@@ -216,7 +216,9 @@
 					};
 
 				cells = getCells( rows );
-				fn = getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
+				var customFn = $( col ).data( 'tablesaw-sort' );
+				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
+					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
