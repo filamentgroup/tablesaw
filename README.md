@@ -141,10 +141,13 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 
 * [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
 
+### Custom Sort Functions
+
 We also provide the option to specify Custom Sort functions on individual columns ([working example](http://filamentgroup.github.io/tablesaw/demo/sort-custom.html)). In the contrived example below, we want to sort full dates (e.g. `12/02/2014`) just on the year.
 
 ```
-$( "#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
+// Add a data function to the table header cell
+$( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
     // return a function
     return function( a, b ) {
         // use a.cell and b.cell for cell values
