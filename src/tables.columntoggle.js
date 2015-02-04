@@ -21,11 +21,6 @@
 			toolbar: 'tablesaw-bar'
 		};
 
-		this.i18n = {
-			columnBtnText: '<%= columntoggle.buttonText %>',
-			columnsDialogError: '<%= columntoggle.dialogError %>'
-		};
-
 		// Expose headers and allHeaders properties on the widget
 		// headers references the THs within the first TR in the table
 		this.headers = this.$table.find( 'tr:first > th' );
@@ -49,7 +44,7 @@
 		id = tableId + "-popup";
 		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
 		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
-										"<span>" + this.i18n.columnBtnText + "</span></a>" );
+										"<span>" + Tablesaw.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
 
@@ -72,7 +67,7 @@
 		});
 
 		if( !hasNonPersistentHeaders ) {
-			$menu.append( '<label>' + this.i18n.columnsDialogError + '</label>' );
+			$menu.append( '<label>' + Tablesaw.i18n.columnsDialogError + '</label>' );
 		}
 
 		$menu.appendTo( $popup );

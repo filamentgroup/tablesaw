@@ -26,9 +26,6 @@ module.exports = function(grunt) {
 		concat: {
 			options: {
 				banner: '<%= banner %>',
-				process: {
-					data: grunt.file.readJSON('src/i18n.json')
-				},
 				stripBanners: true
 			},
 			jsall: {

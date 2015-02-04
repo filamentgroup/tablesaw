@@ -32,9 +32,6 @@
 			tableToolbar: 'tablesaw-toolbar',
 			sortButton: pluginName + "-btn"
 		},
-		i18n = {
-			sort: '<%= sort.label %>'
-		},
 		methods = {
 			_create: function( o ){
 				return $( this ).each(function() {
@@ -113,7 +110,7 @@
 					},
 					addSwitcher = function( heads ){
 						$switcher = $( '<div>' ).addClass( classes.switcher ).addClass( classes.tableToolbar ).html(function() {
-							var html = [ '<label>' + i18n.sort + ':' ];
+							var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
 
 							html.push( '<span class="btn btn-small">&#160;<select>' );
 							heads.each(function( j ) {
