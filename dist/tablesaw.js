@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.3 - 2015-01-27
+/*! Tablesaw - v1.0.4 - 2015-02-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -562,12 +562,11 @@ if( !Tablesaw.config ) {
 		}
 
 		// Calculate initial widths
-		var initialWidth = $table.css( 'width' );
 		$table.css('width', 'auto');
 		$headerCells.each(function() {
 			headerWidths.push( $( this ).outerWidth() );
 		});
-		$table.css( 'width', initialWidth );
+		$table.css( 'width', '' );
 
 		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
@@ -606,7 +605,9 @@ if( !Tablesaw.config ) {
 		function maintainWidths() {
 			var prefix = '#' + tableId + '.tablesaw-swipe ',
 				styles = [],
-				tableWidth = $table.width();
+				tableWidth = $table.width(),
+				hash = [],
+				newHash;
 
 			$headerCells.each(function( index ) {
 				var width;
@@ -615,14 +616,28 @@ if( !Tablesaw.config ) {
 
 					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
+						hash.push( index + '-' + width );
 						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
 					}
 				}
 			});
+			newHash = hash.join( '_' );
 
-			unmaintainWidths();
 			$table.addClass( persistWidths );
-			$head.append( $( '<style>' + styles.join( "\n" ) + '</style>' ).attr( 'id', tableId + '-persist' ) );
+
+			var $style = $( '#' + tableId + '-persist' );
+			// If style element not yet added OR if the widths have changed
+			if( !$style.length || $style.data( 'hash' ) !== newHash ) {
+				// Remove existing
+				$style.remove();
+
+				if( styles.length ) {
+					$( '<style>' + styles.join( "\n" ) + '</style>' )
+						.attr( 'id', tableId + '-persist' )
+						.data( 'hash', newHash )
+						.appendTo( $head );
+				}
+			}
 		}
 
 		function getNext(){
@@ -670,7 +685,7 @@ if( !Tablesaw.config ) {
 			}
 
 			var extraPaddingPixels = 20,
-				tableWidth = $table.width(),
+				containerWidth = $table.parent().width(),
 				persist = [],
 				sum = 0,
 				sums = [],
@@ -686,7 +701,7 @@ if( !Tablesaw.config ) {
 				sums.push( sum );
 
 				// is persistent or is hidden
-				if( isPersist || sum > tableWidth ) {
+				if( isPersist || sum > containerWidth ) {
 					visibleNonPersistantCount--;
 				}
 			});
@@ -701,7 +716,7 @@ if( !Tablesaw.config ) {
 					return;
 				}
 
-				if( sums[ index ] <= tableWidth || needsNonPersistentColumn ) {
+				if( sums[ index ] <= containerWidth || needsNonPersistentColumn ) {
 					needsNonPersistentColumn = false;
 					showColumn( this );
 				} else {
