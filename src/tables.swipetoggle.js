@@ -77,7 +77,9 @@
 		function maintainWidths() {
 			var prefix = '#' + tableId + '.tablesaw-swipe ',
 				styles = [],
-				tableWidth = $table.width();
+				tableWidth = $table.width(),
+				hash = [],
+				newHash;
 
 			$headerCells.each(function( index ) {
 				var width;
@@ -86,14 +88,28 @@
 
 					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
+						hash.push( index + '-' + width );
 						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
 					}
 				}
 			});
+			newHash = hash.join( '_' );
 
-			unmaintainWidths();
 			$table.addClass( persistWidths );
-			$head.append( $( '<style>' + styles.join( "\n" ) + '</style>' ).attr( 'id', tableId + '-persist' ) );
+
+			var $style = $( '#' + tableId + '-persist' );
+			// If style element not yet added OR if the widths have changed
+			if( !$style.length || $style.data( 'hash' ) !== newHash ) {
+				// Remove existing
+				$style.remove();
+
+				if( styles.length ) {
+					$( '<style>' + styles.join( "\n" ) + '</style>' )
+						.attr( 'id', tableId + '-persist' )
+						.data( 'hash', newHash )
+						.appendTo( $head );
+				}
+			}
 		}
 
 		function getNext(){
