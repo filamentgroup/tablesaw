@@ -19,17 +19,13 @@
 			toolbar: 'tablesaw-toolbar'
 		},
 		modes: [ 'stack', 'swipe', 'columntoggle' ],
-		i18n: {
-			modes: [ '<%= modeswitch.stack %>', '<%= modeswitch.swipe %>', '<%= modeswitch.columntoggle %>' ],
-			columns: '<%= modeswitch.columns %>'
-		},
 		init: function( table ) {
 			var $table = $( table ),
 				ignoreMode = $table.attr( S.attributes.excludeMode ),
 				$toolbar = $table.prev( '.tablesaw-bar' ),
 				modeVal = '',
 				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
-					var html = [ '<label>' + S.i18n.columns + ':' ],
+					var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
 						dataMode = $table.attr( 'data-tablesaw-mode' ),
 						isSelected;
 
@@ -47,7 +43,7 @@
 
 						html.push( '<option' +
 							( isSelected ? ' selected' : '' ) +
-							' value="' + S.modes[ j ] + '">' + S.i18n.modes[ j ] + '</option>' );
+							' value="' + S.modes[ j ] + '">' + Tablesaw.i18n.modes[ j ] + '</option>' );
 					}
 					html.push( '</select></span></label>' );
 
