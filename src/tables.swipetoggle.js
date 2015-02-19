@@ -34,12 +34,11 @@
 		}
 
 		// Calculate initial widths
-		var initialWidth = $table.css( 'width' );
 		$table.css('width', 'auto');
 		$headerCells.each(function() {
 			headerWidths.push( $( this ).outerWidth() );
 		});
-		$table.css( 'width', initialWidth );
+		$table.css( 'width', '' );
 
 		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
 
@@ -142,7 +141,7 @@
 			}
 
 			var extraPaddingPixels = 20,
-				tableWidth = $table.width(),
+				containerWidth = $table.parent().width(),
 				persist = [],
 				sum = 0,
 				sums = [],
@@ -158,7 +157,7 @@
 				sums.push( sum );
 
 				// is persistent or is hidden
-				if( isPersist || sum > tableWidth ) {
+				if( isPersist || sum > containerWidth ) {
 					visibleNonPersistantCount--;
 				}
 			});
@@ -173,7 +172,7 @@
 					return;
 				}
 
-				if( sums[ index ] <= tableWidth || needsNonPersistentColumn ) {
+				if( sums[ index ] <= containerWidth || needsNonPersistentColumn ) {
 					needsNonPersistentColumn = false;
 					showColumn( this );
 				} else {
