@@ -22,10 +22,10 @@
 					yearB = b.cell.split( "/" );
 
 				if( ascending ) {
-					return parseInt( yearA[ 1 ], 10 ) > parseInt( yearB[ 1 ], 10 );
+					return parseInt( yearA[ 1 ], 10 ) - parseInt( yearB[ 1 ], 10 );
 				} else {
 					// descending
-					return parseInt( yearA[ 1 ], 10 ) < parseInt( yearB[ 1 ], 10 );
+					return parseInt( yearB[ 1 ], 10 ) - parseInt( yearA[ 1 ], 10 );
 				}
 			};
 		});

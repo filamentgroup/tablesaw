@@ -35,7 +35,15 @@
 */
 
 if( typeof Tablesaw === "undefined" ) {
-	Tablesaw = {};
+	Tablesaw = {
+		i18n: {
+			modes: [ 'Stack', 'Swipe', 'Toggle' ],
+			columns: 'Col<span class=\"a11y-sm\">umn</span>s',
+			columnBtnText: 'Columns',
+			columnsDialogError: 'No eligible columns.',
+			sort: 'Sort'
+		}
+	};
 }
 if( !Tablesaw.config ) {
 	Tablesaw.config = {};
@@ -366,11 +374,6 @@ if( !Tablesaw.config ) {
 			toolbar: 'tablesaw-bar'
 		};
 
-		this.i18n = {
-			columnBtnText: 'Columns',
-			columnsDialogError: 'No eligible columns.'
-		};
-
 		// Expose headers and allHeaders properties on the widget
 		// headers references the THs within the first TR in the table
 		this.headers = this.$table.find( 'tr:first > th' );
@@ -394,7 +397,7 @@ if( !Tablesaw.config ) {
 		id = tableId + "-popup";
 		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
 		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
-										"<span>" + this.i18n.columnBtnText + "</span></a>" );
+										"<span>" + Tablesaw.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
 
@@ -417,7 +420,7 @@ if( !Tablesaw.config ) {
 		});
 
 		if( !hasNonPersistentHeaders ) {
-			$menu.append( '<label>' + this.i18n.columnsDialogError + '</label>' );
+			$menu.append( '<label>' + Tablesaw.i18n.columnsDialogError + '</label>' );
 		}
 
 		$menu.appendTo( $popup );
@@ -862,9 +865,6 @@ if( !Tablesaw.config ) {
 			tableToolbar: 'tablesaw-toolbar',
 			sortButton: pluginName + "-btn"
 		},
-		i18n = {
-			sort: 'Sort'
-		},
 		methods = {
 			_create: function( o ){
 				return $( this ).each(function() {
@@ -943,7 +943,7 @@ if( !Tablesaw.config ) {
 					},
 					addSwitcher = function( heads ){
 						$switcher = $( '<div>' ).addClass( classes.switcher ).addClass( classes.tableToolbar ).html(function() {
-							var html = [ '<label>' + i18n.sort + ':' ];
+							var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
 
 							html.push( '<span class="btn btn-small">&#160;<select>' );
 							heads.each(function( j ) {
@@ -1197,17 +1197,13 @@ if( !Tablesaw.config ) {
 			toolbar: 'tablesaw-toolbar'
 		},
 		modes: [ 'stack', 'swipe', 'columntoggle' ],
-		i18n: {
-			modes: [ 'Stack', 'Swipe', 'Toggle' ],
-			columns: 'Col<span class="a11y-sm">umn</span>s'
-		},
 		init: function( table ) {
 			var $table = $( table ),
 				ignoreMode = $table.attr( S.attributes.excludeMode ),
 				$toolbar = $table.prev( '.tablesaw-bar' ),
 				modeVal = '',
 				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
-					var html = [ '<label>' + S.i18n.columns + ':' ],
+					var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
 						dataMode = $table.attr( 'data-tablesaw-mode' ),
 						isSelected;
 
@@ -1225,7 +1221,7 @@ if( !Tablesaw.config ) {
 
 						html.push( '<option' +
 							( isSelected ? ' selected' : '' ) +
-							' value="' + S.modes[ j ] + '">' + S.i18n.modes[ j ] + '</option>' );
+							' value="' + S.modes[ j ] + '">' + Tablesaw.i18n.modes[ j ] + '</option>' );
 					}
 					html.push( '</select></span></label>' );
 
