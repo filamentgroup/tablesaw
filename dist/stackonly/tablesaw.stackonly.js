@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.3 - 2015-01-27
+/*! Tablesaw - v1.0.4 - 2015-02-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
 ;(function( $ ) {
@@ -35,7 +35,15 @@
 */
 
 if( typeof Tablesaw === "undefined" ) {
-	Tablesaw = {};
+	Tablesaw = {
+		i18n: {
+			modes: [ 'Stack', 'Swipe', 'Toggle' ],
+			columns: 'Col<span class=\"a11y-sm\">umn</span>s',
+			columnBtnText: 'Columns',
+			columnsDialogError: 'No eligible columns.',
+			sort: 'Sort'
+		}
+	};
 }
 if( !Tablesaw.config ) {
 	Tablesaw.config = {};
