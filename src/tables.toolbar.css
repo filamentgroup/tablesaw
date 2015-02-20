@@ -67,13 +67,6 @@
 .tablesaw-bar .btn:focus {
 	box-shadow: 0 0 .35em var(button-interaction-shadow) !important;
 }
-.ie-lte8 .tablesaw-bar .btn:hover,
-.ie-lte8 .tablesaw-bar .btn:focus {
-	color: var(button-interaction-text);
-	background-color: #fff;
-	border-color: #aaa;
-	outline: none;
-}
 
 .tablesaw-bar .btn-select select {
 	background: none;
@@ -106,9 +99,6 @@
 	min-width: 7.25em;
 	text-align: left;
 	text-indent: 0;
-}
-.ie-lte8 .tablesaw-bar .btn-select {
-	min-width: 6.1em;
 }
 .tablesaw-bar .btn.btn-small,
 .tablesaw-bar .btn.btn-micro {

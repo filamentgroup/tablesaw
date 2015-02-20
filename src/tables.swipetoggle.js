@@ -14,6 +14,15 @@
 		}
 	});
 
+	function isIE8() {
+		var div = document.createElement('div'),
+			all = div.getElementsByTagName('i');
+
+		div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
+
+		return !!all.length;
+	}
+
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
@@ -27,7 +36,7 @@
 			$head = $( document.head || 'head' ),
 			tableId = $table.attr( 'id' ),
 			// TODO switch this to an nth-child feature test
-			isIE8 = $( 'html' ).is( '.ie-lte8' );
+			supportsNthChild = !isIE8();
 
 		if( !$headerCells.length ) {
 			throw new Error( "tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?" );
@@ -174,6 +183,7 @@
 
 				// is persistent or is hidden
 				if( isPersist || sum > containerWidth ) {
+					console.log( sum, ' ', containerWidth );
 					visibleNonPersistantCount--;
 				}
 			});
@@ -196,7 +206,7 @@
 				}
 			});
 
-			if( !isIE8 ) {
+			if( supportsNthChild ) {
 				unmaintainWidths();
 			}
 			$table.trigger( 'tablesawcolumns' );
@@ -214,7 +224,7 @@
 					}
 				}
 
-				if( !isIE8 ) {
+				if( supportsNthChild ) {
 					maintainWidths();
 				}
 

@@ -36,8 +36,7 @@ body {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	max-width: 10em;
-	max-width: 40vw;
+	width: 10em;
 }
 @media (min-width: 40em) {
 	td.title {
