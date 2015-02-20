@@ -12,15 +12,27 @@ module.exports = function(grunt) {
 			'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>;' +
 			' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 		// Task configuration.
-		clean: ['dist/tmp/', 'dist/**/*.min.*'],
+		clean: {
+			dependencies: ['dist/dependencies/'],
+			post: ['dist/tmp/', 'dist/**/*.min.*']
+		},
 		copy: {
 			jquery: {
-				src: 'bower_components/jquery/dist/jquery.js',
+				src: 'node_modules/jquery/dist/jquery.js',
 				dest: 'dist/dependencies/jquery.js'
 			},
 			respond: {
-				src: 'bower_components/respond/dest/respond.src.js',
+				src: 'node_modules/respond.js/dest/respond.src.js',
 				dest: 'dist/dependencies/respond.js'
+			},
+			qunit: {
+				files: [{
+					expand: true,
+					flatten: true,
+					src: [ 'node_modules/qunitjs/qunit/*' ],
+					dest: 'dist/dependencies/',
+					filter: 'isFile'
+				}]
 			}
 		},
 		concat: {
@@ -169,7 +181,7 @@ module.exports = function(grunt) {
 		},
 		'gh-pages': {
 			options: {},
-			src: ['dist/**/*', 'bower_components/**/*', 'demo/**/*', 'test/**/*']
+			src: ['dist/**/*', 'demo/**/*', 'test/**/*']
 		},
 		myth: {
 			dist: {
@@ -204,8 +216,8 @@ module.exports = function(grunt) {
 	grunt.registerTask('travis', ['jshint', 'qunit']);
 	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
-	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'copy', 'clean']);
-	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean']);
+	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
+	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);
 
 	grunt.registerTask('default', ['jshint', 'src', 'qunit', 'filesize']);
 

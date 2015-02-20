@@ -10,10 +10,7 @@
 		"**/.*"
 	],
 	"dependencies": {
-		"jquery": ">=1.9.1",
-		"respond": "~1.4.2"
-	},
-	"devDependencies": {
-		"qunit": "1.11.0"
+		"jquery": ">=1.11.2",
+		"respond": ">=1.4.2"
 	}
 }

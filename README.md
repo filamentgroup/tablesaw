@@ -224,18 +224,6 @@ If you want the other modes, it’ll take a little bit more configuration.
 <script src="tablesaw.js"></script>
 ```
 
-Or, if you use Bower to manage your dependencies (and bower is installed globally):
-
-    bower install
-
-```html
-<link rel="stylesheet" href="tablesaw.css">
-
-<!--[if lt IE 9]><script src="bower_components/respond/dest/respond.min.js"></script><!--<![endif]-->
-<script src="bower_components/jquery/jquery.js"></script>
-<script src="tablesaw.js"></script>
-```
-
 Check out any of the demos above for complete working examples.
 
 ### Using Bare TableSaw 
@@ -252,4 +240,4 @@ To see what all TableSaw functionality looks like with this alternate stylesheet
 
 ## Building the Project Locally
 
-Run `npm install`, then `bower install`, then `grunt` to build the project files into the `dist` folder.
+Run `npm install` to install dependencies and then `grunt` to build the project files into the `dist` folder.

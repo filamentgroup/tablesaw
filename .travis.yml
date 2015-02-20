@@ -4,7 +4,6 @@ node_js:
 before_script:
   - npm install -g grunt-cli
   - npm install
-  - ./node_modules/.bin/bower install
 script: grunt -v
 branches:
   except:
