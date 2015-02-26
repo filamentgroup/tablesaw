@@ -214,7 +214,7 @@ The argument to `tablesaw-stack` is the breakpoint at which the table will switc
 
 ### Using Stack-Only TableSaw Less Mixin
 
-To easily customize the breakpoint at which the stack table switches, use the Less mixin.  First, include the `tablesaw.stackonly.less` file instead of `tablesaw.stackonly.css` in your SASS. Then, use a parent selector on your table.
+To easily customize the breakpoint at which the stack table switches, use the Less mixin.  First, include the `tablesaw.stackonly.less` file instead of `tablesaw.stackonly.css` in your Less file. Then, use a parent selector on your table.
 
 ```html
 <div class="my-parent-selector">
