@@ -112,6 +112,20 @@ module.exports = function(grunt) {
 					'src/tables.stack-mixin.scss'
 				],
 				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.scss'
+			},
+			lessstackmixinpre: {
+				src: [
+					'src/tables.css',
+					'src/tables.stack.css'
+				],
+				dest: 'dist/tmp/<%= pkg.name %>.stackonly.myth.less'
+			},
+			lessstackmixinpost: {
+				src: [
+					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.less',
+					'src/tables.stack-mixin.less'
+				],
+				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.less'
 			}
 		},
 		qunit: {
@@ -189,7 +203,8 @@ module.exports = function(grunt) {
 					'dist/<%= pkg.name %>.css': '<%= concat.cssall.dest %>',
 					'dist/bare/<%= pkg.name %>.bare.css': '<%= concat.cssbare.dest %>',
 					'dist/stackonly/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>',
-					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>'
+					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>',
+          'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.less': '<%= concat.lessstackmixinpre.dest %>'
 				}
 			}
 		},
@@ -214,8 +229,8 @@ module.exports = function(grunt) {
 
 	// Default task.
 	grunt.registerTask('travis', ['jshint', 'qunit']);
-	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
-	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
+	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre', 'concat:lessstackmixinpre']);
+	grunt.registerTask('concat-post', ['concat:cssstackmixinpost', 'concat:lessstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);
 
