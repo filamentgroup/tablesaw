@@ -1,24 +1,15 @@
-/*! Tablesaw - v1.0.4 - 2015-03-09
+/*! Tablesaw - v1.0.4 - 2015-02-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
-// UMD module definition
-// From: https://github.com/umdjs/umd/blob/master/jqueryPluginCommonjs.js
-
-(function (factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
-    } else if (typeof exports === 'object') {
-        // Node/CommonJS
-        module.exports = factory(require('jquery'));
-    } else {
-        // Browser globals
-        factory(jQuery);
-    }
-}(function (jQuery) {
-  var Tablesaw, win = typeof window !== "undefined" ? window : this;
-
 ;(function( $ ) {
+	var div = document.createElement('div'),
+		all = div.getElementsByTagName('i'),
+		$doc = $( document.documentElement );
+
+	div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
+	if( all[ 0 ] ) {
+		$doc.addClass( 'ie-lte8' );
+	}
 
 	// Cut the mustard
 	if( !( 'querySelector' in document ) ||
@@ -26,7 +17,7 @@
 			window.operamini ) {
 		return;
 	} else {
-		$( document.documentElement ).addClass( 'tablesaw-enhanced' );
+		$doc.addClass( 'tablesaw-enhanced' );
 
 		// DOM-ready auto-init of plugins.
 		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
@@ -229,7 +220,7 @@ if( !Tablesaw.config ) {
 		// get headers in reverse order so that top-level headers are appended last
 		var reverseHeaders = $( this.allHeaders );
 		var hideempty = this.hideempty;
-
+		
 		// create the hide/show toggles
 		reverseHeaders.each(function(){
 			var $t = $( this ),
@@ -283,5 +274,4 @@ if( !Tablesaw.config ) {
 
 	} );
 
-}( win, jQuery ));
-}));
+}( this, jQuery ));
