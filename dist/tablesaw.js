@@ -1,15 +1,23 @@
-/*! Tablesaw - v1.0.4 - 2015-02-19
+/*! Tablesaw - v1.0.4 - 2015-03-08
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
-;(function( $ ) {
-	var div = document.createElement('div'),
-		all = div.getElementsByTagName('i'),
-		$doc = $( document.documentElement );
+// UMD module definition
+// From: https://github.com/umdjs/umd/blob/master/jqueryPluginCommonjs.js
 
-	div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
-	if( all[ 0 ] ) {
-		$doc.addClass( 'ie-lte8' );
-	}
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        // Node/CommonJS
+        module.exports = factory(require('jquery'));
+    } else {
+        // Browser globals
+        factory(jQuery);
+    }
+}(function (jQuery) {
+
+;(function( $ ) {
 
 	// Cut the mustard
 	if( !( 'querySelector' in document ) ||
@@ -17,7 +25,7 @@
 			window.operamini ) {
 		return;
 	} else {
-		$doc.addClass( 'tablesaw-enhanced' );
+		$( document.documentElement ).addClass( 'tablesaw-enhanced' );
 
 		// DOM-ready auto-init of plugins.
 		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
@@ -545,6 +553,15 @@ if( !Tablesaw.config ) {
 		}
 	});
 
+	function isIE8() {
+		var div = document.createElement('div'),
+			all = div.getElementsByTagName('i');
+
+		div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
+
+		return !!all.length;
+	}
+
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
@@ -558,7 +575,7 @@ if( !Tablesaw.config ) {
 			$head = $( document.head || 'head' ),
 			tableId = $table.attr( 'id' ),
 			// TODO switch this to an nth-child feature test
-			isIE8 = $( 'html' ).is( '.ie-lte8' );
+			supportsNthChild = !isIE8();
 
 		if( !$headerCells.length ) {
 			throw new Error( "tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?" );
@@ -705,6 +722,7 @@ if( !Tablesaw.config ) {
 
 				// is persistent or is hidden
 				if( isPersist || sum > containerWidth ) {
+					console.log( sum, ' ', containerWidth );
 					visibleNonPersistantCount--;
 				}
 			});
@@ -727,7 +745,7 @@ if( !Tablesaw.config ) {
 				}
 			});
 
-			if( !isIE8 ) {
+			if( supportsNthChild ) {
 				unmaintainWidths();
 			}
 			$table.trigger( 'tablesawcolumns' );
@@ -745,7 +763,7 @@ if( !Tablesaw.config ) {
 					}
 				}
 
-				if( !isIE8 ) {
+				if( supportsNthChild ) {
 					maintainWidths();
 				}
 
@@ -1259,3 +1277,4 @@ if( !Tablesaw.config ) {
 	});
 
 })( this, jQuery );
+}));
