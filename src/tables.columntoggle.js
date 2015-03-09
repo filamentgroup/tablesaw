@@ -182,4 +182,4 @@
 		}
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));

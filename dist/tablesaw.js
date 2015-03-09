@@ -16,6 +16,7 @@
         factory(jQuery);
     }
 }(function (jQuery) {
+  var Tablesaw, win = typeof window !== "undefined" ? window : this;
 
 ;(function( $ ) {
 
@@ -228,7 +229,7 @@ if( !Tablesaw.config ) {
 		// get headers in reverse order so that top-level headers are appended last
 		var reverseHeaders = $( this.allHeaders );
 		var hideempty = this.hideempty;
-		
+
 		// create the hide/show toggles
 		reverseHeaders.each(function(){
 			var $t = $( this ),
@@ -282,7 +283,7 @@ if( !Tablesaw.config ) {
 
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));
 ;(function( $ ) {
 	var pluginName = "tablesawbtn",
 		initSelector = ".btn",
@@ -543,7 +544,7 @@ if( !Tablesaw.config ) {
 		}
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));
 ;(function( win, $, undefined ){
 
 	$.extend( Tablesaw.config, {
@@ -854,7 +855,7 @@ if( !Tablesaw.config ) {
 
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));
 
 ;(function( $ ) {
 	function getSortValue( cell ) {
@@ -1199,7 +1200,7 @@ if( !Tablesaw.config ) {
 
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));
 
 ;(function( win, $ ) {
 
@@ -1276,5 +1277,5 @@ if( !Tablesaw.config ) {
 		}
 	});
 
-})( this, jQuery );
+})( win, jQuery );
 }));

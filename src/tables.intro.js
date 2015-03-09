@@ -13,3 +13,4 @@
         factory(jQuery);
     }
 }(function (jQuery) {
+  var Tablesaw, win = typeof window !== "undefined" ? window : this;
