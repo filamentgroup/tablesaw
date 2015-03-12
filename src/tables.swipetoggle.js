@@ -183,7 +183,6 @@
 
 				// is persistent or is hidden
 				if( isPersist || sum > containerWidth ) {
-					console.log( sum, ' ', containerWidth );
 					visibleNonPersistantCount--;
 				}
 			});
