@@ -38,10 +38,10 @@
 	right: .5em;
 }
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after {
-	content: "↑";
+	content: "\2191";
 }
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
-	content: "↓";
+	content: "\2193";
 }
 
 .tablesaw-sortable .not-applicable:after {
