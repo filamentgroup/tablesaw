@@ -212,6 +212,26 @@ Include the mixin like so:
 
 The argument to `tablesaw-stack` is the breakpoint at which the table will switch from columns to stacked.
 
+### Using Stack-Only TableSaw Less Mixin
+
+To easily customize the breakpoint at which the stack table switches, use the Less mixin.  First, include the `tablesaw.stackonly.less` file instead of `tablesaw.stackonly.css` in your Less file. Then, use a parent selector on your table.
+
+```html
+<div class="my-parent-selector">
+    <table class="tablesaw" data-tablesaw-mode="stack">
+```
+
+Include the mixin like so:
+
+```less
+.my-parent-selector {
+  .tablesaw-stack( 50em );
+}
+```
+
+The argument to `tablesaw-stack` is the breakpoint at which the table will switch from columns to stacked.
+
+
 ### The Full TableSaw 
 
 If you want the other modes, it’ll take a little bit more configuration.
