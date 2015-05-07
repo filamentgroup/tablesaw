@@ -126,8 +126,6 @@ if( !Tablesaw.config ) {
 		// other plugins
 		this.$table.trigger( events.destroy, [ this ] );
 
-		this.$table.removeAttr( 'data-tablesaw-mode' );
-
 		this.$table.removeData( pluginName );
 	};
 
