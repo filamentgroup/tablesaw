@@ -546,6 +546,15 @@ if( !Tablesaw.config ) {
 					.data( "cells", $cells );
 			}
 		});
+
+		$(popup_menu).find( 'input[type="checkbox"]' ).each(function() {
+			var checked = this.checked;
+
+			$( this ).data( "cells" )
+				.toggleClass( "tablesaw-cell-hidden", !checked )
+				.toggleClass( "tablesaw-cell-visible", checked );
+		});
+
 	} );
 
 	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
