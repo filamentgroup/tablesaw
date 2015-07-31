@@ -252,7 +252,7 @@
 			if( isNaN( lenVisible ) || !lenVisible ) {
 				advance( fwd );
 			}else {
-				for (i = 0; i < lenVisible - 1; i++ ) {
+				for (var i = 0; i < lenVisible - 1; i++ ) {
 					advance( fwd );
 				}
 			}
