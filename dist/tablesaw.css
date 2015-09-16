@@ -4,7 +4,8 @@
 
 table.tablesaw {
   empty-cells: show;
-  max-width: 100%;
+  /*max-width: 100%;*/
+  word-break: break-all; /* added to make sure the table responds */
   width: 100%;
 }
 
@@ -361,15 +362,13 @@ table.tablesaw {
   width: 1px;
 }
 
-@media (min-width: 24em) {
-  .tablesaw-toolbar .a11y-sm {
+ .tablesaw[min-width~="24em"] .tablesaw-toolbar .a11y-sm {
     clip: none;
     height: auto;
     width: auto;
     position: static;
     overflow: visible;
   }
-}
 
 
 
@@ -438,11 +437,9 @@ table.tablesaw thead td {
   line-height: 2.4;
 }
 
-@media (min-width: 25em) {
-  .tablesaw caption {
+ .tablesaw[min-width~="25em"] caption {
     margin-bottom: .6em;
     line-height: 1.2;
-  }
 }
 
 /* Stack */
@@ -460,11 +457,10 @@ table.tablesaw thead td {
   font-family: sans-serif;
 }
 
-@media (min-width: 40em) {
-  .tablesaw td {
+
+ .tablesaw[min-width~="40em"] td {
     line-height: 2em;
   }
-}
 
 @media only all {
   .tablesaw-swipe .tablesaw-cell-persist {
@@ -540,58 +536,56 @@ table.tablesaw thead td {
   }
 }
 
-@media (max-width: 39.9375em) {
-  .tablesaw-stack thead td,
-  .tablesaw-stack thead th {
+
+  .tablesaw-stack[max-width~="39.9375em"] thead td,
+  .tablesaw-stack[max-width~="39.9375em"] thead th {
     display: none;
   }
 
-  .tablesaw-stack tbody td,
-  .tablesaw-stack tbody th {
+  .tablesaw-stack[max-width~="39.9375em"] tbody td,
+  .tablesaw-stack[max-width~="39.9375em"] tbody th {
     clear: left;
     float: left;
     width: 100%;
   }
 
-  .tablesaw-cell-label {
+  .tablesaw[max-width~="39.9375em"] .tablesaw-cell-label {
     vertical-align: top;
   }
 
-  .tablesaw-cell-content {
+  .tablesaw[max-width~="39.9375em"] .tablesaw-cell-content {
     max-width: 67%;
     display: inline-block;
   }
 
-  .tablesaw-stack td:empty,
-  .tablesaw-stack th:empty {
+  .tablesaw-stack[max-width~="39.9375em"] td:empty,
+  .tablesaw-stack[max-width~="39.9375em"] th:empty {
     display: none;
   }
-}
+
 
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */
-
-@media (min-width: 40em) {
-  .tablesaw-stack tr {
+.tablesaw-stack[min-width~="40em"] tr {
     display: table-row;
   }
 
   /* Show the table header rows */
 
-  .tablesaw-stack td,
-  .tablesaw-stack th,
-  .tablesaw-stack thead td,
-  .tablesaw-stack thead th {
+  .tablesaw-stack[min-width~="40em"] td,
+  .tablesaw-stack[min-width~="40em"] th,
+  .tablesaw-stack[min-width~="40em"] thead td,
+  .tablesaw-stack[min-width~="40em"] thead th {
     display: table-cell;
     margin: 0;
   }
 
   /* Hide the labels in each cell */
 
-  .tablesaw-stack td .tablesaw-cell-label,
-  .tablesaw-stack th .tablesaw-cell-label {
+  .tablesaw-stack[min-width~="40em"] td .tablesaw-cell-label,
+  .tablesaw-stack[min-width~="40em"] th .tablesaw-cell-label {
     display: none !important;
   }
-}
+
 
 .tablesaw-fix-persist {
   table-layout: fixed;
@@ -684,61 +678,57 @@ table.tablesaw thead td {
 
 /* Show priority 1 at 320px (20em x 16px) */
 
-@media (min-width: 20em) {
-  .tablesaw-columntoggle th.tablesaw-priority-1,
-  .tablesaw-columntoggle td.tablesaw-priority-1 {
+  .tablesaw-columntoggle[min-width~="20em"] th.tablesaw-priority-1,
+  .tablesaw-columntoggle[min-width~="20em"] td.tablesaw-priority-1 {
     display: table-cell;
   }
-}
 
 /* Show priority 2 at 480px (30em x 16px) */
 
-@media (min-width: 30em) {
-  .tablesaw-columntoggle th.tablesaw-priority-2,
-  .tablesaw-columntoggle td.tablesaw-priority-2 {
+ .tablesaw-columntoggle[min-width~="30em"] th.tablesaw-priority-2,
+ .tablesaw-columntoggle[min-width~="30em"] td.tablesaw-priority-2 {
     display: table-cell;
-  }
-}
+ }
+
 
 /* Show priority 3 at 640px (40em x 16px) */
 
-@media (min-width: 40em) {
-  .tablesaw-columntoggle th.tablesaw-priority-3,
-  .tablesaw-columntoggle td.tablesaw-priority-3 {
+
+ .tablesaw-columntoggle[min-width~="40em"] th.tablesaw-priority-3,
+ .tablesaw-columntoggle[min-width~="40em"] td.tablesaw-priority-3 {
     display: table-cell;
   }
 
-  .tablesaw-columntoggle tbody td {
+ .tablesaw-columntoggle[min-width~="40em"] tbody td {
     line-height: 2;
   }
-}
+
 
 /* Show priority 4 at 800px (50em x 16px) */
 
-@media (min-width: 50em) {
-  .tablesaw-columntoggle th.tablesaw-priority-4,
-  .tablesaw-columntoggle td.tablesaw-priority-4 {
+
+ .tablesaw-columntoggle[min-width~="50em"] th.tablesaw-priority-4,
+ .tablesaw-columntoggle[min-width~="50em"] td.tablesaw-priority-4 {
     display: table-cell;
   }
-}
+
 
 /* Show priority 5 at 960px (60em x 16px) */
 
-@media (min-width: 60em) {
-  .tablesaw-columntoggle th.tablesaw-priority-5,
-  .tablesaw-columntoggle td.tablesaw-priority-5 {
+
+ .tablesaw-columntoggle[min-width~="60em"] th.tablesaw-priority-5,
+ .tablesaw-columntoggle[min-width~="60em"] td.tablesaw-priority-5 {
     display: table-cell;
   }
-}
+
 
 /* Show priority 6 at 1,120px (70em x 16px) */
 
-@media (min-width: 70em) {
-  .tablesaw-columntoggle th.tablesaw-priority-6,
-  .tablesaw-columntoggle td.tablesaw-priority-6 {
+
+ .tablesaw-columntoggle[min-width~="70em"] th.tablesaw-priority-6,
+ .tablesaw-columntoggle[min-width~="70em"] td.tablesaw-priority-6 {
     display: table-cell;
   }
-}
 
 @media only all {
   /* Unchecked manually: Always hide */
