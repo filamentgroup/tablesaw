@@ -222,8 +222,8 @@ If you want the other modes, it’ll take a little bit more configuration.
 <!--[if lt IE 9]><script src="dependencies/respond.js"></script><!--<![endif]-->
 <script src="dependencies/jquery.js"></script>
 <script src="tablesaw.js"></script>
-<script src="ElementQueries.js">//https://github.com/marcj/css-element-queries</script>
-<script src="ResizeSensor.js">//https://github.com/marcj/css-element-queries</script>
+<script src="ElementQueries.js"> //https://github.com/marcj/css-element-queries </script>
+<script src="ResizeSensor.js"> //https://github.com/marcj/css-element-queries </script>
 ```
 
 Check out any of the demos above for complete working examples.
