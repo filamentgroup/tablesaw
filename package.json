@@ -2,7 +2,7 @@
   "name": "tablesaw",
   "title": "Tablesaw",
   "description": "A set of plugins for responsive tables.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "homepage": "https://github.com/filamentgroup/tablesaw",
   "author": {
     "name": "Zach Leatherman",
@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "jquery": "^1.11.2",
-    "respond.js": "^1.4.2"
+    "respond.js": "^1.4.2",
+    "shoestring": "^1.0.3"
   },
   "devDependencies": {
     "qunitjs": "^1.17.1",
