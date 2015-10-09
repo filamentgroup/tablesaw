@@ -1,4 +1,4 @@
-/*! Tablesaw - v1.0.4 - 2015-02-19
+/*! Tablesaw - v1.0.5 - 2015-10-09
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
 
@@ -96,14 +96,6 @@ table.tablesaw {
   box-shadow: 0 0 .35em #4faeef !important;
 }
 
-.ie-lte8 .tablesaw-bar .btn:hover,
-.ie-lte8 .tablesaw-bar .btn:focus {
-  color: #208de3;
-  background-color: #fff;
-  border-color: #aaa;
-  outline: none;
-}
-
 .tablesaw-bar .btn-select select {
   background: none;
   border: none;
@@ -138,10 +130,6 @@ table.tablesaw {
   min-width: 7.25em;
   text-align: left;
   text-indent: 0;
-}
-
-.ie-lte8 .tablesaw-bar .btn-select {
-  min-width: 6.1em;
 }
 
 .tablesaw-bar .btn.btn-small,
@@ -812,11 +800,11 @@ table.tablesaw thead td {
 }
 
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after {
-  content: "↑";
+  content: "\2191";
 }
 
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
-  content: "↓";
+  content: "\2193";
 }
 
 .tablesaw-sortable .not-applicable:after {

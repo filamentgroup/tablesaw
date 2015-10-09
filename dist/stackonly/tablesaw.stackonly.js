@@ -1,15 +1,7 @@
-/*! Tablesaw - v1.0.4 - 2015-02-19
+/*! Tablesaw - v1.0.5 - 2015-10-09
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
 ;(function( $ ) {
-	var div = document.createElement('div'),
-		all = div.getElementsByTagName('i'),
-		$doc = $( document.documentElement );
-
-	div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
-	if( all[ 0 ] ) {
-		$doc.addClass( 'ie-lte8' );
-	}
 
 	// Cut the mustard
 	if( !( 'querySelector' in document ) ||
@@ -17,7 +9,7 @@
 			window.operamini ) {
 		return;
 	} else {
-		$doc.addClass( 'tablesaw-enhanced' );
+		$( document.documentElement ).addClass( 'tablesaw-enhanced' );
 
 		// DOM-ready auto-init of plugins.
 		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
@@ -127,7 +119,7 @@ if( !Tablesaw.config ) {
 	Table.prototype.createToolbar = function() {
 		// Insert the toolbar
 		// TODO move this into a separate component
-		var $toolbar = this.$table.prev( '.' + classes.toolbar );
+		var $toolbar = this.$table.prev().filter( '.' + classes.toolbar );
 		if( !$toolbar.length ) {
 			$toolbar = $( '<div>' )
 				.addClass( classes.toolbar )
@@ -142,7 +134,7 @@ if( !Tablesaw.config ) {
 
 	Table.prototype.destroy = function() {
 		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
-		this.$table.prev( '.' + classes.toolbar ).each(function() {
+		this.$table.prev().filter( '.' + classes.toolbar ).each(function() {
 			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
 		});
 
