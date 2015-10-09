@@ -40,9 +40,12 @@ module.exports = function(grunt) {
 				banner: '<%= banner %>',
 				stripBanners: true
 			},
+			jsautoinit: {
+				src: ['src/tables-init.js'],
+				dest: 'dist/<%= pkg.name %>-init.js'
+			},
 			jsall: {
 				src: [
-					'src/tables-init.js',
 					'src/tables.js',
 					'src/tables.stack.js',
 					'src/tables.btnmarkup.js',
@@ -56,8 +59,6 @@ module.exports = function(grunt) {
 			},
 			jsstack: {
 				src: [
-					'src/tables-init.js',
-					'src/tablesaw.js',
 					'src/tables.js',
 					'src/tables.stack.js'
 				],
@@ -143,7 +144,7 @@ module.exports = function(grunt) {
 				tasks: ['jshint:gruntfile']
 			},
 			src: {
-				files: ['<%= concat.cssall.src %>', '<%= concat.jsall.src %>'],
+				files: ['<%= concat.cssall.src %>', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>'],
 				tasks: ['src']
 			},
 			test: {
@@ -214,7 +215,7 @@ module.exports = function(grunt) {
 
 	// Default task.
 	grunt.registerTask('travis', ['jshint', 'qunit']);
-	grunt.registerTask('concat-pre', ['concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
+	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);

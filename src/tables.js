@@ -15,11 +15,18 @@ if( typeof Tablesaw === "undefined" ) {
 			columnBtnText: 'Columns',
 			columnsDialogError: 'No eligible columns.',
 			sort: 'Sort'
-		}
+		},
+		// cut the mustard
+		mustard: 'querySelector' in document &&
+			( !window.blackberry || window.WebKitPoint ) &&
+			!window.operamini
 	};
 }
 if( !Tablesaw.config ) {
 	Tablesaw.config = {};
+}
+if( Tablesaw.mustard ) {
+	jQuery( document.documentElement ).addClass( 'tablesaw-enhanced' );
 }
 
 ;(function( $ ) {
@@ -146,7 +153,10 @@ if( !Tablesaw.config ) {
 	};
 
 	$( document ).on( "enhance.tablesaw", function( e ) {
-		$( e.target ).find( initSelector )[ pluginName ]();
+		// Cut the mustard
+		if( Tablesaw.mustard ) {
+			$( e.target ).find( initSelector )[ pluginName ]();
+		}
 	});
 
 }( jQuery ));

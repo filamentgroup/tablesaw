@@ -7,7 +7,6 @@
 
 ;(function( $ ) {
 	var pluginName = "tablesawbtn",
-		initSelector = ".btn",
 		methods = {
 			_create: function(){
 				return $( this ).each(function() {
@@ -82,9 +81,5 @@
 
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
-
-	$( document ).on( "enhance", function( e ) {
-		$( initSelector, e.target )[ pluginName ]();
-	});
 
 }( jQuery ));
