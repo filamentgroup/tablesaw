@@ -1,24 +1,6 @@
-/*! Tablesaw - v1.0.5 - 2015-10-09
+/*! Tablesaw - v2.0.0 - 2015-10-09
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
-;(function( $ ) {
-
-	// Cut the mustard
-	if( !( 'querySelector' in document ) ||
-			( window.blackberry && !window.WebKitPoint ) ||
-			window.operamini ) {
-		return;
-	} else {
-		$( document.documentElement ).addClass( 'tablesaw-enhanced' );
-
-		// DOM-ready auto-init of plugins.
-		// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
-		$( function(){
-			$( document ).trigger( "enhance.tablesaw" );
-		});
-	}
-
-})( jQuery );
 /*
 * tablesaw: A set of plugins for responsive tables
 * Stack and Column Toggle tables
@@ -34,11 +16,18 @@ if( typeof Tablesaw === "undefined" ) {
 			columnBtnText: 'Columns',
 			columnsDialogError: 'No eligible columns.',
 			sort: 'Sort'
-		}
+		},
+		// cut the mustard
+		mustard: 'querySelector' in document &&
+			( !window.blackberry || window.WebKitPoint ) &&
+			!window.operamini
 	};
 }
 if( !Tablesaw.config ) {
 	Tablesaw.config = {};
+}
+if( Tablesaw.mustard ) {
+	jQuery( document.documentElement ).addClass( 'tablesaw-enhanced' );
 }
 
 ;(function( $ ) {
@@ -102,7 +91,7 @@ if( !Tablesaw.config ) {
 				}
 
 				// Store "cells" data on header as a reference to all cells in the same column as this TH
-				this.cells = self.$table.find("tr").not( $( thrs ).eq( 0 ) ).not( this ).children( sel );
+				this.cells = self.$table.find("tr").not( thrs[0] ).not( this ).children( sel );
 				coltally++;
 			});
 		});
@@ -165,7 +154,10 @@ if( !Tablesaw.config ) {
 	};
 
 	$( document ).on( "enhance.tablesaw", function( e ) {
-		$( e.target ).find( initSelector )[ pluginName ]();
+		// Cut the mustard
+		if( Tablesaw.mustard ) {
+			$( e.target ).find( initSelector )[ pluginName ]();
+		}
 	});
 
 }( jQuery ));
@@ -269,7 +261,6 @@ if( !Tablesaw.config ) {
 }( this, jQuery ));
 ;(function( $ ) {
 	var pluginName = "tablesawbtn",
-		initSelector = ".btn",
 		methods = {
 			_create: function(){
 				return $( this ).each(function() {
@@ -344,10 +335,6 @@ if( !Tablesaw.config ) {
 
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
-
-	$( document ).on( "enhance", function( e ) {
-		$( initSelector, e.target )[ pluginName ]();
-	});
 
 }( jQuery ));
 ;(function( win, $, undefined ){
