@@ -15,6 +15,7 @@ header( "Content-Type:text/html; charset=windows-1250" );
 	<!--[if lt IE 9]><script src="../dist/dependencies/respond.js"></script><![endif]-->
 	<script src="../../dist/dependencies/jquery.js"></script>
 	<script src="../../dist/tablesaw.js"></script>
+	<script src="../../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
 </head>
 <body>
