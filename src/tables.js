@@ -90,7 +90,7 @@ if( Tablesaw.mustard ) {
 				}
 
 				// Store "cells" data on header as a reference to all cells in the same column as this TH
-				this.cells = self.$table.find("tr").not( thrs[0] ).not( this ).children( sel );
+				this.cells = self.$table.find("tr").not( thrs[0] ).not( this ).children().filter( sel );
 				coltally++;
 			});
 		});
