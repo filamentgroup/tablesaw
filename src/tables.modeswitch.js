@@ -22,7 +22,7 @@
 		init: function( table ) {
 			var $table = $( table ),
 				ignoreMode = $table.attr( S.attributes.excludeMode ),
-				$toolbar = $table.prev( '.tablesaw-bar' ),
+				$toolbar = $table.prev().filter( '.tablesaw-bar' ),
 				modeVal = '',
 				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
 					var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],

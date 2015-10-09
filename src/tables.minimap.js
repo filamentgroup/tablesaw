@@ -25,7 +25,7 @@
 			$dotNav.append( '<li><i></i></li>' );
 		});
 
-		$btns.appendTo( $table.prev( '.tablesaw-bar' ) );
+		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
 
 		function showMinimap( $table ) {
 			var mq = $table.attr( MM.attr.init );
@@ -60,7 +60,7 @@
 			.bind( "tablesawdestroy.minimap", function(){
 				var $t = $( this );
 
-				$t.prev( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
+				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
 				$t.unbind( ".minimap" );

@@ -84,7 +84,7 @@
 		});
 
 		$menuButton.appendTo( $btnContain );
-		$btnContain.appendTo( this.$table.prev( '.' + this.classes.toolbar ) );
+		$btnContain.appendTo( this.$table.prev().filter( '.' + this.classes.toolbar ) );
 
 		var closeTimeout;
 		function openPopup() {

@@ -135,7 +135,7 @@
 							return html.join('');
 						});
 
-						var $toolbar = el.prev( '.tablesaw-bar' ),
+						var $toolbar = el.prev().filter( '.tablesaw-bar' ),
 							$firstChild = $toolbar.children().eq( 0 );
 
 						if( $firstChild.length ) {
