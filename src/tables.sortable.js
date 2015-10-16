@@ -22,7 +22,8 @@
 		initSelector = "table[data-" + pluginName + "]",
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		attrs = {
-			defaultCol: "data-tablesaw-sortable-default-col"
+			defaultCol: "data-tablesaw-sortable-default-col",
+			numericCol: "data-tablesaw-sortable-numeric"
 		},
 		classes = {
 			head: pluginName + "-head",
@@ -114,18 +115,24 @@
 
 							html.push( '<span class="btn btn-small">&#160;<select>' );
 							heads.each(function( j ) {
-								var $t = $( this ),
-									isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" ),
-									isDescending = $t.hasClass( classes.descend ),
-									isNumeric = false;
+								var $t = $( this );
+								var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
+								var isDescending = $t.hasClass( classes.descend );
 
-								// Check only the first three rows to see if the column is numbers.
-								$( this.cells ).slice( 0, 3 ).each(function() {
+								var hasNumericAttribute = $t.is( '[data-sortable-numeric]' );
+								var numericCount = 0;
+								// Check only the first four rows to see if the column is numbers.
+								var numericCountMax = 5;
+
+								$( this.cells ).slice( 0, numericCountMax ).each(function() {
 									if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
-										isNumeric = true;
-										return false;
+										numericCount++;
 									}
 								});
+								var isNumeric = numericCount === numericCountMax;
+								if( !hasNumericAttribute ) {
+									$t.attr( "data-sortable-numeric", isNumeric ? "" : "false" );
+								}
 
 								html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
 								html.push( '<option' + ( isDefaultCol && isDescending ? ' selected' : '' ) + ' value="' + j + '_desc">' + $t.text() + ' ' + ( isNumeric ? '&#x2193;' : '(Z-A)' ) + '</option>' );
@@ -188,7 +195,7 @@
 							regex = /[^\-\+\d\.]/g;
 						if( ascending ){
 							fn = function( a , b ){
-								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+								if( forceNumeric ) {
 									return parseFloat( a.cell.replace( regex, '' ) ) - parseFloat( b.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
@@ -196,7 +203,7 @@
 							};
 						} else {
 							fn = function( a , b ){
-								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+								if( forceNumeric ) {
 									return parseFloat( b.cell.replace( regex, '' ) ) - parseFloat( a.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
@@ -217,7 +224,7 @@
 				cells = getCells( rows );
 				var customFn = $( col ).data( 'tablesaw-sort' );
 				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
-					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
+					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) && !$( col ).is( '[data-sortable-numeric="false"]' ) );
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
