@@ -52,7 +52,7 @@
 		$( this.headers ).not( "td" ).each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
-				$cells = $this.add( this.cells );
+				$cells = self.$getCells( this );
 
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
@@ -60,7 +60,7 @@
 				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
 					.appendTo( $menu )
 					.children( 0 )
-					.data( "cells", $cells );
+					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
 			}
@@ -76,7 +76,7 @@
 		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
 			var checked = e.target.checked;
 
-			$( e.target ).data( "cells" )
+			self.$getCellsFromCheckbox( e.target )
 				.toggleClass( "tablesaw-cell-hidden", !checked )
 				.toggleClass( "tablesaw-cell-visible", checked );
 
@@ -131,11 +131,19 @@
 		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.refreshToggle = function() {
-		this.$menu.find( "input" ).each( function() {
-			var $this = $( this );
+	ColumnToggle.prototype.$getCells = function( th ) {
+		return $( th ).add( th.cells );
+	};
 
-			this.checked = $this.data( "cells" ).eq( 0 ).css( "display" ) === "table-cell";
+	ColumnToggle.prototype.$getCellsFromCheckbox = function( checkbox ) {
+		var th = $( checkbox ).data( "tablesaw-header" );
+		return this.$getCells( th );
+	};
+
+	ColumnToggle.prototype.refreshToggle = function() {
+		var self = this;
+		this.$menu.find( "input" ).each( function() {
+			this.checked = self.$getCellsFromCheckbox( this ).eq( 0 ).css( "display" ) === "table-cell";
 		});
 	};
 
