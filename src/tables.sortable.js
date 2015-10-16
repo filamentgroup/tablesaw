@@ -174,8 +174,10 @@
 				var getCells = function( rows ){
 						var cells = [];
 						$.each( rows , function( i , r ){
+							var element = $( r ).children().get( colNum );
 							cells.push({
-								cell: getSortValue( $( r ).children().get( colNum ) ),
+								element: element,
+								cell: getSortValue( element ),
 								rowNum: i
 							});
 						});

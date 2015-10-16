@@ -19,6 +19,9 @@
 	$(function() {
 		$( "#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
 			return function( a, b ) {
+				// a.cell
+				// a.element
+				// a.rowNum
 				var yearA = a.cell.split( "/" ),
 					yearB = b.cell.split( "/" );
 
