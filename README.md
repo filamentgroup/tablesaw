@@ -183,6 +183,7 @@ As shown above, we provide a Stack-mode-only package of TableSaw. It’s a bareb
 <link rel="stylesheet" href="tablesaw.css">
 <!--[if lt IE 9]><script src="dependencies/respond.js"></script><!--<![endif]-->
 <script src="tablesaw.js"></script>
+<script src="tablesaw-init.js"></script>
 ```
 
 And then:
@@ -222,6 +223,7 @@ If you want the other modes, it’ll take a little bit more configuration.
 <!--[if lt IE 9]><script src="dependencies/respond.js"></script><!--<![endif]-->
 <script src="dependencies/jquery.js"></script>
 <script src="tablesaw.js"></script>
+<script src="tablesaw-init.js"></script>
 ```
 
 Check out any of the demos above for complete working examples.
