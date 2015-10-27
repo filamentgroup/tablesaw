@@ -1,4 +1,4 @@
-/*! Tablesaw - v2.0.1 - 2015-10-09
+/*! Tablesaw - v2.0.2 - 2015-10-27
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2015 Filament Group; Licensed MIT */
 /*
@@ -384,7 +384,7 @@ if( Tablesaw.mustard ) {
 		$( this.headers ).not( "td" ).each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
-				$cells = $this.add( this.cells );
+				$cells = self.$getCells( this );
 
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
@@ -392,7 +392,7 @@ if( Tablesaw.mustard ) {
 				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
 					.appendTo( $menu )
 					.children( 0 )
-					.data( "cells", $cells );
+					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
 			}
@@ -408,7 +408,7 @@ if( Tablesaw.mustard ) {
 		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
 			var checked = e.target.checked;
 
-			$( e.target ).data( "cells" )
+			self.$getCellsFromCheckbox( e.target )
 				.toggleClass( "tablesaw-cell-hidden", !checked )
 				.toggleClass( "tablesaw-cell-visible", checked );
 
@@ -463,11 +463,19 @@ if( Tablesaw.mustard ) {
 		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.refreshToggle = function() {
-		this.$menu.find( "input" ).each( function() {
-			var $this = $( this );
+	ColumnToggle.prototype.$getCells = function( th ) {
+		return $( th ).add( th.cells );
+	};
 
-			this.checked = $this.data( "cells" ).eq( 0 ).css( "display" ) === "table-cell";
+	ColumnToggle.prototype.$getCellsFromCheckbox = function( checkbox ) {
+		var th = $( checkbox ).data( "tablesaw-header" );
+		return this.$getCells( th );
+	};
+
+	ColumnToggle.prototype.refreshToggle = function() {
+		var self = this;
+		this.$menu.find( "input" ).each( function() {
+			this.checked = self.$getCellsFromCheckbox( this ).eq( 0 ).css( "display" ) === "table-cell";
 		});
 	};
 
@@ -843,7 +851,8 @@ if( Tablesaw.mustard ) {
 		initSelector = "table[data-" + pluginName + "]",
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		attrs = {
-			defaultCol: "data-tablesaw-sortable-default-col"
+			defaultCol: "data-tablesaw-sortable-default-col",
+			numericCol: "data-tablesaw-sortable-numeric"
 		},
 		classes = {
 			head: pluginName + "-head",
@@ -935,18 +944,24 @@ if( Tablesaw.mustard ) {
 
 							html.push( '<span class="btn btn-small">&#160;<select>' );
 							heads.each(function( j ) {
-								var $t = $( this ),
-									isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" ),
-									isDescending = $t.hasClass( classes.descend ),
-									isNumeric = false;
+								var $t = $( this );
+								var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
+								var isDescending = $t.hasClass( classes.descend );
 
-								// Check only the first three rows to see if the column is numbers.
-								$( this.cells ).slice( 0, 3 ).each(function() {
+								var hasNumericAttribute = $t.is( '[data-sortable-numeric]' );
+								var numericCount = 0;
+								// Check only the first four rows to see if the column is numbers.
+								var numericCountMax = 5;
+
+								$( this.cells ).slice( 0, numericCountMax ).each(function() {
 									if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
-										isNumeric = true;
-										return false;
+										numericCount++;
 									}
 								});
+								var isNumeric = numericCount === numericCountMax;
+								if( !hasNumericAttribute ) {
+									$t.attr( "data-sortable-numeric", isNumeric ? "" : "false" );
+								}
 
 								html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
 								html.push( '<option' + ( isDefaultCol && isDescending ? ' selected' : '' ) + ' value="' + j + '_desc">' + $t.text() + ' ' + ( isNumeric ? '&#x2193;' : '(Z-A)' ) + '</option>' );
@@ -995,8 +1010,10 @@ if( Tablesaw.mustard ) {
 				var getCells = function( rows ){
 						var cells = [];
 						$.each( rows , function( i , r ){
+							var element = $( r ).children().get( colNum );
 							cells.push({
-								cell: getSortValue( $( r ).children().get( colNum ) ),
+								element: element,
+								cell: getSortValue( element ),
 								rowNum: i
 							});
 						});
@@ -1007,7 +1024,7 @@ if( Tablesaw.mustard ) {
 							regex = /[^\-\+\d\.]/g;
 						if( ascending ){
 							fn = function( a , b ){
-								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+								if( forceNumeric ) {
 									return parseFloat( a.cell.replace( regex, '' ) ) - parseFloat( b.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
@@ -1015,7 +1032,7 @@ if( Tablesaw.mustard ) {
 							};
 						} else {
 							fn = function( a , b ){
-								if( forceNumeric || !isNaN( parseFloat( a.cell ) ) ) {
+								if( forceNumeric ) {
 									return parseFloat( b.cell.replace( regex, '' ) ) - parseFloat( a.cell.replace( regex, '' ) );
 								} else {
 									return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
@@ -1036,7 +1053,7 @@ if( Tablesaw.mustard ) {
 				cells = getCells( rows );
 				var customFn = $( col ).data( 'tablesaw-sort' );
 				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
-					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) );
+					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) && !$( col ).is( '[data-sortable-numeric="false"]' ) );
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
