@@ -8,3 +8,4 @@ script: grunt -v
 branches:
   except:
     - gh-pages
+sudo: false
