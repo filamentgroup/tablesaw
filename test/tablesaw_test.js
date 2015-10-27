@@ -25,7 +25,7 @@
 			'<thead>',
 				'<tr>',
 					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
-					'<th data-tablesaw-sortable-col>Header</th>',
+					'<th data-tablesaw-sortable-col data-sortable-numeric>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
