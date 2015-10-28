@@ -1,6 +1,6 @@
 :root {
-	var-thead-background: #e2dfdc;
-	var-thead-background-to-gradient: #fff;
+	--thead-background: #e2dfdc;
+	--thead-background-to-gradient: #fff;
 }
 
 table.tablesaw tbody th {
@@ -30,8 +30,8 @@ table.tablesaw thead td {
 
 .tablesaw thead {
 	border: 1px solid #e5e5e4;
-	background: var(thead-background);
-	background-image: linear-gradient(to bottom, var(thead-background-to-gradient), var(thead-background));
+	background: var(--thead-background);
+	background-image: linear-gradient(to bottom, var(--thead-background-to-gradient), var(--thead-background));
 }
 .tablesaw thead th {
 	font-weight: 100;
