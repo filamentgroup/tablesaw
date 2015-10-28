@@ -1,6 +1,6 @@
-/*! Tablesaw - v2.0.2 - 2015-10-27
+/*! Tablesaw - v2.0.2 - 2015-10-28
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2015 Filament Group; Licensed MIT */
+* Copyright (c) 2015 Filament Group; Licensed  */
 /*
 * tablesaw: A set of plugins for responsive tables
 * Stack and Column Toggle tables
