@@ -7,12 +7,12 @@
 */
 
 :root {
-	var-button-text: #1c95d4;
-	var-button-selected-background: #29abe2;
-	var-button-checkbox-selected-background: #34a3de;
-	var-button-selected-shadow: rgba(0,75,115,.45);
-	var-button-interaction-text: #208de3;
-	var-button-interaction-shadow: #4faeef;
+	--button-text: #1c95d4;
+	--button-selected-background: #29abe2;
+	--button-checkbox-selected-background: #34a3de;
+	--button-selected-shadow: rgba(0,75,115,.45);
+	--button-interaction-text: #208de3;
+	--button-interaction-shadow: #4faeef;
 }
 
 .tablesaw-enhanced .tablesaw-bar .btn {
@@ -47,7 +47,7 @@
 	border-radius: .25em;
 }
 .tablesaw-enhanced .tablesaw-bar a.btn {
-	color: var(button-text);
+	color: var(--button-text);
 }
 .tablesaw-enhanced .tablesaw-bar .btn:hover {
 	text-decoration: none;
@@ -60,12 +60,12 @@
 }
 .tablesaw-enhanced .tablesaw-bar .btn:hover,
 .tablesaw-enhanced .tablesaw-bar .btn:focus {
-	color: var(button-interaction-text);
+	color: var(--button-interaction-text);
 	background-color: #fff;
 	outline: none;
 }
 .tablesaw-bar .btn:focus {
-	box-shadow: 0 0 .35em var(button-interaction-shadow) !important;
+	box-shadow: 0 0 .35em var(--button-interaction-shadow) !important;
 }
 
 .tablesaw-bar .btn-select select {
