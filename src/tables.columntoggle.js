@@ -184,6 +184,12 @@
 
 	} );
 
+  $( document ).on( "tablesawrefresh", function( e, Tablesaw ){
+    if( Tablesaw.mode === 'columntoggle' ){
+      $( Tablesaw.table ).data( 'tablesaw-coltoggle' ).refreshPriority();
+    }
+  } );
+
 	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
 		if( Tablesaw.mode === 'columntoggle' ){
 			$( Tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();

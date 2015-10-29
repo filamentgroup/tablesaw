@@ -101,7 +101,7 @@ if( Tablesaw.mustard ) {
 	Table.prototype.refresh = function() {
 		this._initCells();
 
-		this.$table.trigger( events.refresh );
+		this.$table.trigger( events.refresh, this );
 	};
 
 	Table.prototype.createToolbar = function() {
