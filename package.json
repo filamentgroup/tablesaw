@@ -15,7 +15,7 @@
     "url": "git://github.com/filamentgroup/tablesaw.git"
   },
   "bugs": "https://github.com/filamentgroup/tablesaw/issues",
-  "license" : "MIT",
+  "license": "MIT",
   "engines": {
     "node": ">= 0.8.0"
   },
@@ -31,7 +31,7 @@
     "qunitjs": "^1.17.1",
     "grunt": "~0.4.2",
     "grunt-bytesize": "~0.1.1",
-    "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-clean": "~0.7.0",
     "grunt-contrib-compress": "~0.14.0",
     "grunt-contrib-concat": "~0.5.1",
     "grunt-contrib-copy": "~0.8.2",
