@@ -1022,7 +1022,8 @@ if( Tablesaw.mustard ) {
 						return cells;
 					},
 					getSortFxn = function( ascending, col, sortCols){
-						var _sortFxn = function (valueA, valueB, forceNumeric) {
+						var _sortFxn = function (valueA, valueB, $col) {
+							var forceNumeric = $col.is( '[data-sortable-numeric]' ) && !$col.is( '[data-sortable-numeric="false"]' );
 							if( forceNumeric ){
 								var regex = /[^\-\+\d\.]/g;
 								valueA = parseFloat(valueA.replace(regex, ""));
@@ -1036,6 +1037,7 @@ if( Tablesaw.mustard ) {
 							} else {
 								valueA = valueA.toLowerCase();
 			                  	valueB = valueB.toLowerCase();
+			                  	console.log(valueA);
 				                if( ascending ) {
 				                    return valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
 				                } else {
