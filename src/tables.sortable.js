@@ -208,7 +208,6 @@
 							} else {
 								valueA = valueA.toLowerCase();
 			                  	valueB = valueB.toLowerCase();
-			                  	console.log(valueA);
 				                if( ascending ) {
 				                    return valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
 				                } else {
