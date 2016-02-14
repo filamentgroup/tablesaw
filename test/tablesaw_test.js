@@ -26,7 +26,7 @@
 				'<tr>',
 					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
 					'<th data-tablesaw-sortable-col data-tablesaw-sortable-numeric>Header</th>',
-					'<th>Header</th>',
+					'<th data-tablesaw-sortable-col data-tablesaw-multicol-sort=[2,1,0]>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -49,7 +49,7 @@
 				'<tr>',
 					'<td>Body Row 1</td>',
 					'<td>1</td>',
-					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>A</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
@@ -231,6 +231,19 @@
 
 	});
 
+	// QUnit.test( 'Multiple Column sort is working', function(assert) {
+	// 	var maximumRow1Text = "body row 4",
+	// 		previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
+	// 		$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 2 );
+	//
+	// 	$sortButton.trigger("click");
+	// 	notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending by 3rd, than by 2nd and than by 1st column' );
+	// 	equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).html(), maximumRow1Text, maximumRow1Text+' is in the first row sorted descencing by 3rd, than by 2nd and than by 1st column' );
+	//
+	// 	$sortButton.trigger("click");
+	// 	equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).html(), maximumRow1Text, maximumRow1Text+' is in the third row sorted ascending by 3rd, than by 2nd and than by 1st column' );
+	// });
+
 	QUnit.module( 'tablesaw Sortable Switcher', {
 		beforeEach: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable data-tablesaw-sortable-switch' )
 	});
@@ -298,7 +311,7 @@
 			$fixture = $( '#qunit-fixture' );
 			$fixture.html( tableHtml.replace( /\%s/, 'data-tablesaw-mode="stack" data-tablesaw-hide-empty' ) );
 			$fixture.find( 'table tbody tr' ).eq( 3 ).find( 'td' ).eq( 4 ).html('');
-			$( document ).trigger( 'enhance.tablesaw' );		
+			$( document ).trigger( 'enhance.tablesaw' );
 		}
 	});
 
