@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>TableSaw Column Toggle Table</title>
+	<title>TableSaw Multi Column Sortable Table</title>
 
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
@@ -34,9 +34,9 @@
 	<div class="nav-container">
 		<div class="docs-globalnav">
 			<nav class="docs-nav">
-			<a href="kitchensink.html" class="current">Kitchen Sink</a>
+			<a href="kitchensink.html">Kitchen Sink</a>
 			<a href="modeswitch.html">Mode Switch</a>
-			<a href="sort.html">Sortable</a>
+			<a href="sort.html" class="current">Sortable</a>
 			<a href="sort-multicol.html" class="current">Sortable Multi Column</a>
 			<a href="stack.html">Stack</a>
 			<a href="stackonly.html">Stack Only</a>
@@ -47,16 +47,17 @@
 		</div>
 	</div>
 	<div class="docs-main">
-		<h2>Kitchen Sink</h2>
-		<p>This demonstration table contains all of the bells and whistles available in tablesaw: Swipe Mode, ModeSwitch, Minimap, Sortable, and SortableSwitch.</p>
-		<table class="tablesaw" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch data-tablesaw-minimap data-tablesaw-mode-switch>
+		<h2>Multiple Column Sortable Table</h2>
+		<h3 class="docs">Default appearance (with optional sortable-switch)</h3>
+
+		<table class="tablesaw" data-tablesaw-sortable data-tablesaw-sortable-switch>
 			<thead>
 				<tr>
 					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>
 					<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="3">Rank</th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Year</th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Gross</th>
+					<th scope="col" data-multicol-sort=[2,1] data-tablesaw-sortable-col data-tablesaw-priority="2">Year (than by Rank)</th>
+					<th scope="col" data-multicol-sort=[3,2,1] data-tablesaw-sortable-col data-tablesaw-priority="1"><abbr title="Rotten Tomato Rating">Rating (than by Year, than by Rank)</abbr></th>
+					<th scope="col" data-multicol-sort=[4,2,1] data-tablesaw-sortable-col data-tablesaw-priority="4">Gross (than by Year, than by Rank)</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -77,22 +78,15 @@
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/The_Avengers_(2012_film)">The Avengers</a></td>
 					<td>3</td>
-					<td>2012</td>
-					<td>92%</td>
+					<td>2011</td>
+					<td>88%</td>
 					<td>$1.5B</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Harry_Potter_and_the_Deathly_Hallows_%E2%80%93_Part_2">Harry Potter and the Deathly Hallows—Part 2</a></td>
 					<td>4</td>
 					<td>2011</td>
-					<td>96%</td>
-					<td>$1.3B</td>
-				</tr>
-				<tr>
-					<td class="title"><a href="http://en.wikipedia.org/wiki/Frozen_(2013_film)">Frozen</a></td>
-					<td>5</td>
-					<td>2013</td>
-					<td>89%</td>
+					<td>88%</td>
 					<td>$1.2B</td>
 				</tr>
 				<tr>
@@ -100,6 +94,20 @@
 					<td>6</td>
 					<td>2013</td>
 					<td>78%</td>
+					<td>$1.2B</td>
+				</tr>
+				<tr>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Frozen_(2013_film)">Frozen</a></td>
+					<td>5</td>
+					<td>2013</td>
+					<td>88%</td>
+					<td>$1.2B</td>
+				</tr>
+				<tr>
+					<td class="title"><a href="https://en.wikipedia.org/wiki/A_Place_at_the_Table">A Place at the Table</a></td>
+					<td>11</td>
+					<td>2013</td>
+					<td>15%</td>
 					<td>$1.2B</td>
 				</tr>
 				<tr>
@@ -119,20 +127,19 @@
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Skyfall">Skyfall</a></td>
 					<td>9</td>
-					<td>2012</td>
+					<td>2011</td>
 					<td>92%</td>
 					<td>$1.1B</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Transformers:_Age_of_Extinction">Transformers: Age of Extinction</a></td>
 					<td>10</td>
-					<td>2014</td>
+					<td>2013</td>
 					<td>18%</td>
 					<td>$1.0B</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-
 </body>
 </html>

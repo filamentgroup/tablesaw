@@ -26,7 +26,7 @@
 				'<tr>',
 					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
 					'<th data-tablesaw-sortable-col data-sortable-numeric>Header</th>',
-					'<th>Header</th>',
+					'<th data-tablesaw-sortable-col data-multicol-sort=[2,1,0]>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -41,7 +41,7 @@
 				'<tr>',
 					'<td>Body Row 1</td>',
 					'<td>1</td>',
-					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>A</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
@@ -190,6 +190,7 @@
 		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
 	});
 
+
 	test( 'Sort works with floats', function() {
 		var previousText = "Body Row 1.2",
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 ),
@@ -213,6 +214,19 @@
 		$sortButton.click();
 		equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).text(), previousText, previousText + ' is in the third row (ascending)' );
 
+	});
+
+	test( 'Multiple Column sort is working', function() {
+		var maximumRow1Text = "body row 4",
+			previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
+		    $sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 2 );
+
+		$sortButton.click();
+		notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending by 3rd, than by 2nd and than by 1st column' );
+		equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).html(), maximumRow1Text, maximumRow1Text+' is in the first row sorted descencing by 3rd, than by 2nd and than by 1st column' );
+
+		$sortButton.click();
+		equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).html(), maximumRow1Text, maximumRow1Text+' is in the third row sorted ascending by 3rd, than by 2nd and than by 1st column' );
 	});
 
 	module( 'tablesaw Sortable Switcher', {
