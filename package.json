@@ -15,7 +15,7 @@
     "url": "git://github.com/filamentgroup/tablesaw.git"
   },
   "bugs": "https://github.com/filamentgroup/tablesaw/issues",
-  "license" : "MIT",
+  "license": "MIT",
   "engines": {
     "node": ">= 0.8.0"
   },
@@ -41,7 +41,7 @@
     "grunt-contrib-uglify": "^0.10.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-gh-pages": "~0.10.0",
-    "grunt-myth": "~1.0.1",
+    "grunt-myth": "~1.1.0",
     "matchdep": "~1.0.0"
   }
 }
