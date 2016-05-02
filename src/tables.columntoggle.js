@@ -86,6 +86,18 @@
 		$menuButton.appendTo( $btnContain );
 		$btnContain.appendTo( this.$table.prev().filter( '.' + this.classes.toolbar ) );
 
+
+		function closePopup( event ) {
+			// Click came from inside the popup, ignore.
+			if( event && $( event.target ).closest( "." + self.classes.popup ).length ) {
+				return;
+			}
+
+			$( document ).unbind( 'click.' + tableId );
+			$menuButton.removeClass( 'up' ).addClass( 'down' );
+			$btnContain.removeClass( 'visible' );
+		}
+
 		var closeTimeout;
 		function openPopup() {
 			$btnContain.addClass( 'visible' );
@@ -97,17 +109,6 @@
 			closeTimeout = window.setTimeout(function() {
 				$( document ).one( 'click.' + tableId, closePopup );
 			}, 15 );
-		}
-
-		function closePopup( event ) {
-			// Click came from inside the popup, ignore.
-			if( event && $( event.target ).closest( "." + self.classes.popup ).length ) {
-				return;
-			}
-
-			$( document ).unbind( 'click.' + tableId );
-			$menuButton.removeClass( 'up' ).addClass( 'down' );
-			$btnContain.removeClass( 'visible' );
 		}
 
 		$menuButton.on( "click.tablesaw", function( event ) {
