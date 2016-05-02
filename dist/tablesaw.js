@@ -1,6 +1,6 @@
-/*! Tablesaw - v2.0.2 - 2015-10-28
+/*! Tablesaw - v2.0.3 - 2016-05-02
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2015 Filament Group; Licensed  */
+* Copyright (c) 2016 Filament Group; Licensed MIT */
 /*
 * tablesaw: A set of plugins for responsive tables
 * Stack and Column Toggle tables
@@ -133,8 +133,6 @@ if( Tablesaw.mustard ) {
 
 		// other plugins
 		this.$table.trigger( events.destroy, [ this ] );
-
-		this.$table.removeAttr( 'data-tablesaw-mode' );
 
 		this.$table.removeData( pluginName );
 	};
@@ -418,6 +416,18 @@ if( Tablesaw.mustard ) {
 		$menuButton.appendTo( $btnContain );
 		$btnContain.appendTo( this.$table.prev().filter( '.' + this.classes.toolbar ) );
 
+
+		function closePopup( event ) {
+			// Click came from inside the popup, ignore.
+			if( event && $( event.target ).closest( "." + self.classes.popup ).length ) {
+				return;
+			}
+
+			$( document ).unbind( 'click.' + tableId );
+			$menuButton.removeClass( 'up' ).addClass( 'down' );
+			$btnContain.removeClass( 'visible' );
+		}
+
 		var closeTimeout;
 		function openPopup() {
 			$btnContain.addClass( 'visible' );
@@ -429,17 +439,6 @@ if( Tablesaw.mustard ) {
 			closeTimeout = window.setTimeout(function() {
 				$( document ).one( 'click.' + tableId, closePopup );
 			}, 15 );
-		}
-
-		function closePopup( event ) {
-			// Click came from inside the popup, ignore.
-			if( event && $( event.target ).closest( "." + self.classes.popup ).length ) {
-				return;
-			}
-
-			$( document ).unbind( 'click.' + tableId );
-			$menuButton.removeClass( 'up' ).addClass( 'down' );
-			$btnContain.removeClass( 'visible' );
 		}
 
 		$menuButton.on( "click.tablesaw", function( event ) {
@@ -541,13 +540,19 @@ if( Tablesaw.mustard ) {
 		return !!all.length;
 	}
 
+	var classes = {
+		// TODO duplicate class, also in tables.js
+		toolbar: "tablesaw-bar",
+		hideBtn: "disabled",
+		persistWidths: "tablesaw-fix-persist",
+		allColumnsVisible: 'tablesaw-all-cols-visible'
+	};
+
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
 			$prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
 			$nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
-			hideBtn = 'disabled',
-			persistWidths = 'tablesaw-fix-persist',
 			$headerCells = $table.find( "thead th" ),
 			$headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' ),
 			headerWidths = [],
@@ -597,7 +602,7 @@ if( Tablesaw.mustard ) {
 		}
 
 		function unmaintainWidths() {
-			$table.removeClass( persistWidths );
+			$table.removeClass( classes.persistWidths );
 			$( '#' + tableId + '-persist' ).remove();
 		}
 
@@ -622,7 +627,7 @@ if( Tablesaw.mustard ) {
 			});
 			newHash = hash.join( '_' );
 
-			$table.addClass( persistWidths );
+			$table.addClass( classes.persistWidths );
 
 			var $style = $( '#' + tableId + '-persist' );
 			// If style element not yet added OR if the widths have changed
@@ -798,8 +803,12 @@ if( Tablesaw.mustard ) {
 
 			})
 			.bind( "tablesawcolumns.swipetoggle", function(){
-				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
-				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
+				var canGoPrev = canAdvance( getPrev() );
+				var canGoNext = canAdvance( getNext() );
+				$prevBtn[ canGoPrev ? "removeClass" : "addClass" ]( classes.hideBtn );
+				$nextBtn[ canGoNext ? "removeClass" : "addClass" ]( classes.hideBtn );
+
+				$prevBtn.closest( "." + classes.toolbar )[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
 			})
 			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );

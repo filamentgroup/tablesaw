@@ -1,6 +1,6 @@
-/*! Tablesaw - v2.0.2 - 2015-10-28
+/*! Tablesaw - v2.0.3 - 2016-05-02
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2015 Filament Group; Licensed  */
+* Copyright (c) 2016 Filament Group; Licensed MIT */
 /*
 * tablesaw: A set of plugins for responsive tables
 * Stack and Column Toggle tables
@@ -133,8 +133,6 @@ if( Tablesaw.mustard ) {
 
 		// other plugins
 		this.$table.trigger( events.destroy, [ this ] );
-
-		this.$table.removeAttr( 'data-tablesaw-mode' );
 
 		this.$table.removeData( pluginName );
 	};
