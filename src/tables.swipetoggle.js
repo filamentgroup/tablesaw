@@ -23,13 +23,19 @@
 		return !!all.length;
 	}
 
+	var classes = {
+		// TODO duplicate class, also in tables.js
+		toolbar: "tablesaw-bar",
+		hideBtn: "disabled",
+		persistWidths: "tablesaw-fix-persist",
+		allColumnsVisible: 'tablesaw-all-cols-visible'
+	};
+
 	function createSwipeTable( $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" ),
 			$prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
 			$nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
-			hideBtn = 'disabled',
-			persistWidths = 'tablesaw-fix-persist',
 			$headerCells = $table.find( "thead th" ),
 			$headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' ),
 			headerWidths = [],
@@ -79,7 +85,7 @@
 		}
 
 		function unmaintainWidths() {
-			$table.removeClass( persistWidths );
+			$table.removeClass( classes.persistWidths );
 			$( '#' + tableId + '-persist' ).remove();
 		}
 
@@ -104,7 +110,7 @@
 			});
 			newHash = hash.join( '_' );
 
-			$table.addClass( persistWidths );
+			$table.addClass( classes.persistWidths );
 
 			var $style = $( '#' + tableId + '-persist' );
 			// If style element not yet added OR if the widths have changed
@@ -280,8 +286,12 @@
 
 			})
 			.bind( "tablesawcolumns.swipetoggle", function(){
-				$prevBtn[ canAdvance( getPrev() ) ? "removeClass" : "addClass" ]( hideBtn );
-				$nextBtn[ canAdvance( getNext() ) ? "removeClass" : "addClass" ]( hideBtn );
+				var canGoPrev = canAdvance( getPrev() );
+				var canGoNext = canAdvance( getNext() );
+				$prevBtn[ canGoPrev ? "removeClass" : "addClass" ]( classes.hideBtn );
+				$nextBtn[ canGoNext ? "removeClass" : "addClass" ]( classes.hideBtn );
+
+				$prevBtn.closest( "." + classes.toolbar )[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
 			})
 			.bind( "tablesawnext.swipetoggle", function(){
 				advance( true );
