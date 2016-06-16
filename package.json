@@ -42,6 +42,6 @@
     "grunt-gh-pages": "~1.1.0",
     "grunt-myth": "~1.1.0",
     "matchdep": "~1.0.1",
-    "qunitjs": "^1.23.1"
+    "qunitjs": "^2.0.0"
   }
 }
