@@ -171,8 +171,8 @@
 				return;
 			}
 
-			var extraPaddingPixels = 20,
-				containerWidth = $table.parent().width(),
+			//var extraPaddingPixels = 20,
+			var	containerWidth = $table.parent().width(),
 				persist = [],
 				sum = 0,
 				sums = [],

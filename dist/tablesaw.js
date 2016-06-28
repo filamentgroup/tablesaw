@@ -688,8 +688,8 @@ if( Tablesaw.mustard ) {
 				return;
 			}
 
-			var extraPaddingPixels = 20,
-				containerWidth = $table.parent().width(),
+			//var extraPaddingPixels = 20,
+			var	containerWidth = $table.parent().width(),
 				persist = [],
 				sum = 0,
 				sums = [],
@@ -701,7 +701,7 @@ if( Tablesaw.mustard ) {
 
 				persist.push( isPersist );
 
-				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+				sum += headerWidths[ index ];// + ( isPersist ? 0 : extraPaddingPixels );
 				sums.push( sum );
 
 				// is persistent or is hidden
