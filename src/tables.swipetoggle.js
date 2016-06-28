@@ -184,7 +184,7 @@
 
 				persist.push( isPersist );
 
-				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+				sum += headerWidths[ index ];// + ( isPersist ? 0 : extraPaddingPixels );
 				sums.push( sum );
 
 				// is persistent or is hidden
