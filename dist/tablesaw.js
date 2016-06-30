@@ -1,4 +1,4 @@
-/*! Tablesaw - v2.0.3 - 2016-06-28
+/*! Tablesaw - v2.0.3 - 2016-06-30
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 /*
@@ -688,7 +688,6 @@ if( Tablesaw.mustard ) {
 				return;
 			}
 
-			//var extraPaddingPixels = 20,
 			var	containerWidth = $table.parent().width(),
 				persist = [],
 				sum = 0,
@@ -701,7 +700,7 @@ if( Tablesaw.mustard ) {
 
 				persist.push( isPersist );
 
-				sum += headerWidths[ index ];// + ( isPersist ? 0 : extraPaddingPixels );
+				sum += headerWidths[ index ];
 				sums.push( sum );
 
 				// is persistent or is hidden
