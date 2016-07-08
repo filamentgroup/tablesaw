@@ -11,5 +11,5 @@
   "boss": true,
   "eqnull": true,
   "browser": true,
-  "predef": ["jQuery", "Tablesaw", "console"]
+  "predef": ["jQuery", "Tablesaw", "console", "win"]
 }

@@ -47,7 +47,7 @@
 		// get headers in reverse order so that top-level headers are appended last
 		var reverseHeaders = $( this.allHeaders );
 		var hideempty = this.hideempty;
-		
+
 		// create the hide/show toggles
 		reverseHeaders.each(function(){
 			var $t = $( this ),
@@ -101,4 +101,4 @@
 
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));

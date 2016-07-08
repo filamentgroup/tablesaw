@@ -46,6 +46,8 @@ module.exports = function(grunt) {
 			},
 			jsall: {
 				src: [
+					'src/tables.intro.js',
+					'src/tables-init.js',
 					'src/tables.js',
 					'src/tables.stack.js',
 					'src/tables.btnmarkup.js',
@@ -53,14 +55,18 @@ module.exports = function(grunt) {
 					'src/tables.swipetoggle.js',
 					'src/tables.sortable.js',
 					'src/tables.minimap.js',
-					'src/tables.modeswitch.js'
+					'src/tables.modeswitch.js',
+					'src/tables.outro.js'
 				],
 				dest: 'dist/<%= pkg.name %>.js'
 			},
 			jsstack: {
 				src: [
+					'src/tables.intro.js',
+					'src/tables-init.js',
 					'src/tables.js',
-					'src/tables.stack.js'
+					'src/tables.stack.js',
+					'src/tables.outro.js'
 				],
 				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.js'
 			},
@@ -127,7 +133,8 @@ module.exports = function(grunt) {
 			},
 			src: {
 				options: {
-					jshintrc: 'src/.jshintrc'
+					jshintrc: 'src/.jshintrc',
+					ignores: ['src/tables.intro.js', 'src/tables.outro.js']
 				},
 				src: ['src/**/*.js']
 			},

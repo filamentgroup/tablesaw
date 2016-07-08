@@ -80,4 +80,4 @@
 		}
 	});
 
-})( this, jQuery );
+})( win, jQuery );
