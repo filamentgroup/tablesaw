@@ -4,14 +4,14 @@
 		http://api.qunitjs.com/
 
 		Test methods:
-			module(name, {[setup][ ,teardown]})
-			test(name, callback)
+			QUnit.module(name, {[setup][ ,teardown]})
+			QUnit.test(name, callback)
 			expect(numberOfAssertions)
 			stop(increment)
 			start(decrement)
 		Test assertions:
-			ok(value, [message])
-			equal(actual, expected, [message])
+			assert.ok(value, [message])
+			assert.equal(actual, expected, [message])
 			notEqual(actual, expected, [message])
 			deepEqual(actual, expected, [message])
 			notDeepEqual(actual, expected, [message])
@@ -86,48 +86,48 @@
 			};
 		};
 
-	module( 'Global' );
-	test( 'Initialization', function() {
-		ok( $( 'html' ).hasClass( 'tablesaw-enhanced' ), 'Has initialization class.' );
+	QUnit.module( 'Global' );
+	QUnit.test( 'Initialization', function( assert ) {
+		assert.ok( $( 'html' ).hasClass( 'tablesaw-enhanced' ), 'Has initialization class.' );
 	});
 
-	module( 'tablesaw is opt-in only, no default', {
-		setup: setup( '' )
+	QUnit.module( 'tablesaw is opt-in only, no default', {
+		beforeEach: setup( '' )
 	});
 
-	test( 'Initialization', function() {
-		ok( $table[ 0 ].className.indexOf( 'tablesaw-' ) === -1, 'Does not have initialization class.' );
+	QUnit.test( 'Initialization', function( assert ) {
+		assert.ok( $table[ 0 ].className.indexOf( 'tablesaw-' ) === -1, 'Does not have initialization class.' );
 	});
 
-	module( 'tablesaw Stack', {
-		setup: setup( 'data-tablesaw-mode="stack"' )
+	QUnit.module( 'tablesaw Stack', {
+		beforeEach: setup( 'data-tablesaw-mode="stack"' )
 	});
 
-	test( 'Initialization', function() {
-		ok( $table.hasClass( 'tablesaw-stack' ), 'Has initialization class.' );
+	QUnit.test( 'Initialization', function( assert ) {
+		assert.ok( $table.hasClass( 'tablesaw-stack' ), 'Has initialization class.' );
 	});
 
-	module( 'tablesaw Column Toggle', {
-		setup: setup( 'data-tablesaw-mode="columntoggle"' )
+	QUnit.module( 'tablesaw Column Toggle', {
+		beforeEach: setup( 'data-tablesaw-mode="columntoggle"' )
 	});
 
-	test( 'Initialization', function() {
-		ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has initialization class.' );
-		ok( $table.find( 'tbody td' ).eq( 0 ).is( ':visible' ), 'First cell is visible' );
+	QUnit.test( 'Initialization', function( assert ) {
+		assert.ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has initialization class.' );
+		assert.ok( $table.find( 'tbody td' ).eq( 0 ).is( ':visible' ), 'First cell is visible' );
 	});
 
-	test( 'Show Dialog', function() {
-		ok( !$fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog hidden' );
+	QUnit.test( 'Show Dialog', function( assert ) {
+		assert.ok( !$fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog hidden' );
 
 		$table.prev().find( '.tablesaw-columntoggle-btn' ).click();
 
-		ok( $fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog visible after button click' );
+		assert.ok( $fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog visible after button click' );
 	});
 
-	test( 'Toggle Column', function() {
+	QUnit.test( 'Toggle Column', function( assert ) {
 		var $cell = $table.find( 'tbody td' ).eq( 0 );
 
-		strictEqual( $cell.is( '.tablesaw-cell-hidden' ), false, 'First cell is visible before checkbox unchecked' );
+		assert.strictEqual( $cell.is( '.tablesaw-cell-hidden' ), false, 'First cell is visible before checkbox unchecked' );
 
 		$table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
 			.next().find( ':checkbox' ).trigger( 'click' );
@@ -135,183 +135,183 @@
 		// close dialog
 		$( '.tablesaw-columntoggle-popup .close' ).click();
 
-		strictEqual( $cell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
+		assert.strictEqual( $cell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
 	});
 
 
-	module( 'tablesaw Swipe', {
-		setup: setup( 'data-tablesaw-mode="swipe"' )
+	QUnit.module( 'tablesaw Swipe', {
+		beforeEach: setup( 'data-tablesaw-mode="swipe"' )
 	});
 
-	test( 'Initialization', function() {
+	QUnit.test( 'Initialization', function( assert ) {
 		var $buttons = $table.prev().find( '.tablesaw-nav-btn' );
-		ok( $table.hasClass( 'tablesaw-swipe' ), 'Has initialization class.' );
-		equal( $buttons.length, 2, 'Has buttons.' );
+		assert.ok( $table.hasClass( 'tablesaw-swipe' ), 'Has initialization class.' );
+		assert.equal( $buttons.length, 2, 'Has buttons.' );
 	});
 
-	test( 'Navigate with buttons', function() {
+	QUnit.test( 'Navigate with buttons', function( assert ) {
 		var $buttons = $table.prev().find( '.tablesaw-nav-btn' ),
 			$prev = $buttons.filter( '.left' ),
 			$next = $buttons.filter( '.right' );
 
-		ok( $prev.is( '.disabled' ), 'Starts at far left, previous button disabled.' );
-		ok( !$next.is( '.disabled' ), 'Starts at far left, next button enabled.' );
-		ok( $table.find( 'tbody td:first-child' ).not( '.tablesaw-cell-hidden' ), 'First column is visible' );
+		assert.ok( $prev.is( '.disabled' ), 'Starts at far left, previous button disabled.' );
+		assert.ok( !$next.is( '.disabled' ), 'Starts at far left, next button enabled.' );
+		assert.ok( $table.find( 'tbody td:first-child' ).not( '.tablesaw-cell-hidden' ), 'First column is visible' );
 
 		$next.trigger( 'click' );
-		ok( !$prev.is( '.disabled' ), 'Previous button enabled.' );
-		ok( $table.find( 'tbody td:first-child' ).is( '.tablesaw-cell-hidden' ), 'First column is hidden after click' );
+		assert.ok( !$prev.is( '.disabled' ), 'Previous button enabled.' );
+		assert.ok( $table.find( 'tbody td:first-child' ).is( '.tablesaw-cell-hidden' ), 'First column is hidden after click' );
 	});
 
-	module( 'tablesaw Sortable without a Mode', {
-		setup: setup( 'data-tablesaw-sortable' )
+	QUnit.module( 'tablesaw Sortable without a Mode', {
+		beforeEach: setup( 'data-tablesaw-sortable' )
 	});
 
-	test( 'Sortable still initializes without a data-tablesaw-mode', function() {
-		ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
-		ok( $table.find( '.tablesaw-sortable-head' ).length > 0, 'Header has sort class.' );
+	QUnit.test( 'Sortable still initializes without a data-tablesaw-mode', function( assert ) {
+		assert.ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
+		assert.ok( $table.find( '.tablesaw-sortable-head' ).length > 0, 'Header has sort class.' );
 	});
 
-	module( 'tablesaw Sortable', {
-		setup: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable' )
+	QUnit.module( 'tablesaw Sortable', {
+		beforeEach: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable' )
 	});
 
-	test( 'Initialization', function() {
-		ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
-		ok( $table.find( '.tablesaw-sortable-head' ).length > 0, 'Header has sort class.' );
+	QUnit.test( 'Initialization', function( assert ) {
+		assert.ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
+		assert.ok( $table.find( '.tablesaw-sortable-head' ).length > 0, 'Header has sort class.' );
 	});
 
-	test( 'Can sort descending', function() {
+	QUnit.test( 'Can sort descending', function( assert ) {
 		var previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 );
 
 		$sortButton.click();
 
-		notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
+		assert.notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
 
 		$sortButton.click();
 
-		equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
+		assert.equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
 	});
 
-	test( 'Can sort numeric descending', function() {
+	QUnit.test( 'Can sort numeric descending', function( assert ) {
 		var $sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 1 );
 
 		$sortButton.click();
 
-		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
+		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
 
 		$sortButton.click();
 
-		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
+		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
 	});
 
-	test( 'Sort works with floats', function() {
+	QUnit.test( 'Sort works with floats', function( assert ) {
 		var previousText = "Body Row 1.2",
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 ),
 			rows = $table.find( 'tbody tr' ).length;
 
 		$sortButton.click();
-		equal( $table.find( 'tbody tr:eq(' + (rows - 2 ) + ') td:eq(0)' ).text(), previousText, previousText + ' is in row ' + ( rows - 2 ) + ' of ' + rows + ' (descending)' );
+		assert.equal( $table.find( 'tbody tr:eq(' + (rows - 2 ) + ') td:eq(0)' ).text(), previousText, previousText + ' is in row ' + ( rows - 2 ) + ' of ' + rows + ' (descending)' );
 
 		$sortButton.click();
-		equal( $table.find( 'tbody tr:eq(1) td:eq(0)' ).text(), previousText, previousText + ' is in the second row (ascending)' );
+		assert.equal( $table.find( 'tbody tr:eq(1) td:eq(0)' ).text(), previousText, previousText + ' is in the second row (ascending)' );
 
 	});
 
-	test( 'Sort is case insensitive', function() {
+	QUnit.test( 'Sort is case insensitive', function( assert ) {
 		var previousText = "body row 4",
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 );
 
 		$sortButton.click();
-		equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).text(), previousText, previousText + ' is in the first row (descending)' );
+		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).text(), previousText, previousText + ' is in the first row (descending)' );
 
 		$sortButton.click();
-		equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).text(), previousText, previousText + ' is in the third row (ascending)' );
+		assert.equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).text(), previousText, previousText + ' is in the third row (ascending)' );
 
 	});
 
-	module( 'tablesaw Sortable Switcher', {
-		setup: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable data-tablesaw-sortable-switch' )
+	QUnit.module( 'tablesaw Sortable Switcher', {
+		beforeEach: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable data-tablesaw-sortable-switch' )
 	});
 
-	test( 'Can sort descending with switcher', function() {
+	QUnit.test( 'Can sort descending with switcher', function( assert ) {
 		var previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
 			$switcher = $table.prev().find( 'select' ).eq( 0 );
 
 		$switcher.val( '0_desc' ).trigger( 'change' );
 
-		notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
+		assert.notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
 
 		$switcher.val( '0_asc' ).trigger( 'change' );
 
-		equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
+		assert.equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
 	});
 
-	test( 'Can sort numeric descending with switcher', function() {
+	QUnit.test( 'Can sort numeric descending with switcher', function( assert ) {
 		var $switcher = $table.prev().find( 'select' ).eq( 0 );
 
 		$switcher.val( '1_desc' ).trigger( 'change' );
 
-		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
+		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
 
 		$switcher.val( '1_asc' ).trigger( 'change' );
 
-		equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
+		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
 	});
 
-	module( 'tablesaw Mini Map', {
-		setup: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-minimap' )
+	QUnit.module( 'tablesaw Mini Map', {
+		beforeEach: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-minimap' )
 	});
 
-	test( 'Initialization', function() {
+	QUnit.test( 'Initialization', function( assert ) {
 		var $minimap = $table.prev().find( '.minimap' );
-		ok( $minimap.length, 'Minimap exists.' );
-		equal( $minimap.find( 'li' ).length, $table.find( 'tbody tr:eq(0) td' ).length, 'Minimap has same number of dots as columns.' );
+		assert.ok( $minimap.length, 'Minimap exists.' );
+		assert.equal( $minimap.find( 'li' ).length, $table.find( 'tbody tr:eq(0) td' ).length, 'Minimap has same number of dots as columns.' );
 	});
 
-	module( 'tablesaw Mode Switch', {
-		setup: setup( 'data-tablesaw-mode="stack" data-tablesaw-mode-switch' )
+	QUnit.module( 'tablesaw Mode Switch', {
+		beforeEach: setup( 'data-tablesaw-mode="stack" data-tablesaw-mode-switch' )
 	});
 
-	test( 'Initialization', function() {
+	QUnit.test( 'Initialization', function( assert ) {
 		var $switcher = $table.prev().find( '.tablesaw-modeswitch' );
-		ok( $switcher.length, 'Mode Switcher exists.' );
+		assert.ok( $switcher.length, 'Mode Switcher exists.' );
 	});
 
-	test( 'Can switch to Swipe mode', function() {
+	QUnit.test( 'Can switch to Swipe mode', function( assert ) {
 		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
-		ok( !$table.hasClass( 'tablesaw-swipe' ), 'Doesn’t have class.' );
+		assert.ok( !$table.hasClass( 'tablesaw-swipe' ), 'Doesn’t have class.' );
 		$switcher.val( 'swipe' ).trigger( 'change' );
-		ok( $table.hasClass( 'tablesaw-swipe' ), 'Has class.' );
+		assert.ok( $table.hasClass( 'tablesaw-swipe' ), 'Has class.' );
 	});
 
-	test( 'Can switch to Column Toggle mode', function() {
+	QUnit.test( 'Can switch to Column Toggle mode', function( assert ) {
 		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
-		ok( !$table.hasClass( 'tablesaw-columntoggle' ), 'Doesn’t have class.' );
+		assert.ok( !$table.hasClass( 'tablesaw-columntoggle' ), 'Doesn’t have class.' );
 		$switcher.val( 'columntoggle' ).trigger( 'change' );
-		ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has class.' );
+		assert.ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has class.' );
 	});
 
-	module( 'tablesaw Stack Hide Empty', {
-		setup: function(){
-				$fixture = $( '#qunit-fixture' );
-				$fixture.html( tableHtml.replace( /\%s/, 'data-tablesaw-mode="stack" data-tablesaw-hide-empty' ) );
-				$('table tbody tr:eq(3) td:eq(4)', $fixture).html('');
-				$( document ).trigger( 'enhance.tablesaw' );
+	QUnit.module( 'tablesaw Stack Hide Empty', {
+		beforeEach: function(){
+			$fixture = $( '#qunit-fixture' );
+			$fixture.html( tableHtml.replace( /\%s/, 'data-tablesaw-mode="stack" data-tablesaw-hide-empty' ) );
+			$('table tbody tr:eq(3) td:eq(4)', $fixture).html('');
+			$( document ).trigger( 'enhance.tablesaw' );		
 		}
 	});
 
-	test( 'Empty cells are hidden', function() {
+	QUnit.test( 'Empty cells are hidden', function( assert ) {
 		$fixture = $( '#qunit-fixture' );
 		var testCell = $fixture.find( 'table tbody tr:eq(3) td:eq(4)' );
 
 		//not sure how to better test this
 		if(window.innerWidth < 640){
-			ok( testCell.is(':hidden'));
+			assert.ok( testCell.is(':hidden'));
 		}
 		else{
-			ok( testCell.is(':visible'));
+			assert.ok( testCell.is(':visible'));
 		}
 	});
 
