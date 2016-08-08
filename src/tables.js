@@ -76,22 +76,36 @@ if( Tablesaw.mustard ) {
 		$( thrs ).each( function(){
 			var coltally = 0;
 
-			$( this ).children().each( function(){
-				var span = parseInt( this.getAttribute( "colspan" ), 10 ),
-					sel = ":nth-child(" + ( coltally + 1 ) + ")";
+			var children = $( this ).children();
+			var columnlookup = [];
+			children.each( function(){
+				var span = parseInt( this.getAttribute( "colspan" ), 10 );
 
+				columnlookup[coltally] = this;
 				colstart = coltally + 1;
 
 				if( span ){
 					for( var k = 0; k < span - 1; k++ ){
 						coltally++;
-						sel += ", :nth-child(" + ( coltally + 1 ) + ")";
+						columnlookup[coltally] = this;
 					}
 				}
-
-				// Store "cells" data on header as a reference to all cells in the same column as this TH
-				this.cells = self.$table.find("tr").not( thrs[0] ).not( this ).children().filter( sel );
+				this.cells = [];
 				coltally++;
+			});
+			// Note that this assumes that children() returns its results in document order. jQuery doesn't
+			// promise that in the docs, but it's a pretty safe assumption.
+			self.$table.find("tr").not( thrs[0]).each( function() {
+				var cellcoltally = 0;
+				$(this).children().each(function () {
+					var span = parseInt( this.getAttribute( "colspan" ), 10 );
+					columnlookup[cellcoltally].cells.push(this);
+					if (span) {
+						cellcoltally += span;
+					} else {
+						cellcoltally++;
+					}
+				});
 			});
 		});
 
