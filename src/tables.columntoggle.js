@@ -191,4 +191,4 @@
 		}
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));

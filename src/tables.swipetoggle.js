@@ -324,4 +324,4 @@
 
 	} );
 
-}( this, jQuery ));
+}( win, jQuery ));

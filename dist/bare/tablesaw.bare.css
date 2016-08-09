@@ -1,4 +1,4 @@
-/*! Tablesaw - v2.0.3 - 2016-05-02
+/*! Tablesaw - v2.0.3 - 2016-06-03
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 
@@ -51,7 +51,7 @@ table.tablesaw {
   width: 100%;
   /* Theming */
   background-image: -webkit-linear-gradient(top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100%);
-  background-image: linear-gradient( top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
+  background-image: linear-gradient( to bottom, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   box-sizing: border-box;
@@ -72,7 +72,7 @@ table.tablesaw {
 .tablesaw-enhanced .tablesaw-bar .btn:active {
   background-color: #ddd;
   background-image: -webkit-linear-gradient(top, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70%);
-  background-image: linear-gradient( top, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
+  background-image: linear-gradient( to bottom, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
 }
 
 .tablesaw-enhanced .tablesaw-bar .btn:hover,

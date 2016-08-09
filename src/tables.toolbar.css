@@ -35,7 +35,7 @@
 	width: 100%;
 
 	/* Theming */
-	background-image: linear-gradient( top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
+	background-image: linear-gradient( to bottom, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
 
 	-webkit-appearance: none !important;
 	-moz-appearance: none !important;
@@ -56,7 +56,7 @@
 /* Default radio/checkbox styling horizonal controlgroups. */
 .tablesaw-enhanced .tablesaw-bar .btn:active {
 	background-color: #ddd;
-	background-image: linear-gradient( top, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
+	background-image: linear-gradient( to bottom, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
 }
 .tablesaw-enhanced .tablesaw-bar .btn:hover,
 .tablesaw-enhanced .tablesaw-bar .btn:focus {
@@ -138,7 +138,7 @@
 
 .tablesaw-bar .btn-select:after {
 	background: none;
-	background-repeat: no-repeat; 
+	background-repeat: no-repeat;
 	background-position: .25em .45em;
 	content: "\25bc";
 	font-size: .55em;
