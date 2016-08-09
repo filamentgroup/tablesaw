@@ -299,8 +299,8 @@
 		}
 	});
 
-	module ('tablesaw colspans', {
-		setup: function() {
+	QUnit.module ('tablesaw colspans', {
+		beforeEach: function() {
 			var colspannedHTML = [
 				'<table %s>',
 				'<thead>',
@@ -331,12 +331,12 @@
 		}
 	});
 
-	test('Hide multicolumn header and single column cells', function() {
+	QUnit.test('Hide multicolumn header and single column cells', function( assert ) {
 		var $firstCell = $table.find( 'tbody td' ).eq( 0 );
 		var $secondCell = $table.find( 'tbody td' ).eq( 1 );
 
-		strictEqual( $firstCell.is( '.tablesaw-cell-hidden' ), false, 'First cell is visible before checkbox unchecked' );
-		strictEqual( $secondCell.is( '.tablesaw-cell-hidden' ), false, 'Second cell is visible before checkbox unchecked' );
+		assert.strictEqual( $firstCell.is( '.tablesaw-cell-hidden' ), false, 'First cell is visible before checkbox unchecked' );
+		assert.strictEqual( $secondCell.is( '.tablesaw-cell-hidden' ), false, 'Second cell is visible before checkbox unchecked' );
 
 		$table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
 			.next().find( ':checkbox' ).first().trigger( 'click' );
@@ -344,72 +344,72 @@
 		// close dialog
 		$( '.tablesaw-columntoggle-popup .close' ).click();
 
-		strictEqual( $firstCell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
-		strictEqual( $secondCell.is( '.tablesaw-cell-hidden' ), true, 'Second cell is hidden after checkbox unchecked' );
+		assert.strictEqual( $firstCell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
+		assert.strictEqual( $secondCell.is( '.tablesaw-cell-hidden' ), true, 'Second cell is hidden after checkbox unchecked' );
 	});
 
-	test('Hide multicolumn header and multi column cells', function() {
+	QUnit.test('Hide multicolumn header and multi column cells', function( assert ) {
 		var $firstRowCell1 = $table.find( 'tbody tr:eq(0) td' ).eq( 2 );
 		var $firstRowCell2 = $table.find( 'tbody tr:eq(0) td' ).eq( 3 );
 		var $firstRowCell3 = $table.find( 'tbody tr:eq(0) td' ).eq( 4 );
 		var $secondRowFatCell = $table.find( 'tbody tr:eq(1) td' ).eq( 2 );
 		var $secondRowLastCell = $table.find( 'tbody tr:eq(1) td' ).eq( 3 );
 
-		strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible before checkbox unchecked' );
-		strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible before checkbox unchecked' );
-		strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,4 is visible before checkbox unchecked' );
-		strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,2-3 is visible before checkbox unchecked' );
-		strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is visible before checkbox unchecked' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible before checkbox unchecked' );
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible before checkbox unchecked' );
+		assert.strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,4 is visible before checkbox unchecked' );
+		assert.strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,2-3 is visible before checkbox unchecked' );
+		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is visible before checkbox unchecked' );
 
 		var middlecheck = $($table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
 			.next().find( ':checkbox' )[1]);
 		if (!middlecheck[0].checked) {
 			middlecheck.trigger( 'click' );
-			strictEqual ( middlecheck[0].checked, true, "Toggle button wasn't initially true and then should've been turned on.");
+			assert.strictEqual ( middlecheck[0].checked, true, "Toggle button wasn't initially true and then should've been turned on.");
 		}
 		middlecheck.trigger( 'click' );
-		strictEqual ( middlecheck[0].checked, false, "Toggle button wasn't unchecked.");
+		assert.strictEqual ( middlecheck[0].checked, false, "Toggle button wasn't unchecked.");
 
 		// close dialog
 		$( '.tablesaw-columntoggle-popup .close' ).click();
 
-		strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,2 cell is hidden after checkbox unchecked' );
-		strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,3 is hidden after checkbox unchecked' );
-		strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,4 is still visible after checkbox unchecked' );
-		strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), true, 'Cell 1,2-3 is hidden after checkbox unchecked' );
-		strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is still visible after checkbox unchecked' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,2 cell is hidden after checkbox unchecked' );
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,3 is hidden after checkbox unchecked' );
+		assert.strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,4 is still visible after checkbox unchecked' );
+		assert.strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), true, 'Cell 1,2-3 is hidden after checkbox unchecked' );
+		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is still visible after checkbox unchecked' );
 	});
 
-	test('Hide single column header and not multi column cells', function() {
+	QUnit.test('Hide single column header and not multi column cells', function( assert ) {
 		var $firstRowCell1 = $table.find( 'tbody tr:eq(0) td' ).eq( 2 );
 		var $firstRowCell2 = $table.find( 'tbody tr:eq(0) td' ).eq( 3 );
 		var $firstRowCell3 = $table.find( 'tbody tr:eq(0) td' ).eq( 4 );
 		var $secondRowFatCell = $table.find( 'tbody tr:eq(1) td' ).eq( 2 );
 		var $secondRowLastCell = $table.find( 'tbody tr:eq(1) td' ).eq( 3 );
 
-		strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible before checkbox unchecked' );
-		strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible before checkbox unchecked' );
-		strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,4 is visible before checkbox unchecked' );
-		strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,2-3 is visible before checkbox unchecked' );
-		strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is visible before checkbox unchecked' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible before checkbox unchecked' );
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible before checkbox unchecked' );
+		assert.strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,4 is visible before checkbox unchecked' );
+		assert.strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,2-3 is visible before checkbox unchecked' );
+		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is visible before checkbox unchecked' );
 
 		var lastcheck = $table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
 			.next().find( ':checkbox').last();
 		if (!lastcheck[0].checked) {
 			lastcheck.trigger( 'click' );
-			strictEqual ( lastcheck[0].checked, true, "Toggle button wasn't initially true and then should've been turned on.");
+			assert.strictEqual ( lastcheck[0].checked, true, "Toggle button wasn't initially true and then should've been turned on.");
 		}
 		lastcheck.trigger( 'click' );
-		strictEqual ( lastcheck[0].checked, false, "Toggle button wasn't unchecked.");
+		assert.strictEqual ( lastcheck[0].checked, false, "Toggle button wasn't unchecked.");
 
 		// close dialog
 		$( '.tablesaw-columntoggle-popup .close' ).click();
 
-		strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible after checkbox unchecked' );
-		strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible after checkbox unchecked' );
-		strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,4 is hidden after checkbox unchecked' );
-		strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,2-3 is visible after checkbox unchecked' );
-		strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), true, 'Cell 1,4 is hidden after checkbox unchecked' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible after checkbox unchecked' );
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible after checkbox unchecked' );
+		assert.strictEqual( $firstRowCell3.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,4 is hidden after checkbox unchecked' );
+		assert.strictEqual( $secondRowFatCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,2-3 is visible after checkbox unchecked' );
+		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), true, 'Cell 1,4 is hidden after checkbox unchecked' );
 	});
 
 }(jQuery));
