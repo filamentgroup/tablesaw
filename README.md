@@ -78,6 +78,8 @@ Columns also respect the `data-tablesaw-priority="persist"` attribute.
 
 * [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
 
+Tablesaw also exposes a `tablesaw-all-cols-visible` class that is toggled on when all of the table columns are visible (and off when not). You can use this in CSS to hide the minimap if needed.
+
 #### Advanced: Configure Swipe Thresholds
 
 Add a Tablesaw `config` object after including the Tablesaw JavaScript.
