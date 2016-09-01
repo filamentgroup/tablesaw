@@ -157,9 +157,9 @@ $( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
             yearB = parseInt( dateB[ 2 ], 10 );
 
         if( ascending ) {
-            return yearA > yearB;
+            return yearA >= yearB ? 1 : -1;
         } else { // descending
-            return yearA < yearB;
+            return yearA < yearB ? 1 : -1;
         }
     };
 });
