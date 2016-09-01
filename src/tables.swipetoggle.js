@@ -241,8 +241,29 @@
 		}
 
 		$prevBtn.add( $nextBtn ).click(function( e ){
-			advance( !!$( e.target ).closest( $nextBtn ).length );
+			var fwd = !!$( e.target ).closest( $nextBtn ).length;
+			var pair = nextpair( fwd );
+			if( isNaN( pair[ 0 ] ) ){
+
+				if( fwd ){
+					pair[0] = 0;
+				}
+				else {
+					pair[0] = $headerCellsNoPersist.length - 1;
+				}
+
+			}
+
+			var lenVisible = Math.abs( pair[1] - pair[0] );
+			if( isNaN( lenVisible ) || !lenVisible ) {
+				advance( fwd );
+			}else {
+				for (var i = 0; i < lenVisible - 1; i++ ) {
+					advance( fwd );
+				}
+			}
 			e.preventDefault();
+
 		});
 
 		function getCoord( event, key ) {
