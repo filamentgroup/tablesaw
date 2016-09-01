@@ -30,6 +30,9 @@
 		persistWidths: "tablesaw-fix-persist",
 		allColumnsVisible: 'tablesaw-all-cols-visible'
 	};
+	var attrs = {
+		disableTouchEvents: "data-tablesaw-no-touch"
+	};
 
 	function createSwipeTable( $table ){
 
@@ -249,42 +252,46 @@
 			return ( event.touches || event.originalEvent.touches )[ 0 ][ key ];
 		}
 
+		if( !$table.is( "[" + attrs.disableTouchEvents + "]" ) ) {
+			
+			$table
+				.bind( "touchstart.swipetoggle", function( e ){
+					var originX = getCoord( e, 'pageX' ),
+						originY = getCoord( e, 'pageY' ),
+						x,
+						y;
+
+					$( win ).off( "resize", fakeBreakpoints );
+
+					$( this )
+						.bind( "touchmove", function( e ){
+							x = getCoord( e, 'pageX' );
+							y = getCoord( e, 'pageY' );
+							var cfg = Tablesaw.config.swipe;
+							if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
+								e.preventDefault();
+							}
+						})
+						.bind( "touchend.swipetoggle", function(){
+							var cfg = Tablesaw.config.swipe;
+							if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
+								if( x - originX < -1 * cfg.horizontalThreshold ){
+									advance( true );
+								}
+								if( x - originX > cfg.horizontalThreshold ){
+									advance( false );
+								}
+							}
+
+							window.setTimeout(function() {
+								$( win ).on( "resize", fakeBreakpoints );
+							}, 300);
+							$( this ).unbind( "touchmove touchend" );
+						});
+				});
+		}
+
 		$table
-			.bind( "touchstart.swipetoggle", function( e ){
-				var originX = getCoord( e, 'pageX' ),
-					originY = getCoord( e, 'pageY' ),
-					x,
-					y;
-
-				$( win ).off( "resize", fakeBreakpoints );
-
-				$( this )
-					.bind( "touchmove", function( e ){
-						x = getCoord( e, 'pageX' );
-						y = getCoord( e, 'pageY' );
-						var cfg = Tablesaw.config.swipe;
-						if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
-							e.preventDefault();
-						}
-					})
-					.bind( "touchend.swipetoggle", function(){
-						var cfg = Tablesaw.config.swipe;
-						if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
-							if( x - originX < -1 * cfg.horizontalThreshold ){
-								advance( true );
-							}
-							if( x - originX > cfg.horizontalThreshold ){
-								advance( false );
-							}
-						}
-
-						window.setTimeout(function() {
-							$( win ).on( "resize", fakeBreakpoints );
-						}, 300);
-						$( this ).unbind( "touchmove touchend" );
-					});
-
-			})
 			.bind( "tablesawcolumns.swipetoggle", function(){
 				var canGoPrev = canAdvance( getPrev() );
 				var canGoNext = canAdvance( getNext() );
