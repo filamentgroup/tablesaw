@@ -145,7 +145,9 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 
 ### Custom Sort Functions
 
-We also provide the option to specify Custom Sort functions on individual columns ([working example](http://filamentgroup.github.io/tablesaw/demo/sort-custom.html)). In the contrived example below, we want to sort full dates (e.g. `12/02/2014`) just on the year.
+Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
+
+All other types of sorting must use a Custom Sort function on the individual columns ([working example](http://filamentgroup.github.io/tablesaw/demo/sort-custom.html)). In the contrived example below, we want to sort full dates (e.g. `12/02/2014`) just on the year.
 
 ```
 // Add a data function to the table header cell
