@@ -25,6 +25,10 @@ module.exports = function(grunt) {
 				src: 'node_modules/respond.js/dest/respond.src.js',
 				dest: 'dist/dependencies/respond.js'
 			},
+			naturalsort: {
+				src: 'node_modules/javascript-natural-sort/naturalSort.js',
+				dest: 'dist/dependencies/naturalsort.js'
+			},
 			qunit: {
 				files: [{
 					expand: true,
