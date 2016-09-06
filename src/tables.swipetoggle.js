@@ -314,6 +314,16 @@
 				$( win ).off( "resize", fakeBreakpoints );
 
 				$t.unbind( ".swipetoggle" );
+			})
+			.bind( "tablesawrefresh", function() {
+				// manual refresh
+				headerWidths = [];
+				$headerCells.each(function() {
+					var width = $( this ).outerWidth();
+					headerWidths.push( width );
+				});
+
+				fakeBreakpoints();
 			});
 
 		fakeBreakpoints();
