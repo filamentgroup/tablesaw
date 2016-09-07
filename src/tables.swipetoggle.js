@@ -14,6 +14,19 @@
 		}
 	});
 
+	function sumStyles( $el, props ) {
+		var total = 0;
+		for( var j = 0, k = props.length; j < k; j++ ) {
+			total += parseInt( $el.css( props[ j ] ), 10 );
+		}
+		return total;
+	}
+
+	function outerWidth( el ) {
+		var $el = $( el );
+		return $el.width() + sumStyles( $el, [ "padding-left", "padding-right", "border-left", "border-right" ] );
+	}
+
 	function isIE8() {
 		var div = document.createElement('div'),
 			all = div.getElementsByTagName('i');
@@ -54,7 +67,7 @@
 		// Calculate initial widths
 		$table.css('width', 'auto');
 		$headerCells.each(function() {
-			headerWidths.push( $( this ).outerWidth() );
+			headerWidths.push( outerWidth( this ) );
 		});
 		$table.css( 'width', '' );
 
@@ -102,7 +115,7 @@
 			$headerCells.each(function( index ) {
 				var width;
 				if( isPersistent( this ) ) {
-					width = $( this ).outerWidth();
+					width = outerWidth( this );
 
 					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
@@ -243,7 +256,7 @@
 			}
 		}
 
-		$prevBtn.add( $nextBtn ).click(function( e ){
+		$prevBtn.add( $nextBtn ).on( "click", function( e ){
 			advance( !!$( e.target ).closest( $nextBtn ).length );
 			e.preventDefault();
 		});
@@ -319,7 +332,7 @@
 				// manual refresh
 				headerWidths = [];
 				$headerCells.each(function() {
-					var width = $( this ).outerWidth();
+					var width = outerWidth( this );
 					headerWidths.push( width );
 				});
 

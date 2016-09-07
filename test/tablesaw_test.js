@@ -72,7 +72,7 @@
 
 	QUnit.module( 'Global' );
 	QUnit.test( 'Initialization', function( assert ) {
-		assert.ok( $( 'html' ).hasClass( 'tablesaw-enhanced' ), 'Has initialization class.' );
+		assert.ok( $( 'html' ).is( '.tablesaw-enhanced' ), 'Has initialization class.' );
 	});
 
 	QUnit.module( 'tablesaw is opt-in only, no default', {
@@ -88,7 +88,7 @@
 	});
 
 	QUnit.test( 'Initialization', function( assert ) {
-		assert.ok( $table.hasClass( 'tablesaw-stack' ), 'Has initialization class.' );
+		assert.ok( $table.is( '.tablesaw-stack' ), 'Has initialization class.' );
 	});
 
 	QUnit.module( 'tablesaw Column Toggle', {
@@ -96,16 +96,16 @@
 	});
 
 	QUnit.test( 'Initialization', function( assert ) {
-		assert.ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has initialization class.' );
-		assert.ok( $table.find( 'tbody td' ).eq( 0 ).is( ':visible' ), 'First cell is visible' );
+		assert.ok( $table.is( '.tablesaw-columntoggle' ), 'Has initialization class.' );
+		assert.ok( $jQ( $table.find( 'tbody td' )[ 0 ] ).is( ':visible' ), 'First cell is visible' );
 	});
 
 	QUnit.test( 'Show Dialog', function( assert ) {
-		assert.ok( !$fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog hidden' );
+		assert.ok( !$jQ( $fixture.find( '.tablesaw-columntoggle-popup' )[ 0 ] ).is( ':visible' ), 'Dialog hidden' );
 
-		$table.prev().find( '.tablesaw-columntoggle-btn' ).click();
+		$table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( "click" );
 
-		assert.ok( $fixture.find( '.tablesaw-columntoggle-popup' ).is( ':visible' ), 'Dialog visible after button click' );
+		assert.ok( $jQ( $fixture.find( '.tablesaw-columntoggle-popup' )[ 0 ] ).is( ':visible' ), 'Dialog visible after button click' );
 	});
 
 	QUnit.test( 'Toggle Column', function( assert ) {
@@ -114,10 +114,10 @@
 		assert.strictEqual( $cell.is( '.tablesaw-cell-hidden' ), false, 'First cell is visible before checkbox unchecked' );
 
 		$table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
-			.next().find( ':checkbox' ).trigger( 'click' );
+			.next().find( 'input[type="checkbox"]' ).trigger( 'click' );
 
 		// close dialog
-		$( '.tablesaw-columntoggle-popup .close' ).click();
+		$( '.tablesaw-columntoggle-popup .close' ).trigger( "click" );
 
 		assert.strictEqual( $cell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
 	});
@@ -129,7 +129,7 @@
 
 	QUnit.test( 'Initialization', function( assert ) {
 		var $buttons = $table.prev().find( '.tablesaw-nav-btn' );
-		assert.ok( $table.hasClass( 'tablesaw-swipe' ), 'Has initialization class.' );
+		assert.ok( $table.is( '.tablesaw-swipe' ), 'Has initialization class.' );
 		assert.equal( $buttons.length, 2, 'Has buttons.' );
 	});
 
@@ -152,7 +152,7 @@
 	});
 
 	QUnit.test( 'Sortable still initializes without a data-tablesaw-mode', function( assert ) {
-		assert.ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
+		assert.ok( $table.is( '.tablesaw-sortable' ), 'Has initialization class.' );
 		assert.ok( $table.find( '.tablesaw-sortable-head' ).length > 0, 'Header has sort class.' );
 	});
 
@@ -161,7 +161,7 @@
 	});
 
 	QUnit.test( 'Initialization', function( assert ) {
-		assert.ok( $table.hasClass( 'tablesaw-sortable' ), 'Has initialization class.' );
+		assert.ok( $table.is( '.tablesaw-sortable' ), 'Has initialization class.' );
 		assert.ok( $table.find( '.tablesaw-sortable-head' ).length > 0, 'Header has sort class.' );
 	});
 
@@ -169,11 +169,11 @@
 		var previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 );
 
-		$sortButton.click();
+		$sortButton.trigger( "click" );
 
 		assert.notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
 
-		$sortButton.click();
+		$sortButton.trigger( "click" );
 
 		assert.equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
 	});
@@ -181,13 +181,13 @@
 	QUnit.test( 'Can sort numeric descending', function( assert ) {
 		var $sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 1 );
 
-		$sortButton.click();
+		$sortButton.trigger( "click" );
 
-		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '10', 'First row is sorted descending' );
 
-		$sortButton.click();
+		$sortButton.trigger( "click" );
 
-		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '1', 'First row is sorted ascending' );
 	});
 
 	QUnit.test( 'Sort works with floats', function( assert ) {
@@ -195,11 +195,11 @@
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 ),
 			rows = $table.find( 'tbody tr' ).length;
 
-		$sortButton.click();
-		assert.equal( $table.find( 'tbody tr:eq(' + (rows - 2 ) + ') td:eq(0)' ).text(), previousText, previousText + ' is in row ' + ( rows - 2 ) + ' of ' + rows + ' (descending)' );
+		$sortButton.trigger( "click" );
+		assert.equal( $table.find( "tbody tr" ).eq( rows - 2 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in row ' + ( rows - 2 ) + ' of ' + rows + ' (descending)' );
 
-		$sortButton.click();
-		assert.equal( $table.find( 'tbody tr:eq(1) td:eq(0)' ).text(), previousText, previousText + ' is in the second row (ascending)' );
+		$sortButton.trigger( "click" );
+		assert.equal( $table.find( "tbody tr" ).eq( 1 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the second row (ascending)' );
 
 	});
 
@@ -207,11 +207,11 @@
 		var previousText = "body row 4",
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 );
 
-		$sortButton.click();
-		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).text(), previousText, previousText + ' is in the first row (descending)' );
+		$sortButton.trigger( "click" );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the first row (descending)' );
 
-		$sortButton.click();
-		assert.equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).text(), previousText, previousText + ' is in the third row (ascending)' );
+		$sortButton.trigger( "click" );
+		assert.equal( $table.find( "tbody tr" ).eq( 4 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the third row (ascending)' );
 
 	});
 
@@ -237,11 +237,11 @@
 
 		$switcher.val( '1_desc' ).trigger( 'change' );
 
-		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '10', 'First row is sorted descending' );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '10', 'First row is sorted descending' );
 
 		$switcher.val( '1_asc' ).trigger( 'change' );
 
-		assert.equal( $table.find( 'tbody tr:eq(0) td:eq(1)' ).html(), '1', 'First row is sorted ascending' );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '1', 'First row is sorted ascending' );
 	});
 
 	QUnit.module( 'tablesaw Mini Map', {
@@ -251,7 +251,7 @@
 	QUnit.test( 'Initialization', function( assert ) {
 		var $minimap = $table.prev().find( '.minimap' );
 		assert.ok( $minimap.length, 'Minimap exists.' );
-		assert.equal( $minimap.find( 'li' ).length, $table.find( 'tbody tr:eq(0) td' ).length, 'Minimap has same number of dots as columns.' );
+		assert.equal( $minimap.find( 'li' ).length, $table.find( 'tbody tr' ).eq( 0 ) .find( 'td' ).length, 'Minimap has same number of dots as columns.' );
 	});
 
 	QUnit.module( 'tablesaw Mode Switch', {
@@ -265,37 +265,37 @@
 
 	QUnit.test( 'Can switch to Swipe mode', function( assert ) {
 		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
-		assert.ok( !$table.hasClass( 'tablesaw-swipe' ), 'Doesn’t have class.' );
+		assert.ok( !$table.is( '.tablesaw-swipe' ), 'Doesn’t have class.' );
 		$switcher.val( 'swipe' ).trigger( 'change' );
-		assert.ok( $table.hasClass( 'tablesaw-swipe' ), 'Has class.' );
+		assert.ok( $table.is( '.tablesaw-swipe' ), 'Has class.' );
 	});
 
 	QUnit.test( 'Can switch to Column Toggle mode', function( assert ) {
 		var $switcher = $table.prev().find( '.tablesaw-modeswitch' ).find( 'select' );
-		assert.ok( !$table.hasClass( 'tablesaw-columntoggle' ), 'Doesn’t have class.' );
+		assert.ok( !$table.is( '.tablesaw-columntoggle' ), 'Doesn’t have class.' );
 		$switcher.val( 'columntoggle' ).trigger( 'change' );
-		assert.ok( $table.hasClass( 'tablesaw-columntoggle' ), 'Has class.' );
+		assert.ok( $table.is( '.tablesaw-columntoggle' ), 'Has class.' );
 	});
 
 	QUnit.module( 'tablesaw Stack Hide Empty', {
 		beforeEach: function(){
 			$fixture = $( '#qunit-fixture' );
 			$fixture.html( tableHtml.replace( /\%s/, 'data-tablesaw-mode="stack" data-tablesaw-hide-empty' ) );
-			$('table tbody tr:eq(3) td:eq(4)', $fixture).html('');
+			$fixture.find( 'table tbody tr' ).eq( 3 ).find( 'td' ).eq( 4 ).html('');
 			$( document ).trigger( 'enhance.tablesaw' );		
 		}
 	});
 
 	QUnit.test( 'Empty cells are hidden', function( assert ) {
 		$fixture = $( '#qunit-fixture' );
-		var testCell = $fixture.find( 'table tbody tr:eq(3) td:eq(4)' );
+		var testCell = $fixture.find( 'table tbody tr' ).eq( 3 ).find( 'td' ).eq( 4 );
 
 		//not sure how to better test this
 		if(window.innerWidth < 640){
-			assert.ok( testCell.is(':hidden'));
+			assert.ok( $jQ( testCell[ 0 ] ).is(':hidden'));
 		}
 		else{
-			assert.ok( testCell.is(':visible'));
+			assert.ok( $jQ( testCell[ 0 ] ).is(':visible'));
 		}
 	});
 
@@ -339,21 +339,21 @@
 		assert.strictEqual( $secondCell.is( '.tablesaw-cell-hidden' ), false, 'Second cell is visible before checkbox unchecked' );
 
 		$table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
-			.next().find( ':checkbox' ).first().trigger( 'click' );
+			.next().find( 'input[type="checkbox"]' ).first().trigger( 'click' );
 
 		// close dialog
-		$( '.tablesaw-columntoggle-popup .close' ).click();
+		$( '.tablesaw-columntoggle-popup .close' ).trigger( "click" );
 
 		assert.strictEqual( $firstCell.is( '.tablesaw-cell-hidden' ), true, 'First cell is hidden after checkbox unchecked' );
 		assert.strictEqual( $secondCell.is( '.tablesaw-cell-hidden' ), true, 'Second cell is hidden after checkbox unchecked' );
 	});
 
 	QUnit.test('Hide multicolumn header and multi column cells', function( assert ) {
-		var $firstRowCell1 = $table.find( 'tbody tr:eq(0) td' ).eq( 2 );
-		var $firstRowCell2 = $table.find( 'tbody tr:eq(0) td' ).eq( 3 );
-		var $firstRowCell3 = $table.find( 'tbody tr:eq(0) td' ).eq( 4 );
-		var $secondRowFatCell = $table.find( 'tbody tr:eq(1) td' ).eq( 2 );
-		var $secondRowLastCell = $table.find( 'tbody tr:eq(1) td' ).eq( 3 );
+		var $firstRowCell1 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 2 );
+		var $firstRowCell2 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 3 );
+		var $firstRowCell3 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 4 );
+		var $secondRowFatCell = $table.find( 'tbody tr' ).eq( 1 ).find( 'td' ).eq( 2 );
+		var $secondRowLastCell = $table.find( 'tbody tr' ).eq( 1 ).find( 'td' ).eq( 3 );
 
 		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible before checkbox unchecked' );
 		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible before checkbox unchecked' );
@@ -362,7 +362,7 @@
 		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is visible before checkbox unchecked' );
 
 		var middlecheck = $($table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
-			.next().find( ':checkbox' )[1]);
+			.next().find( 'input[type="checkbox"]' )[1]);
 		if (!middlecheck[0].checked) {
 			middlecheck.trigger( 'click' );
 			assert.strictEqual ( middlecheck[0].checked, true, "Toggle button wasn't initially true and then should've been turned on.");
@@ -371,7 +371,7 @@
 		assert.strictEqual ( middlecheck[0].checked, false, "Toggle button wasn't unchecked.");
 
 		// close dialog
-		$( '.tablesaw-columntoggle-popup .close' ).click();
+		$( '.tablesaw-columntoggle-popup .close' ).trigger( "click" );
 
 		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,2 cell is hidden after checkbox unchecked' );
 		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), true, 'Cell 0,3 is hidden after checkbox unchecked' );
@@ -381,11 +381,11 @@
 	});
 
 	QUnit.test('Hide single column header and not multi column cells', function( assert ) {
-		var $firstRowCell1 = $table.find( 'tbody tr:eq(0) td' ).eq( 2 );
-		var $firstRowCell2 = $table.find( 'tbody tr:eq(0) td' ).eq( 3 );
-		var $firstRowCell3 = $table.find( 'tbody tr:eq(0) td' ).eq( 4 );
-		var $secondRowFatCell = $table.find( 'tbody tr:eq(1) td' ).eq( 2 );
-		var $secondRowLastCell = $table.find( 'tbody tr:eq(1) td' ).eq( 3 );
+		var $firstRowCell1 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 2 );
+		var $firstRowCell2 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 3 );
+		var $firstRowCell3 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 4 );
+		var $secondRowFatCell = $table.find( 'tbody tr' ).eq( 1 ).find( 'td' ).eq( 2 );
+		var $secondRowLastCell = $table.find( 'tbody tr' ).eq( 1 ).find( 'td' ).eq( 3 );
 
 		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible before checkbox unchecked' );
 		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible before checkbox unchecked' );
@@ -394,7 +394,7 @@
 		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), false, 'Cell 1,4 is visible before checkbox unchecked' );
 
 		var lastcheck = $table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
-			.next().find( ':checkbox').last();
+			.next().find( 'input[type="checkbox"]').last();
 		if (!lastcheck[0].checked) {
 			lastcheck.trigger( 'click' );
 			assert.strictEqual ( lastcheck[0].checked, true, "Toggle button wasn't initially true and then should've been turned on.");
@@ -403,7 +403,7 @@
 		assert.strictEqual ( lastcheck[0].checked, false, "Toggle button wasn't unchecked.");
 
 		// close dialog
-		$( '.tablesaw-columntoggle-popup .close' ).click();
+		$( '.tablesaw-columntoggle-popup .close' ).trigger( "click" );
 
 		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,2 cell is visible after checkbox unchecked' );
 		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Cell 0,3 is visible after checkbox unchecked' );

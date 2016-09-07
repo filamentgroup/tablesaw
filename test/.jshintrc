@@ -13,6 +13,7 @@
   "browser": true,
   "predef": [
     "jQuery",
+    "$jQ",
     "console",
     "QUnit",
     "module",

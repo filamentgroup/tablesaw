@@ -24,31 +24,31 @@
 				ignoreMode = $table.attr( S.attributes.excludeMode ),
 				$toolbar = $table.prev().filter( '.tablesaw-bar' ),
 				modeVal = '',
-				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
-					var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
-						dataMode = $table.attr( 'data-tablesaw-mode' ),
-						isSelected;
+				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar );
 
-					html.push( '<span class="btn btn-small">&#160;<select>' );
-					for( var j=0, k = S.modes.length; j<k; j++ ) {
-						if( ignoreMode && ignoreMode.toLowerCase() === S.modes[ j ] ) {
-							continue;
-						}
+			var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
+				dataMode = $table.attr( 'data-tablesaw-mode' ),
+				isSelected;
 
-						isSelected = dataMode === S.modes[ j ];
+			html.push( '<span class="btn btn-small">&#160;<select>' );
+			for( var j=0, k = S.modes.length; j<k; j++ ) {
+				if( ignoreMode && ignoreMode.toLowerCase() === S.modes[ j ] ) {
+					continue;
+				}
 
-						if( isSelected ) {
-							modeVal = S.modes[ j ];
-						}
+				isSelected = dataMode === S.modes[ j ];
 
-						html.push( '<option' +
-							( isSelected ? ' selected' : '' ) +
-							' value="' + S.modes[ j ] + '">' + Tablesaw.i18n.modes[ j ] + '</option>' );
-					}
-					html.push( '</select></span></label>' );
+				if( isSelected ) {
+					modeVal = S.modes[ j ];
+				}
 
-					return html.join('');
-				});
+				html.push( '<option' +
+					( isSelected ? ' selected' : '' ) +
+					' value="' + S.modes[ j ] + '">' + Tablesaw.i18n.modes[ j ] + '</option>' );
+			}
+			html.push( '</select></span></label>' );
+
+			$switcher.html( html.join( '' ) );
 
 			var $otherToolbarItems = $toolbar.find( '.tablesaw-advance' ).eq( 0 );
 			if( $otherToolbarItems.length ) {
@@ -63,7 +63,7 @@
 		onModeChange: function() {
 			var $t = $( this ),
 				$switcher = $t.closest( '.' + S.classes.main ),
-				$table = $t.closest( '.tablesaw-bar' ).nextUntil( $table ).eq( 0 ),
+				$table = $t.closest( '.tablesaw-bar' ).next().eq( 0 ),
 				val = $t.val();
 
 			$switcher.remove();
@@ -81,7 +81,7 @@
 	});
 
 	$( win.document ).on( "tablesawdestroy", function( e, Tablesaw ) {
-		if ( Tablesaw.$table.prev().hasClass('tablesaw-bar' ) ) {
+		if ( Tablesaw.$table.prev().is( '.tablesaw-bar' ) ) {
 			Tablesaw.$table.prev().remove();
 		}
 	});

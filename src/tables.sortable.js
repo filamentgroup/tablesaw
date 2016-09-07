@@ -7,15 +7,19 @@
 
 ;(function( $ ) {
 	function getSortValue( cell ) {
-		return $.map( cell.childNodes, function( el ) {
-				var $el = $( el );
-				if( $el.is( 'input, select' ) ) {
-					return $el.val();
-				} else if( $el.hasClass( 'tablesaw-cell-label' ) ) {
-					return;
-				}
-				return $.trim( $el.text() );
-			}).join( '' );
+		var text = [];
+
+		$( cell.childNodes ).each(function() {
+			var $el = $( this );
+			if( $el.is( 'input, select' ) ) {
+				text.push( $el.val() );
+			} else if( $el.is( '.tablesaw-cell-label' ) ) {
+			} else {
+				text.push( ( $el.text() || '' ).replace(/^\s+|\s+$/g, '') );
+			}
+		});
+
+		return text.join( '' );
 	}
 
 	var pluginName = "tablesaw-sortable",
@@ -83,10 +87,10 @@
 						e.stopPropagation();
 						var head = $( this ).parent(),
 							v = e.data.col,
-							newSortValue = heads.index( head );
+							newSortValue = heads.index( head[0] );
 
 						clearOthers( head.siblings() );
-						if( head.hasClass( classes.descend ) ){
+						if( head.is( "." + classes.descend ) ){
 							el[ pluginName ]( "sortBy" , v , true);
 							newSortValue += '_asc';
 						} else {
@@ -103,44 +107,43 @@
 						$.each( heads , function( idx , el ){
 							var $el = $( el );
 							if( $el.is( "[" + attrs.defaultCol + "]" ) ){
-								if( !$el.hasClass( classes.descend ) ) {
+								if( !$el.is( "." + classes.descend ) ) {
 									$el.addClass( classes.ascend );
 								}
 							}
 						});
 					},
 					addSwitcher = function( heads ){
-						$switcher = $( '<div>' ).addClass( classes.switcher ).addClass( classes.tableToolbar ).html(function() {
-							var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
+						$switcher = $( '<div>' ).addClass( classes.switcher ).addClass( classes.tableToolbar );
 
-							html.push( '<span class="btn btn-small">&#160;<select>' );
-							heads.each(function( j ) {
-								var $t = $( this );
-								var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
-								var isDescending = $t.hasClass( classes.descend );
+						var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
 
-								var hasNumericAttribute = $t.is( '[data-sortable-numeric]' );
-								var numericCount = 0;
-								// Check only the first four rows to see if the column is numbers.
-								var numericCountMax = 5;
+						html.push( '<span class="btn btn-small">&#160;<select>' );
+						heads.each(function( j ) {
+							var $t = $( this );
+							var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
+							var isDescending = $t.is( "." + classes.descend );
 
-								$( this.cells ).slice( 0, numericCountMax ).each(function() {
-									if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
-										numericCount++;
-									}
-								});
-								var isNumeric = numericCount === numericCountMax;
-								if( !hasNumericAttribute ) {
-									$t.attr( "data-sortable-numeric", isNumeric ? "" : "false" );
+							var hasNumericAttribute = $t.is( '[data-sortable-numeric]' );
+							var numericCount = 0;
+							// Check only the first four rows to see if the column is numbers.
+							var numericCountMax = 5;
+							$( this.cells.slice( 0, numericCountMax ) ).each(function() {
+								if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
+									numericCount++;
 								}
-
-								html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
-								html.push( '<option' + ( isDefaultCol && isDescending ? ' selected' : '' ) + ' value="' + j + '_desc">' + $t.text() + ' ' + ( isNumeric ? '&#x2193;' : '(Z-A)' ) + '</option>' );
 							});
-							html.push( '</select></span></label>' );
+							var isNumeric = numericCount === numericCountMax;
+							if( !hasNumericAttribute ) {
+								$t.attr( "data-sortable-numeric", isNumeric ? "" : "false" );
+							}
 
-							return html.join('');
+							html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
+							html.push( '<option' + ( isDefaultCol && isDescending ? ' selected' : '' ) + ' value="' + j + '_desc">' + $t.text() + ' ' + ( isNumeric ? '&#x2193;' : '(Z-A)' ) + '</option>' );
 						});
+						html.push( '</select></span></label>' );
+
+						$switcher.html( html.join('') );
 
 						var $toolbar = el.prev().filter( '.tablesaw-bar' ),
 							$firstChild = $toolbar.children().eq( 0 );
@@ -225,6 +228,7 @@
 				var customFn = $( col ).data( 'tablesaw-sort' );
 				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
 					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) && !$( col ).is( '[data-sortable-numeric="false"]' ) );
+
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
 				return rows;
@@ -233,6 +237,8 @@
 				var el = $( this ),
 					body = el.find( "tbody" );
 				body.html( rows );
+				// body.children().remove();
+				// body.append( rows );
 			},
 			makeColDefault: function( col , a ){
 				var c = $( col );

@@ -21,6 +21,10 @@ module.exports = function(grunt) {
 				src: 'node_modules/jquery/dist/jquery.js',
 				dest: 'dist/dependencies/jquery.js'
 			},
+			shoestring: {
+				src: 'node_modules/shoestring/dist/shoestring-dev.js',
+				dest: 'dist/dependencies/shoestring-dev.js'
+			},
 			respond: {
 				src: 'node_modules/respond.js/dest/respond.src.js',
 				dest: 'dist/dependencies/respond.js'

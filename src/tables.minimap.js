@@ -34,10 +34,10 @@
 
 		function showHideNav(){
 			if( !showMinimap( $table ) ) {
-				$btns.hide();
+				$btns.css( "display", "none" );
 				return;
 			}
-			$btns.show();
+			$btns.css( "display", "block" );
 
 			// show/hide dots
 			var dots = $dotNav.find( "li" ).removeClass( hideDot );

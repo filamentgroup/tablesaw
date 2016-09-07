@@ -23,7 +23,7 @@
 
 		// Expose headers and allHeaders properties on the widget
 		// headers references the THs within the first TR in the table
-		this.headers = this.$table.find( 'tr:first > th' );
+		this.headers = this.$table.find( "tr" ).eq( 0 ).find( "th" );
 
 		this.$table.data( 'tablesaw-coltoggle', this );
 	};
@@ -76,9 +76,10 @@
 		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
 			var checked = e.target.checked;
 
-			self.$getCellsFromCheckbox( e.target )
-				.toggleClass( "tablesaw-cell-hidden", !checked )
-				.toggleClass( "tablesaw-cell-visible", checked );
+			var $cells = self.$getCellsFromCheckbox( e.target );
+
+			$cells[ !checked ? "addClass" : "removeClass" ]( "tablesaw-cell-hidden" );
+			$cells[ checked ? "addClass" : "removeClass" ]( "tablesaw-cell-visible" );
 
 			self.$table.trigger( 'tablesawcolumns' );
 		});
