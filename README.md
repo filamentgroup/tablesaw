@@ -179,7 +179,7 @@ All of the above options combined into a single table.
 
 ### The Full TableSaw
 
-<details>
+<details open>
 <summary>TableSaw (no dependencies, 10.7KB GZIP)</summary>
 
 ```html
@@ -230,7 +230,7 @@ The demos above include full markup examples for all of the TableSaw types.
 
 As shown above, we provide a Stack-mode-only package of TableSaw. It’s a barebones version that doesn’t include any of the other features above.
 
-<details>
+<details open>
 <summary>Just the Stack-only TableSaw (6.13KB GZIP)</summary>
 
 ```html
