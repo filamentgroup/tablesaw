@@ -12,4 +12,4 @@
 		$( document ).trigger( "enhance.tablesaw" );
 	});
 
-})( jQuery );
+})( shoestring || jQuery );

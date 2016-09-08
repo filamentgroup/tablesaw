@@ -2,6 +2,24 @@
 
 module.exports = function(grunt) {
 
+	var jsFiles = [
+		'src/tables.js',
+		'src/tables.stack.js',
+		'src/tables.btnmarkup.js',
+		'src/tables.columntoggle.js',
+		'src/tables.swipetoggle.js',
+		'src/tables.sortable.js',
+		'src/tables.minimap.js',
+		'src/tables.modeswitch.js',
+		'src/tables.outro.js'
+	];
+
+	var jsStackOnlyFiles = [
+		'src/tables.js',
+		'src/tables.stack.js',
+		'src/tables.outro.js'
+	];
+
 	// Project configuration.
 	grunt.initConfig({
 		// Metadata.
@@ -20,10 +38,6 @@ module.exports = function(grunt) {
 			jquery: {
 				src: 'node_modules/jquery/dist/jquery.js',
 				dest: 'dist/dependencies/jquery.js'
-			},
-			shoestring: {
-				src: 'node_modules/shoestring/dist/shoestring-dev.js',
-				dest: 'dist/dependencies/shoestring-dev.js'
 			},
 			respond: {
 				src: 'node_modules/respond.js/dest/respond.src.js',
@@ -54,29 +68,29 @@ module.exports = function(grunt) {
 			},
 			jsall: {
 				src: [
-					'src/tables.intro.js',
-					'src/tables-init.js',
-					'src/tables.js',
-					'src/tables.stack.js',
-					'src/tables.btnmarkup.js',
-					'src/tables.columntoggle.js',
-					'src/tables.swipetoggle.js',
-					'src/tables.sortable.js',
-					'src/tables.minimap.js',
-					'src/tables.modeswitch.js',
-					'src/tables.outro.js'
-				],
+					'src/lib/shoestring-custom.js',
+					'src/tables.intro.shoestring.js'
+				].concat( jsFiles ),
 				dest: 'dist/<%= pkg.name %>.js'
+			},
+			jsjquery: {
+				src: [
+					'src/tables.intro.jquery.js'
+				].concat( jsFiles ),
+				dest: 'dist/<%= pkg.name %>.jquery.js'
 			},
 			jsstack: {
 				src: [
-					'src/tables.intro.js',
-					'src/tables-init.js',
-					'src/tables.js',
-					'src/tables.stack.js',
-					'src/tables.outro.js'
-				],
+					'src/lib/shoestring-custom.js',
+					'src/tables.intro.shoestring.js'
+				].concat( jsStackOnlyFiles ),
 				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.js'
+			},
+			jsstackjquery: {
+				src: [
+					'src/tables.intro.jquery.js'
+				].concat( jsStackOnlyFiles ),
+				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.jquery.js'
 			},
 			cssall: {
 				src: [
@@ -142,7 +156,7 @@ module.exports = function(grunt) {
 			src: {
 				options: {
 					jshintrc: 'src/.jshintrc',
-					ignores: ['src/tables.intro.js', 'src/tables.outro.js']
+					ignores: ['src/tables.intro.*.js', 'src/tables.outro.js', 'src/lib/**']
 				},
 				src: ['src/**/*.js']
 			},
@@ -171,7 +185,9 @@ module.exports = function(grunt) {
 			js: {
 				files: {
 					'dist/<%= pkg.name %>.min.js': [ 'dist/<%= pkg.name %>.js' ],
-					'dist/stackonly/<%= pkg.name %>.stackonly.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.js' ]
+					'dist/<%= pkg.name %>.jquery.min.js': [ 'dist/<%= pkg.name %>.jquery.js' ],
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.js' ],
+					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.jquery.js' ]
 				}
 			}
 		},
@@ -189,9 +205,11 @@ module.exports = function(grunt) {
 				src: [
 					'dist/<%= pkg.name %>.min.css',
 					'dist/<%= pkg.name %>.min.js',
+					'dist/<%= pkg.name %>.jquery.min.js',
 					'dist/bare/<%= pkg.name %>.bare.min.css',
 					'dist/stackonly/<%= pkg.name %>.stackonly.min.css',
-					'dist/stackonly/<%= pkg.name %>.stackonly.min.js'
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.js',
+					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js'
 				]
 			}
 		},
@@ -230,7 +248,7 @@ module.exports = function(grunt) {
 
 	// Default task.
 	grunt.registerTask('travis', ['jshint', 'qunit']);
-	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
+	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsjquery', 'concat:jsstack', 'concat:jsstackjquery', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);

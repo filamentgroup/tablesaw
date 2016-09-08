@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function( win, $, undefined ){
+;(function(){
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
@@ -101,4 +101,4 @@
 
 	} );
 
-}( win, jQuery ));
+}());

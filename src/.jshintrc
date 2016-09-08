@@ -3,7 +3,7 @@
   "eqeqeq": true,
   "immed": true,
   "latedef": true,
-  "newcap": true,
+  "newcap": false,
   "noarg": true,
   "sub": true,
   "undef": true,
@@ -11,5 +11,5 @@
   "boss": true,
   "eqnull": true,
   "browser": true,
-  "predef": ["jQuery", "Tablesaw", "console", "win"]
+  "predef": ["jQuery", "$", "shoestring", "Tablesaw", "console", "win"]
 }

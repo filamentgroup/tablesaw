@@ -14,6 +14,7 @@
   "predef": [
     "jQuery",
     "$jQ",
+    "shoestring",
     "console",
     "QUnit",
     "module",

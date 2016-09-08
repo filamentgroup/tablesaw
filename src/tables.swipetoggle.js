@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function( win, $, undefined ){
+;(function(){
 
 	$.extend( Tablesaw.config, {
 		swipe: {
@@ -354,4 +354,4 @@
 
 	} );
 
-}( win, jQuery ));
+}());

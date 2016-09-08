@@ -177,11 +177,36 @@ All of the above options combined into a single table.
 
 ## Getting Started
 
-TableSaw requires [Respond.js](https://github.com/scottjehl/Respond) for IE8- support.
+### The Full TableSaw
 
-### Using Stack-Only TableSaw
+<details>
+<summary>TableSaw (no dependencies, 10.7KB GZIP)</summary>
 
-As shown above, we provide a Stack-mode-only package of TableSaw. It’s a barebones version that doesn’t include any of the other features above.
+```html
+<link rel="stylesheet" href="tablesaw.css">
+<script src="tablesaw.js"></script>
+<script src="tablesaw-init.js"></script>
+```
+
+</details>
+
+<details>
+<summary>or TableSaw (jQuery Plugin) (6.15KB GZIP)</summary>
+
+```html
+<link rel="stylesheet" href="tablesaw.css">
+<!-- load your own jQuery -->
+<script src="jquery.js"></script>
+<script src="tablesaw.jquery.js"></script>
+<script src="tablesaw-init.js"></script>
+```
+
+</details>
+
+<details>
+<summary>or with IE8- support</summary>
+
+Just add [Respond.js](https://github.com/scottjehl/Respond)™.
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -189,6 +214,45 @@ As shown above, we provide a Stack-mode-only package of TableSaw. It’s a bareb
 <script src="tablesaw.js"></script>
 <script src="tablesaw-init.js"></script>
 ```
+
+</details>
+
+Don’t forget to add your table markup! For a stack table, this is how it’d look: 
+
+```html
+<table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+```
+
+The demos above include full markup examples for all of the TableSaw types.
+
+
+### Using Stack-Only TableSaw
+
+As shown above, we provide a Stack-mode-only package of TableSaw. It’s a barebones version that doesn’t include any of the other features above.
+
+<details>
+<summary>Just the Stack-only TableSaw (6.13KB GZIP)</summary>
+
+```html
+<link rel="stylesheet" href="tablesaw.css">
+<script src="stackonly/tablesaw.stackonly.js"></script>
+<script src="tablesaw-init.js"></script>
+```
+
+</details>
+
+<details>
+<summary>or just Stack-only TableSaw (jQuery Plugin) (1.58KB GZIP)</summary>
+
+```html
+<link rel="stylesheet" href="tablesaw.css">
+<!-- load your own jQuery -->
+<script src="jquery.js"></script>
+<script src="stackonly/tablesaw.stackonly.jquery.js"></script>
+<script src="tablesaw-init.js"></script>
+```
+
+</details>
 
 And then:
 
@@ -217,28 +281,11 @@ Include the mixin like so:
 
 The argument to `tablesaw-stack` is the breakpoint at which the table will switch from columns to stacked.
 
-### The Full TableSaw 
-
-If you want the other modes, it’ll take a little bit more configuration.
-
-```html
-<link rel="stylesheet" href="tablesaw.css">
-
-<!--[if lt IE 9]><script src="dependencies/respond.js"></script><!--<![endif]-->
-<script src="dependencies/jquery.js"></script>
-<script src="tablesaw.js"></script>
-<script src="tablesaw-init.js"></script>
-```
-
-Check out any of the demos above for complete working examples.
-
 ### Using Bare TableSaw 
 
 Tablesaw is designed to be a drop-in solution, providing table styles as well as responsive table functionality.
 
-If you would like the full functionality of the TableSaw plugin. but the plugin's default table styles don't fit in with your project, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file for a much lighter default style which is significantly easier to customize.
-
-To see what all TableSaw functionality looks like with this alternate stylesheet applied.
+If you would like the full functionality of the TableSaw plugin but the plugin's default table styles don't fit in with your project, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file for a much lighter default style which is significantly easier to customize.
 
 * [Bare CSS Demo](http://filamentgroup.github.io/tablesaw/demo/bare.html)
 

@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function( $ ) {
+;(function() {
 	var pluginName = "tablesawbtn",
 		methods = {
 			_create: function(){
@@ -82,4 +82,4 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-}( jQuery ));
+}());

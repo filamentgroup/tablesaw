@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function( $ ) {
+;(function() {
 	function getSortValue( cell ) {
 		var text = [];
 
@@ -288,4 +288,4 @@
 		}
 	});
 
-}( jQuery ));
+}());

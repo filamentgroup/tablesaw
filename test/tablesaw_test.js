@@ -412,4 +412,4 @@
 		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), true, 'Cell 1,4 is hidden after checkbox unchecked' );
 	});
 
-}(jQuery));
+}( window.shoestring || window.jQuery || window.$jQ ));

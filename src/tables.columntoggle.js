@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function( win, $, undefined ){
+;(function(){
 
 	var ColumnToggle = function( element ) {
 
@@ -192,4 +192,4 @@
 		}
 	} );
 
-}( win, jQuery ));
+}());

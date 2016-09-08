@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function( win, $, undefined ){
+;(function(){
 
 	var MM = {
 		attr: {
@@ -78,4 +78,4 @@
 
 	} );
 
-}( win, jQuery ));
+}());

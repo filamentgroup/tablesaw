@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function( win, $ ) {
+;(function() {
 
 	var S = {
 		selectors: {
@@ -86,4 +86,4 @@
 		}
 	});
 
-})( win, jQuery );
+})();

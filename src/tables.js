@@ -26,10 +26,10 @@ if( !Tablesaw.config ) {
 	Tablesaw.config = {};
 }
 if( Tablesaw.mustard ) {
-	jQuery( document.documentElement ).addClass( 'tablesaw-enhanced' );
+	$( document.documentElement ).addClass( 'tablesaw-enhanced' );
 }
 
-;(function( $ ) {
+(function() {
 	var pluginName = "table",
 		classes = {
 			toolbar: "tablesaw-bar"
@@ -171,4 +171,4 @@ if( Tablesaw.mustard ) {
 		}
 	});
 
-}( jQuery ));
+}());
