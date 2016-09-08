@@ -180,7 +180,7 @@ All of the above options combined into a single table.
 ### The Full TableSaw
 
 <details open>
-<summary>TableSaw (no dependencies, 10.7KB GZIP)</summary>
+<summary>TableSaw (no dependencies)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -191,7 +191,7 @@ All of the above options combined into a single table.
 </details>
 
 <details>
-<summary>or TableSaw (jQuery Plugin) (6.15KB GZIP)</summary>
+<summary>or TableSaw (jQuery Plugin)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -231,7 +231,7 @@ The demos above include full markup examples for all of the TableSaw types.
 As shown above, we provide a Stack-mode-only package of TableSaw. It’s a barebones version that doesn’t include any of the other features above.
 
 <details open>
-<summary>Just the Stack-only TableSaw (6.13KB GZIP)</summary>
+<summary>Stack-only TableSaw (no dependencies)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -242,7 +242,7 @@ As shown above, we provide a Stack-mode-only package of TableSaw. It’s a bareb
 </details>
 
 <details>
-<summary>or just Stack-only TableSaw (jQuery Plugin) (1.58KB GZIP)</summary>
+<summary>or just Stack-only TableSaw (jQuery Plugin)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
