@@ -203,20 +203,6 @@ All of the above options combined into a single table.
 
 </details>
 
-<details>
-<summary>or with IE8- support</summary>
-
-Just add [Respond.js](https://github.com/scottjehl/Respond)™.
-
-```html
-<link rel="stylesheet" href="tablesaw.css">
-<!--[if lt IE 9]><script src="dependencies/respond.js"></script><!--<![endif]-->
-<script src="tablesaw.js"></script>
-<script src="tablesaw-init.js"></script>
-```
-
-</details>
-
 Don’t forget to add your table markup! For a stack table, this is how it’d look: 
 
 ```html

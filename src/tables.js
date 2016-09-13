@@ -17,7 +17,8 @@ if( typeof Tablesaw === "undefined" ) {
 			sort: 'Sort'
 		},
 		// cut the mustard
-		mustard: 'querySelector' in document &&
+		mustard: ( 'querySelector' in document ) &&
+			( 'head' in document ) &&
 			( !window.blackberry || window.WebKitPoint ) &&
 			!window.operamini
 	};
