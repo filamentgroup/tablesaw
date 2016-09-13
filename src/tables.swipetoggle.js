@@ -17,14 +17,14 @@
 	function sumStyles( $el, props ) {
 		var total = 0;
 		for( var j = 0, k = props.length; j < k; j++ ) {
-			total += parseInt( $el.css( props[ j ] ), 10 );
+			total += parseInt( $el.css( props[ j ] ) || 0, 10 );
 		}
 		return total;
 	}
 
 	function outerWidth( el ) {
 		var $el = $( el );
-		return $el.width() + sumStyles( $el, [ "padding-left", "padding-right", "border-left", "border-right" ] );
+		return $el.width() + sumStyles( $el, [ "padding-left", "padding-right", "border-left-width", "border-right-width" ] );
 	}
 
 	function isIE8() {
