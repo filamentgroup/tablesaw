@@ -31,7 +31,7 @@ if( Tablesaw.mustard ) {
 }
 
 (function() {
-	var pluginName = "table",
+	var pluginName = "tablesaw",
 		classes = {
 			toolbar: "tablesaw-bar"
 		},

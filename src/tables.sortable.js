@@ -40,12 +40,12 @@
 		methods = {
 			_create: function( o ){
 				return $( this ).each(function() {
-					var init = $( this ).data( "init" + pluginName );
+					var init = $( this ).data( pluginName + "-init" );
 					if( init ) {
 						return false;
 					}
 					$( this )
-						.data( "init"+ pluginName, true )
+						.data( pluginName + "-init", true )
 						.trigger( "beforecreate." + pluginName )
 						[ pluginName ]( "_init" , o )
 						.trigger( "create." + pluginName );
@@ -273,8 +273,8 @@
 			return (typeof returnVal !== "undefined")? returnVal:$(this);
 		}
 		// check init
-		if( !$( this ).data( pluginName + "data" ) ){
-			$( this ).data( pluginName + "active", true );
+		if( !$( this ).data( pluginName + "-active" ) ){
+			$( this ).data( pluginName + "-active", true );
 			$.fn[ pluginName ].prototype._create.call( this , arrg );
 		}
 		return $(this);

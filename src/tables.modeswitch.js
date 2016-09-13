@@ -67,10 +67,10 @@
 				val = $t.val();
 
 			$switcher.remove();
-			$table.data( 'table' ).destroy();
+			$table.data( 'tablesaw' ).destroy();
 
 			$table.attr( 'data-tablesaw-mode', val );
-			$table.table();
+			$table.tablesaw();
 		}
 	};
 

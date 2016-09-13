@@ -130,14 +130,14 @@
 
 			var $style = $( '#' + tableId + '-persist' );
 			// If style element not yet added OR if the widths have changed
-			if( !$style.length || $style.data( 'hash' ) !== newHash ) {
+			if( !$style.length || $style.data( 'tablesaw-hash' ) !== newHash ) {
 				// Remove existing
 				$style.remove();
 
 				if( styles.length ) {
 					$( '<style>' + styles.join( "\n" ) + '</style>' )
 						.attr( 'id', tableId + '-persist' )
-						.data( 'hash', newHash )
+						.data( 'tablesaw-hash', newHash )
 						.appendTo( $head );
 				}
 			}
