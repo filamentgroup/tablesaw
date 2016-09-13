@@ -236,9 +236,10 @@
 			replaceTableRows: function( rows ){
 				var el = $( this ),
 					body = el.find( "tbody" );
-				body.html( rows );
-				// body.children().remove();
-				// body.append( rows );
+
+				for( var j = 0, k = rows.length; j < k; j++ ) {
+					body.append( rows[ j ] );
+				}
 			},
 			makeColDefault: function( col , a ){
 				var c = $( col );
@@ -259,6 +260,7 @@
 				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending, col );
 				el[ pluginName ]( "replaceTableRows" , rows );
 				el[ pluginName ]( "makeColDefault" , col , ascending );
+				el.trigger( "tablesaw-sorted" );
 			}
 		};
 
