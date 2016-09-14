@@ -94,7 +94,7 @@
 				return;
 			}
 
-			$( document ).unbind( 'click.' + tableId );
+			$( document ).off( 'click.' + tableId );
 			$menuButton.removeClass( 'up' ).addClass( 'down' );
 			$btnContain.removeClass( 'visible' );
 		}
@@ -104,7 +104,7 @@
 			$btnContain.addClass( 'visible' );
 			$menuButton.removeClass( 'down' ).addClass( 'up' );
 
-			$( document ).unbind( 'click.' + tableId, closePopup );
+			$( document ).off( 'click.' + tableId, closePopup );
 
 			window.clearTimeout( closeTimeout );
 			closeTimeout = window.setTimeout(function() {

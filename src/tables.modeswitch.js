@@ -58,7 +58,7 @@
 			}
 
 			$switcher.find( '.btn' ).tablesawbtn();
-			$switcher.find( 'select' ).bind( 'change', S.onModeChange );
+			$switcher.find( 'select' ).on( 'change', S.onModeChange );
 		},
 		onModeChange: function() {
 			var $t = $( this ),

@@ -67,7 +67,7 @@
 					makeHeadsActionable = function( h , fn ){
 						$.each( h , function( i , v ){
 							var b = $( "<button class='" + classes.sortButton + "'/>" );
-							b.bind( "click" , { col: v } , fn );
+							b.on( "click" , { col: v } , fn );
 							$( v ).wrapInner( b );
 						});
 					},

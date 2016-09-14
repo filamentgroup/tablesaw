@@ -54,16 +54,16 @@
 
 
 		$table
-			.bind( "tablesawcolumns.minimap", function(){
+			.on( "tablesawcolumns.minimap", function(){
 				showHideNav();
 			})
-			.bind( "tablesawdestroy.minimap", function(){
+			.on( "tablesawdestroy.minimap", function(){
 				var $t = $( this );
 
 				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
-				$t.unbind( ".minimap" );
+				$t.off( ".minimap" );
 			});
 	}
 

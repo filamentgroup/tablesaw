@@ -142,8 +142,8 @@ if( Tablesaw.mustard ) {
 		});
 
 		var tableId = this.$table.attr( 'id' );
-		$( document ).unbind( "." + tableId );
-		$( window ).unbind( "." + tableId );
+		$( document ).off( "." + tableId );
+		$( window ).off( "." + tableId );
 
 		// other plugins
 		this.$table.trigger( events.destroy, [ this ] );

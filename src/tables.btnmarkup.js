@@ -52,7 +52,7 @@
 				};
 
 				update( this, sel );
-				$( this ).bind( "change refresh", function() {
+				$( this ).on( "change refresh", function() {
 					update( this, sel );
 				});
 			}

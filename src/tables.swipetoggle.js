@@ -268,7 +268,7 @@
 		if( !$table.is( "[" + attrs.disableTouchEvents + "]" ) ) {
 			
 			$table
-				.bind( "touchstart.swipetoggle", function( e ){
+				.on( "touchstart.swipetoggle", function( e ){
 					var originX = getCoord( e, 'pageX' ),
 						originY = getCoord( e, 'pageY' ),
 						x,
@@ -277,7 +277,7 @@
 					$( win ).off( "resize", fakeBreakpoints );
 
 					$( this )
-						.bind( "touchmove", function( e ){
+						.on( "touchmove", function( e ){
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
 							var cfg = Tablesaw.config.swipe;
@@ -285,7 +285,7 @@
 								e.preventDefault();
 							}
 						})
-						.bind( "touchend.swipetoggle", function(){
+						.on( "touchend.swipetoggle", function(){
 							var cfg = Tablesaw.config.swipe;
 							if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
 								if( x - originX < -1 * cfg.horizontalThreshold ){
@@ -299,13 +299,13 @@
 							window.setTimeout(function() {
 								$( win ).on( "resize", fakeBreakpoints );
 							}, 300);
-							$( this ).unbind( "touchmove touchend" );
+							$( this ).off( "touchmove touchend" );
 						});
 				});
 		}
 
 		$table
-			.bind( "tablesawcolumns.swipetoggle", function(){
+			.on( "tablesawcolumns.swipetoggle", function(){
 				var canGoPrev = canAdvance( getPrev() );
 				var canGoNext = canAdvance( getNext() );
 				$prevBtn[ canGoPrev ? "removeClass" : "addClass" ]( classes.hideBtn );
@@ -313,22 +313,22 @@
 
 				$prevBtn.closest( "." + classes.toolbar )[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
 			})
-			.bind( "tablesawnext.swipetoggle", function(){
+			.on( "tablesawnext.swipetoggle", function(){
 				advance( true );
 			} )
-			.bind( "tablesawprev.swipetoggle", function(){
+			.on( "tablesawprev.swipetoggle", function(){
 				advance( false );
 			} )
-			.bind( "tablesawdestroy.swipetoggle", function(){
+			.on( "tablesawdestroy.swipetoggle", function(){
 				var $t = $( this );
 
 				$t.removeClass( 'tablesaw-swipe' );
 				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
-				$t.unbind( ".swipetoggle" );
+				$t.off( ".swipetoggle" );
 			})
-			.bind( "tablesawrefresh", function() {
+			.on( "tablesawrefresh", function() {
 				// manual refresh
 				headerWidths = [];
 				$headerCells.each(function() {
