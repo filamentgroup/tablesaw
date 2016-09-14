@@ -187,8 +187,7 @@
 				return;
 			}
 
-			var extraPaddingPixels = 20,
-				containerWidth = $table.parent().width(),
+			var	containerWidth = $table.parent().width(),
 				persist = [],
 				sum = 0,
 				sums = [],
@@ -200,7 +199,7 @@
 
 				persist.push( isPersist );
 
-				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+				sum += headerWidths[ index ];
 				sums.push( sum );
 
 				// is persistent or is hidden
