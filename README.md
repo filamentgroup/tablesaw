@@ -4,6 +4,16 @@
 
 A set of jQuery plugins for responsive tables.
 
+* [#getting-started](Getting Started)
+* [#stack](Stack Mode)
+* [#toggle](Column Toggle Mode)
+* [#swipe](Swipe Mode)
+* [#mini-map](Mini-Map)
+* [#mode-switcher](Mode Switcher)
+* [#sortable](Sortable)
+* [http://filamentgroup.github.io/tablesaw/demo/kitchensink.html](Kitchen Sink Example)
+* [http://filamentgroup.github.io/tablesaw/test/tablesaw.html](Run Tests)
+
 ## Table Modes
 
 ### Stack
@@ -22,15 +32,27 @@ If you only want to use the Stack Table and don’t want all the extra features 
 
 * [Stack-Only Table Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
 
+<details>
+<summary>Stack Options</summary>
+
 #### Opt out of inline labels
 
 To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-tablesaw-no-labels>`; on a per-row basis, use `<tr data-tablesaw-no-labels>`.
+
+</details>
 
 ### Toggle
 
 The Column Toggle Table allows the user to select which columns they want to be visible.
 
-    <table data-tablesaw-mode="columntoggle">
+```html
+<table data-tablesaw-mode="columntoggle">
+```
+
+<details>
+<summary>Toggle Options</summary>
+
+#### Prioritize Columns
 
 Table headers must have a `data-tablesaw-priority` attribute to be eligible to toggle. `data-tablesaw-priority` is a numeric value from 1 to 6, which determine default breakpoints at which a column will show. The breakpoint defaults are:
 
@@ -46,11 +68,15 @@ Table headers must have a `data-tablesaw-priority` attribute to be eligible to t
 
 Keep in mind that the priorities are not exclusive—multiple columns can reuse the same priority value.
 
-#### Add a Mini Map
+#### Add a Mini-Map
 
-    <table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+```html
+<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
+```
 
 ![](docs/columntoggle-minimap.gif)
+
+</details>
 
 * [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
 
@@ -62,13 +88,18 @@ Allows the user to use the swipe gesture (or use the left and right buttons) to 
 <table data-tablesaw-mode="swipe">
 ```
 
+* [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
+
+<details>
+<summary>Swipe Options</summary>
+
 Columns also respect the `data-tablesaw-priority="persist"` attribute.
 
 ```html
 <th data-tablesaw-priority="persist"><!-- Always shows --></th>
 ```
 
-#### Add a Mini Map
+#### Add a Mini-Map
 
 ```html
 <table data-tablesaw-mode="swipe" data-tablesaw-minimap>
@@ -76,7 +107,7 @@ Columns also respect the `data-tablesaw-priority="persist"` attribute.
 
 ![](docs/swipe-minimap.gif)
 
-* [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
+#### All columns visible class
 
 Tablesaw also exposes a `tablesaw-all-cols-visible` class that is toggled on when all of the table columns are visible (and off when not). You can use this in CSS to hide the minimap if needed.
 
@@ -95,6 +126,8 @@ Tablesaw.config = {
 
 * [Configure Swipe Threshold Demo](http://filamentgroup.github.io/tablesaw/demo/swipe-config.html)
 
+</details>
+
 ## Mini Map
 
 Use `data-tablesaw-minimap` to add a series of small dots to show which columns are currently visible and which are hidden. Only available on `swipe` and `columntoggle` tables. Examples available above.
@@ -105,7 +138,7 @@ Use `data-tablesaw-minimap` to add a series of small dots to show which columns 
 <table data-tablesaw-mode-switch>
 
 <!-- With a different default mode -->
-<table data-tablesaw-mode="swipe" data-tablesaw-mode-switch>
+<table data-tablesaw-mode-switch data-tablesaw-mode="swipe">
 
 <!-- Exclude a mode from the switcher -->
 <table data-tablesaw-mode-switch data-tablesaw-mode-exclude="columntoggle">
@@ -137,13 +170,16 @@ The “sortable” option allows the user to sort the table data by clicking on 
 
 Use `data-tablesaw-sortable-switch` to add a select form element to manually choose the sort order.
 
-    <table data-tablesaw-sortable data-tablesaw-sortable-switch>
+```html
+<table data-tablesaw-sortable data-tablesaw-sortable-switch>
+```
 
 ![](docs/sortable.png)
 
 * [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
 
-### Custom Sort Functions
+<details>
+<summary>Custom Sort Functions</summary>
 
 Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
 
@@ -168,6 +204,8 @@ $( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
     };
 });
 ```
+
+</details>
 
 ## Kitchen ~~Table~~ Sink
 
