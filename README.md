@@ -240,6 +240,8 @@ $( "#my-tab-content" ).trigger( "enhance.tablesaw" );
 
 ### Using Stack-Only Tablesaw
 
+* [Stack-Only Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
+
 As shown above, we provide a Stack-mode-only package of Tablesaw. It’s a barebones version that doesn’t include any of the other features above.
 
 <details open>
@@ -271,8 +273,6 @@ And then:
 ```html
 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
 ```
-
-Check out [the Stack-Only demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html) to see a working example.
 
 ### Using Stack-Only Tablesaw SCSS Mixin
 
