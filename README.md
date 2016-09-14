@@ -14,9 +14,7 @@ A set of jQuery plugins for responsive tables.
 * [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
 * [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
-## Table Modes
-
-### Stack
+## Stack Mode
 
 * [Stack Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html) and [Stack-Only Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
 
@@ -30,11 +28,11 @@ The Stack Table stacks the table headers to a two column layout with headers on 
 
 If you only want to use the Stack Table and don’t want all the extra features below (save yourself some bytes), Tablesaw provides a Stack-Only version.
 
-| Options | Description |
+| Option | Description |
 | --- | --- |
 | Opt out of inline labels | To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-tablesaw-no-labels>`; on a per-row basis, use `<tr data-tablesaw-no-labels>`. |
 
-### Toggle
+## Toggle Mode
 
 * [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
 
@@ -46,10 +44,12 @@ The Column Toggle Table allows the user to select which columns they want to be 
 <table data-tablesaw-mode="columntoggle">
 ```
 
-<details>
-<summary>Toggle Options</summary>
+| Option | Description |
+| --- | --- |
+| Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>` |
 
-#### Prioritize Columns
+<details open>
+<summary>Prioritize Columns</summary>
 
 Table headers must have a `data-tablesaw-priority` attribute to be eligible to toggle. `data-tablesaw-priority` is a numeric value from 1 to 6, which determine default breakpoints at which a column will show. The breakpoint defaults are:
 
@@ -65,17 +65,9 @@ Table headers must have a `data-tablesaw-priority` attribute to be eligible to t
 
 Keep in mind that the priorities are not exclusive—multiple columns can reuse the same priority value.
 
-#### Add a Mini-Map
-
-The little dots that appear next to the column toggle popup.
-
-```html
-<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
-```
-
 </details>
 
-### Swipe
+## Swipe Mode
 
 * [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
 
@@ -87,28 +79,14 @@ Allows the user to use the swipe gesture (or use the left and right buttons) to 
 <table data-tablesaw-mode="swipe">
 ```
 
+| Options | Description |
+| --- | --- |
+| Persist a Column | Columns also respect the `data-tablesaw-priority="persist"` attribute: `<th data-tablesaw-priority="persist"><!-- Always shows --></th>` |
+| Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="swipe" data-tablesaw-minimap>` |
+| All columns visible class | Tablesaw also exposes a `tablesaw-all-cols-visible` class that is toggled on when all of the table columns are visible (and off when not). You can use this in CSS to hide the minimap or navigation buttons if needed. |
+
 <details>
-<summary>Swipe Options</summary>
-
-Columns also respect the `data-tablesaw-priority="persist"` attribute.
-
-```html
-<th data-tablesaw-priority="persist"><!-- Always shows --></th>
-```
-
-#### Add a Mini-Map
-
-The little dots that appear next to the column toggle popup.
-
-```html
-<table data-tablesaw-mode="swipe" data-tablesaw-minimap>
-```
-
-#### All columns visible class
-
-Tablesaw also exposes a `tablesaw-all-cols-visible` class that is toggled on when all of the table columns are visible (and off when not). You can use this in CSS to hide the minimap if needed.
-
-#### Advanced: Configure Swipe Thresholds
+<summary>Advanced Option: Configure Swipe Thresholds</summary>
 
 Add a Tablesaw `config` object after including the Tablesaw JavaScript.
 
@@ -144,7 +122,6 @@ Use `data-tablesaw-minimap` to add a series of small dots to show which columns 
 <!-- Exclude a mode from the switcher -->
 <table data-tablesaw-mode-switch data-tablesaw-mode-exclude="columntoggle">
 ```
-
 
 ## Sortable
 
