@@ -2491,6 +2491,34 @@ if( Tablesaw.mustard ) {
 
 	} );
 
+	$( document ).on( "tablesawrefresh", function( e, Tablesaw ){
+		column_toggle = $(e.target).table().data('tablesawColtoggle');
+		popup_menu    = column_toggle.$menu;
+
+		column_toggle.headers.not( "td" ).each( function() {
+			var $this = $( this ),
+				priority = $this.attr("data-tablesaw-priority"),
+				$cells = $this.add( this.cells );
+
+			if( priority && priority !== "persist" ) {
+				$cells.addClass( column_toggle.classes.priorityPrefix + priority );
+
+				$(popup_menu).find('label:contains(' + $this.text() +')').first()
+					.children( 0 )
+					.data( "cells", $cells );
+			}
+		});
+
+		$(popup_menu).find( 'input[type="checkbox"]' ).each(function() {
+			var checked = this.checked;
+
+			$( this ).data( "cells" )
+				.toggleClass( "tablesaw-cell-hidden", !checked )
+				.toggleClass( "tablesaw-cell-visible", checked );
+		});
+
+	} );
+
 	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
 		if( Tablesaw.mode === 'columntoggle' ){
 			$( Tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
