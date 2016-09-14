@@ -49,7 +49,7 @@ The Column Toggle Table allows the user to select which columns they want to be 
 | Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>` |
 
 <details>
-<summary>Advanced Option: Prioritize Columns</summary>
+<summary>_Advanced Option_: Prioritize Columns</summary>
 
 Table headers must have a `data-tablesaw-priority` attribute to be eligible to toggle. `data-tablesaw-priority` is a numeric value from 1 to 6, which determine default breakpoints at which a column will show. The breakpoint defaults are:
 
@@ -87,7 +87,7 @@ Allows the user to use the swipe gesture (or use the left and right buttons) to 
 | All columns visible class | Tablesaw also exposes a `tablesaw-all-cols-visible` class that is toggled on when all of the table columns are visible (and off when not). You can use this in CSS to hide the minimap or navigation buttons if needed. |
 
 <details>
-<summary>Advanced Option: Configure Swipe Thresholds</summary>
+<summary>_Advanced Option_: Configure Swipe Thresholds</summary>
 
 Add a Tablesaw `config` object after including the Tablesaw JavaScript.
 
@@ -155,7 +155,7 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 ![](docs/sortable.png)
 
 <details>
-<summary>Advanced Option: Custom Sort Functions</summary>
+<summary>_Advanced Option_: Custom Sort Functions</summary>
 
 Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
 
@@ -191,10 +191,10 @@ All of the above options combined into a single table.
 
 ## Getting Started
 
-### The Full TableSaw
+### The Full Tablesaw
 
 <details open>
-<summary>TableSaw (no dependencies)</summary>
+<summary>Tablesaw (no dependencies)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -205,7 +205,7 @@ All of the above options combined into a single table.
 </details>
 
 <details open>
-<summary>or TableSaw (jQuery Plugin)</summary>
+<summary>or Tablesaw (jQuery Plugin)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -223,14 +223,27 @@ Don’t forget to add your table markup! For a stack table, this is how it’d l
 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
 ```
 
-The demos above include full markup examples for all of the TableSaw types.
+The demos above include full markup examples for all of the Tablesaw types.
 
-### Using Stack-Only TableSaw
+#### Manual initialization of Tablesaw Components
 
-As shown above, we provide a Stack-mode-only package of TableSaw. It’s a barebones version that doesn’t include any of the other features above.
+If you want to initialize your Tablesaw tables manually, don’t include `<script src="tablesaw-init.js">` in your markup. Instead, you can trigger the `enhance.tablesaw` event on any DOM node you wish. This will scan the tree for any Tablesaw tables and initialize them for you.
+
+Two caveats here:
+
+* This can only properly occur after DOMContentLoaded.
+* Tables must be visible for proper initialization.
+
+```js
+$( "#my-tab-content" ).trigger( "enhance.tablesaw" );
+```
+
+### Using Stack-Only Tablesaw
+
+As shown above, we provide a Stack-mode-only package of Tablesaw. It’s a barebones version that doesn’t include any of the other features above.
 
 <details open>
-<summary>Stack-only TableSaw (no dependencies)</summary>
+<summary>Stack-only Tablesaw (no dependencies)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -241,7 +254,7 @@ As shown above, we provide a Stack-mode-only package of TableSaw. It’s a bareb
 </details>
 
 <details open>
-<summary>or just Stack-only TableSaw (jQuery Plugin)</summary>
+<summary>or just Stack-only Tablesaw (jQuery Plugin)</summary>
 
 ```html
 <link rel="stylesheet" href="tablesaw.css">
@@ -261,7 +274,7 @@ And then:
 
 Check out [the Stack-Only demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html) to see a working example.
 
-### Using Stack-Only TableSaw SCSS Mixin
+### Using Stack-Only Tablesaw SCSS Mixin
 
 To easily customize the breakpoint at which the stack table switches, use the SCSS mixin.  First, include the `tablesaw.stackonly.scss` file instead of `tablesaw.stackonly.css` in your SASS. Then, use a parent selector on your table.
 
@@ -280,13 +293,13 @@ Include the mixin like so:
 
 The argument to `tablesaw-stack` is the breakpoint at which the table will switch from columns to stacked.
 
-### Using Bare TableSaw 
+### Using Bare Tablesaw 
 
 * [Bare CSS Demo](http://filamentgroup.github.io/tablesaw/demo/bare.html)
 
 Tablesaw is designed to be a drop-in solution, providing table styles as well as responsive table functionality.
 
-If you would like the full functionality of the TableSaw plugin but the plugin's default table styles don't fit in with your project, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file for a much lighter default style which is significantly easier to customize.
+If you would like the full functionality of the Tablesaw plugin but the plugin's default table styles don't fit in with your project, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file for a much lighter default style which is significantly easier to customize.
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
