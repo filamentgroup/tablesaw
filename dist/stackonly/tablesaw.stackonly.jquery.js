@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0 - 2016-09-07
+/*! Tablesaw - v3.0.0-beta.0 - 2016-09-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 // UMD module definition
@@ -49,7 +49,8 @@ if( typeof Tablesaw === "undefined" ) {
 			sort: 'Sort'
 		},
 		// cut the mustard
-		mustard: 'querySelector' in document &&
+		mustard: ( 'querySelector' in document ) &&
+			( 'head' in document ) &&
 			( !window.blackberry || window.WebKitPoint ) &&
 			!window.operamini
 	};
@@ -62,7 +63,7 @@ if( Tablesaw.mustard ) {
 }
 
 (function() {
-	var pluginName = "table",
+	var pluginName = "tablesaw",
 		classes = {
 			toolbar: "tablesaw-bar"
 		},
@@ -173,8 +174,8 @@ if( Tablesaw.mustard ) {
 		});
 
 		var tableId = this.$table.attr( 'id' );
-		$( document ).unbind( "." + tableId );
-		$( window ).unbind( "." + tableId );
+		$( document ).off( "." + tableId );
+		$( window ).off( "." + tableId );
 
 		// other plugins
 		this.$table.trigger( events.destroy, [ this ] );
@@ -285,18 +286,18 @@ if( Tablesaw.mustard ) {
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw, colstart ){
-		if( Tablesaw.mode === 'stack' ){
-			var table = new Stack( Tablesaw.table );
+	$( document ).on( "tablesawcreate", function( e, tablesaw, colstart ){
+		if( tablesaw.mode === 'stack' ){
+			var table = new Stack( tablesaw.table );
 			table.init( colstart );
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
+	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
 
-		if( Tablesaw.mode === 'stack' ){
-			$( Tablesaw.table ).data( data.obj ).destroy();
+		if( tablesaw.mode === 'stack' ){
+			$( tablesaw.table ).data( data.obj ).destroy();
 		}
 
 	} );

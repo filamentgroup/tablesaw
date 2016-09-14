@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0 - 2016-09-07
+/*! Tablesaw - v3.0.0-beta.0 - 2016-09-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 /*! Shoestring - v1.0.3 - 2016-09-07
@@ -1979,7 +1979,8 @@ if( typeof Tablesaw === "undefined" ) {
 			sort: 'Sort'
 		},
 		// cut the mustard
-		mustard: 'querySelector' in document &&
+		mustard: ( 'querySelector' in document ) &&
+			( 'head' in document ) &&
 			( !window.blackberry || window.WebKitPoint ) &&
 			!window.operamini
 	};
@@ -1992,7 +1993,7 @@ if( Tablesaw.mustard ) {
 }
 
 (function() {
-	var pluginName = "table",
+	var pluginName = "tablesaw",
 		classes = {
 			toolbar: "tablesaw-bar"
 		},
@@ -2103,8 +2104,8 @@ if( Tablesaw.mustard ) {
 		});
 
 		var tableId = this.$table.attr( 'id' );
-		$( document ).unbind( "." + tableId );
-		$( window ).unbind( "." + tableId );
+		$( document ).off( "." + tableId );
+		$( window ).off( "." + tableId );
 
 		// other plugins
 		this.$table.trigger( events.destroy, [ this ] );
@@ -2215,18 +2216,18 @@ if( Tablesaw.mustard ) {
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw, colstart ){
-		if( Tablesaw.mode === 'stack' ){
-			var table = new Stack( Tablesaw.table );
+	$( document ).on( "tablesawcreate", function( e, tablesaw, colstart ){
+		if( tablesaw.mode === 'stack' ){
+			var table = new Stack( tablesaw.table );
 			table.init( colstart );
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
+	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
 
-		if( Tablesaw.mode === 'stack' ){
-			$( Tablesaw.table ).data( data.obj ).destroy();
+		if( tablesaw.mode === 'stack' ){
+			$( tablesaw.table ).data( data.obj ).destroy();
 		}
 
 	} );
@@ -2279,7 +2280,7 @@ if( Tablesaw.mustard ) {
 				};
 
 				update( this, sel );
-				$( this ).bind( "change refresh", function() {
+				$( this ).on( "change refresh", function() {
 					update( this, sel );
 				});
 			}
@@ -2316,6 +2317,10 @@ if( Tablesaw.mustard ) {
 
 		this.$table = $( element );
 
+		if( !this.$table.length ) {
+			return;
+		}
+
 		this.classes = {
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
@@ -2334,6 +2339,10 @@ if( Tablesaw.mustard ) {
 	};
 
 	ColumnToggle.prototype.init = function() {
+
+		if( !this.$table.length ) {
+			return;
+		}
 
 		var tableId,
 			id,
@@ -2399,7 +2408,7 @@ if( Tablesaw.mustard ) {
 				return;
 			}
 
-			$( document ).unbind( 'click.' + tableId );
+			$( document ).off( 'click.' + tableId );
 			$menuButton.removeClass( 'up' ).addClass( 'down' );
 			$btnContain.removeClass( 'visible' );
 		}
@@ -2409,7 +2418,7 @@ if( Tablesaw.mustard ) {
 			$btnContain.addClass( 'visible' );
 			$menuButton.removeClass( 'down' ).addClass( 'up' );
 
-			$( document ).unbind( 'click.' + tableId, closePopup );
+			$( document ).off( 'click.' + tableId, closePopup );
 
 			window.clearTimeout( closeTimeout );
 			closeTimeout = window.setTimeout(function() {
@@ -2482,18 +2491,18 @@ if( Tablesaw.mustard ) {
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
+	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 
-		if( Tablesaw.mode === 'columntoggle' ){
-			var table = new ColumnToggle( Tablesaw.table );
+		if( tablesaw.mode === 'columntoggle' ){
+			var table = new ColumnToggle( tablesaw.table );
 			table.init();
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
-		if( Tablesaw.mode === 'columntoggle' ){
-			$( Tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
+	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
+		if( tablesaw.mode === 'columntoggle' ){
+			$( tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
 		}
 	} );
 
@@ -2510,14 +2519,14 @@ if( Tablesaw.mustard ) {
 	function sumStyles( $el, props ) {
 		var total = 0;
 		for( var j = 0, k = props.length; j < k; j++ ) {
-			total += parseInt( $el.css( props[ j ] ), 10 );
+			total += parseInt( $el.css( props[ j ] ) || 0, 10 );
 		}
 		return total;
 	}
 
 	function outerWidth( el ) {
 		var $el = $( el );
-		return $el.width() + sumStyles( $el, [ "padding-left", "padding-right", "border-left", "border-right" ] );
+		return $el.width() + sumStyles( $el, [ "padding-left", "padding-right", "border-left-width", "border-right-width" ] );
 	}
 
 	function isIE8() {
@@ -2623,14 +2632,14 @@ if( Tablesaw.mustard ) {
 
 			var $style = $( '#' + tableId + '-persist' );
 			// If style element not yet added OR if the widths have changed
-			if( !$style.length || $style.data( 'hash' ) !== newHash ) {
+			if( !$style.length || $style.data( 'tablesaw-hash' ) !== newHash ) {
 				// Remove existing
 				$style.remove();
 
 				if( styles.length ) {
 					$( '<style>' + styles.join( "\n" ) + '</style>' )
 						.attr( 'id', tableId + '-persist' )
-						.data( 'hash', newHash )
+						.data( 'tablesaw-hash', newHash )
 						.appendTo( $head );
 				}
 			}
@@ -2680,8 +2689,7 @@ if( Tablesaw.mustard ) {
 				return;
 			}
 
-			var extraPaddingPixels = 20,
-				containerWidth = $table.parent().width(),
+			var	containerWidth = $table.parent().width(),
 				persist = [],
 				sum = 0,
 				sums = [],
@@ -2693,7 +2701,7 @@ if( Tablesaw.mustard ) {
 
 				persist.push( isPersist );
 
-				sum += headerWidths[ index ] + ( isPersist ? 0 : extraPaddingPixels );
+				sum += headerWidths[ index ];
 				sums.push( sum );
 
 				// is persistent or is hidden
@@ -2761,7 +2769,7 @@ if( Tablesaw.mustard ) {
 		if( !$table.is( "[" + attrs.disableTouchEvents + "]" ) ) {
 			
 			$table
-				.bind( "touchstart.swipetoggle", function( e ){
+				.on( "touchstart.swipetoggle", function( e ){
 					var originX = getCoord( e, 'pageX' ),
 						originY = getCoord( e, 'pageY' ),
 						x,
@@ -2770,7 +2778,7 @@ if( Tablesaw.mustard ) {
 					$( win ).off( "resize", fakeBreakpoints );
 
 					$( this )
-						.bind( "touchmove", function( e ){
+						.on( "touchmove", function( e ){
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
 							var cfg = Tablesaw.config.swipe;
@@ -2778,7 +2786,7 @@ if( Tablesaw.mustard ) {
 								e.preventDefault();
 							}
 						})
-						.bind( "touchend.swipetoggle", function(){
+						.on( "touchend.swipetoggle", function(){
 							var cfg = Tablesaw.config.swipe;
 							if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
 								if( x - originX < -1 * cfg.horizontalThreshold ){
@@ -2792,13 +2800,13 @@ if( Tablesaw.mustard ) {
 							window.setTimeout(function() {
 								$( win ).on( "resize", fakeBreakpoints );
 							}, 300);
-							$( this ).unbind( "touchmove touchend" );
+							$( this ).off( "touchmove touchend" );
 						});
 				});
 		}
 
 		$table
-			.bind( "tablesawcolumns.swipetoggle", function(){
+			.on( "tablesawcolumns.swipetoggle", function(){
 				var canGoPrev = canAdvance( getPrev() );
 				var canGoNext = canAdvance( getNext() );
 				$prevBtn[ canGoPrev ? "removeClass" : "addClass" ]( classes.hideBtn );
@@ -2806,22 +2814,22 @@ if( Tablesaw.mustard ) {
 
 				$prevBtn.closest( "." + classes.toolbar )[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
 			})
-			.bind( "tablesawnext.swipetoggle", function(){
+			.on( "tablesawnext.swipetoggle", function(){
 				advance( true );
 			} )
-			.bind( "tablesawprev.swipetoggle", function(){
+			.on( "tablesawprev.swipetoggle", function(){
 				advance( false );
 			} )
-			.bind( "tablesawdestroy.swipetoggle", function(){
+			.on( "tablesawdestroy.swipetoggle", function(){
 				var $t = $( this );
 
 				$t.removeClass( 'tablesaw-swipe' );
 				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", fakeBreakpoints );
 
-				$t.unbind( ".swipetoggle" );
+				$t.off( ".swipetoggle" );
 			})
-			.bind( "tablesawrefresh", function() {
+			.on( "tablesawrefresh", function() {
 				// manual refresh
 				headerWidths = [];
 				$headerCells.each(function() {
@@ -2839,10 +2847,9 @@ if( Tablesaw.mustard ) {
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
-
-		if( Tablesaw.mode === 'swipe' ){
-			createSwipeTable( Tablesaw.$table );
+	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+		if( tablesaw.mode === 'swipe' ){
+			createSwipeTable( tablesaw.$table );
 		}
 
 	} );
@@ -2884,12 +2891,12 @@ if( Tablesaw.mustard ) {
 		methods = {
 			_create: function( o ){
 				return $( this ).each(function() {
-					var init = $( this ).data( "init" + pluginName );
+					var init = $( this ).data( pluginName + "-init" );
 					if( init ) {
 						return false;
 					}
 					$( this )
-						.data( "init"+ pluginName, true )
+						.data( pluginName + "-init", true )
 						.trigger( "beforecreate." + pluginName )
 						[ pluginName ]( "_init" , o )
 						.trigger( "create." + pluginName );
@@ -2911,7 +2918,7 @@ if( Tablesaw.mustard ) {
 					makeHeadsActionable = function( h , fn ){
 						$.each( h , function( i , v ){
 							var b = $( "<button class='" + classes.sortButton + "'/>" );
-							b.bind( "click" , { col: v } , fn );
+							b.on( "click" , { col: v } , fn );
 							$( v ).wrapInner( b );
 						});
 					},
@@ -3080,9 +3087,10 @@ if( Tablesaw.mustard ) {
 			replaceTableRows: function( rows ){
 				var el = $( this ),
 					body = el.find( "tbody" );
-				body.html( rows );
-				// body.children().remove();
-				// body.append( rows );
+
+				for( var j = 0, k = rows.length; j < k; j++ ) {
+					body.append( rows[ j ] );
+				}
 			},
 			makeColDefault: function( col , a ){
 				var c = $( col );
@@ -3103,6 +3111,7 @@ if( Tablesaw.mustard ) {
 				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending, col );
 				el[ pluginName ]( "replaceTableRows" , rows );
 				el[ pluginName ]( "makeColDefault" , col , ascending );
+				el.trigger( "tablesaw-sorted" );
 			}
 		};
 
@@ -3117,8 +3126,8 @@ if( Tablesaw.mustard ) {
 			return (typeof returnVal !== "undefined")? returnVal:$(this);
 		}
 		// check init
-		if( !$( this ).data( pluginName + "data" ) ){
-			$( this ).data( pluginName + "active", true );
+		if( !$( this ).data( pluginName + "-active" ) ){
+			$( this ).data( pluginName + "-active", true );
 			$.fn[ pluginName ].prototype._create.call( this , arrg );
 		}
 		return $(this);
@@ -3136,7 +3145,7 @@ if( Tablesaw.mustard ) {
 
 ;(function(){
 
-	var MM = {
+	var MiniMap = {
 		attr: {
 			init: 'data-tablesaw-minimap'
 		}
@@ -3157,7 +3166,7 @@ if( Tablesaw.mustard ) {
 		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
 
 		function showMinimap( $table ) {
-			var mq = $table.attr( MM.attr.init );
+			var mq = $table.attr( MiniMap.attr.init );
 			return !mq || win.matchMedia && win.matchMedia( mq ).matches;
 		}
 
@@ -3183,26 +3192,26 @@ if( Tablesaw.mustard ) {
 
 
 		$table
-			.bind( "tablesawcolumns.minimap", function(){
+			.on( "tablesawcolumns.minimap", function(){
 				showHideNav();
 			})
-			.bind( "tablesawdestroy.minimap", function(){
+			.on( "tablesawdestroy.minimap", function(){
 				var $t = $( this );
 
 				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
 				$( win ).off( "resize", showHideNav );
 
-				$t.unbind( ".minimap" );
+				$t.off( ".minimap" );
 			});
 	}
 
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
+	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 
-		if( ( Tablesaw.mode === 'swipe' || Tablesaw.mode === 'columntoggle' ) && Tablesaw.$table.is( '[ ' + MM.attr.init + ']' ) ){
-			createMiniMap( Tablesaw.$table );
+		if( ( tablesaw.mode === 'swipe' || tablesaw.mode === 'columntoggle' ) && tablesaw.$table.is( '[ ' + MiniMap.attr.init + ']' ) ){
+			createMiniMap( tablesaw.$table );
 		}
 
 	} );
@@ -3262,7 +3271,7 @@ if( Tablesaw.mustard ) {
 			}
 
 			$switcher.find( '.btn' ).tablesawbtn();
-			$switcher.find( 'select' ).bind( 'change', S.onModeChange );
+			$switcher.find( 'select' ).on( 'change', S.onModeChange );
 		},
 		onModeChange: function() {
 			var $t = $( this ),
@@ -3271,10 +3280,10 @@ if( Tablesaw.mustard ) {
 				val = $t.val();
 
 			$switcher.remove();
-			$table.data( 'table' ).destroy();
+			$table.data( 'tablesaw' ).destroy();
 
 			$table.attr( 'data-tablesaw-mode', val );
-			$table.table();
+			$table.tablesaw();
 		}
 	};
 

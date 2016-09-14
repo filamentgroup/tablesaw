@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0 - 2016-09-07
+/*! Tablesaw - v3.0.0-beta.0 - 2016-09-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 ;(function( $ ) {
