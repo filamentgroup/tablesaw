@@ -4,15 +4,15 @@
 
 A set of jQuery plugins for responsive tables.
 
-* [#getting-started](Getting Started)
-* [#stack](Stack Mode)
-* [#toggle](Column Toggle Mode)
-* [#swipe](Swipe Mode)
-* [#mini-map](Mini-Map)
-* [#mode-switcher](Mode Switcher)
-* [#sortable](Sortable)
-* [http://filamentgroup.github.io/tablesaw/demo/kitchensink.html](Kitchen Sink Example)
-* [http://filamentgroup.github.io/tablesaw/test/tablesaw.html](Run Tests)
+* [Getting Started](#getting-started)
+* [Stack Mode](#stack)
+* [Column Toggle Mode](#toggle)
+* [Swipe Mode](#swipe)
+* [Mini-Map](#mini-map)
+* [Mode Switcher](#mode-switcher)
+* [Sortable](#sortable)
+* [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
+* [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
 ## Table Modes
 
