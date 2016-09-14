@@ -85,18 +85,18 @@
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw, colstart ){
-		if( Tablesaw.mode === 'stack' ){
-			var table = new Stack( Tablesaw.table );
+	$( document ).on( "tablesawcreate", function( e, tablesaw, colstart ){
+		if( tablesaw.mode === 'stack' ){
+			var table = new Stack( tablesaw.table );
 			table.init( colstart );
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
+	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
 
-		if( Tablesaw.mode === 'stack' ){
-			$( Tablesaw.table ).data( data.obj ).destroy();
+		if( tablesaw.mode === 'stack' ){
+			$( tablesaw.table ).data( data.obj ).destroy();
 		}
 
 	} );

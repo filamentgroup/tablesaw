@@ -346,10 +346,9 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
-
-		if( Tablesaw.mode === 'swipe' ){
-			createSwipeTable( Tablesaw.$table );
+	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+		if( tablesaw.mode === 'swipe' ){
+			createSwipeTable( tablesaw.$table );
 		}
 
 	} );

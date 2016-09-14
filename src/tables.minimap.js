@@ -7,7 +7,7 @@
 
 ;(function(){
 
-	var MM = {
+	var MiniMap = {
 		attr: {
 			init: 'data-tablesaw-minimap'
 		}
@@ -28,7 +28,7 @@
 		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
 
 		function showMinimap( $table ) {
-			var mq = $table.attr( MM.attr.init );
+			var mq = $table.attr( MiniMap.attr.init );
 			return !mq || win.matchMedia && win.matchMedia( mq ).matches;
 		}
 
@@ -70,10 +70,10 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
+	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 
-		if( ( Tablesaw.mode === 'swipe' || Tablesaw.mode === 'columntoggle' ) && Tablesaw.$table.is( '[ ' + MM.attr.init + ']' ) ){
-			createMiniMap( Tablesaw.$table );
+		if( ( tablesaw.mode === 'swipe' || tablesaw.mode === 'columntoggle' ) && tablesaw.$table.is( '[ ' + MiniMap.attr.init + ']' ) ){
+			createMiniMap( tablesaw.$table );
 		}
 
 	} );

@@ -177,18 +177,18 @@
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ){
+	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 
-		if( Tablesaw.mode === 'columntoggle' ){
-			var table = new ColumnToggle( Tablesaw.table );
+		if( tablesaw.mode === 'columntoggle' ){
+			var table = new ColumnToggle( tablesaw.table );
 			table.init();
 		}
 
 	} );
 
-	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
-		if( Tablesaw.mode === 'columntoggle' ){
-			$( Tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
+	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
+		if( tablesaw.mode === 'columntoggle' ){
+			$( tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
 		}
 	} );
 
