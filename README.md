@@ -20,11 +20,11 @@ A set of jQuery plugins for responsive tables.
 
 The Stack Table stacks the table headers to a two column layout with headers on the left when the viewport width is less than `40em` (`640px`).
 
+![](docs/stack.gif)
+
 ```html
 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
 ```
-
-![](docs/stack.gif)
 
 If you only want to use the Stack Table and don’t want all the extra features below (save yourself some bytes), Tablesaw provides a Stack-Only version.
 
@@ -36,9 +36,9 @@ If you only want to use the Stack Table and don’t want all the extra features 
 
 * [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
 
-![](docs/columntoggle-minimap.gif)
-
 The Column Toggle Table allows the user to select which columns they want to be visible.
+
+![](docs/columntoggle-minimap.gif)
 
 ```html
 <table data-tablesaw-mode="columntoggle">
@@ -71,13 +71,14 @@ Keep in mind that the priorities are not exclusive—multiple columns can reuse 
 
 * [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
 
-![](docs/swipe-minimap.gif)
-
 Allows the user to use the swipe gesture (or use the left and right buttons) to navigate the columns.
+
+![](docs/swipe-minimap.gif)
 
 ```html
 <table data-tablesaw-mode="swipe">
 ```
+
 
 | Options | Description |
 | --- | --- |
@@ -203,7 +204,7 @@ All of the above options combined into a single table.
 
 </details>
 
-<details>
+<details open>
 <summary>or TableSaw (jQuery Plugin)</summary>
 
 ```html
@@ -224,7 +225,6 @@ Don’t forget to add your table markup! For a stack table, this is how it’d l
 
 The demos above include full markup examples for all of the TableSaw types.
 
-
 ### Using Stack-Only TableSaw
 
 As shown above, we provide a Stack-mode-only package of TableSaw. It’s a barebones version that doesn’t include any of the other features above.
@@ -240,7 +240,7 @@ As shown above, we provide a Stack-mode-only package of TableSaw. It’s a bareb
 
 </details>
 
-<details>
+<details open>
 <summary>or just Stack-only TableSaw (jQuery Plugin)</summary>
 
 ```html
@@ -282,11 +282,11 @@ The argument to `tablesaw-stack` is the breakpoint at which the table will switc
 
 ### Using Bare TableSaw 
 
+* [Bare CSS Demo](http://filamentgroup.github.io/tablesaw/demo/bare.html)
+
 Tablesaw is designed to be a drop-in solution, providing table styles as well as responsive table functionality.
 
 If you would like the full functionality of the TableSaw plugin but the plugin's default table styles don't fit in with your project, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file for a much lighter default style which is significantly easier to customize.
-
-* [Bare CSS Demo](http://filamentgroup.github.io/tablesaw/demo/bare.html)
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
