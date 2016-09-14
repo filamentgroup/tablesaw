@@ -11,6 +11,10 @@
 
 		this.$table = $( element );
 
+		if( !this.$table.length ) {
+			return;
+		}
+
 		this.classes = {
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
@@ -29,6 +33,10 @@
 	};
 
 	ColumnToggle.prototype.init = function() {
+
+		if( !this.$table.length ) {
+			return;
+		}
 
 		var tableId,
 			id,
