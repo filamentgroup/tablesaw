@@ -18,6 +18,8 @@ A set of jQuery plugins for responsive tables.
 
 ### Stack
 
+* [Stack Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html) and [Stack-Only Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
+
 The Stack Table stacks the table headers to a two column layout with headers on the left when the viewport width is less than `40em` (`640px`).
 
 ```html
@@ -26,11 +28,7 @@ The Stack Table stacks the table headers to a two column layout with headers on 
 
 ![](docs/stack.gif)
 
-* [Stack Table Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html)
-
 If you only want to use the Stack Table and don’t want all the extra features below (save yourself some bytes), Tablesaw provides a Stack-Only version.
-
-* [Stack-Only Table Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
 
 <details>
 <summary>Stack Options</summary>
@@ -42,6 +40,10 @@ To opt-out of inline label creation (the table header cell text that shows at sm
 </details>
 
 ### Toggle
+
+* [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
+
+![](docs/columntoggle-minimap.gif)
 
 The Column Toggle Table allows the user to select which columns they want to be visible.
 
@@ -70,25 +72,25 @@ Keep in mind that the priorities are not exclusive—multiple columns can reuse 
 
 #### Add a Mini-Map
 
+The little dots that appear next to the column toggle popup.
+
 ```html
 <table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>
 ```
 
-![](docs/columntoggle-minimap.gif)
-
 </details>
 
-* [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
-
 ### Swipe
+
+* [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
+
+![](docs/swipe-minimap.gif)
 
 Allows the user to use the swipe gesture (or use the left and right buttons) to navigate the columns.
 
 ```html
 <table data-tablesaw-mode="swipe">
 ```
-
-* [Swipe Demo](http://filamentgroup.github.io/tablesaw/demo/swipe.html)
 
 <details>
 <summary>Swipe Options</summary>
@@ -101,11 +103,11 @@ Columns also respect the `data-tablesaw-priority="persist"` attribute.
 
 #### Add a Mini-Map
 
+The little dots that appear next to the column toggle popup.
+
 ```html
 <table data-tablesaw-mode="swipe" data-tablesaw-minimap>
 ```
-
-![](docs/swipe-minimap.gif)
 
 #### All columns visible class
 
@@ -134,6 +136,10 @@ Use `data-tablesaw-minimap` to add a series of small dots to show which columns 
 
 ## Mode Switcher
 
+* [Mode Switcher Demo](http://filamentgroup.github.io/tablesaw/demo/modeswitch.html)
+
+![](docs/mode-switch.gif)
+
 ```html
 <table data-tablesaw-mode-switch>
 
@@ -144,11 +150,12 @@ Use `data-tablesaw-minimap` to add a series of small dots to show which columns 
 <table data-tablesaw-mode-switch data-tablesaw-mode-exclude="columntoggle">
 ```
 
-![](docs/mode-switch.gif)
-
-* [Mode Switcher Demo](http://filamentgroup.github.io/tablesaw/demo/modeswitch.html)
 
 ## Sortable
+
+* [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
+
+![](docs/sortable.png)
 
 The “sortable” option allows the user to sort the table data by clicking on the table headers. Since all the columns may not be visible on smaller breakpoints (or not there at all if using the “stack” table mode), relying solely on the column headers to choose the table sort isn’t practical. To address this, there is an optional `data-tablesaw-sortable-switch` attribute on the table that adds a select menu auto-populated with the names of each column in the table with options for choosing ascending or descending sort direction. Data options on table headers can be used to control which columns are sortable (`data-tablesaw-sortable-col`) and the default sort order (`data-tablesaw-sortable-default-col`).
 
@@ -173,10 +180,6 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 ```html
 <table data-tablesaw-sortable data-tablesaw-sortable-switch>
 ```
-
-![](docs/sortable.png)
-
-* [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
 
 <details>
 <summary>Custom Sort Functions</summary>
@@ -209,9 +212,9 @@ $( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
 
 ## Kitchen ~~Table~~ Sink
 
-All of the above options combined into a single table.
-
 * [Kitchen Sink Demo](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
+
+All of the above options combined into a single table.
 
 ## Getting Started
 
