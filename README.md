@@ -48,8 +48,8 @@ The Column Toggle Table allows the user to select which columns they want to be 
 | --- | --- |
 | Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>` |
 
-<details open>
-<summary>Prioritize Columns</summary>
+<details>
+<summary>Advanced Option: Prioritize Columns</summary>
 
 Table headers must have a `data-tablesaw-priority` attribute to be eligible to toggle. `data-tablesaw-priority` is a numeric value from 1 to 6, which determine default breakpoints at which a column will show. The breakpoint defaults are:
 
@@ -128,8 +128,6 @@ Use `data-tablesaw-minimap` to add a series of small dots to show which columns 
 
 * [Sortable Demo](http://filamentgroup.github.io/tablesaw/demo/sort.html)
 
-![](docs/sortable.png)
-
 The “sortable” option allows the user to sort the table data by clicking on the table headers. Since all the columns may not be visible on smaller breakpoints (or not there at all if using the “stack” table mode), relying solely on the column headers to choose the table sort isn’t practical. To address this, there is an optional `data-tablesaw-sortable-switch` attribute on the table that adds a select menu auto-populated with the names of each column in the table with options for choosing ascending or descending sort direction. Data options on table headers can be used to control which columns are sortable (`data-tablesaw-sortable-col`) and the default sort order (`data-tablesaw-sortable-default-col`).
 
 ```html
@@ -154,8 +152,10 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 <table data-tablesaw-sortable data-tablesaw-sortable-switch>
 ```
 
+![](docs/sortable.png)
+
 <details>
-<summary>Custom Sort Functions</summary>
+<summary>Advanced Option: Custom Sort Functions</summary>
 
 Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
 
