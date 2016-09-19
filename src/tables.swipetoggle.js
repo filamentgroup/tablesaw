@@ -24,7 +24,7 @@
 
 	function outerWidth( el ) {
 		var $el = $( el );
-		return $el.width() + sumStyles( $el, [ "padding-left", "padding-right", "border-left-width", "border-right-width" ] );
+		return $el.width() + sumStyles( $el, [ "border-left-width", "border-right-width" ] );
 	}
 
 	function isIE8() {
@@ -65,11 +65,11 @@
 		}
 
 		// Calculate initial widths
-		$table.css('width', 'auto');
+		// $table.css('width', 'auto');
 		$headerCells.each(function() {
 			headerWidths.push( outerWidth( this ) );
 		});
-		$table.css( 'width', '' );
+		// $table.css( 'width', '' );
 
 		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
 
@@ -208,6 +208,7 @@
 				}
 			});
 
+			// We need at least one column to swipe.
 			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
 
 			$headerCells.each(function( index ) {
