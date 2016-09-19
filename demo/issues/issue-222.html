@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TableSaw Stack Table</title>
+
+  <link rel="stylesheet" href="../../dist/tablesaw.css">
+
+  <script src="../../dist/dependencies/jquery.js"></script>
+  <script src="../../dist/tablesaw.js"></script>
+</head>
+<body>
+  <script>
+  $("#grid table").attr("data-tablesaw-mode","columntoggle");
+ $("#grid table").attr("data-tablesaw-minimap","");
+ $("#grid table").attr("data-tablesaw-sortable","");
+ $("#grid table").attr("data-tablesaw-mode-exclude","columntoggle");
+ $("#grid table").attr("data-tablesaw-mode-switch","");
+ $(document).trigger( "enhance.tablesaw" );
+  </script>
+  
+  
+</body>
+</html>
