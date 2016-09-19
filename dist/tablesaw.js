@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0-beta.0 - 2016-09-14
+/*! Tablesaw - v3.0.0-beta.1 - 2016-09-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 /*! Shoestring - v1.0.3 - 2016-09-07
@@ -2526,7 +2526,7 @@ if( Tablesaw.mustard ) {
 
 	function outerWidth( el ) {
 		var $el = $( el );
-		return $el.width() + sumStyles( $el, [ "padding-left", "padding-right", "border-left-width", "border-right-width" ] );
+		return $el.width() + sumStyles( $el, [ "border-left-width", "border-right-width" ] );
 	}
 
 	function isIE8() {
@@ -2567,11 +2567,11 @@ if( Tablesaw.mustard ) {
 		}
 
 		// Calculate initial widths
-		$table.css('width', 'auto');
+		// $table.css('width', 'auto');
 		$headerCells.each(function() {
 			headerWidths.push( outerWidth( this ) );
 		});
-		$table.css( 'width', '' );
+		// $table.css( 'width', '' );
 
 		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
 
@@ -2710,6 +2710,7 @@ if( Tablesaw.mustard ) {
 				}
 			});
 
+			// We need at least one column to swipe.
 			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
 
 			$headerCells.each(function( index ) {
