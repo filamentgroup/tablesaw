@@ -22,9 +22,10 @@
 		hideempty: 'data-tablesaw-hide-empty'
 	};
 
-	var Stack = function( element ) {
+	var Stack = function( element, colstart ) {
 
 		this.$table = $( element );
+		this.colstart = colstart;
 
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
 		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
@@ -37,7 +38,7 @@
 		this.$table.data( data.obj, this );
 	};
 
-	Stack.prototype.init = function( colstart ) {
+	Stack.prototype.init = function( ) {
 		this.$table.addClass( classes.stackTable );
 
 		if( this.labelless ) {
@@ -65,12 +66,24 @@
 						filter = "";
 
 					if( iteration ){
-						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
+						filter = "td:nth-child("+ iteration +"n + " + ( this.colstart ) +")";
 					}
-					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + html + "</b>"  );
+					var filteredCells = $cells.filter( filter );
+					filteredCells.not( ":has(b." + classes.cellLabels + ")" ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'></b>"  );
+					filteredCells.children( "b." + classes.cellLabels ).each(function() {
+						if (this.innerHTML != html) {
+							this.innerHTML = html;
+						}
+					});
 				} else {
-					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
-					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + html + "</b>"  );
+					var newCells = $cells.not( ":has(b." + classes.cellLabels + ")" );
+					newCells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+					newCells.prepend( "<b class='" + classes.cellLabels + "'></b>"  );
+					$cells.children( "b." + classes.cellLabels ).each(function() {
+						if (this.innerHTML != html) {
+							this.innerHTML = html;
+						}
+					});
 				}
 			}
 		});
@@ -87,10 +100,19 @@
 	// on tablecreate, init
 	$( document ).on( "tablesawcreate", function( e, tablesaw, colstart ){
 		if( tablesaw.mode === 'stack' ){
-			var table = new Stack( tablesaw.table );
-			table.init( colstart );
+			var table = new Stack( Tablesaw.table, colstart );
+			table.init();
 		}
 
+	} );
+
+	$( document ).on( "tablesawrefresh", function( e ){
+		var table = $(e.target).table().data( data.obj );
+		if (table) {
+			// Reinitialization will only add labels to new rows
+			// or update existing labels.
+			table.init()
+		}
 	} );
 
 	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
