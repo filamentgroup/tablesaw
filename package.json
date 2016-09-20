@@ -24,9 +24,7 @@
   },
   "main": "dist/tablesaw.js",
   "dependencies": {
-    "javascript-natural-sort": "^0.7.1",
-    "jquery": "^3.1.0",
-    "shoestring": "^1.0.3"
+    "shoestring": "^1.0.5"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
@@ -43,6 +41,10 @@
     "grunt-gh-pages": "~2.0.0",
     "grunt-myth": "~1.1.0",
     "matchdep": "~1.0.1",
-    "qunitjs": "^2.0.0"
+    "qunitjs": "^2.0.0",
+    "jquery": "^3.1.0"
+  },
+  "optionalDependencies": {
+    "javascript-natural-sort": "^0.7.1"
   }
 }
