@@ -297,13 +297,15 @@ Include the mixin like so:
 
 The argument to `tablesaw-stack` is the breakpoint at which the table will switch from columns to stacked.
 
-### Using Bare Tablesaw 
+### Default Styles
 
-* [Bare CSS Demo](http://filamentgroup.github.io/tablesaw/demo/bare.html)
+_Starting with Tablesaw 3.0, the “Bare”, or stripped down style version of Tablesaw has been made the default._
 
-Tablesaw is designed to be a drop-in solution, providing table styles as well as responsive table functionality.
+Some of the more intrusive default styles have instead moved to opt-in classes you can add to the `<table>` element:
 
-If you would like the full functionality of the Tablesaw plugin but the plugin's default table styles don't fit in with your project, use the `tablesaw.bare.css` file instead of the standard `tablesaw.css` file for a much lighter default style which is significantly easier to customize.
+* `tablesaw-row-border`: Adds a bottom border to each table row.
+* `tablesaw-row-zebra`: Adds a light background color to every other table row.
+* `tablesaw-swipe-shadow`: Adds the light shadow to the right of persistant columns to make them stand out a little more.
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 

@@ -2,11 +2,6 @@
  Styles for the table stack mode
 */
 
-/* Table rows have a gray bottom stroke by default */
-.tablesaw-stack tbody tr {
-	border-bottom: 1px solid #dfdfdf;
-}
-
 .tablesaw-stack td .tablesaw-cell-label,
 .tablesaw-stack th .tablesaw-cell-label {
 	display: none;

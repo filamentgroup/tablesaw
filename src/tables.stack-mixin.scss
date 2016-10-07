@@ -1,6 +1,10 @@
 /* Tablesaw Sass Mixins */
 
 @mixin tablesaw-stack-max {
+  /* Table rows have a gray bottom stroke by default */
+  .tablesaw-stack tbody tr {
+    border-bottom: 1px solid #dfdfdf;
+  }
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
     display: none;

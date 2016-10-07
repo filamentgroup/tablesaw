@@ -29,13 +29,16 @@
 	text-transform: inherit;
 	position: relative;
 }
+.tablesaw-sortable .tablesaw-sortable-head button:after {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	content: " ";
+	margin-left: .3125em;
+}
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after,
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
-	width: 7px;
-	height: 10px;
 	content: "\0020";
-	position: absolute;
-	right: .5em;
 }
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after {
 	content: "\2191";
