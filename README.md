@@ -3,7 +3,6 @@
 [![npm version](https://badge.fury.io/js/tablesaw.svg)](https://badge.fury.io/js/tablesaw)
 [![Build Status](https://img.shields.io/travis/filamentgroup/tablesaw/master.svg)](https://travis-ci.org/filamentgroup/tablesaw)
 [![Dependency Status](https://david-dm.org/filamentgroup/tablesaw.svg?theme=shields.io)](https://david-dm.org/filamentgroup/tablesaw)
-[![devDependency Status](https://david-dm.org/filamentgroup/tablesaw/dev-status.svg?theme=shields.io)](https://david-dm.org/filamentgroup/tablesaw#info=devDependencies)
 
 [![Filament Group](http://filamentgroup.com/images/fg-logo-positive-sm-crop.png) ](http://www.filamentgroup.com/)
 
