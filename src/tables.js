@@ -138,7 +138,7 @@ if( Tablesaw.mustard ) {
 	Table.prototype.destroy = function() {
 		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
 		this.$table.prev().filter( '.' + classes.toolbar ).each(function() {
-			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
+			this.className = this.className.replace( /\btablesaw-mode\-\w*\b/gi, '' );
 		});
 
 		var tableId = this.$table.attr( 'id' );
