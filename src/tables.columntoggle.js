@@ -171,9 +171,6 @@
 	};
 
 	ColumnToggle.prototype.destroy = function() {
-		// table toolbars, document and window .tableId events
-		// removed in parent tables.js destroy method
-
 		this.$table.removeClass( this.classes.columnToggleTable );
 		this.$table.find( 'th, td' ).each(function() {
 			var $cell = $( this );

@@ -80,10 +80,4 @@
 		}
 	});
 
-	$( win.document ).on( "tablesawdestroy", function( e, Tablesaw ) {
-		if ( Tablesaw.$table.prev().is( '.tablesaw-bar' ) ) {
-			Tablesaw.$table.prev().remove();
-		}
-	});
-
 })();
