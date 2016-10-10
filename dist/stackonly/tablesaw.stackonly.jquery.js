@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0-beta.1 - 2016-09-19
+/*! Tablesaw - v3.0.0-beta.3 - 2016-10-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 // UMD module definition
@@ -163,14 +163,14 @@ if( Tablesaw.mustard ) {
 		this.$toolbar = $toolbar;
 
 		if( this.mode ) {
-			this.$toolbar.addClass( 'mode-' + this.mode );
+			this.$toolbar.addClass( 'tablesaw-mode-' + this.mode );
 		}
 	};
 
 	Table.prototype.destroy = function() {
 		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
 		this.$table.prev().filter( '.' + classes.toolbar ).each(function() {
-			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
+			this.className = this.className.replace( /\btablesaw-mode\-\w*\b/gi, '' );
 		});
 
 		var tableId = this.$table.attr( 'id' );

@@ -1,28 +1,22 @@
-/*! Tablesaw - v3.0.0-beta.1 - 2016-09-19
+/*! Tablesaw - v3.0.0-beta.3 - 2016-10-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 
-table.tablesaw {
-  empty-cells: show;
+.tablesaw {
+  width: 100%;
   max-width: 100%;
-  width: 100%;
-}
-
-.tablesaw {
+  empty-cells: show;
   border-collapse: collapse;
-  width: 100%;
-}
-
-/* Structure */
-
-.tablesaw {
   border: 0;
   padding: 0;
 }
 
+.tablesaw * {
+  box-sizing: border-box;
+}
+
 .tablesaw th,
 .tablesaw td {
-  box-sizing: border-box;
   padding: .5em .7em;
 }
 
@@ -31,67 +25,55 @@ table.tablesaw {
   padding-bottom: .7em;
 }
 
-.tablesaw-enhanced .tablesaw-bar .btn {
+.tablesaw-bar .btn {
   border: 1px solid #ccc;
+  border-radius: .25em;
   background: none;
-  background-color: #fafafa;
   box-shadow: 0 1px 0 rgba(255,255,255,1);
   color: #4a4a4a;
-  clear: both;
   cursor: pointer;
-  display: block;
-  font: bold 20px/1 sans-serif;
+  display: inline-block;
   margin: 0;
   padding: .5em .85em .4em .85em;
   position: relative;
   text-align: center;
   text-decoration: none;
   text-transform: capitalize;
-  text-shadow: 0 1px 0 #fff;
-  width: 100%;
-  /* Theming */
-  background-image: -webkit-linear-gradient(top, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100%);
-  background-image: linear-gradient( to bottom, rgba( 255,255,255,.1 ) 0%, rgba( 255,255,255,.1 ) 50%, rgba( 170,170,170,.1 ) 55%, rgba( 120,120,120,.15 ) 100% );
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  box-sizing: border-box;
-  -webkit-font-smoothing: antialiased;
-  border-radius: .25em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-.tablesaw-enhanced .tablesaw-bar a.btn {
+.tablesaw-bar a.btn {
   color: #1c95d4;
 }
 
-.tablesaw-enhanced .tablesaw-bar .btn:hover {
+.tablesaw-bar .btn:hover {
   text-decoration: none;
 }
 
 /* Default radio/checkbox styling horizonal controlgroups. */
 
-.tablesaw-enhanced .tablesaw-bar .btn:active {
+.tablesaw-bar .btn:active {
   background-color: #ddd;
-  background-image: -webkit-linear-gradient(top, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70%);
-  background-image: linear-gradient( to bottom, rgba( 100,100,100,.35 ) 0%, rgba( 255,255,255,0 ) 70% );
 }
 
-.tablesaw-enhanced .tablesaw-bar .btn:hover,
-.tablesaw-enhanced .tablesaw-bar .btn:focus {
-  color: #208de3;
-  background-color: #fff;
-  outline: none;
-}
+@supports (box-shadow: none ) {
+  .tablesaw-bar .btn:focus {
+    background-color: #fff;
+    outline: none;
+  }
 
-.tablesaw-bar .btn:focus {
-  box-shadow: 0 0 .35em #4faeef !important;
+  .tablesaw-bar .btn:focus {
+    box-shadow: 0 0 .35em #4faeef !important;
+  }
 }
 
 .tablesaw-bar .btn-select select {
   background: none;
   border: none;
-  display: block;
+  display: inline-block;
   position: absolute;
-  font-weight: inherit;
   left: 0;
   top: 0;
   margin: 0;
@@ -99,12 +81,7 @@ table.tablesaw {
   height: 100%;
   z-index: 2;
   min-height: 1em;
-}
-
-.tablesaw-bar .btn-select select {
   opacity: 0;
-  filter: alpha(opacity=0);
-  display: inline-block;
   color: transparent;
 }
 
@@ -114,16 +91,7 @@ table.tablesaw {
   font-family: sans-serif;
 }
 
-.tablesaw-enhanced .tablesaw-bar .btn.btn-select {
-  color: #4d4d4d;
-  padding-right: 2.5em;
-  min-width: 7.25em;
-  text-align: left;
-  text-indent: 0;
-}
-
-.tablesaw-bar .btn.btn-small,
-.tablesaw-bar .btn.btn-micro {
+.tablesaw-bar .btn {
   display: inline-block;
   width: auto;
   height: auto;
@@ -142,25 +110,19 @@ table.tablesaw {
   padding: .4em .7em .25em .7em;
 }
 
-.tablesaw-enhanced .tablesaw-bar .btn-select {
+.tablesaw-bar .btn-select {
+  padding-right: 1.5em;
+  text-align: left;
+  display: inline-block;
+  color: #4d4d4d;
+  padding-right: 2.5em;
+  min-width: 7.25em;
   text-align: left;
 }
 
 .tablesaw-bar .btn-select:after {
-  background: #e5e5e5;
-  background: rgba(0,0,0,.1);
-  box-shadow: 0 2px 2px rgba(255,255,255,.25);
   content: " ";
-  display: block;
   position: absolute;
-}
-
-.tablesaw-bar .btn-select.btn-small,
-.tablesaw-bar .btn-select.btn-micro {
-  padding-right: 1.5em;
-}
-
-.tablesaw-bar .btn-select:after {
   background: none;
   background-repeat: no-repeat;
   background-position: .25em .45em;
@@ -259,7 +221,6 @@ table.tablesaw {
 
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
   opacity: .25;
-  filter: alpha(opacity=25);
   cursor: default;
   pointer-events: none;
 }
@@ -272,11 +233,11 @@ table.tablesaw {
 }
 
 .tablesaw-toolbar {
-  font-size: .875em;
   float: left;
 }
 
 .tablesaw-toolbar label {
+  font-size: .875em;
   padding: .5em 0;
   clear: both;
   display: block;
@@ -344,112 +305,43 @@ table.tablesaw {
   }
 }
 
-table.tablesaw tbody th {
-  font-weight: bold;
-}
-
-table.tablesaw thead th,
-table.tablesaw thead td {
-  color: #444;
-  font-size: .9em;
-}
-
 .tablesaw th,
 .tablesaw td {
-  line-height: 1em;
   text-align: left;
   vertical-align: middle;
-}
-
-.tablesaw td,
-.tablesaw tbody th {
-  vertical-align: middle;
-  font-size: 1.17em;
-  /* 19px */
-}
-
-.tablesaw td .btn,
-.tablesaw tbody th .btn {
-  margin: 0;
-}
-
-.tablesaw thead {
-  border: 1px solid #e5e5e4;
-  background: #e2dfdc;
-  background-image: -webkit-linear-gradient(top, #fff, #e2dfdc);
-  background-image: linear-gradient(to bottom, #fff, #e2dfdc);
 }
 
 .tablesaw thead th {
-  font-weight: 100;
-  color: #777;
-  text-transform: uppercase;
-  text-shadow: 0 1px 0 #fff;
   text-align: left;
-}
-
-.tablesaw thead tr:first-child th {
-  font-weight: normal;
-  font-family: sans-serif;
-  border-right: 1px solid #e4e1de;
 }
 
 /* Table rows have a gray bottom stroke by default */
 
-.tablesaw tbody tr {
+.tablesaw-row-border tr {
   border-bottom: 1px solid #dfdfdf;
+}
+
+/* Zebra striping */
+
+.tablesaw-row-zebra tr:nth-child(2n) {
+  background-color: #f8f8f8;
 }
 
 .tablesaw caption {
   text-align: left;
-  margin-bottom: 0;
-  opacity: .5;
-  filter: alpha(opacity=50);
-  line-height: 2.4;
+  margin: .59375em 0;
 }
 
-@media (min-width: 25em) {
-  .tablesaw caption {
-    margin-bottom: .6em;
-    line-height: 1.2;
-  }
+.tablesaw-swipe .tablesaw-cell-persist {
+  border-right: 2px solid #e4e1de;
 }
 
-/* Stack */
-
-.tablesaw-cell-label-top {
-  text-transform: uppercase;
-  font-size: .9em;
-  font-weight: normal;
+.tablesaw-swipe-shadow .tablesaw-cell-persist {
+  border-right-width: 1px;
 }
 
-.tablesaw-cell-label {
-  font-size: .65em;
-  text-transform: uppercase;
-  color: #888;
-  font-family: sans-serif;
-}
-
-@media (min-width: 40em) {
-  .tablesaw td {
-    line-height: 2em;
-  }
-}
-
-@media only all {
-  .tablesaw-swipe .tablesaw-cell-persist {
-    border-right: 1px solid #e4e1de;
-  }
-
-  .tablesaw-swipe .tablesaw-cell-persist {
-    box-shadow: 3px 0 4px -1px #e4e1de;
-  }
-}
-
-/* Table rows have a gray bottom stroke by default */
-
-.tablesaw-stack tbody tr {
-  border-bottom: 1px solid #dfdfdf;
+.tablesaw-swipe-shadow .tablesaw-cell-persist {
+  box-shadow: 3px 0 4px -1px #e4e1de;
 }
 
 .tablesaw-stack td .tablesaw-cell-label,
@@ -510,6 +402,12 @@ table.tablesaw thead td {
 }
 
 @media (max-width: 39.9375em) {
+  /* Table rows have a gray bottom stroke by default */
+
+  .tablesaw-stack tbody tr {
+    border-bottom: 1px solid #dfdfdf;
+  }
+
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
     display: none;
@@ -742,12 +640,10 @@ table.tablesaw thead td {
 }
 
 .tablesaw-sortable thead tr th {
-  padding-right: 1.6em;
   vertical-align: top;
 }
 
-.tablesaw-sortable th.tablesaw-sortable-head,
-.tablesaw-sortable tr:first-child th.tablesaw-sortable-head {
+.tablesaw-sortable th.tablesaw-sortable-head.tablesaw-sortable-head {
   padding: 0;
 }
 
@@ -755,7 +651,7 @@ table.tablesaw thead td {
   padding-top: .9em;
   padding-bottom: .7em;
   padding-left: .6em;
-  padding-right: 1.6em;
+  padding-right: .6em;
 }
 
 .tablesaw-sortable .tablesaw-sortable-head button {
@@ -767,23 +663,26 @@ table.tablesaw thead td {
   text-align: left;
   font: inherit;
   text-transform: inherit;
-  position: relative;
 }
 
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after,
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
-  width: 7px;
-  height: 10px;
+.tablesaw-sortable-arrow:after {
+  display: inline-block;
+  width: 10px;
+  height: 14px;
+  content: " ";
+  margin-left: .3125em;
+}
+
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
   content: "\0020";
-  position: absolute;
-  right: .5em;
 }
 
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after {
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
   content: "\2191";
 }
 
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
   content: "\2193";
 }
 
@@ -827,7 +726,6 @@ table.tablesaw thead td {
 
 .tablesaw-advance-dots-hide {
   opacity: .25;
-  filter: alpha(opacity=25);
   cursor: default;
   pointer-events: none;
 }

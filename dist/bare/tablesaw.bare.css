@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0-beta.1 - 2016-09-19
+/*! Tablesaw - v3.0.0-beta.2 - 2016-10-07
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 
@@ -103,7 +103,6 @@ table.tablesaw {
 
 .tablesaw-bar .btn-select select {
   opacity: 0;
-  filter: alpha(opacity=0);
   display: inline-block;
   color: transparent;
 }
@@ -259,7 +258,6 @@ table.tablesaw {
 
 .tablesaw-advance a.tablesaw-nav-btn.disabled {
   opacity: .25;
-  filter: alpha(opacity=25);
   cursor: default;
   pointer-events: none;
 }
@@ -344,12 +342,6 @@ table.tablesaw {
   }
 }
 
-/* Table rows have a gray bottom stroke by default */
-
-.tablesaw-stack tbody tr {
-  border-bottom: 1px solid #dfdfdf;
-}
-
 .tablesaw-stack td .tablesaw-cell-label,
 .tablesaw-stack th .tablesaw-cell-label {
   display: none;
@@ -408,6 +400,12 @@ table.tablesaw {
 }
 
 @media (max-width: 39.9375em) {
+  /* Table rows have a gray bottom stroke by default */
+
+  .tablesaw-stack tbody tr {
+    border-bottom: 1px solid #dfdfdf;
+  }
+
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
     display: none;
@@ -668,13 +666,17 @@ table.tablesaw {
   position: relative;
 }
 
+.tablesaw-sortable .tablesaw-sortable-head button:after {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  content: " ";
+  margin-left: .3125em;
+}
+
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after,
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
-  width: 7px;
-  height: 10px;
   content: "\0020";
-  position: absolute;
-  right: .5em;
 }
 
 .tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after {
@@ -725,7 +727,6 @@ table.tablesaw {
 
 .tablesaw-advance-dots-hide {
   opacity: .25;
-  filter: alpha(opacity=25);
   cursor: default;
   pointer-events: none;
 }

@@ -36,8 +36,6 @@ body {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-}
-.tablesaw-swipe td.title a {
 	max-width: 10em;
 	max-width: 40vw;
 }
