@@ -1,7 +1,9 @@
-/*! Tablesaw - v3.0.0-beta.2 - 2016-09-20
+/*! Tablesaw - v3.0.0-beta.3 - 2016-10-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
-;(function( $ ) {
+;(function( win ) {
+
+	var $ = 'jQuery' in win ? jQuery : shoestring;
 
 	// DOM-ready auto-init of plugins.
 	// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
@@ -9,4 +11,4 @@
 		$( document ).trigger( "enhance.tablesaw" );
 	});
 
-})( shoestring || jQuery );
+})( typeof window !== "undefined" ? window : this );

@@ -1,40 +1,28 @@
-/*! Tablesaw - v3.0.0-beta.2 - 2016-09-20
+/*! Tablesaw - v3.0.0-beta.3 - 2016-10-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2016 Filament Group; Licensed MIT */
 
-table.tablesaw {
-  empty-cells: show;
+.tablesaw {
+  width: 100%;
   max-width: 100%;
-  width: 100%;
-}
-
-.tablesaw {
+  empty-cells: show;
   border-collapse: collapse;
-  width: 100%;
-}
-
-/* Structure */
-
-.tablesaw {
   border: 0;
   padding: 0;
 }
 
+.tablesaw * {
+  box-sizing: border-box;
+}
+
 .tablesaw th,
 .tablesaw td {
-  box-sizing: border-box;
   padding: .5em .7em;
 }
 
 .tablesaw thead tr:first-child th {
   padding-top: .9em;
   padding-bottom: .7em;
-}
-
-/* Table rows have a gray bottom stroke by default */
-
-.tablesaw-stack tbody tr {
-  border-bottom: 1px solid #dfdfdf;
 }
 
 .tablesaw-stack td .tablesaw-cell-label,
@@ -95,6 +83,12 @@ table.tablesaw {
 }
 
 @media (max-width: 39.9375em) {
+  /* Table rows have a gray bottom stroke by default */
+
+  .tablesaw-stack tbody tr {
+    border-bottom: 1px solid #dfdfdf;
+  }
+
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
     display: none;
