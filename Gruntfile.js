@@ -7,8 +7,8 @@ module.exports = function(grunt) {
 		'src/tables.stack.js',
 		'src/tables.btnmarkup.js',
 		'src/tables.columntoggle.js',
-		'src/tables.swipetoggle.js',
 		'src/tables.sortable.js',
+		'src/tables.swipetoggle.js',
 		'src/tables.minimap.js',
 		'src/tables.modeswitch.js',
 		'src/tables.outro.js'

@@ -5,18 +5,16 @@
 	position: relative;
 }
 .tablesaw-sortable thead tr th {
-	padding-right: 1.6em;
 	vertical-align: top;
 }
-.tablesaw-sortable th.tablesaw-sortable-head,
-.tablesaw-sortable tr:first-child th.tablesaw-sortable-head {
+.tablesaw-sortable th.tablesaw-sortable-head.tablesaw-sortable-head {
 	padding: 0;
 }
 .tablesaw-sortable th.tablesaw-sortable-head button {
 	padding-top: .9em;
 	padding-bottom: .7em;
 	padding-left: .6em;
-	padding-right: 1.6em;
+	padding-right: .6em;
 }
 .tablesaw-sortable .tablesaw-sortable-head button {
 	min-width: 100%;
@@ -27,23 +25,22 @@
 	text-align: left;
 	font: inherit;
 	text-transform: inherit;
-	position: relative;
 }
-.tablesaw-sortable .tablesaw-sortable-head button:after {
+.tablesaw-sortable-arrow:after {
 	display: inline-block;
-	width: 14px;
+	width: 10px;
 	height: 14px;
 	content: " ";
 	margin-left: .3125em;
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after,
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
 	content: "\0020";
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after {
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
 	content: "\2191";
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
+.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
 	content: "\2193";
 }
 

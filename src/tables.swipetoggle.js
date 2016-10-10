@@ -27,15 +27,6 @@
 		return $el.width() + sumStyles( $el, [ "border-left-width", "border-right-width" ] );
 	}
 
-	function isIE8() {
-		var div = document.createElement('div'),
-			all = div.getElementsByTagName('i');
-
-		div.innerHTML = '<!--[if lte IE 8]><i></i><![endif]-->';
-
-		return !!all.length;
-	}
-
 	var classes = {
 		// TODO duplicate class, also in tables.js
 		toolbar: "tablesaw-bar",
@@ -56,24 +47,21 @@
 			$headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' ),
 			headerWidths = [],
 			$head = $( document.head || 'head' ),
-			tableId = $table.attr( 'id' ),
-			// TODO switch this to an nth-child feature test
-			supportsNthChild = !isIE8();
+			tableId = $table.attr( 'id' );
 
 		if( !$headerCells.length ) {
 			throw new Error( "tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?" );
 		}
 
+		$table.addClass( "tablesaw-swipe" );
+
 		// Calculate initial widths
-		// $table.css('width', 'auto');
 		$headerCells.each(function() {
-			headerWidths.push( outerWidth( this ) );
+			var width = outerWidth( this );
+			headerWidths.push( width );
 		});
-		// $table.css( 'width', '' );
 
 		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
-
-		$table.addClass( "tablesaw-swipe" );
 
 		if( !tableId ) {
 			tableId = 'tableswipe-' + Math.round( Math.random() * 10000 );
@@ -198,7 +186,6 @@
 					isPersist = $t.is( '[data-tablesaw-priority="persist"]' );
 
 				persist.push( isPersist );
-
 				sum += headerWidths[ index ];
 				sums.push( sum );
 
@@ -227,9 +214,7 @@
 				}
 			});
 
-			if( supportsNthChild ) {
-				unmaintainWidths();
-			}
+			unmaintainWidths();
 			$table.trigger( 'tablesawcolumns' );
 		}
 
@@ -245,9 +230,7 @@
 					}
 				}
 
-				if( supportsNthChild ) {
-					maintainWidths();
-				}
+				maintainWidths();
 
 				hideColumn( $headerCellsNoPersist.get( pair[ 0 ] ) );
 				showColumn( $headerCellsNoPersist.get( pair[ 1 ] ) );

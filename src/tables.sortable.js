@@ -69,6 +69,7 @@
 							var b = $( "<button class='" + classes.sortButton + "'/>" );
 							b.on( "click" , { col: v } , fn );
 							$( v ).wrapInner( b );
+							b.append( "<span class='tablesaw-sortable-arrow'>" );
 						});
 					},
 					clearOthers = function( sibs ){
