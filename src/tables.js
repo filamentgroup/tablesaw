@@ -131,7 +131,7 @@ if( Tablesaw.mustard ) {
 		this.$toolbar = $toolbar;
 
 		if( this.mode ) {
-			this.$toolbar.addClass( 'mode-' + this.mode );
+			this.$toolbar.addClass( 'tablesaw-mode-' + this.mode );
 		}
 	};
 
