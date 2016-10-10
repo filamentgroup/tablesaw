@@ -30,7 +30,7 @@
 				dataMode = $table.attr( 'data-tablesaw-mode' ),
 				isSelected;
 
-			html.push( '<span class="btn btn-small">&#160;<select>' );
+			html.push( '<span class="btn"><select>' );
 			for( var j=0, k = S.modes.length; j<k; j++ ) {
 				if( ignoreMode && ignoreMode.toLowerCase() === S.modes[ j ] ) {
 					continue;

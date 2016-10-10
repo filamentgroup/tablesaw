@@ -29,13 +29,19 @@
 			},
 			_select: function( sel ) {
 				var update = function( oEl, sel ) {
-					var opts = $( sel ).find( "option" ),
-						label, el, children;
+					var opts = $( sel ).find( "option" );
+					var label = document.createElement( "span" );
+					var el;
+					var children;
+					var found = false;
+
+					label.setAttribute( "aria-hidden", "true" );
+					label.innerHTML = "&#160;";
 
 					opts.each(function() {
 						var opt = this;
 						if( opt.selected ) {
-							label = document.createTextNode( opt.text );
+							label.innerHTML = opt.text;
 						}
 					});
 
@@ -44,9 +50,14 @@
 						for( var i = 0, l = children.length; i < l; i++ ) {
 							el = children[ i ];
 
-							if( el && el.nodeType === 3 ) {
+							if( el && el.nodeName.toUpperCase() === "SPAN" ) {
 								oEl.replaceChild( label, el );
+								found = true;
 							}
+						}
+
+						if( !found ) {
+							oEl.insertBefore( label, oEl.firstChild );
 						}
 					}
 				};

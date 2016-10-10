@@ -118,7 +118,7 @@
 
 						var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
 
-						html.push( '<span class="btn btn-small">&#160;<select>' );
+						html.push( '<span class="btn"><select>' );
 						heads.each(function( j ) {
 							var $t = $( this );
 							var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
