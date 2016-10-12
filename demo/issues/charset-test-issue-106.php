@@ -12,7 +12,6 @@ header( "Content-Type:text/html; charset=windows-1250" );
 	<link rel="stylesheet" href="../demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
 
-	<script src="../../dist/dependencies/jquery.js"></script>
 	<script src="../../dist/tablesaw.js"></script>
 	<script src="../../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
