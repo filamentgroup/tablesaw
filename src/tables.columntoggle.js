@@ -44,7 +44,9 @@
 			$popup,
 			$menu,
 			$btnContain,
-			self = this;
+			self = this,
+			initiallyHidden = [],
+			initiallyShown = [];
 
 		this.$table.addClass( this.classes.columnToggleTable );
 
@@ -60,6 +62,7 @@
 		$( this.headers ).not( "td" ).each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
+				hidden = $this.data("tablesaw-hidden"),
 				$cells = self.$getCells( this );
 
 			if( priority && priority !== "persist" ) {
@@ -71,6 +74,11 @@
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
+				if (hidden === true) {
+					initiallyHidden.push(this);
+				} else if (hidden === false) {
+					initiallyShown.push(this);
+				}
 			}
 		});
 
@@ -138,6 +146,17 @@
 			self.refreshToggle();
 		});
 
+
+		$(initiallyHidden).each( function ( idx, th ) {
+			self.$getCells( th )
+				.toggleClass( "tablesaw-cell-hidden", true )
+				.toggleClass( "tablesaw-cell-visible", false );
+		});
+		$(initiallyShown).each( function ( idx, th ) {
+			self.$getCells( th )
+				.toggleClass( "tablesaw-cell-hidden", false )
+				.toggleClass( "tablesaw-cell-visible", true );
+		});
 		this.refreshToggle();
 	};
 
