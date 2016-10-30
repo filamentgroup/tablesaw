@@ -64,6 +64,17 @@
 				priority = $this.attr("data-tablesaw-priority"),
 				hidden = $this.data("tablesaw-hidden"),
 				$cells = self.$getCells( this );
+			if (hidden === undefined) {
+				// This secondary attribute check is only necessary when using shoestring, not jQuery.
+				hidden = $this.attr("data-tablesaw-hidden");
+				if (hidden !== undefined) {
+					if (hidden === "true") {
+						hidden = true;
+					} else if (hidden === "false") {
+						hidden = false;
+					}
+				}
+			}
 
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
@@ -149,13 +160,13 @@
 
 		$(initiallyHidden).each( function ( idx, th ) {
 			self.$getCells( th )
-				.toggleClass( "tablesaw-cell-hidden", true )
-				.toggleClass( "tablesaw-cell-visible", false );
+				.addClass( "tablesaw-cell-hidden" )
+				.removeClass( "tablesaw-cell-visible" );
 		});
 		$(initiallyShown).each( function ( idx, th ) {
 			self.$getCells( th )
-				.toggleClass( "tablesaw-cell-hidden", false )
-				.toggleClass( "tablesaw-cell-visible", true );
+				.removeClass( "tablesaw-cell-hidden" )
+				.addClass( "tablesaw-cell-visible" );
 		});
 		this.refreshToggle();
 	};
