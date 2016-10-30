@@ -428,4 +428,92 @@
 		assert.strictEqual( $secondRowLastCell.is( '.tablesaw-cell-hidden' ), true, 'Cell 1,4 is hidden after checkbox unchecked' );
 	});
 
+	QUnit.module ('tablesaw initially toggled columns', {
+		beforeEach: function() {
+			var toggledHtml = [
+				'<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap data-tablesaw-no-labels>',
+				'<thead>',
+					'<tr>',
+						'<th data-tablesaw-priority="1" data-tablesaw-hidden="true">Header 1</th>',
+						'<th data-tablesaw-priority="2" data-tablesaw-hidden="false">Header 2</th>',
+						'<th data-tablesaw-priority="5">Header 3</th>',
+						'<th data-tablesaw-priority="6">Header 4</th>',
+					'</tr>',
+				'</thead>',
+				'<tbody>',
+					'<tr>',
+						'<td>Body Row 1</td>',
+						'<td>1</td>',
+						'<td>This column text is designed to make the columns really wide.</td>',
+						'<td>This column text is designed to make the columns really wide.</td>',
+					'</tr>',
+					'<tr><td>Body Row 2</td><td>2</td><td>2</td><td>2</td></tr>',
+					'<tr><td>Body Row 3</td><td>3</td><td>A</td><td>A</td></tr>',
+				'</tbody>',
+				'</table>'].join('');
+			$fixture.html( toggledHtml );
+			$table = $fixture.find( 'table' );
+			$( document ).trigger( 'enhance.tablesaw' );
+		}
+	});
+
+	QUnit.test('Are columns initially hidden or visible', function( assert ) {
+		var $firstRowCell1 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 0 );
+		var $firstRowCell2 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 1 );
+
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), true, 'First cell is initially hidden.' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-visible' ), false, 'First cell is initially not visible.' );
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), false, 'Second cell is initially not hidden.' );
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-visible' ), true, 'Second cell is initially visible.' );
+
+		var $toggleButton = $table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
+			.next().find( 'input[type="checkbox"]' ).first();
+		assert.strictEqual ( $toggleButton[0].checked, false, "First checkbox should've been turned off." );
+		$toggleButton.trigger( 'click' );
+
+		// close dialog
+		$( '.tablesaw-columntoggle-popup .close' ).trigger( "click" );
+
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'First cell should no longer be hidden.' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-visible' ), true, 'First cell should be visible.' );
+
+		var $middlecheck = $($table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
+			.next().find( 'input[type="checkbox"]' )[1]);
+		assert.strictEqual ( $middlecheck[0].checked, true, "Second checkbox should've been turned on." );
+		$middlecheck.trigger( 'click' );
+
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-hidden' ), true, 'Second cell should be hidden.' );
+		assert.strictEqual( $firstRowCell2.is( '.tablesaw-cell-visible' ), false, 'Second cell should no longer be visible.' );
+	});
+
+	QUnit.test('Is minimap correct', function( assert ) {
+		var $minimap = $table.prev().find( '.minimap' );
+		assert.ok( $minimap.length, 'Minimap exists.' );
+		assert.strictEqual( $minimap.find( 'li' ).first().is( '.tablesaw-advance-dots-hide' ), true, 'First minimap dot is hidden.' );
+		assert.strictEqual( $($minimap.find( 'li' )[1]).is( '.tablesaw-advance-dots-hide' ), false, 'Second minimap dot is visible.' );
+	});
+
+	QUnit.test('Shoestring data test', function( assert ) {
+		var $firstRowCell1 = $table.find( 'tbody tr' ).eq( 0 ).find( 'td' ).eq( 0 );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), true, 'First cell is initially hidden.' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-visible' ), false, 'First cell is initially not visible.' );
+		$table.tablesaw().data('tablesaw').destroy();
+		$table.find( 'thead tr' ).eq( 0 ).find( 'th' ).eq( 0).data('tablesaw-hidden', false);
+		$table.tablesaw();
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), false, 'First cell is no longer initially hidden.' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-visible' ), true, 'First cell is no longer initially not visible.' );
+
+		var $toggleButton = $table.prev().find( '.tablesaw-columntoggle-btn' ).trigger( 'click' )
+				.next().find( 'input[type="checkbox"]' ).first();
+		assert.strictEqual ( $toggleButton[0].checked, true, "First checkbox should've been turned on." );
+		$toggleButton.trigger( 'click' );
+
+		// close dialog
+		$( '.tablesaw-columntoggle-popup .close' ).trigger( "click" );
+
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-hidden' ), true, 'First cell should be hidden.' );
+		assert.strictEqual( $firstRowCell1.is( '.tablesaw-cell-visible' ), false, 'First cell should no longer be visible.' );
+	});
+
+
 }( window.shoestring || window.jQuery || window.$jQ ));
