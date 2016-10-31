@@ -17,7 +17,7 @@
   "bugs": "https://github.com/filamentgroup/tablesaw/issues",
   "license": "MIT",
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 4"
   },
   "scripts": {
     "test": "./node_modules/.bin/grunt travis"
