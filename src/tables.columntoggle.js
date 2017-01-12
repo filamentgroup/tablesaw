@@ -67,7 +67,8 @@
 
 				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
 					.appendTo( $menu )
-					.children( 0 )
+					.children()
+					.first()
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
