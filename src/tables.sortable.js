@@ -91,7 +91,7 @@
 							newSortValue = heads.index( head[0] );
 
 						clearOthers( head.siblings() );
-						if( head.is( "." + classes.descend ) ){
+						if( head.is( "." + classes.descend ) || !head.is( "." + classes.ascend ) ){
 							el[ pluginName ]( "sortBy" , v , true);
 							newSortValue += '_asc';
 						} else {
