@@ -9,9 +9,9 @@
 A set of plugins for responsive tables.
 
 * [Getting Started](#getting-started)
-* [Stack Mode](#stack)
-* [Column Toggle Mode](#toggle)
-* [Swipe Mode](#swipe)
+* [Stack Mode](#stack-mode)
+* [Column Toggle Mode](#toggle-mode)
+* [Swipe Mode](#swipe-mode)
 * [Mini-Map](#mini-map)
 * [Mode Switcher](#mode-switcher)
 * [Sortable](#sortable)
