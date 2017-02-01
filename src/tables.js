@@ -7,25 +7,21 @@
 * MIT License
 */
 
-if( typeof Tablesaw === "undefined" ) {
-	Tablesaw = {
-		i18n: {
-			modes: [ 'Stack', 'Swipe', 'Toggle' ],
-			columns: 'Col<span class=\"a11y-sm\">umn</span>s',
-			columnBtnText: 'Columns',
-			columnsDialogError: 'No eligible columns.',
-			sort: 'Sort'
-		},
-		// cut the mustard
-		mustard: ( 'querySelector' in document ) &&
-			( 'head' in document ) &&
-			( !window.blackberry || window.WebKitPoint ) &&
-			!window.operamini
-	};
-}
-if( !Tablesaw.config ) {
-	Tablesaw.config = {};
-}
+var Tablesaw = {
+	i18n: {
+		modes: [ 'Stack', 'Swipe', 'Toggle' ],
+		columns: 'Col<span class=\"a11y-sm\">umn</span>s',
+		columnBtnText: 'Columns',
+		columnsDialogError: 'No eligible columns.',
+		sort: 'Sort'
+	},
+	// cut the mustard
+	mustard: ( 'querySelector' in document ) &&
+		( 'head' in document ) &&
+		( !window.blackberry || window.WebKitPoint ) &&
+		!window.operamini
+};
+
 if( Tablesaw.mustard ) {
 	$( document.documentElement ).addClass( 'tablesaw-enhanced' );
 }

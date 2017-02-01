@@ -7,12 +7,12 @@
 
 ;(function(){
 
-	$.extend( Tablesaw.config, {
-		swipe: {
+	function getSwipeConfig() {
+		return $.extend({
 			horizontalThreshold: 15,
 			verticalThreshold: 30
-		}
-	});
+		}, TablesawConfig.swipe );
+	}
 
 	function sumStyles( $el, props ) {
 		var total = 0;
@@ -249,7 +249,7 @@
 		}
 
 		if( !$table.is( "[" + attrs.disableTouchEvents + "]" ) ) {
-			
+
 			$table
 				.on( "touchstart.swipetoggle", function( e ){
 					var originX = getCoord( e, 'pageX' ),
@@ -263,13 +263,13 @@
 						.on( "touchmove", function( e ){
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
-							var cfg = Tablesaw.config.swipe;
+							var cfg = getSwipeConfig();
 							if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
 								e.preventDefault();
 							}
 						})
 						.on( "touchend.swipetoggle", function(){
-							var cfg = Tablesaw.config.swipe;
+							var cfg = getSwipeConfig();
 							if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
 								if( x - originX < -1 * cfg.horizontalThreshold ){
 									advance( true );

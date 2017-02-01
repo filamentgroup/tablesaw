@@ -93,15 +93,17 @@ Allows the user to use the swipe gesture (or use the left and right buttons) to 
 <details>
 <summary>_Advanced Option_: Configure Swipe Thresholds</summary>
 
-Add a Tablesaw `config` object after including the Tablesaw JavaScript.
+Add a `TablesawConfig` object to your page in a `<script>` element. It doesn’t matter if it’s declared before or after the Tablesaw JavaScript.
 
 ```js
-Tablesaw.config = {
+<script>
+TablesawConfig = {
   swipe: {
     horizontalThreshold: 15,
     verticalThreshold: 20
   }
 };
+</script>
 ```
 
 * [Configure Swipe Threshold Demo](http://filamentgroup.github.io/tablesaw/demo/swipe-config.html)
