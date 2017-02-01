@@ -138,9 +138,9 @@ module.exports = function(grunt) {
 			src: {
 				options: {
 					jshintrc: 'src/.jshintrc',
-					ignores: ['src/tables.intro.*.js', 'src/tables.outro.js', 'src/lib/**']
+					ignores: []
 				},
-				src: ['src/**/*.js']
+				src: ['dist/tablesaw-init.js', 'dist/tablesaw.jquery.js']
 			},
 			test: {
 				options: {
@@ -155,7 +155,7 @@ module.exports = function(grunt) {
 				tasks: ['jshint:gruntfile']
 			},
 			src: {
-				files: ['<%= concat.cssall.src %>', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>'],
+				files: ['dist/<%= pkg.name %>.js', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>'],
 				tasks: ['src']
 			},
 			test: {
@@ -231,7 +231,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);
 
-	grunt.registerTask('default', ['jshint', 'src', 'qunit', 'filesize']);
+	grunt.registerTask('default', ['src', 'jshint', 'qunit', 'filesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);

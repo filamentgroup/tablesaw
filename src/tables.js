@@ -1,5 +1,3 @@
-/*global Tablesaw:true */
-
 /*
 * tablesaw: A set of plugins for responsive tables
 * Stack and Column Toggle tables
