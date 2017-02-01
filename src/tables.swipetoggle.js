@@ -11,7 +11,7 @@
 		return $.extend({
 			horizontalThreshold: 15,
 			verticalThreshold: 30
-		}, TablesawConfig.swipe );
+		}, typeof TablesawConfig !== "undefined" ? TablesawConfig.swipe : {} );
 	}
 
 	function sumStyles( $el, props ) {
@@ -23,8 +23,7 @@
 	}
 
 	function outerWidth( el ) {
-		var $el = $( el );
-		return $el.width() + sumStyles( $el, [ "border-left-width", "border-right-width" ] );
+		return $( el ).width();
 	}
 
 	var classes = {
