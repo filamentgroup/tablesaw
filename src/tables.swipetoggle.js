@@ -14,14 +14,6 @@
 		}, typeof TablesawConfig !== "undefined" ? TablesawConfig.swipe : {} );
 	}
 
-	function sumStyles( $el, props ) {
-		var total = 0;
-		for( var j = 0, k = props.length; j < k; j++ ) {
-			total += parseInt( $el.css( props[ j ] ) || 0, 10 );
-		}
-		return total;
-	}
-
 	function outerWidth( el ) {
 		return $( el ).width();
 	}
