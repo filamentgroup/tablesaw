@@ -197,6 +197,12 @@ All of the above options combined into a single table.
 
 ## Getting Started
 
+Available through npm:
+
+```
+npm install tablesaw
+```
+
 ### The Full Tablesaw
 
 <details open>
