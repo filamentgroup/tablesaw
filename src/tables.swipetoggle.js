@@ -14,10 +14,6 @@
 		}, typeof TablesawConfig !== "undefined" ? TablesawConfig.swipe : {} );
 	}
 
-	function outerWidth( el ) {
-		return $( el ).width();
-	}
-
 	var classes = {
 		// TODO duplicate class, also in tables.js
 		toolbar: "tablesaw-bar",
@@ -48,7 +44,7 @@
 
 		// Calculate initial widths
 		$headerCells.each(function() {
-			var width = outerWidth( this );
+			var width = this.offsetWidth;
 			headerWidths.push( width );
 		});
 
@@ -94,7 +90,7 @@
 			$headerCells.each(function( index ) {
 				var width;
 				if( isPersistent( this ) ) {
-					width = outerWidth( this );
+					width = this.offsetWidth;
 
 					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
@@ -306,7 +302,7 @@
 				// manual refresh
 				headerWidths = [];
 				$headerCells.each(function() {
-					var width = outerWidth( this );
+					var width = this.offsetWidth;
 					headerWidths.push( width );
 				});
 
