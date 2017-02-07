@@ -41,7 +41,6 @@ header( "Content-Type:text/html; charset=windows-1250" );
 			<a href="stackonly.html">Stack Only</a>
 			<a href="swipe.html">Swipe Table</a>
 			<a href="toggle.html">Toggle</a>
-			<a href="bare.html">Bare</a>
 			</nav>
 		</div>
 	</div>
