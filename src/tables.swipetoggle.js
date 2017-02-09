@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function(){
+(function(){
 
 	function getSwipeConfig() {
 		return $.extend({
