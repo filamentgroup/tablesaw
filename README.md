@@ -323,8 +323,8 @@ Some of the more intrusive default styles have instead moved to opt-in classes y
 
 | | Stack | Column Toggle | Swipe | Sortable |
 | --- | --- | --- | --- | --- |
-| rowspan | _Not yet supported_ | Supported | Supported | _Not yet supported_ |
-| colspan | Supported | Supported | Supported | Supported |
+| `rowspan` | _Not yet supported_ ([#247](https://github.com/filamentgroup/tablesaw/issues/247)) | Supported | Supported | _Not yet supported_ ([#268](https://github.com/filamentgroup/tablesaw/issues/268)) |
+| `colspan` | Supported | Supported | Supported | Supported |
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
