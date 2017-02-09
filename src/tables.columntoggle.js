@@ -116,7 +116,7 @@
 
 			window.clearTimeout( closeTimeout );
 			closeTimeout = window.setTimeout(function() {
-				$( document ).one( 'click.' + tableId, closePopup );
+				$( document ).on( 'click.' + tableId, closePopup );
 			}, 15 );
 		}
 
