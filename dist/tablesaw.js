@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2016-10-12
+/*! Tablesaw - v3.0.0-beta.4 - 2017-02-09
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2016 Filament Group; Licensed MIT */
+* Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v1.0.5 - 2016-09-20
 * http://github.com/filamentgroup/shoestring/
 * Copyright (c) 2016 Scott Jehl, Filament Group, Inc; Licensed MIT & GPLv2 */ 
@@ -1989,34 +1989,23 @@
 		factory(shoestring);
 	}
 }(function ($) {
-	var Tablesaw, win = typeof window !== "undefined" ? window : this;
+	var win = typeof window !== "undefined" ? window : this;
 
-/*
-* tablesaw: A set of plugins for responsive tables
-* Stack and Column Toggle tables
-* Copyright (c) 2013 Filament Group, Inc.
-* MIT License
-*/
+var Tablesaw = {
+	i18n: {
+		modes: [ 'Stack', 'Swipe', 'Toggle' ],
+		columns: 'Col<span class=\"a11y-sm\">umn</span>s',
+		columnBtnText: 'Columns',
+		columnsDialogError: 'No eligible columns.',
+		sort: 'Sort'
+	},
+	// cut the mustard
+	mustard: ( 'querySelector' in document ) &&
+		( 'head' in document ) &&
+		( !window.blackberry || window.WebKitPoint ) &&
+		!window.operamini
+};
 
-if( typeof Tablesaw === "undefined" ) {
-	Tablesaw = {
-		i18n: {
-			modes: [ 'Stack', 'Swipe', 'Toggle' ],
-			columns: 'Col<span class=\"a11y-sm\">umn</span>s',
-			columnBtnText: 'Columns',
-			columnsDialogError: 'No eligible columns.',
-			sort: 'Sort'
-		},
-		// cut the mustard
-		mustard: ( 'querySelector' in document ) &&
-			( 'head' in document ) &&
-			( !window.blackberry || window.WebKitPoint ) &&
-			!window.operamini
-	};
-}
-if( !Tablesaw.config ) {
-	Tablesaw.config = {};
-}
 if( Tablesaw.mustard ) {
 	$( document.documentElement ).addClass( 'tablesaw-enhanced' );
 }
@@ -2055,53 +2044,95 @@ if( Tablesaw.mustard ) {
 
 		this.createToolbar();
 
-		var colstart = this._initCells();
+		// TODO this is used inside stack table init for some reason? what does it do?
+		this._initCells();
 
-		this.$table.trigger( events.create, [ this, colstart ] );
+		this.$table.trigger( events.create, [ this ] );
+	};
+
+	Table.prototype._getPrimaryHeaders = function() {
+		return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+	};
+
+	Table.prototype._findHeadersForCell = function( cell ) {
+		var $headers = this._getPrimaryHeaders();
+		var results = [];
+
+		for( var rowNumber = 1; rowNumber < this.headerMapping.length; rowNumber++ ) {
+			for( var colNumber = 0; colNumber < this.headerMapping[ rowNumber ].length; colNumber++ ) {
+				if( this.headerMapping[ rowNumber ][ colNumber ] === cell ) {
+					results.push( $headers[ colNumber ] );
+				}
+			}
+		}
+		return results;
 	};
 
 	Table.prototype._initCells = function() {
-		var colstart,
-			thrs = this.table.querySelectorAll( "thead tr" ),
-			self = this;
+		var colstart = 0;
+		var $rows = this.$table.find( "tr" );
+		var columnLookup = [];
 
-		$( thrs ).each( function(){
+		$rows.each(function( rowNumber ) {
+			columnLookup[ rowNumber ] = [];
+		});
+
+		$rows.each(function( rowNumber ) {
 			var coltally = 0;
+			var $t = $( this );
+			var children = $t.children();
+			// var isInHeader = $t.closest( "thead" ).length;
 
-			var children = $( this ).children();
-			var columnlookup = [];
-			children.each( function(){
-				var span = parseInt( this.getAttribute( "colspan" ), 10 );
+			children.each(function() {
+				var colspan = parseInt( this.getAttribute( "colspan" ), 10 );
+				var rowspan = parseInt( this.getAttribute( "rowspan" ), 10 );
 
-				columnlookup[coltally] = this;
+				// set in a previous rowspan
+				while( columnLookup[ rowNumber ][ coltally ] ) {
+					coltally++;
+				}
+
+				columnLookup[ rowNumber ][ coltally ] = this;
 				colstart = coltally + 1;
 
-				if( span ){
-					for( var k = 0; k < span - 1; k++ ){
+				// TODO both colspan and rowspan
+				if( colspan ) {
+					for( var k = 0; k < colspan - 1; k++ ){
 						coltally++;
-						columnlookup[coltally] = this;
+						columnLookup[ rowNumber ][ coltally ] = this;
 					}
 				}
-				this.cells = [];
-				coltally++;
-			});
-			// Note that this assumes that children() returns its results in document order. jQuery doesn't
-			// promise that in the docs, but it's a pretty safe assumption.
-			self.$table.find("tr").not( thrs[0]).each( function() {
-				var cellcoltally = 0;
-				$(this).children().each(function () {
-					var span = parseInt( this.getAttribute( "colspan" ), 10 );
-					columnlookup[cellcoltally].cells.push(this);
-					if (span) {
-						cellcoltally += span;
-					} else {
-						cellcoltally++;
+				if( rowspan ) {
+					for( var j = 1; j < rowspan; j++ ){
+						columnLookup[ rowNumber + j ][ coltally ] = this;
 					}
-				});
+				}
+
+				coltally++;
 			});
 		});
 
-		return colstart;
+		for( var colNumber = 0; colNumber < columnLookup[ 0 ].length; colNumber++ ) {
+			var headerCol = columnLookup[ 0 ][ colNumber ];
+			var rowNumber = 0;
+			var rowCell;
+
+			if( !headerCol.cells ) {
+				headerCol.cells = [];
+			}
+
+			while( rowNumber < columnLookup.length ) {
+				rowCell = columnLookup[ rowNumber ][ colNumber ];
+
+				if( headerCol !== rowCell ) {
+					headerCol.cells.push( rowCell );
+				}
+
+				rowNumber++;
+			}
+		}
+
+		this.headerMapping = columnLookup;
 	};
 
 	Table.prototype.refresh = function() {
@@ -2182,57 +2213,46 @@ if( Tablesaw.mustard ) {
 		hideempty: 'data-tablesaw-hide-empty'
 	};
 
-	var Stack = function( element ) {
+	var Stack = function( element, tablesaw ) {
 
+		this.tablesaw = tablesaw;
 		this.$table = $( element );
 
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
 		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
 
-		if( !this.labelless ) {
-			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
-			this.allHeaders = this.$table.find( "th" );
-		}
-
 		this.$table.data( data.obj, this );
 	};
 
-	Stack.prototype.init = function( colstart ) {
+	// Stack.prototype.init = function( colstart ) {
+	Stack.prototype.init = function() {
 		this.$table.addClass( classes.stackTable );
 
 		if( this.labelless ) {
 			return;
 		}
 
-		// get headers in reverse order so that top-level headers are appended last
-		var reverseHeaders = $( this.allHeaders );
-		var hideempty = this.hideempty;
+		var self = this;
 
-		// create the hide/show toggles
-		reverseHeaders.each(function(){
-			var $t = $( this ),
-				$cells = $( this.cells ).filter(function() {
-					return !$( this ).parent().is( "[" + attrs.labelless + "]" ) && ( !hideempty || !$( this ).is( ":empty" ) );
-				}),
-				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-				// TODO reduce coupling with sortable
-				$sortableButton = $t.find( ".tablesaw-sortable-btn" ),
-				html = $sortableButton.length ? $sortableButton.html() : $t.html();
+		this.$table.find( "th, td" ).filter(function() {
+			return !$( this ).closest( "thead" ).length;
+		}).filter(function() {
+			return !$( this ).closest( "tr" ).is( "[" + attrs.labelless + "]" ) &&
+				( !self.hideempty || !!$( this ).html() );
+		}).each(function() {
+			var html = [];
+			var $cell = $( this );
 
-			if( html !== "" ){
-				if( hierarchyClass ){
-					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
-						filter = "";
+			// headers
+			$( self.tablesaw._findHeadersForCell( this ) ).each(function() {
+				var $t = $( this );
+				// TODO decouple from sortable better
+				var $sortableButton = $t.find( ".tablesaw-sortable-btn" );
+				html.push( $sortableButton.length ? $sortableButton.html() : $t.html() );
+			});
 
-					if( iteration ){
-						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
-					}
-					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + html + "</b>"  );
-				} else {
-					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
-					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + html + "</b>"  );
-				}
-			}
+			$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+			$cell.prepend( "<b class='" + classes.cellLabels + "'>" + html.join( ", " ) + "</b>"  );
 		});
 	};
 
@@ -2245,10 +2265,10 @@ if( Tablesaw.mustard ) {
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw, colstart ){
+	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
-			var table = new Stack( tablesaw.table );
-			table.init( colstart );
+			var table = new Stack( tablesaw.table, tablesaw );
+			table.init();
 		}
 
 	} );
@@ -2351,7 +2371,7 @@ if( Tablesaw.mustard ) {
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
 }());
-;(function(){
+(function(){
 
 	var ColumnToggle = function( element ) {
 
@@ -2462,7 +2482,7 @@ if( Tablesaw.mustard ) {
 
 			window.clearTimeout( closeTimeout );
 			closeTimeout = window.setTimeout(function() {
-				$( document ).one( 'click.' + tableId, closePopup );
+				$( document ).on( 'click.' + tableId, closePopup );
 			}, 15 );
 		}
 
@@ -2630,7 +2650,7 @@ if( Tablesaw.mustard ) {
 							newSortValue = heads.index( head[0] );
 
 						clearOthers( head.siblings() );
-						if( head.is( "." + classes.descend ) ){
+						if( head.is( "." + classes.descend ) || !head.is( "." + classes.ascend ) ){
 							el[ pluginName ]( "sortBy" , v , true);
 							newSortValue += '_asc';
 						} else {
@@ -2832,26 +2852,13 @@ if( Tablesaw.mustard ) {
 
 }());
 
-;(function(){
+(function(){
 
-	$.extend( Tablesaw.config, {
-		swipe: {
+	function getSwipeConfig() {
+		return $.extend({
 			horizontalThreshold: 15,
 			verticalThreshold: 30
-		}
-	});
-
-	function sumStyles( $el, props ) {
-		var total = 0;
-		for( var j = 0, k = props.length; j < k; j++ ) {
-			total += parseInt( $el.css( props[ j ] ) || 0, 10 );
-		}
-		return total;
-	}
-
-	function outerWidth( el ) {
-		var $el = $( el );
-		return $el.width() + sumStyles( $el, [ "border-left-width", "border-right-width" ] );
+		}, typeof TablesawConfig !== "undefined" ? TablesawConfig.swipe : {} );
 	}
 
 	var classes = {
@@ -2867,14 +2874,15 @@ if( Tablesaw.mustard ) {
 
 	function createSwipeTable( $table ){
 
-		var $btns = $( "<div class='tablesaw-advance'></div>" ),
-			$prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
-			$nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
-			$headerCells = $table.find( "thead th" ),
-			$headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' ),
-			headerWidths = [],
-			$head = $( document.head || 'head' ),
-			tableId = $table.attr( 'id' );
+		var $btns = $( "<div class='tablesaw-advance'></div>" );
+		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
+		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
+
+		var $headerCells = this._getPrimaryHeaders();
+		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );
+		var headerWidths = [];
+		var $head = $( document.head || 'head' );
+		var tableId = $table.attr( 'id' );
 
 		if( !$headerCells.length ) {
 			throw new Error( "tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?" );
@@ -2884,7 +2892,7 @@ if( Tablesaw.mustard ) {
 
 		// Calculate initial widths
 		$headerCells.each(function() {
-			var width = outerWidth( this );
+			var width = this.offsetWidth;
 			headerWidths.push( width );
 		});
 
@@ -2930,7 +2938,7 @@ if( Tablesaw.mustard ) {
 			$headerCells.each(function( index ) {
 				var width;
 				if( isPersistent( this ) ) {
-					width = outerWidth( this );
+					width = this.offsetWidth;
 
 					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
@@ -3076,7 +3084,7 @@ if( Tablesaw.mustard ) {
 		}
 
 		if( !$table.is( "[" + attrs.disableTouchEvents + "]" ) ) {
-			
+
 			$table
 				.on( "touchstart.swipetoggle", function( e ){
 					var originX = getCoord( e, 'pageX' ),
@@ -3090,13 +3098,13 @@ if( Tablesaw.mustard ) {
 						.on( "touchmove", function( e ){
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
-							var cfg = Tablesaw.config.swipe;
+							var cfg = getSwipeConfig();
 							if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
 								e.preventDefault();
 							}
 						})
 						.on( "touchend.swipetoggle", function(){
-							var cfg = Tablesaw.config.swipe;
+							var cfg = getSwipeConfig();
 							if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
 								if( x - originX < -1 * cfg.horizontalThreshold ){
 									advance( true );
@@ -3142,7 +3150,7 @@ if( Tablesaw.mustard ) {
 				// manual refresh
 				headerWidths = [];
 				$headerCells.each(function() {
-					var width = outerWidth( this );
+					var width = this.offsetWidth;
 					headerWidths.push( width );
 				});
 
@@ -3158,7 +3166,7 @@ if( Tablesaw.mustard ) {
 	// on tablecreate, init
 	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 		if( tablesaw.mode === 'swipe' ){
-			createSwipeTable( tablesaw.$table );
+			createSwipeTable.call( tablesaw, tablesaw.$table );
 		}
 
 	} );
