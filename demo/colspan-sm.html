@@ -15,7 +15,6 @@
 		border: 1px solid #000;
 	}
 	</style>
-
 	<script src="../dist/tablesaw.js"></script>
 	<script src="../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
@@ -53,29 +52,25 @@
 		<table class="tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap data-tablesaw-mode-switch>
 			<thead>
 				<tr>
-					<th data-tablesaw-priority="1" colspan="2">Header 1</th>
-					<th data-tablesaw-priority="3">Header 1.5</th>
-					<th data-tablesaw-priority="2" colspan="2">Header 2</th>
-					<th data-tablesaw-priority="6">Header 3</th>
-					<th data-tablesaw-priority="6">Header 4</th>
-					<th data-tablesaw-priority="6">Header 5</th>
+					<th data-tablesaw-priority="1">Header 1</th>
+					<th data-tablesaw-priority="1">Header 2</th>
+					<th data-tablesaw-priority="1">Header 3</th>
+				</tr>
+				<tr>
+					<th data-tablesaw-priority="1">Header 1</th>
+					<th data-tablesaw-priority="1" colspan="2">Header 2 (colspan=2)</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>Body Row 1 Col 1</td>
-					<td>Col 1</td>
-					<td>Col 1.5</td>
-					<td>Col 2</td>
-					<td>Col 2</td>
-					<td>Col 3</td>
-					<td>Col 4</td>
-					<td>Col 5</td>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
 				</tr>
-				<tr><td>Body Row 2 Col 1</td><td>Col 1</td><td>Col 1.5</td><td colspan="2">Col 2 (colspan=2)</td><td>Col 3</td><td>Col 4</td><td>Col 5</td></tr>
-				<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
-				<tr><td>body row 4</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
-				<tr><td>Body Row 1.2</td><td>1.2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
+				<tr>
+					<td colspan="2">colspan="2"</td>
+					<td>3</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

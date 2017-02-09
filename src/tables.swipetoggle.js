@@ -27,14 +27,15 @@
 
 	function createSwipeTable( $table ){
 
-		var $btns = $( "<div class='tablesaw-advance'></div>" ),
-			$prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns ),
-			$nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns ),
-			$headerCells = $table.find( "thead th" ),
-			$headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' ),
-			headerWidths = [],
-			$head = $( document.head || 'head' ),
-			tableId = $table.attr( 'id' );
+		var $btns = $( "<div class='tablesaw-advance'></div>" );
+		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
+		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
+
+		var $headerCells = this._getPrimaryHeaders();
+		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );
+		var headerWidths = [];
+		var $head = $( document.head || 'head' );
+		var tableId = $table.attr( 'id' );
 
 		if( !$headerCells.length ) {
 			throw new Error( "tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?" );
@@ -318,7 +319,7 @@
 	// on tablecreate, init
 	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 		if( tablesaw.mode === 'swipe' ){
-			createSwipeTable( tablesaw.$table );
+			createSwipeTable.call( tablesaw, tablesaw.$table );
 		}
 
 	} );

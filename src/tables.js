@@ -58,53 +58,95 @@ if( Tablesaw.mustard ) {
 
 		this.createToolbar();
 
-		var colstart = this._initCells();
+		// TODO this is used inside stack table init for some reason? what does it do?
+		this._initCells();
 
-		this.$table.trigger( events.create, [ this, colstart ] );
+		this.$table.trigger( events.create, [ this ] );
+	};
+
+	Table.prototype._getPrimaryHeaders = function() {
+		return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+	};
+
+	Table.prototype._findHeadersForCell = function( cell ) {
+		var $headers = this._getPrimaryHeaders();
+		var results = [];
+
+		for( var rowNumber = 1; rowNumber < this.headerMapping.length; rowNumber++ ) {
+			for( var colNumber = 0; colNumber < this.headerMapping[ rowNumber ].length; colNumber++ ) {
+				if( this.headerMapping[ rowNumber ][ colNumber ] === cell ) {
+					results.push( $headers[ colNumber ] );
+				}
+			}
+		}
+		return results;
 	};
 
 	Table.prototype._initCells = function() {
-		var colstart,
-			thrs = this.table.querySelectorAll( "thead tr" ),
-			self = this;
+		var colstart = 0;
+		var $rows = this.$table.find( "tr" );
+		var columnLookup = [];
 
-		$( thrs ).each( function(){
+		$rows.each(function( rowNumber ) {
+			columnLookup[ rowNumber ] = [];
+		});
+
+		$rows.each(function( rowNumber ) {
 			var coltally = 0;
+			var $t = $( this );
+			var children = $t.children();
+			// var isInHeader = $t.closest( "thead" ).length;
 
-			var children = $( this ).children();
-			var columnlookup = [];
-			children.each( function(){
-				var span = parseInt( this.getAttribute( "colspan" ), 10 );
+			children.each(function() {
+				var colspan = parseInt( this.getAttribute( "colspan" ), 10 );
+				var rowspan = parseInt( this.getAttribute( "rowspan" ), 10 );
 
-				columnlookup[coltally] = this;
+				// set in a previous rowspan
+				while( columnLookup[ rowNumber ][ coltally ] ) {
+					coltally++;
+				}
+
+				columnLookup[ rowNumber ][ coltally ] = this;
 				colstart = coltally + 1;
 
-				if( span ){
-					for( var k = 0; k < span - 1; k++ ){
+				// TODO both colspan and rowspan
+				if( colspan ) {
+					for( var k = 0; k < colspan - 1; k++ ){
 						coltally++;
-						columnlookup[coltally] = this;
+						columnLookup[ rowNumber ][ coltally ] = this;
 					}
 				}
-				this.cells = [];
-				coltally++;
-			});
-			// Note that this assumes that children() returns its results in document order. jQuery doesn't
-			// promise that in the docs, but it's a pretty safe assumption.
-			self.$table.find("tr").not( thrs[0]).each( function() {
-				var cellcoltally = 0;
-				$(this).children().each(function () {
-					var span = parseInt( this.getAttribute( "colspan" ), 10 );
-					columnlookup[cellcoltally].cells.push(this);
-					if (span) {
-						cellcoltally += span;
-					} else {
-						cellcoltally++;
+				if( rowspan ) {
+					for( var j = 1; j < rowspan; j++ ){
+						columnLookup[ rowNumber + j ][ coltally ] = this;
 					}
-				});
+				}
+
+				coltally++;
 			});
 		});
 
-		return colstart;
+		for( var colNumber = 0; colNumber < columnLookup[ 0 ].length; colNumber++ ) {
+			var headerCol = columnLookup[ 0 ][ colNumber ];
+			var rowNumber = 0;
+			var rowCell;
+
+			if( !headerCol.cells ) {
+				headerCol.cells = [];
+			}
+
+			while( rowNumber < columnLookup.length ) {
+				rowCell = columnLookup[ rowNumber ][ colNumber ];
+
+				if( headerCol !== rowCell ) {
+					headerCol.cells.push( rowCell );
+				}
+
+				rowNumber++;
+			}
+		}
+
+		this.headerMapping = columnLookup;
 	};
 
 	Table.prototype.refresh = function() {

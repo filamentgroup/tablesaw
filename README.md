@@ -16,6 +16,7 @@ A set of plugins for responsive tables.
 * [Mode Switcher](#mode-switcher)
 * [Sortable](#sortable)
 * [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
+* [Limitations](#limitations)
 * [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
 ## Stack Mode
@@ -35,6 +36,7 @@ If you only want to use the Stack Table and don’t want all the extra features 
 | Option | Description |
 | --- | --- |
 | Opt out of inline labels | To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-tablesaw-no-labels>`; on a per-row basis, use `<tr data-tablesaw-no-labels>`. |
+| Hide headers for empty body cells | When the table cell is empty, use `<table data-tablesaw-hide-empty>` to hide the header when stacked. |
 
 ## Toggle Mode
 
@@ -314,6 +316,11 @@ Some of the more intrusive default styles have instead moved to opt-in classes y
 * `tablesaw-row-border`: Adds a bottom border to each table row.
 * `tablesaw-row-zebra`: Adds a light background color to every other table row.
 * `tablesaw-swipe-shadow`: Adds the light shadow to the right of persistant columns to make them stand out a little more.
+
+## Limitations
+
+* Simple `colspan` and `rowspan` are supported, in part thanks to a [lovely PR](https://github.com/filamentgroup/tablesaw/pull/225) from @jgibson. More complex `colspan` scenarios (where table cells cross Tablesaw top-level column boundaries) are not supported. Tablesaw top-level column boundaries are defined by the cells in the first table header row and determine what columns are listed in the Column Toggle switcher or what hides/shows when the user navigates on a Swipe table.
+* `rowspan` is not yet supported on *Stack* or *Sortable* tables.
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
