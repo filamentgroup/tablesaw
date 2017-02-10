@@ -1,7 +1,7 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2017-02-09
+/*! Tablesaw - v3.0.0-beta.4 - 2017-02-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
-/*! Tablesaw - v3.0.0-beta.4 - 2017-02-09
+/*! Tablesaw - v3.0.0-beta.4 - 2017-02-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 
@@ -35,8 +35,14 @@
 
 /* Mobile first styles: Begin with the stacked presentation at narrow widths */
 
+/* Support note IE9+: @media only all */
+
 @media only all {
   /* Show the table cells as a block level element */
+
+  .tablesaw-stack {
+    clear: both;
+  }
 
   .tablesaw-stack td,
   .tablesaw-stack th {
@@ -87,6 +93,8 @@
 @mixin tablesaw-stack-max {
   /* Table rows have a gray bottom stroke by default */
   .tablesaw-stack tbody tr {
+    display: block;
+    width: 100%;
     border-bottom: 1px solid #dfdfdf;
   }
   .tablesaw-stack thead td,
@@ -95,8 +103,7 @@
   }
   .tablesaw-stack tbody td,
   .tablesaw-stack tbody th {
-    clear: left;
-    float: left;
+    display: block;
     width: 100%;
   }
   .tablesaw-cell-label {

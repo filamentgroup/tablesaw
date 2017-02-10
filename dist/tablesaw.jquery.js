@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2017-02-09
+/*! Tablesaw - v3.0.0-beta.4 - 2017-02-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -30,6 +30,8 @@
 		factory(jQuery);
 	}
 }(function ($) {
+	"use strict";
+
 	var win = typeof window !== "undefined" ? window : this;
 
 var Tablesaw = {
@@ -41,9 +43,8 @@ var Tablesaw = {
 		sort: 'Sort'
 	},
 	// cut the mustard
-	mustard: ( 'querySelector' in document ) &&
-		( 'head' in document ) &&
-		( !window.blackberry || window.WebKitPoint ) &&
+	mustard: ( 'head' in document ) && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
+		( !window.blackberry || window.WebKitPoint ) && // only WebKit Blackberry (OS 6+)
 		!window.operamini
 };
 
@@ -237,7 +238,7 @@ if( Tablesaw.mustard ) {
 
 }());
 
-;(function(){
+(function(){
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
@@ -311,26 +312,22 @@ if( Tablesaw.mustard ) {
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
-
-	} );
+	});
 
 	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
-
 		if( tablesaw.mode === 'stack' ){
 			$( tablesaw.table ).data( data.obj ).destroy();
 		}
-
-	} );
+	});
 
 }());
-;(function() {
+(function() {
 	var pluginName = "tablesawbtn",
 		methods = {
 			_create: function(){
 				return $( this ).each(function() {
 					$( this )
-						.trigger( "beforecreate." + pluginName )
-						[ pluginName ]( "_init" )
+						.trigger( "beforecreate." + pluginName )[ pluginName ]( "_init" )
 						.trigger( "create." + pluginName );
 				});
 			},
@@ -340,8 +337,7 @@ if( Tablesaw.mustard ) {
 
 				if( sel ) {
 					$( this )
-						.addClass( "btn-select" )
-						[ pluginName ]( "_select", sel );
+						.addClass( "btn-select" )[ pluginName ]( "_select", sel );
 				}
 				return oEl;
 			},
@@ -391,19 +387,18 @@ if( Tablesaw.mustard ) {
 	$.fn[ pluginName ] = function( arrg, a, b, c ) {
 		return this.each(function() {
 
-		// if it's a method
-		if( arrg && typeof( arrg ) === "string" ){
-			return $.fn[ pluginName ].prototype[ arrg ].call( this, a, b, c );
-		}
+			// if it's a method
+			if( arrg && typeof( arrg ) === "string" ){
+				return $.fn[ pluginName ].prototype[ arrg ].call( this, a, b, c );
+			}
 
-		// don't re-init
-		if( $( this ).data( pluginName + "active" ) ){
-			return $( this );
-		}
+			// don't re-init
+			if( $( this ).data( pluginName + "active" ) ){
+				return $( this );
+			}
 
-		// otherwise, init
+			$( this ).data( pluginName + "active", true );
 
-		$( this ).data( pluginName + "active", true );
 			$.fn[ pluginName ].prototype._create.call( this );
 		});
 	};
@@ -913,13 +908,13 @@ if( Tablesaw.mustard ) {
 		disableTouchEvents: "data-tablesaw-no-touch"
 	};
 
-	function createSwipeTable( $table ){
+	function createSwipeTable( tbl, $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" );
 		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
 		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
 
-		var $headerCells = this._getPrimaryHeaders();
+		var $headerCells = tbl._getPrimaryHeaders();
 		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );
 		var headerWidths = [];
 		var $head = $( document.head || 'head' );
@@ -1207,7 +1202,7 @@ if( Tablesaw.mustard ) {
 	// on tablecreate, init
 	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 		if( tablesaw.mode === 'swipe' ){
-			createSwipeTable.call( tablesaw, tablesaw.$table );
+			createSwipeTable( tablesaw, tablesaw.$table );
 		}
 
 	} );

@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2017-02-09
+/*! Tablesaw - v3.0.0-beta.4 - 2017-02-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -30,6 +30,8 @@
 		factory(jQuery);
 	}
 }(function ($) {
+	"use strict";
+
 	var win = typeof window !== "undefined" ? window : this;
 
 var Tablesaw = {
@@ -41,9 +43,8 @@ var Tablesaw = {
 		sort: 'Sort'
 	},
 	// cut the mustard
-	mustard: ( 'querySelector' in document ) &&
-		( 'head' in document ) &&
-		( !window.blackberry || window.WebKitPoint ) &&
+	mustard: ( 'head' in document ) && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
+		( !window.blackberry || window.WebKitPoint ) && // only WebKit Blackberry (OS 6+)
 		!window.operamini
 };
 
@@ -237,7 +238,7 @@ if( Tablesaw.mustard ) {
 
 }());
 
-;(function(){
+(function(){
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
@@ -311,16 +312,13 @@ if( Tablesaw.mustard ) {
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
-
-	} );
+	});
 
 	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
-
 		if( tablesaw.mode === 'stack' ){
 			$( tablesaw.table ).data( data.obj ).destroy();
 		}
-
-	} );
+	});
 
 }());
 }));
