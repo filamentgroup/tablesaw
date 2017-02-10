@@ -3,6 +3,8 @@
 @mixin tablesaw-stack-max {
   /* Table rows have a gray bottom stroke by default */
   .tablesaw-stack tbody tr {
+    display: block;
+    width: 100%;
     border-bottom: 1px solid #dfdfdf;
   }
   .tablesaw-stack thead td,
@@ -11,8 +13,9 @@
   }
   .tablesaw-stack tbody td,
   .tablesaw-stack tbody th {
-    clear: left;
+    display: block;
     float: left;
+    clear: left;
     width: 100%;
   }
   .tablesaw-cell-label {
