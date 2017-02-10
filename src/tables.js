@@ -14,9 +14,8 @@ var Tablesaw = {
 		sort: 'Sort'
 	},
 	// cut the mustard
-	mustard: ( 'querySelector' in document ) &&
-		( 'head' in document ) &&
-		( !window.blackberry || window.WebKitPoint ) &&
+	mustard: ( 'head' in document ) && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
+		( !window.blackberry || window.WebKitPoint ) && // only WebKit Blackberry (OS 6+)
 		!window.operamini
 };
 
