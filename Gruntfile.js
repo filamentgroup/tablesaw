@@ -155,7 +155,7 @@ module.exports = function(grunt) {
 				tasks: ['jshint:gruntfile']
 			},
 			src: {
-				files: ['dist/<%= pkg.name %>.js', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>'],
+				files: ['dist/<%= pkg.name %>.js', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>', '<%= concat.cssall.src %>' ],
 				tasks: ['src']
 			},
 			test: {
