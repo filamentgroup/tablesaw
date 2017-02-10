@@ -27,4 +27,6 @@
 		factory(jQuery);
 	}
 }(function ($) {
+	"use strict";
+
 	var win = typeof window !== "undefined" ? window : this;

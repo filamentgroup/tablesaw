@@ -25,13 +25,13 @@
 		disableTouchEvents: "data-tablesaw-no-touch"
 	};
 
-	function createSwipeTable( $table ){
+	function createSwipeTable( tbl, $table ){
 
 		var $btns = $( "<div class='tablesaw-advance'></div>" );
 		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
 		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
 
-		var $headerCells = this._getPrimaryHeaders();
+		var $headerCells = tbl._getPrimaryHeaders();
 		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );
 		var headerWidths = [];
 		var $head = $( document.head || 'head' );
@@ -319,7 +319,7 @@
 	// on tablecreate, init
 	$( document ).on( "tablesawcreate", function( e, tablesaw ){
 		if( tablesaw.mode === 'swipe' ){
-			createSwipeTable.call( tablesaw, tablesaw.$table );
+			createSwipeTable( tablesaw, tablesaw.$table );
 		}
 
 	} );

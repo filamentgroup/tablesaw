@@ -27,4 +27,6 @@
 		factory(shoestring);
 	}
 }(function ($) {
+	"use strict";
+
 	var win = typeof window !== "undefined" ? window : this;

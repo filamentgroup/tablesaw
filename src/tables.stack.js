@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function(){
+(function(){
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
@@ -79,15 +79,12 @@
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
-
-	} );
+	});
 
 	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
-
 		if( tablesaw.mode === 'stack' ){
 			$( tablesaw.table ).data( data.obj ).destroy();
 		}
-
-	} );
+	});
 
 }());
