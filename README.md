@@ -18,6 +18,7 @@ A set of plugins for responsive tables.
 * [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
 * [Limitations](#limitations)
 * [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+* [Browser Support](#browser-support)
 
 ## Stack Mode
 
@@ -328,6 +329,17 @@ Some of the more intrusive default styles have instead moved to opt-in classes y
 
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 
+## Browser Support
+
+All major browsers (evergreens are not listed, but supported). Notably this project cuts the mustard for A-grade support with:
+
+* Internet Explorer 9+
+* Android Browser 2.3+
+* Blackberry OS 6+
+
+Other legacy browsers and Opera Mini receive unenhanced table markup.
+
 ## Building the Project Locally
 
 Run `npm install` to install dependencies and then `grunt` to build the project files into the `dist` folder.
+
