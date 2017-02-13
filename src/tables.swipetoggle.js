@@ -88,12 +88,12 @@
 				hash = [],
 				newHash;
 
+			// save persistent column widths (as long as they take up less than 75% of table width)
 			$headerCells.each(function( index ) {
 				var width;
 				if( isPersistent( this ) ) {
 					width = this.offsetWidth;
 
-					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
 						hash.push( index + '-' + width );
 						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
@@ -102,15 +102,14 @@
 			});
 			newHash = hash.join( '_' );
 
-			$table.addClass( classes.persistWidths );
+			if( styles.length ) {
+				$table.addClass( classes.persistWidths );
+				var $style = $( '#' + tableId + '-persist' );
+				// If style element not yet added OR if the widths have changed
+				if( !$style.length || $style.data( 'tablesaw-hash' ) !== newHash ) {
+					// Remove existing
+					$style.remove();
 
-			var $style = $( '#' + tableId + '-persist' );
-			// If style element not yet added OR if the widths have changed
-			if( !$style.length || $style.data( 'tablesaw-hash' ) !== newHash ) {
-				// Remove existing
-				$style.remove();
-
-				if( styles.length ) {
 					$( '<style>' + styles.join( "\n" ) + '</style>' )
 						.attr( 'id', tableId + '-persist' )
 						.data( 'tablesaw-hash', newHash )
