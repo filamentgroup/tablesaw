@@ -24,7 +24,7 @@
   },
   "main": "dist/tablesaw.js",
   "dependencies": {
-    "shoestring": "^1.0.5"
+    "shoestring": "^2.0.0"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
