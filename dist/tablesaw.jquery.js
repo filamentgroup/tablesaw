@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2017-02-10
+/*! Tablesaw - v3.0.0 - 2017-02-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -720,7 +720,7 @@ if( Tablesaw.mustard ) {
 							var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
 							var isDescending = $t.is( "." + classes.descend );
 
-							var hasNumericAttribute = $t.is( '[data-sortable-numeric]' );
+							var hasNumericAttribute = $t.is( '[' + attrs.numericCol + ']' );
 							var numericCount = 0;
 							// Check only the first four rows to see if the column is numbers.
 							var numericCountMax = 5;
@@ -731,7 +731,7 @@ if( Tablesaw.mustard ) {
 							});
 							var isNumeric = numericCount === numericCountMax;
 							if( !hasNumericAttribute ) {
-								$t.attr( "data-sortable-numeric", isNumeric ? "" : "false" );
+								$t.attr( attrs.numericCol, isNumeric ? "" : "false" );
 							}
 
 							html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
@@ -823,7 +823,7 @@ if( Tablesaw.mustard ) {
 				cells = getCells( rows );
 				var customFn = $( col ).data( 'tablesaw-sort' );
 				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
-					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) && !$( col ).is( '[data-sortable-numeric="false"]' ) );
+					getSortFxn( ascending, $( col ).is( '[' + attrs.numericCol + ']' ) && !$( col ).is( '[' + attrs.numericCol + '="false"]' ) );
 
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
@@ -971,12 +971,12 @@ if( Tablesaw.mustard ) {
 				hash = [],
 				newHash;
 
+			// save persistent column widths (as long as they take up less than 75% of table width)
 			$headerCells.each(function( index ) {
 				var width;
 				if( isPersistent( this ) ) {
 					width = this.offsetWidth;
 
-					// Only save width on non-greedy columns (take up less than 75% of table width)
 					if( width < tableWidth * 0.75 ) {
 						hash.push( index + '-' + width );
 						styles.push( prefix + ' .tablesaw-cell-persist:nth-child(' + ( index + 1 ) + ') { width: ' + width + 'px; }' );
@@ -985,15 +985,14 @@ if( Tablesaw.mustard ) {
 			});
 			newHash = hash.join( '_' );
 
-			$table.addClass( classes.persistWidths );
+			if( styles.length ) {
+				$table.addClass( classes.persistWidths );
+				var $style = $( '#' + tableId + '-persist' );
+				// If style element not yet added OR if the widths have changed
+				if( !$style.length || $style.data( 'tablesaw-hash' ) !== newHash ) {
+					// Remove existing
+					$style.remove();
 
-			var $style = $( '#' + tableId + '-persist' );
-			// If style element not yet added OR if the widths have changed
-			if( !$style.length || $style.data( 'tablesaw-hash' ) !== newHash ) {
-				// Remove existing
-				$style.remove();
-
-				if( styles.length ) {
 					$( '<style>' + styles.join( "\n" ) + '</style>' )
 						.attr( 'id', tableId + '-persist' )
 						.data( 'tablesaw-hash', newHash )

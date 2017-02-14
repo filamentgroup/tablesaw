@@ -1,9 +1,9 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2017-02-10
+/*! Tablesaw - v3.0.0 - 2017-02-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
-/*! Shoestring - v1.0.5 - 2016-09-20
+/*! Shoestring - v2.0.0 - 2017-02-14
 * http://github.com/filamentgroup/shoestring/
-* Copyright (c) 2016 Scott Jehl, Filament Group, Inc; Licensed MIT & GPLv2 */ 
+* Copyright (c) 2017 Scott Jehl, Filament Group, Inc; Licensed MIT & GPLv2 */ 
 (function( factory ) {
 	if( typeof define === 'function' && define.amd ) {
 			// AMD. Register as an anonymous module.
@@ -219,25 +219,13 @@
 			}
 		};
 
-	// Quick IE8 shiv
-	if( !win.addEventListener ){
-		win.addEventListener = function( evt, cb ){
-			return win.attachEvent( "on" + evt, cb );
-		};
-	}
-
 	// If DOM is already ready at exec time, depends on the browser.
 	// From: https://github.com/mobify/mobifyjs/blob/526841be5509e28fc949038021799e4223479f8d/src/capture.js#L128
 	if (doc.attachEvent ? doc.readyState === "complete" : doc.readyState !== "loading") {
 		runReady();
-	}	else {
-		if( !doc.addEventListener ){
-			doc.attachEvent( "DOMContentLoaded", runReady );
-			doc.attachEvent( "onreadystatechange", runReady );
-		} else {
-			doc.addEventListener( "DOMContentLoaded", runReady, false );
-			doc.addEventListener( "readystatechange", runReady, false );
-		}
+	} else {
+		doc.addEventListener( "DOMContentLoaded", runReady, false );
+		doc.addEventListener( "readystatechange", runReady, false );
 		win.addEventListener( "load", runReady, false );
 	}
 
@@ -556,139 +544,8 @@
 
 
   shoestring.cssExceptions = {
-		'float': [ 'cssFloat', 'styleFloat' ] // styleFloat is IE8
+		'float': [ 'cssFloat' ]
 	};
-
-
-
-	/**
-	 * A polyfill to support computed styles in IE < 9
-	 *
-	 * NOTE this is taken directly from https://github.com/jonathantneal/polyfill
-	 */
-	(function () {
-		function getComputedStylePixel(element, property, fontSize) {
-			element.document; // Internet Explorer sometimes struggles to read currentStyle until the element's document is accessed.
-
-			var
-			value = element.currentStyle[property].match(/([\d\.]+)(%|cm|em|in|mm|pc|pt|)/) || [0, 0, ''],
-			size = value[1],
-			suffix = value[2],
-			rootSize;
-
-			fontSize = !fontSize ? fontSize : /%|em/.test(suffix) && element.parentElement ? getComputedStylePixel(element.parentElement, 'fontSize', null) : 16;
-			rootSize = property === 'fontSize' ? fontSize : /width/i.test(property) ? element.clientWidth : element.clientHeight;
-
-			return suffix === '%' ? size / 100 * rootSize :
-				suffix === 'cm' ? size * 0.3937 * 96 :
-				suffix === 'em' ? size * fontSize :
-				suffix === 'in' ? size * 96 :
-				suffix === 'mm' ? size * 0.3937 * 96 / 10 :
-				suffix === 'pc' ? size * 12 * 96 / 72 :
-				suffix === 'pt' ? size * 96 / 72 :
-				size;
-		}
-
-		function setShortStyleProperty(style, property) {
-			var
-			borderSuffix = property === 'border' ? 'Width' : '',
-			t = property + 'Top' + borderSuffix,
-			r = property + 'Right' + borderSuffix,
-			b = property + 'Bottom' + borderSuffix,
-			l = property + 'Left' + borderSuffix;
-
-			style[property] = (style[t] === style[r] && style[t] === style[b] && style[t] === style[l] ? [ style[t] ] :
-												 style[t] === style[b] && style[l] === style[r] ? [ style[t], style[r] ] :
-												 style[l] === style[r] ? [ style[t], style[r], style[b] ] :
-												 [ style[t], style[r], style[b], style[l] ]).join(' ');
-		}
-
-		// <CSSStyleDeclaration>
-		function CSSStyleDeclaration(element) {
-			var
-			style = this,
-			currentStyle = element.currentStyle,
-			fontSize = getComputedStylePixel(element, 'fontSize'),
-			unCamelCase = function (match) {
-				return '-' + match.toLowerCase();
-			},
-			property;
-
-			for (property in currentStyle) {
-				Array.prototype.push.call(style, property === 'styleFloat' ? 'float' : property.replace(/[A-Z]/, unCamelCase));
-
-				if (property === 'width') {
-					style[property] = element.offsetWidth + 'px';
-				} else if (property === 'height') {
-					style[property] = element.offsetHeight + 'px';
-				} else if (property === 'styleFloat') {
-					style.float = currentStyle[property];
-				} else if (/margin.|padding.|border.+W/.test(property) && style[property] !== 'auto') {
-					style[property] = Math.round(getComputedStylePixel(element, property, fontSize)) + 'px';
-				} else if (/^outline/.test(property)) {
-					// errors on checking outline
-					try {
-						style[property] = currentStyle[property];
-					} catch (error) {
-						style.outlineColor = currentStyle.color;
-						style.outlineStyle = style.outlineStyle || 'none';
-						style.outlineWidth = style.outlineWidth || '0px';
-						style.outline = [style.outlineColor, style.outlineWidth, style.outlineStyle].join(' ');
-					}
-				} else {
-					style[property] = currentStyle[property];
-				}
-			}
-
-			setShortStyleProperty(style, 'margin');
-			setShortStyleProperty(style, 'padding');
-			setShortStyleProperty(style, 'border');
-
-			style.fontSize = Math.round(fontSize) + 'px';
-		}
-
-		CSSStyleDeclaration.prototype = {
-			constructor: CSSStyleDeclaration,
-			// <CSSStyleDeclaration>.getPropertyPriority
-			getPropertyPriority: function () {
-				throw new Error('NotSupportedError: DOM Exception 9');
-			},
-			// <CSSStyleDeclaration>.getPropertyValue
-			getPropertyValue: function (property) {
-				return this[property.replace(/-\w/g, function (match) {
-					return match[1].toUpperCase();
-				})];
-			},
-			// <CSSStyleDeclaration>.item
-			item: function (index) {
-				return this[index];
-			},
-			// <CSSStyleDeclaration>.removeProperty
-			removeProperty: function () {
-				throw new Error('NoModificationAllowedError: DOM Exception 7');
-			},
-			// <CSSStyleDeclaration>.setProperty
-			setProperty: function () {
-				throw new Error('NoModificationAllowedError: DOM Exception 7');
-			},
-			// <CSSStyleDeclaration>.getPropertyCSSValue
-			getPropertyCSSValue: function () {
-				throw new Error('NotSupportedError: DOM Exception 9');
-			}
-		};
-
-		if( !win.getComputedStyle ) {
-			// <win>.getComputedStyle
-			// NOTE win is not defined in all browsers
-			win.getComputedStyle = function (element) {
-				return new CSSStyleDeclaration(element);
-			};
-
-			if ( win.Window ) {
-				win.Window.prototype.getComputedStyle = win.getComputedStyle;
-			}
-		}
-	})();
 
 
 
@@ -703,7 +560,6 @@
 		}
 
 		function _getStyle( element, property ) {
-			// polyfilled in getComputedStyle module
 			return win.getComputedStyle( element, null ).getPropertyValue( property );
 		}
 
@@ -1564,24 +1420,6 @@
 		}
 	}
 
-	// In IE8 the events trigger in a reverse order (LIFO). This code
-	// unbinds and rebinds all callbacks on an element in the a FIFO order.
-	function reorderEvents( node, eventName ) {
-		if( node.addEventListener || !node.shoestringData || !node.shoestringData.events ) {
-			// add event listner obviates the need for all the callback order juggling
-			return;
-		}
-
-		var otherEvents = node.shoestringData.events[ eventName ] || [];
-		for( var j = otherEvents.length - 1; j >= 0; j-- ) {
-			// DOM Events only, Custom events maintain their own order internally.
-			if( !otherEvents[ j ].isCustomEvent ) {
-				node.detachEvent( "on" + eventName, otherEvents[ j ].callback );
-				node.attachEvent( "on" + eventName, otherEvents[ j ].callback );
-			}
-		}
-	}
-
 	/**
 	 * Bind a callback to an event for the currrent set of elements.
 	 *
@@ -1598,8 +1436,7 @@
 			data = null;
 		}
 
-		var evts = evt.split( " " ),
-			docEl = doc.documentElement;
+		var evts = evt.split( " " );
 
 		// NOTE the `triggeredElement` is purely for custom events from IE
 		function encasedCallback( e, namespace, triggeredElement ){
@@ -1652,26 +1489,6 @@
 			return result;
 		}
 
-		// This is exclusively for custom events on browsers without addEventListener (IE8)
-		function propChange( originalEvent, boundElement, namespace ) {
-			var lastEventInfo = doc.documentElement[ originalEvent.propertyName ],
-				triggeredElement = lastEventInfo.el;
-
-			var boundCheckElement = boundElement;
-
-			if( boundElement === doc && triggeredElement !== doc ) {
-				boundCheckElement = doc.documentElement;
-			}
-
-			if( triggeredElement !== undefined &&
-				shoestring( triggeredElement ).closest( boundCheckElement ).length ) {
-
-				originalEvent._namespace = lastEventInfo._namespace;
-				originalEvent._args = lastEventInfo._args;
-				encasedCallback.call( boundElement, originalEvent, namespace, triggeredElement );
-			}
-		}
-
 		return this.each(function(){
 			var domEventCallback,
 				customEventCallback,
@@ -1697,45 +1514,7 @@
 
 				initEventCache( this, evt );
 
-				if( "addEventListener" in this ){
-					this.addEventListener( evt, domEventCallback, false );
-				} else if( this.attachEvent ){
-					if( this[ "on" + evt ] !== undefined ) {
-						this.attachEvent( "on" + evt, domEventCallback );
-					} else {
-						customEventCallback = (function() {
-							var eventName = evt;
-							return function( e ) {
-								if( e.propertyName === eventName ) {
-									propChange( e, oEl, namespace );
-								}
-							};
-						})();
-
-						// only assign one onpropertychange per element
-						if( this.shoestringData.events[ evt ].length === 0 ) {
-							customEventLoop = (function() {
-								var eventName = evt;
-								return function( e ) {
-									if( !oEl.shoestringData || !oEl.shoestringData.events ) {
-										return;
-									}
-									var events = oEl.shoestringData.events[ eventName ];
-									if( !events ) {
-										return;
-									}
-
-									// TODO stopImmediatePropagation
-									for( var j = 0, k = events.length; j < k; j++ ) {
-										events[ j ].callback( e );
-									}
-								};
-							})();
-
-							docEl.attachEvent( "onpropertychange", customEventLoop );
-						}
-					}
-				}
+				this.addEventListener( evt, domEventCallback, false );
 
 				addToEventCache( this, evt, {
 					callfunc: customEventCallback || domEventCallback,
@@ -1744,11 +1523,6 @@
 					originalCallback: originalCallback,
 					namespace: namespace
 				});
-
-				// Don’t reorder custom events, only DOM Events.
-				if( !customEventCallback ) {
-					reorderEvents( oEl, evt );
-				}
 			}
 		});
 	};
@@ -1805,17 +1579,7 @@
 		for( j = 0, jl = bound.length; j < jl; j++ ) {
 			if( !namespace || namespace === bound[ j ].namespace ) {
 				if( callback === undefined || callback === bound[ j ].originalCallback ) {
-					if( "removeEventListener" in win ){
-						this.removeEventListener( evt, bound[ j ].callback, false );
-					} else if( this.detachEvent ){
-						// dom event
-						this.detachEvent( "on" + evt, bound[ j ].callback );
-
-						// only unbind custom events if its the last one on the element
-						if( bound.length === 1 && this.shoestringData.loop && this.shoestringData.loop[ evt ] ) {
-							doc.documentElement.detachEvent( "onpropertychange", this.shoestringData.loop[ evt ] );
-						}
-					}
+					this.removeEventListener( evt, bound[ j ].callback, false );
 					matched.push( j );
 				}
 			}
@@ -1882,7 +1646,6 @@
 			el = this[ 0 ],
 			ret;
 
-		// TODO needs IE8 support
 		// See this.fireEvent( 'on' + evts[ i ], document.createEventObject() ); instead of click() etc in trigger.
 		if( doc.createEvent && el.shoestringData && el.shoestringData.events && el.shoestringData.events[ e ] ){
 			var bindings = el.shoestringData.events[ e ];
@@ -1935,21 +1698,6 @@
 					event._namespace = namespace;
 
 					this.dispatchEvent( event );
-				} else if ( doc.createEventObject ) {
-					if( ( "" + this[ evt ] ).indexOf( "function" ) > -1 ) {
-						this.ssEventTrigger = {
-							_namespace: namespace,
-							_args: args
-						};
-
-						this[ evt ]();
-					} else {
-						doc.documentElement[ evt ] = {
-							"el": this,
-							_namespace: namespace,
-							_args: args
-						};
-					}
 				}
 			}
 		});
