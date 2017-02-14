@@ -146,8 +146,8 @@ The “sortable” option allows the user to sort the table data by clicking on 
             <!-- Default column -->
             <th data-tablesaw-sortable-col data-tablesaw-sortable-default-col>Rank</th>
             <th data-tablesaw-sortable-col>Movie Title</th>
-            <th data-tablesaw-sortable-col data-sortable-numeric>Year</th>
-            <th data-tablesaw-sortable-col data-sortable-numeric><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+            <th data-tablesaw-sortable-col data-tablesaw-sortable-numeric>Year</th>
+            <th data-tablesaw-sortable-col data-tablesaw-sortable-numeric><abbr title="Rotten Tomato Rating">Rating</abbr></th>
             <!-- Unsortable column -->
             <th>Reviews</th>
         </tr>
@@ -166,7 +166,7 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 <details>
 <summary>_Advanced Option_: Custom Sort Functions</summary>
 
-Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
+Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-tablesaw-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
 
 All other types of sorting must use a Custom Sort function on the individual columns ([working example](http://filamentgroup.github.io/tablesaw/demo/sort-custom.html)). In the contrived example below, we want to sort full dates (e.g. `12/02/2014`) just on the year.
 
