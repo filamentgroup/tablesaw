@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0 - 2017-02-14
+/*! Tablesaw - v3.0.1 - 2017-02-16
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -60,10 +60,13 @@ if( Tablesaw.mustard ) {
 		events = {
 			create: "tablesawcreate",
 			destroy: "tablesawdestroy",
-			refresh: "tablesawrefresh"
+			refresh: "tablesawrefresh",
+			resize: "tablesawresize"
 		},
 		defaultMode = "stack",
 		initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+
+	Tablesaw.events = events;
 
 	var Table = function( element ) {
 		if( !element ) {
@@ -229,10 +232,32 @@ if( Tablesaw.mustard ) {
 		});
 	};
 
-	$( document ).on( "enhance.tablesaw", function( e ) {
+	var $doc = $( win.document );
+	$doc.on( "enhance.tablesaw", function( e ) {
 		// Cut the mustard
 		if( Tablesaw.mustard ) {
 			$( e.target ).find( initSelector )[ pluginName ]();
+		}
+	});
+
+	// Avoid a resize during scroll:
+	// Some Mobile devices trigger a resize during scroll (sometimes when
+	// doing elastic stretch at the end of the document or from the 
+	// location bar hide)
+	var isScrolling = false;
+	var scrollTimeout;
+	$doc.on( "scroll.tablesaw", function() {
+		isScrolling = true;
+
+		win.clearTimeout( scrollTimeout );
+		scrollTimeout = win.setTimeout(function() {
+			isScrolling = false;
+		}, 300 );
+	});
+
+	$doc.on( "resize.tablesaw", function() {
+		if( !isScrolling ) {
+			$doc.trigger( events.resize );
 		}
 	});
 
@@ -307,14 +332,14 @@ if( Tablesaw.mustard ) {
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
 	});
 
-	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
 			$( tablesaw.table ).data( data.obj ).destroy();
 		}
@@ -536,7 +561,7 @@ if( Tablesaw.mustard ) {
 
 		this.$menu = $menu;
 
-		$(window).on( "resize." + tableId, function(){
+		$(window).on( Tablesaw.events.resize + "." + tableId, function(){
 			self.refreshToggle();
 		});
 
@@ -584,7 +609,7 @@ if( Tablesaw.mustard ) {
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 
 		if( tablesaw.mode === 'columntoggle' ){
 			var table = new ColumnToggle( tablesaw.table );
@@ -593,7 +618,7 @@ if( Tablesaw.mustard ) {
 
 	} );
 
-	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
 		if( tablesaw.mode === 'columntoggle' ){
 			$( tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
 		}
@@ -880,7 +905,7 @@ if( Tablesaw.mustard ) {
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ) {
+	$( document ).on( Tablesaw.events.create, function( e, Tablesaw ) {
 		if( Tablesaw.$table.is( initSelector ) ) {
 			Tablesaw.$table[ pluginName ]();
 		}
@@ -892,7 +917,7 @@ if( Tablesaw.mustard ) {
 
 	function getSwipeConfig() {
 		return $.extend({
-			horizontalThreshold: 15,
+			horizontalThreshold: 30,
 			verticalThreshold: 30
 		}, typeof TablesawConfig !== "undefined" ? TablesawConfig.swipe : {} );
 	}
@@ -909,7 +934,6 @@ if( Tablesaw.mustard ) {
 	};
 
 	function createSwipeTable( tbl, $table ){
-
 		var $btns = $( "<div class='tablesaw-advance'></div>" );
 		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
 		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
@@ -1122,25 +1146,25 @@ if( Tablesaw.mustard ) {
 
 			$table
 				.on( "touchstart.swipetoggle", function( e ){
-					var originX = getCoord( e, 'pageX' ),
-						originY = getCoord( e, 'pageY' ),
-						x,
-						y;
+					var originX = getCoord( e, 'pageX' );
+					var originY = getCoord( e, 'pageY' );
+					var x;
+					var y;
+					var scrollTop = window.pageYOffset;
 
-					$( win ).off( "resize", fakeBreakpoints );
+					$( win ).off( Tablesaw.events.resize, fakeBreakpoints );
 
 					$( this )
-						.on( "touchmove", function( e ){
+						.on( "touchmove.swipetoggle", function( e ){
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
-							var cfg = getSwipeConfig();
-							if( Math.abs( x - originX ) > cfg.horizontalThreshold && Math.abs( y - originY ) < cfg.verticalThreshold ) {
-								e.preventDefault();
-							}
 						})
 						.on( "touchend.swipetoggle", function(){
 							var cfg = getSwipeConfig();
-							if( Math.abs( y - originY ) < cfg.verticalThreshold ) {
+							var isPageScrolled = Math.abs( window.pageYOffset - scrollTop ) >= cfg.verticalThreshold;
+							var isVerticalSwipe = Math.abs( y - originY ) >= cfg.verticalThreshold;
+
+							if( !isVerticalSwipe && !isPageScrolled ) {
 								if( x - originX < -1 * cfg.horizontalThreshold ){
 									advance( true );
 								}
@@ -1150,9 +1174,10 @@ if( Tablesaw.mustard ) {
 							}
 
 							window.setTimeout(function() {
-								$( win ).on( "resize", fakeBreakpoints );
+								$( win ).on( Tablesaw.events.resize, fakeBreakpoints );
 							}, 300);
-							$( this ).off( "touchmove touchend" );
+
+							$( this ).off( "touchmove.swipetoggle touchend.swipetoggle" );
 						});
 				});
 		}
@@ -1172,16 +1197,16 @@ if( Tablesaw.mustard ) {
 			.on( "tablesawprev.swipetoggle", function(){
 				advance( false );
 			} )
-			.on( "tablesawdestroy.swipetoggle", function(){
+			.on( Tablesaw.events.destroy + ".swipetoggle", function(){
 				var $t = $( this );
 
 				$t.removeClass( 'tablesaw-swipe' );
 				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
-				$( win ).off( "resize", fakeBreakpoints );
+				$( win ).off( Tablesaw.events.resize, fakeBreakpoints );
 
 				$t.off( ".swipetoggle" );
 			})
-			.on( "tablesawrefresh", function() {
+			.on( Tablesaw.events.refresh, function() {
 				// manual refresh
 				headerWidths = [];
 				$headerCells.each(function() {
@@ -1193,13 +1218,11 @@ if( Tablesaw.mustard ) {
 			});
 
 		fakeBreakpoints();
-		$( win ).on( "resize", fakeBreakpoints );
+		$( win ).on( Tablesaw.events.resize, fakeBreakpoints );
 	}
 
-
-
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 		if( tablesaw.mode === 'swipe' ){
 			createSwipeTable( tablesaw, tablesaw.$table );
 		}
@@ -1253,18 +1276,18 @@ if( Tablesaw.mustard ) {
 
 		// run on init and resize
 		showHideNav();
-		$( win ).on( "resize", showHideNav );
+		$( win ).on( Tablesaw.events.resize, showHideNav );
 
 
 		$table
 			.on( "tablesawcolumns.minimap", function(){
 				showHideNav();
 			})
-			.on( "tablesawdestroy.minimap", function(){
+			.on( Tablesaw.events.destroy + ".minimap", function(){
 				var $t = $( this );
 
 				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
-				$( win ).off( "resize", showHideNav );
+				$( win ).off( Tablesaw.events.resize, showHideNav );
 
 				$t.off( ".minimap" );
 			});
@@ -1273,7 +1296,7 @@ if( Tablesaw.mustard ) {
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 
 		if( ( tablesaw.mode === 'swipe' || tablesaw.mode === 'columntoggle' ) && tablesaw.$table.is( '[ ' + MiniMap.attr.init + ']' ) ){
 			createMiniMap( tablesaw.$table );
@@ -1352,7 +1375,7 @@ if( Tablesaw.mustard ) {
 		}
 	};
 
-	$( win.document ).on( "tablesawcreate", function( e, Tablesaw ) {
+	$( win.document ).on( Tablesaw.events.create, function( e, Tablesaw ) {
 		if( Tablesaw.$table.is( S.selectors.init ) ) {
 			S.init( Tablesaw.table );
 		}

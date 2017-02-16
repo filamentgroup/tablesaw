@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.0 - 2017-02-14
+/*! Tablesaw - v3.0.1 - 2017-02-16
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -1767,10 +1767,13 @@ if( Tablesaw.mustard ) {
 		events = {
 			create: "tablesawcreate",
 			destroy: "tablesawdestroy",
-			refresh: "tablesawrefresh"
+			refresh: "tablesawrefresh",
+			resize: "tablesawresize"
 		},
 		defaultMode = "stack",
 		initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+
+	Tablesaw.events = events;
 
 	var Table = function( element ) {
 		if( !element ) {
@@ -1936,10 +1939,32 @@ if( Tablesaw.mustard ) {
 		});
 	};
 
-	$( document ).on( "enhance.tablesaw", function( e ) {
+	var $doc = $( win.document );
+	$doc.on( "enhance.tablesaw", function( e ) {
 		// Cut the mustard
 		if( Tablesaw.mustard ) {
 			$( e.target ).find( initSelector )[ pluginName ]();
+		}
+	});
+
+	// Avoid a resize during scroll:
+	// Some Mobile devices trigger a resize during scroll (sometimes when
+	// doing elastic stretch at the end of the document or from the 
+	// location bar hide)
+	var isScrolling = false;
+	var scrollTimeout;
+	$doc.on( "scroll.tablesaw", function() {
+		isScrolling = true;
+
+		win.clearTimeout( scrollTimeout );
+		scrollTimeout = win.setTimeout(function() {
+			isScrolling = false;
+		}, 300 );
+	});
+
+	$doc.on( "resize.tablesaw", function() {
+		if( !isScrolling ) {
+			$doc.trigger( events.resize );
 		}
 	});
 
@@ -2014,14 +2039,14 @@ if( Tablesaw.mustard ) {
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
 	});
 
-	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
 			$( tablesaw.table ).data( data.obj ).destroy();
 		}
