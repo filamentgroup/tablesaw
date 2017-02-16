@@ -125,7 +125,6 @@ if( Tablesaw.mustard ) {
 	};
 
 	Table.prototype._initCells = function() {
-		var colstart = 0;
 		var $rows = this.$table.find( "tr" );
 		var columnLookup = [];
 
@@ -149,7 +148,6 @@ if( Tablesaw.mustard ) {
 				}
 
 				columnLookup[ rowNumber ][ coltally ] = this;
-				colstart = coltally + 1;
 
 				// TODO both colspan and rowspan
 				if( colspan ) {
@@ -194,7 +192,7 @@ if( Tablesaw.mustard ) {
 	Table.prototype.refresh = function() {
 		this._initCells();
 
-		this.$table.trigger( events.refresh );
+		this.$table.trigger( events.refresh, [ this ] );
 	};
 
 	Table.prototype.createToolbar = function() {
@@ -283,7 +281,7 @@ if( Tablesaw.mustard ) {
 	};
 
 	var data = {
-		obj: 'tablesaw-stack'
+		key: 'tablesaw-stack'
 	};
 
 	var attrs = {
@@ -299,10 +297,9 @@ if( Tablesaw.mustard ) {
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
 		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
 
-		this.$table.data( data.obj, this );
+		this.$table.data( data.key, this );
 	};
 
-	// Stack.prototype.init = function( colstart ) {
 	Stack.prototype.init = function() {
 		this.$table.addClass( classes.stackTable );
 
@@ -323,14 +320,28 @@ if( Tablesaw.mustard ) {
 
 			// headers
 			$( self.tablesaw._findHeadersForCell( this ) ).each(function() {
-				var $t = $( this );
+				var $header = $( this.cloneNode( true ) );
 				// TODO decouple from sortable better
-				var $sortableButton = $t.find( ".tablesaw-sortable-btn" );
-				html.push( $sortableButton.length ? $sortableButton.html() : $t.html() );
+				// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
+				// to preserve structural html in headers, like <a>
+				var $sortableButton = $header.find( ".tablesaw-sortable-btn" );
+				$header.find( ".tablesaw-sortable-arrow" ).remove();
+
+				html.push( $sortableButton.length ? $sortableButton.html() : $header.html() );
 			});
 
-			$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
-			$cell.prepend( "<b class='" + classes.cellLabels + "'>" + html.join( ", " ) + "</b>"  );
+			if( !$cell.find( "." + classes.cellContentLabels ).length ) {
+				$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+			}
+
+			// Update if already exists.
+			var $label = $cell.find( "." + classes.cellLabels );
+			var newHtml = html.join( ", " );
+			if( !$label.length ) {
+				$cell.prepend( "<b class='" + classes.cellLabels + "'>" + newHtml + "</b>"  );
+			} else if( $label.html() !== newHtml ) { // only if changed
+				$label.html( newHtml );
+			}
 		});
 	};
 
@@ -348,11 +359,13 @@ if( Tablesaw.mustard ) {
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
-	});
-
-	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
+	}).on( Tablesaw.events.refresh, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
-			$( tablesaw.table ).data( data.obj ).destroy();
+			$( tablesaw.table ).data( data.key ).init();
+		}
+	}).on( Tablesaw.events.destroy, function( e, tablesaw ){
+		if( tablesaw.mode === 'stack' ){
+			$( tablesaw.table ).data( data.key ).destroy();
 		}
 	});
 
@@ -445,6 +458,10 @@ if( Tablesaw.mustard ) {
 }());
 (function(){
 
+	var data = {
+		key: "tablesaw-coltoggle"
+	};
+
 	var ColumnToggle = function( element ) {
 
 		this.$table = $( element );
@@ -467,7 +484,7 @@ if( Tablesaw.mustard ) {
 		// headers references the THs within the first TR in the table
 		this.headers = this.$table.find( "tr" ).eq( 0 ).find( "th" );
 
-		this.$table.data( 'tablesaw-coltoggle', this );
+		this.$table.data( data.key, this );
 	};
 
 	ColumnToggle.prototype.init = function() {
@@ -505,7 +522,8 @@ if( Tablesaw.mustard ) {
 
 				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
 					.appendTo( $menu )
-					.children( 0 )
+					.children()
+					.first()
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
@@ -631,7 +649,7 @@ if( Tablesaw.mustard ) {
 
 	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
 		if( tablesaw.mode === 'columntoggle' ){
-			$( tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
+			$( tablesaw.table ).data( data.key ).destroy();
 		}
 	} );
 
