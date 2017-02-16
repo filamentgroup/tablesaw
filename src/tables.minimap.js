@@ -50,18 +50,18 @@
 
 		// run on init and resize
 		showHideNav();
-		$( win ).on( "resize", showHideNav );
+		$( win ).on( Tablesaw.events.resize, showHideNav );
 
 
 		$table
 			.on( "tablesawcolumns.minimap", function(){
 				showHideNav();
 			})
-			.on( "tablesawdestroy.minimap", function(){
+			.on( Tablesaw.events.destroy + ".minimap", function(){
 				var $t = $( this );
 
 				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
-				$( win ).off( "resize", showHideNav );
+				$( win ).off( Tablesaw.events.resize, showHideNav );
 
 				$t.off( ".minimap" );
 			});
@@ -70,7 +70,7 @@
 
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 
 		if( ( tablesaw.mode === 'swipe' || tablesaw.mode === 'columntoggle' ) && tablesaw.$table.is( '[ ' + MiniMap.attr.init + ']' ) ){
 			createMiniMap( tablesaw.$table );

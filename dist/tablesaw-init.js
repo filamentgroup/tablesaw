@@ -1,7 +1,8 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2016-10-12
+/*! Tablesaw - v3.0.1 - 2017-02-16
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2016 Filament Group; Licensed MIT */
-;(function( win ) {
+* Copyright (c) 2017 Filament Group; Licensed MIT */
+(function( win ) {
+	"use strict";
 
 	var $;
 	if( 'shoestring' in win ) {
@@ -14,8 +15,11 @@
 
 	// DOM-ready auto-init of plugins.
 	// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
-	$( function(){
-		$( document ).trigger( "enhance.tablesaw" );
-	});
+	// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
+	if( "addEventListener" in document ) {
+		document.addEventListener( "DOMContentLoaded", function() {
+			$( document ).trigger( "enhance.tablesaw" );
+		});
+	}
 
 })( typeof window !== "undefined" ? window : this );

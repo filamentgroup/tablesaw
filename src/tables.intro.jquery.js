@@ -27,4 +27,6 @@
 		factory(jQuery);
 	}
 }(function ($) {
-	var Tablesaw, win = typeof window !== "undefined" ? window : this;
+	"use strict";
+
+	var win = typeof window !== "undefined" ? window : this;

@@ -91,7 +91,7 @@
 							newSortValue = heads.index( head[0] );
 
 						clearOthers( head.siblings() );
-						if( head.is( "." + classes.descend ) ){
+						if( head.is( "." + classes.descend ) || !head.is( "." + classes.ascend ) ){
 							el[ pluginName ]( "sortBy" , v , true);
 							newSortValue += '_asc';
 						} else {
@@ -125,7 +125,7 @@
 							var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
 							var isDescending = $t.is( "." + classes.descend );
 
-							var hasNumericAttribute = $t.is( '[data-sortable-numeric]' );
+							var hasNumericAttribute = $t.is( '[' + attrs.numericCol + ']' );
 							var numericCount = 0;
 							// Check only the first four rows to see if the column is numbers.
 							var numericCountMax = 5;
@@ -136,7 +136,7 @@
 							});
 							var isNumeric = numericCount === numericCountMax;
 							if( !hasNumericAttribute ) {
-								$t.attr( "data-sortable-numeric", isNumeric ? "" : "false" );
+								$t.attr( attrs.numericCol, isNumeric ? "" : "false" );
 							}
 
 							html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
@@ -228,7 +228,7 @@
 				cells = getCells( rows );
 				var customFn = $( col ).data( 'tablesaw-sort' );
 				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
-					getSortFxn( ascending, $( col ).is( '[data-sortable-numeric]' ) && !$( col ).is( '[data-sortable-numeric="false"]' ) );
+					getSortFxn( ascending, $( col ).is( '[' + attrs.numericCol + ']' ) && !$( col ).is( '[' + attrs.numericCol + '="false"]' ) );
 
 				sorted = cells.sort( fn );
 				rows = applyToRows( sorted , rows );
@@ -285,7 +285,7 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ) {
+	$( document ).on( Tablesaw.events.create, function( e, Tablesaw ) {
 		if( Tablesaw.$table.is( initSelector ) ) {
 			Tablesaw.$table[ pluginName ]();
 		}

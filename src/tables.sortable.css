@@ -22,7 +22,7 @@
 	background: transparent;
 	border: 0;
 	padding: 0;
-	text-align: left;
+	text-align: inherit;
 	font: inherit;
 	text-transform: inherit;
 }

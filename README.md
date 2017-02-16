@@ -16,7 +16,9 @@ A set of plugins for responsive tables.
 * [Mode Switcher](#mode-switcher)
 * [Sortable](#sortable)
 * [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
+* [Limitations](#limitations)
 * [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+* [Browser Support](#browser-support)
 
 ## Stack Mode
 
@@ -35,6 +37,7 @@ If you only want to use the Stack Table and don’t want all the extra features 
 | Option | Description |
 | --- | --- |
 | Opt out of inline labels | To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-tablesaw-no-labels>`; on a per-row basis, use `<tr data-tablesaw-no-labels>`. |
+| Hide headers for empty body cells | When the table cell is empty, use `<table data-tablesaw-hide-empty>` to hide the header when stacked. |
 
 ## Column Toggle Mode
 
@@ -89,19 +92,22 @@ Allows the user to use the swipe gesture (or use the left and right buttons) to 
 | Persist a Column | Columns also respect the `data-tablesaw-priority="persist"` attribute: `<th data-tablesaw-priority="persist"><!-- Always shows --></th>` |
 | Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="swipe" data-tablesaw-minimap>` |
 | All columns visible class | Tablesaw also exposes a `tablesaw-all-cols-visible` class that is toggled on when all of the table columns are visible (and off when not). You can use this in CSS to hide the minimap or navigation buttons if needed. |
+| Disable swipe touch events | Use the `<table data-tablesaw-no-touch>` attribute to opt-out of swiping left or right to navigate columns. Users will need to use the provided buttons instead. |
 
 <details>
 <summary>_Advanced Option_: Configure Swipe Thresholds</summary>
 
-Add a Tablesaw `config` object after including the Tablesaw JavaScript.
+Add a `TablesawConfig` object to your page in a `<script>` element. It doesn’t matter if it’s declared before or after the Tablesaw JavaScript.
 
 ```js
-Tablesaw.config = {
+<script>
+TablesawConfig = {
   swipe: {
     horizontalThreshold: 15,
     verticalThreshold: 20
   }
 };
+</script>
 ```
 
 * [Configure Swipe Threshold Demo](http://filamentgroup.github.io/tablesaw/demo/swipe-config.html)
@@ -141,8 +147,8 @@ The “sortable” option allows the user to sort the table data by clicking on 
             <!-- Default column -->
             <th data-tablesaw-sortable-col data-tablesaw-sortable-default-col>Rank</th>
             <th data-tablesaw-sortable-col>Movie Title</th>
-            <th data-tablesaw-sortable-col data-sortable-numeric>Year</th>
-            <th data-tablesaw-sortable-col data-sortable-numeric><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+            <th data-tablesaw-sortable-col data-tablesaw-sortable-numeric>Year</th>
+            <th data-tablesaw-sortable-col data-tablesaw-sortable-numeric><abbr title="Rotten Tomato Rating">Rating</abbr></th>
             <!-- Unsortable column -->
             <th>Reviews</th>
         </tr>
@@ -161,7 +167,7 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 <details>
 <summary>_Advanced Option_: Custom Sort Functions</summary>
 
-Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
+Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-tablesaw-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
 
 All other types of sorting must use a Custom Sort function on the individual columns ([working example](http://filamentgroup.github.io/tablesaw/demo/sort-custom.html)). In the contrived example below, we want to sort full dates (e.g. `12/02/2014`) just on the year.
 
@@ -194,6 +200,12 @@ $( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
 All of the above options combined into a single table.
 
 ## Getting Started
+
+Available through npm:
+
+```
+npm install tablesaw
+```
 
 ### The Full Tablesaw
 
@@ -307,8 +319,28 @@ Some of the more intrusive default styles have instead moved to opt-in classes y
 * `tablesaw-row-zebra`: Adds a light background color to every other table row.
 * `tablesaw-swipe-shadow`: Adds the light shadow to the right of persistant columns to make them stand out a little more.
 
+## Limitations
+
+* Simple `colspan` and `rowspan` are supported, in part thanks to a [lovely PR](https://github.com/filamentgroup/tablesaw/pull/225) from @jgibson. More complex `colspan` scenarios (where table cells cross Tablesaw top-level column boundaries) are not supported. Tablesaw top-level column boundaries are defined by the cells in the first table header row and determine what columns are listed in the Column Toggle switcher or what hides/shows when the user navigates on a Swipe table.
+
+| | Stack | Column Toggle | Swipe | Sortable |
+| --- | --- | --- | --- | --- |
+| `rowspan` | _Not yet supported_ ([#247](https://github.com/filamentgroup/tablesaw/issues/247)) | Supported | Supported | _Not yet supported_ ([#268](https://github.com/filamentgroup/tablesaw/issues/268)) |
+| `colspan` | Supported | Supported | Supported | Supported |
+
 ## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+
+## Browser Support
+
+All major browsers (evergreens are not listed, but supported). Notably this project cuts the mustard for A-grade support with:
+
+* Internet Explorer 9+
+* Android Browser 2.3+
+* Blackberry OS 6+
+
+Other legacy browsers and Opera Mini receive unenhanced table markup.
 
 ## Building the Project Locally
 
 Run `npm install` to install dependencies and then `grunt` to build the project files into the `dist` folder.
+

@@ -8,8 +8,12 @@
 }
 
 /* Mobile first styles: Begin with the stacked presentation at narrow widths */
+/* Support note IE9+: @media only all */
 @media only all {
 	/* Show the table cells as a block level element */
+	.tablesaw-stack {
+		clear: both;
+	}
 	.tablesaw-stack td,
 	.tablesaw-stack th {
 		text-align: left;

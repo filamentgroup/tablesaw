@@ -9,12 +9,6 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
-	<style>
-	th,
-	td {
-		border: 1px solid #000;
-	}
-	</style>
 
 	<script src="../dist/tablesaw.js"></script>
 	<script src="../dist/tablesaw-init.js"></script>
@@ -38,44 +32,49 @@
 	<div class="nav-container">
 		<div class="docs-globalnav">
 			<nav class="docs-nav">
-			<a href="kitchensink.html" class="current">Kitchen Sink</a>
+			<a href="kitchensink.html">Kitchen Sink</a>
 			<a href="modeswitch.html">Mode Switch</a>
 			<a href="sort.html">Sortable</a>
 			<a href="stack.html">Stack</a>
 			<a href="stackonly.html">Stack Only</a>
 			<a href="swipe.html">Swipe Table</a>
-			<a href="toggle.html">Toggle</a>
+			<a href="toggle.html" class="current">Toggle</a>
 			</nav>
 		</div>
 	</div>
 	<div class="docs-main">
-		<h2>Colspans</h2>
-		<table class="tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap data-tablesaw-mode-switch>
+
+		<h2>Column Toggle with Rowspan Table</h2>
+		<table class="tablesaw" data-tablesaw-mode="swipe">
 			<thead>
 				<tr>
-					<th data-tablesaw-priority="1" colspan="2">Header 1</th>
-					<th data-tablesaw-priority="3">Header 1.5</th>
-					<th data-tablesaw-priority="2" colspan="2">Header 2</th>
-					<th data-tablesaw-priority="6">Header 3</th>
-					<th data-tablesaw-priority="6">Header 4</th>
-					<th data-tablesaw-priority="6">Header 5</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>
+					<th scope="col" rowspan="2" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="3" style="border: 1px solid #000">rowspan=2</th>
+					<th scope="col" colspan="2" data-tablesaw-sortable-col data-tablesaw-priority="2" style="border: 1px solid #000">colspan=2</th>
+				</tr>
+				<tr>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>
+					<th scope="col" colspan="2" data-tablesaw-sortable-col data-tablesaw-priority="2" style="border: 1px solid #000">colspan=2</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>Body Row 1 Col 1</td>
-					<td>Col 1</td>
-					<td>Col 1.5</td>
-					<td>Col 2</td>
-					<td>Col 2</td>
-					<td>Col 3</td>
-					<td>Col 4</td>
-					<td>Col 5</td>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>
+					<td>1</td>
+					<td>2009</td>
+					<td rowspan="2" style="border: 1px solid #000">rowspan=2</td>
 				</tr>
-				<tr><td>Body Row 2 Col 1</td><td>Col 1</td><td>Col 1.5</td><td colspan="2">Col 2 (colspan=2)</td><td>Col 3</td><td>Col 4</td><td>Col 5</td></tr>
-				<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
-				<tr><td>body row 4</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
-				<tr><td>Body Row 1.2</td><td>1.2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
+				<tr>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Titanic_(1997_film)">Titanic</a></td>
+					<td>2</td>
+					<td>2009</td>
+				</tr>
+				<tr>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/The_Avengers_(2012_film)">The Avengers</a></td>
+					<td>3</td>
+					<td>2012</td>
+					<td>2012</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

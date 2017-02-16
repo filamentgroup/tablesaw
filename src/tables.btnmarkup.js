@@ -5,14 +5,13 @@
 * MIT License
 */
 
-;(function() {
+(function() {
 	var pluginName = "tablesawbtn",
 		methods = {
 			_create: function(){
 				return $( this ).each(function() {
 					$( this )
-						.trigger( "beforecreate." + pluginName )
-						[ pluginName ]( "_init" )
+						.trigger( "beforecreate." + pluginName )[ pluginName ]( "_init" )
 						.trigger( "create." + pluginName );
 				});
 			},
@@ -22,8 +21,7 @@
 
 				if( sel ) {
 					$( this )
-						.addClass( "btn-select" )
-						[ pluginName ]( "_select", sel );
+						.addClass( "btn-select" )[ pluginName ]( "_select", sel );
 				}
 				return oEl;
 			},
@@ -73,19 +71,18 @@
 	$.fn[ pluginName ] = function( arrg, a, b, c ) {
 		return this.each(function() {
 
-		// if it's a method
-		if( arrg && typeof( arrg ) === "string" ){
-			return $.fn[ pluginName ].prototype[ arrg ].call( this, a, b, c );
-		}
+			// if it's a method
+			if( arrg && typeof( arrg ) === "string" ){
+				return $.fn[ pluginName ].prototype[ arrg ].call( this, a, b, c );
+			}
 
-		// don't re-init
-		if( $( this ).data( pluginName + "active" ) ){
-			return $( this );
-		}
+			// don't re-init
+			if( $( this ).data( pluginName + "active" ) ){
+				return $( this );
+			}
 
-		// otherwise, init
+			$( this ).data( pluginName + "active", true );
 
-		$( this ).data( pluginName + "active", true );
 			$.fn[ pluginName ].prototype._create.call( this );
 		});
 	};

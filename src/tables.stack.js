@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function(){
+(function(){
 
 	var classes = {
 		stackTable: 'tablesaw-stack',
@@ -14,7 +14,7 @@
 	};
 
 	var data = {
-		obj: 'tablesaw-stack'
+		key: 'tablesaw-stack'
 	};
 
 	var attrs = {
@@ -22,56 +22,58 @@
 		hideempty: 'data-tablesaw-hide-empty'
 	};
 
-	var Stack = function( element ) {
+	var Stack = function( element, tablesaw ) {
 
+		this.tablesaw = tablesaw;
 		this.$table = $( element );
 
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
 		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
 
-		if( !this.labelless ) {
-			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
-			this.allHeaders = this.$table.find( "th" );
-		}
-
-		this.$table.data( data.obj, this );
+		this.$table.data( data.key, this );
 	};
 
-	Stack.prototype.init = function( colstart ) {
+	Stack.prototype.init = function() {
 		this.$table.addClass( classes.stackTable );
 
 		if( this.labelless ) {
 			return;
 		}
 
-		// get headers in reverse order so that top-level headers are appended last
-		var reverseHeaders = $( this.allHeaders );
-		var hideempty = this.hideempty;
+		var self = this;
 
-		// create the hide/show toggles
-		reverseHeaders.each(function(){
-			var $t = $( this ),
-				$cells = $( this.cells ).filter(function() {
-					return !$( this ).parent().is( "[" + attrs.labelless + "]" ) && ( !hideempty || !$( this ).is( ":empty" ) );
-				}),
-				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-				// TODO reduce coupling with sortable
-				$sortableButton = $t.find( ".tablesaw-sortable-btn" ),
-				html = $sortableButton.length ? $sortableButton.html() : $t.html();
+		this.$table.find( "th, td" ).filter(function() {
+			return !$( this ).closest( "thead" ).length;
+		}).filter(function() {
+			return !$( this ).closest( "tr" ).is( "[" + attrs.labelless + "]" ) &&
+				( !self.hideempty || !!$( this ).html() );
+		}).each(function() {
+			var html = [];
+			var $cell = $( this );
 
-			if( html !== "" ){
-				if( hierarchyClass ){
-					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
-						filter = "";
+			// headers
+			$( self.tablesaw._findHeadersForCell( this ) ).each(function() {
+				var $header = $( this.cloneNode( true ) );
+				// TODO decouple from sortable better
+				// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
+				// to preserve structural html in headers, like <a>
+				var $sortableButton = $header.find( ".tablesaw-sortable-btn" );
+				$header.find( ".tablesaw-sortable-arrow" ).remove();
 
-					if( iteration ){
-						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
-					}
-					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + html + "</b>"  );
-				} else {
-					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
-					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + html + "</b>"  );
-				}
+				html.push( $sortableButton.length ? $sortableButton.html() : $header.html() );
+			});
+
+			if( !$cell.find( "." + classes.cellContentLabels ).length ) {
+				$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+			}
+
+			// Update if already exists.
+			var $label = $cell.find( "." + classes.cellLabels );
+			var newHtml = html.join( ", " );
+			if( !$label.length ) {
+				$cell.prepend( "<b class='" + classes.cellLabels + "'>" + newHtml + "</b>"  );
+			} else if( $label.html() !== newHtml ) { // only if changed
+				$label.html( newHtml );
 			}
 		});
 	};
@@ -85,20 +87,19 @@
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw, colstart ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
-			var table = new Stack( tablesaw.table );
-			table.init( colstart );
+			var table = new Stack( tablesaw.table, tablesaw );
+			table.init();
 		}
-
-	} );
-
-	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
-
+	}).on( Tablesaw.events.refresh, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
-			$( tablesaw.table ).data( data.obj ).destroy();
+			$( tablesaw.table ).data( data.key ).init();
 		}
-
-	} );
+	}).on( Tablesaw.events.destroy, function( e, tablesaw ){
+		if( tablesaw.mode === 'stack' ){
+			$( tablesaw.table ).data( data.key ).destroy();
+		}
+	});
 
 }());

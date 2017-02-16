@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.0.0-beta.4 - 2016-10-12
+/*! Tablesaw - v3.0.1 - 2017-02-16
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2016 Filament Group; Licensed MIT */
+* Copyright (c) 2017 Filament Group; Licensed MIT */
 
 .tablesaw {
   width: 100%;
@@ -88,7 +88,6 @@
 .tablesaw-bar .btn select option {
   background: #fff;
   color: #000;
-  font-family: sans-serif;
 }
 
 .tablesaw-bar .btn {
@@ -165,13 +164,22 @@
   padding: .3em .7em .25em .7em;
 }
 
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn:first-child {
+  margin-left: 0;
+}
+
+.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn:last-child {
+  margin-right: 0;
+}
+
 .tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
   display: inline-block;
   overflow: hidden;
   width: 1.8em;
   height: 1.8em;
   background-position: 50% 50%;
-  margin-left: .5em;
+  margin-left: .25em;
+  margin-right: .25em;
   position: relative;
 }
 
@@ -229,7 +237,6 @@
 
 .tablesaw-bar {
   clear: both;
-  font-family: sans-serif;
 }
 
 .tablesaw-toolbar {
@@ -264,7 +271,6 @@
   border: none;
   box-shadow: none;
   background: transparent;
-  font-family: sans-serif;
   font-size: 1em;
   padding-left: .3em;
 }
@@ -351,8 +357,14 @@
 
 /* Mobile first styles: Begin with the stacked presentation at narrow widths */
 
+/* Support note IE9+: @media only all */
+
 @media only all {
   /* Show the table cells as a block level element */
+
+  .tablesaw-stack {
+    clear: both;
+  }
 
   .tablesaw-stack td,
   .tablesaw-stack th {
@@ -405,6 +417,8 @@
   /* Table rows have a gray bottom stroke by default */
 
   .tablesaw-stack tbody tr {
+    display: block;
+    width: 100%;
     border-bottom: 1px solid #dfdfdf;
   }
 
@@ -415,8 +429,9 @@
 
   .tablesaw-stack tbody td,
   .tablesaw-stack tbody th {
-    clear: left;
+    display: block;
     float: left;
+    clear: left;
     width: 100%;
   }
 
@@ -660,7 +675,7 @@
   background: transparent;
   border: 0;
   padding: 0;
-  text-align: left;
+  text-align: inherit;
   font: inherit;
   text-transform: inherit;
 }

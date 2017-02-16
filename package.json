@@ -2,7 +2,7 @@
   "name": "tablesaw",
   "title": "Tablesaw",
   "description": "A set of plugins for responsive tables.",
-  "version": "3.0.0-beta.4",
+  "version": "3.0.1",
   "homepage": "https://github.com/filamentgroup/tablesaw",
   "author": {
     "name": "Zach Leatherman",
@@ -24,7 +24,7 @@
   },
   "main": "dist/tablesaw.js",
   "dependencies": {
-    "shoestring": "^1.0.5"
+    "shoestring": "^2.0.0"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
