@@ -24,18 +24,23 @@ if( Tablesaw.mustard ) {
 }
 
 (function() {
-	var pluginName = "tablesaw",
-		classes = {
-			toolbar: "tablesaw-bar"
-		},
-		events = {
-			create: "tablesawcreate",
-			destroy: "tablesawdestroy",
-			refresh: "tablesawrefresh",
-			resize: "tablesawresize"
-		},
-		defaultMode = "stack",
-		initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+	var pluginName = "tablesaw";
+	var classes = {
+		toolbar: "tablesaw-bar"
+	};
+	var events = {
+		create: "tablesawcreate",
+		destroy: "tablesawdestroy",
+		refresh: "tablesawrefresh",
+		resize: "tablesawresize"
+	};
+	var defaultMode = "stack";
+	var initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+	var defaultConfig = {
+		getHeaderCells: function() {
+			return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+		}
+	};
 
 	Tablesaw.events = events;
 
@@ -66,12 +71,18 @@ if( Tablesaw.mustard ) {
 		this.$table.trigger( events.create, [ this ] );
 	};
 
-	Table.prototype._getPrimaryHeaders = function() {
-		return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+	Table.prototype.getConfig = function( pluginSpecificConfig ) {
+		// shoestring extend doesn’t support arbitrary args
+		var configs = $.extend( defaultConfig, pluginSpecificConfig || {} );
+		return $.extend( configs, typeof TablesawConfig !== "undefined" ? TablesawConfig : {} );
+	};
+
+	Table.prototype._getPrimaryHeaderCells = function() {
+		return this.getConfig().getHeaderCells.call( this );
 	};
 
 	Table.prototype._findHeadersForCell = function( cell ) {
-		var $headers = this._getPrimaryHeaders();
+		var $headers = this._getPrimaryHeaderCells();
 		var results = [];
 
 		for( var rowNumber = 1; rowNumber < this.headerMapping.length; rowNumber++ ) {

@@ -7,13 +7,6 @@
 
 (function(){
 
-	function getSwipeConfig() {
-		return $.extend({
-			horizontalThreshold: 30,
-			verticalThreshold: 30
-		}, typeof TablesawConfig !== "undefined" ? TablesawConfig.swipe : {} );
-	}
-
 	var classes = {
 		// TODO duplicate class, also in tables.js
 		toolbar: "tablesaw-bar",
@@ -30,7 +23,7 @@
 		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
 		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
 
-		var $headerCells = tbl._getPrimaryHeaders();
+		var $headerCells = tbl._getPrimaryHeaderCells();
 		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );
 		var headerWidths = [];
 		var $head = $( document.head || 'head' );
@@ -251,16 +244,26 @@
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
 						})
-						.on( "touchend.swipetoggle", function(){
-							var cfg = getSwipeConfig();
-							var isPageScrolled = Math.abs( window.pageYOffset - scrollTop ) >= cfg.verticalThreshold;
-							var isVerticalSwipe = Math.abs( y - originY ) >= cfg.verticalThreshold;
+						.on( "touchend.swipetoggle", function() {
+							var cfg = tbl.getConfig({
+								swipeHorizontalThreshold: 30,
+								swipeVerticalThreshold: 30
+							});
+
+							// This config code is a little awkward because shoestring doesn’t support deep $.extend
+							// Trying to work around when devs only override one of (not both) horizontalThreshold or
+							// verticalThreshold in their TablesawConfig.
+							var verticalThreshold = cfg.swipe.verticalThreshold || cfg.swipeVerticalThreshold;
+							var horizontalThreshold = cfg.swipe.horizontalThreshold || cfg.swipeHorizontalThreshold;
+
+							var isPageScrolled = Math.abs( window.pageYOffset - scrollTop ) >= verticalThreshold;
+							var isVerticalSwipe = Math.abs( y - originY ) >= verticalThreshold;
 
 							if( !isVerticalSwipe && !isPageScrolled ) {
-								if( x - originX < -1 * cfg.horizontalThreshold ){
+								if( x - originX < -1 * horizontalThreshold ){
 									advance( true );
 								}
-								if( x - originX > cfg.horizontalThreshold ){
+								if( x - originX > horizontalThreshold ){
 									advance( false );
 								}
 							}
