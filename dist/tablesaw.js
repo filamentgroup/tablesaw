@@ -1760,18 +1760,23 @@ if( Tablesaw.mustard ) {
 }
 
 (function() {
-	var pluginName = "tablesaw",
-		classes = {
-			toolbar: "tablesaw-bar"
-		},
-		events = {
-			create: "tablesawcreate",
-			destroy: "tablesawdestroy",
-			refresh: "tablesawrefresh",
-			resize: "tablesawresize"
-		},
-		defaultMode = "stack",
-		initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+	var pluginName = "tablesaw";
+	var classes = {
+		toolbar: "tablesaw-bar"
+	};
+	var events = {
+		create: "tablesawcreate",
+		destroy: "tablesawdestroy",
+		refresh: "tablesawrefresh",
+		resize: "tablesawresize"
+	};
+	var defaultMode = "stack";
+	var initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+	var defaultConfig = {
+		getHeaderCells: function() {
+			return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+		}
+	};
 
 	Tablesaw.events = events;
 
@@ -1802,12 +1807,18 @@ if( Tablesaw.mustard ) {
 		this.$table.trigger( events.create, [ this ] );
 	};
 
-	Table.prototype._getPrimaryHeaders = function() {
-		return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+	Table.prototype.getConfig = function( pluginSpecificConfig ) {
+		// shoestring extend doesn’t support arbitrary args
+		var configs = $.extend( defaultConfig, pluginSpecificConfig || {} );
+		return $.extend( configs, typeof TablesawConfig !== "undefined" ? TablesawConfig : {} );
+	};
+
+	Table.prototype._getPrimaryHeaderCells = function() {
+		return this.getConfig().getHeaderCells.call( this );
 	};
 
 	Table.prototype._findHeadersForCell = function( cell ) {
-		var $headers = this._getPrimaryHeaders();
+		var $headers = this._getPrimaryHeaderCells();
 		var results = [];
 
 		for( var rowNumber = 1; rowNumber < this.headerMapping.length; rowNumber++ ) {
@@ -2622,13 +2633,6 @@ if( Tablesaw.mustard ) {
 
 (function(){
 
-	function getSwipeConfig() {
-		return $.extend({
-			horizontalThreshold: 30,
-			verticalThreshold: 30
-		}, typeof TablesawConfig !== "undefined" ? TablesawConfig.swipe : {} );
-	}
-
 	var classes = {
 		// TODO duplicate class, also in tables.js
 		toolbar: "tablesaw-bar",
@@ -2645,7 +2649,7 @@ if( Tablesaw.mustard ) {
 		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
 		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
 
-		var $headerCells = tbl._getPrimaryHeaders();
+		var $headerCells = tbl._getPrimaryHeaderCells();
 		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );
 		var headerWidths = [];
 		var $head = $( document.head || 'head' );
@@ -2866,16 +2870,26 @@ if( Tablesaw.mustard ) {
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
 						})
-						.on( "touchend.swipetoggle", function(){
-							var cfg = getSwipeConfig();
-							var isPageScrolled = Math.abs( window.pageYOffset - scrollTop ) >= cfg.verticalThreshold;
-							var isVerticalSwipe = Math.abs( y - originY ) >= cfg.verticalThreshold;
+						.on( "touchend.swipetoggle", function() {
+							var cfg = tbl.getConfig({
+								swipeHorizontalThreshold: 30,
+								swipeVerticalThreshold: 30
+							});
+
+							// This config code is a little awkward because shoestring doesn’t support deep $.extend
+							// Trying to work around when devs only override one of (not both) horizontalThreshold or
+							// verticalThreshold in their TablesawConfig.
+							var verticalThreshold = cfg.swipe.verticalThreshold || cfg.swipeVerticalThreshold;
+							var horizontalThreshold = cfg.swipe.horizontalThreshold || cfg.swipeHorizontalThreshold;
+
+							var isPageScrolled = Math.abs( window.pageYOffset - scrollTop ) >= verticalThreshold;
+							var isVerticalSwipe = Math.abs( y - originY ) >= verticalThreshold;
 
 							if( !isVerticalSwipe && !isPageScrolled ) {
-								if( x - originX < -1 * cfg.horizontalThreshold ){
+								if( x - originX < -1 * horizontalThreshold ){
 									advance( true );
 								}
-								if( x - originX > cfg.horizontalThreshold ){
+								if( x - originX > horizontalThreshold ){
 									advance( false );
 								}
 							}
