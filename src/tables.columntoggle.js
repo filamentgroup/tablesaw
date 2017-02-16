@@ -7,6 +7,10 @@
 
 (function(){
 
+	var data = {
+		key: "tablesaw-coltoggle"
+	};
+
 	var ColumnToggle = function( element ) {
 
 		this.$table = $( element );
@@ -29,7 +33,7 @@
 		// headers references the THs within the first TR in the table
 		this.headers = this.$table.find( "tr" ).eq( 0 ).find( "th" );
 
-		this.$table.data( 'tablesaw-coltoggle', this );
+		this.$table.data( data.key, this );
 	};
 
 	ColumnToggle.prototype.init = function() {
@@ -193,7 +197,7 @@
 
 	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
 		if( tablesaw.mode === 'columntoggle' ){
-			$( tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
+			$( tablesaw.table ).data( data.key ).destroy();
 		}
 	} );
 

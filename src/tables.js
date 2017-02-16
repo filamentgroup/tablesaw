@@ -96,7 +96,6 @@ if( Tablesaw.mustard ) {
 	};
 
 	Table.prototype._initCells = function() {
-		var colstart = 0;
 		var $rows = this.$table.find( "tr" );
 		var columnLookup = [];
 
@@ -120,7 +119,6 @@ if( Tablesaw.mustard ) {
 				}
 
 				columnLookup[ rowNumber ][ coltally ] = this;
-				colstart = coltally + 1;
 
 				// TODO both colspan and rowspan
 				if( colspan ) {
@@ -165,7 +163,7 @@ if( Tablesaw.mustard ) {
 	Table.prototype.refresh = function() {
 		this._initCells();
 
-		this.$table.trigger( events.refresh );
+		this.$table.trigger( events.refresh, [ this ] );
 	};
 
 	Table.prototype.createToolbar = function() {

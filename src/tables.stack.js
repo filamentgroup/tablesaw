@@ -14,7 +14,7 @@
 	};
 
 	var data = {
-		obj: 'tablesaw-stack'
+		key: 'tablesaw-stack'
 	};
 
 	var attrs = {
@@ -30,10 +30,9 @@
 		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
 		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
 
-		this.$table.data( data.obj, this );
+		this.$table.data( data.key, this );
 	};
 
-	// Stack.prototype.init = function( colstart ) {
 	Stack.prototype.init = function() {
 		this.$table.addClass( classes.stackTable );
 
@@ -54,14 +53,28 @@
 
 			// headers
 			$( self.tablesaw._findHeadersForCell( this ) ).each(function() {
-				var $t = $( this );
+				var $header = $( this.cloneNode( true ) );
 				// TODO decouple from sortable better
-				var $sortableButton = $t.find( ".tablesaw-sortable-btn" );
-				html.push( $sortableButton.length ? $sortableButton.html() : $t.html() );
+				// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
+				// to preserve structural html in headers, like <a>
+				var $sortableButton = $header.find( ".tablesaw-sortable-btn" );
+				$header.find( ".tablesaw-sortable-arrow" ).remove();
+
+				html.push( $sortableButton.length ? $sortableButton.html() : $header.html() );
 			});
 
-			$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
-			$cell.prepend( "<b class='" + classes.cellLabels + "'>" + html.join( ", " ) + "</b>"  );
+			if( !$cell.find( "." + classes.cellContentLabels ).length ) {
+				$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
+			}
+
+			// Update if already exists.
+			var $label = $cell.find( "." + classes.cellLabels );
+			var newHtml = html.join( ", " );
+			if( !$label.length ) {
+				$cell.prepend( "<b class='" + classes.cellLabels + "'>" + newHtml + "</b>"  );
+			} else if( $label.html() !== newHtml ) { // only if changed
+				$label.html( newHtml );
+			}
 		});
 	};
 
@@ -79,11 +92,13 @@
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
-	});
-
-	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
+	}).on( Tablesaw.events.refresh, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
-			$( tablesaw.table ).data( data.obj ).destroy();
+			$( tablesaw.table ).data( data.key ).init();
+		}
+	}).on( Tablesaw.events.destroy, function( e, tablesaw ){
+		if( tablesaw.mode === 'stack' ){
+			$( tablesaw.table ).data( data.key ).destroy();
 		}
 	});
 
