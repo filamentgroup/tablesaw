@@ -31,10 +31,13 @@ if( Tablesaw.mustard ) {
 		events = {
 			create: "tablesawcreate",
 			destroy: "tablesawdestroy",
-			refresh: "tablesawrefresh"
+			refresh: "tablesawrefresh",
+			resize: "tablesawresize"
 		},
 		defaultMode = "stack",
 		initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+
+	Tablesaw.events = events;
 
 	var Table = function( element ) {
 		if( !element ) {
@@ -200,10 +203,32 @@ if( Tablesaw.mustard ) {
 		});
 	};
 
-	$( document ).on( "enhance.tablesaw", function( e ) {
+	var $doc = $( win.document );
+	$doc.on( "enhance.tablesaw", function( e ) {
 		// Cut the mustard
 		if( Tablesaw.mustard ) {
 			$( e.target ).find( initSelector )[ pluginName ]();
+		}
+	});
+
+	// Avoid a resize during scroll:
+	// Some Mobile devices trigger a resize during scroll (sometimes when
+	// doing elastic stretch at the end of the document or from the 
+	// location bar hide)
+	var isScrolling = false;
+	var scrollTimeout;
+	$doc.on( "scroll.tablesaw", function() {
+		isScrolling = true;
+
+		win.clearTimeout( scrollTimeout );
+		scrollTimeout = win.setTimeout(function() {
+			isScrolling = false;
+		}, 300 );
+	});
+
+	$doc.on( "resize.tablesaw", function() {
+		if( !isScrolling ) {
+			$doc.trigger( events.resize );
 		}
 	});
 

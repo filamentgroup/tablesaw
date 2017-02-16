@@ -285,7 +285,7 @@
 	// add methods
 	$.extend( $.fn[ pluginName ].prototype, methods );
 
-	$( document ).on( "tablesawcreate", function( e, Tablesaw ) {
+	$( document ).on( Tablesaw.events.create, function( e, Tablesaw ) {
 		if( Tablesaw.$table.is( initSelector ) ) {
 			Tablesaw.$table[ pluginName ]();
 		}

@@ -74,14 +74,14 @@
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
 			var table = new Stack( tablesaw.table, tablesaw );
 			table.init();
 		}
 	});
 
-	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
 		if( tablesaw.mode === 'stack' ){
 			$( tablesaw.table ).data( data.obj ).destroy();
 		}

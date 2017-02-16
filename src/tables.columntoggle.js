@@ -134,7 +134,7 @@
 
 		this.$menu = $menu;
 
-		$(window).on( "resize." + tableId, function(){
+		$(window).on( Tablesaw.events.resize + "." + tableId, function(){
 			self.refreshToggle();
 		});
 
@@ -182,7 +182,7 @@
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.create, function( e, tablesaw ){
 
 		if( tablesaw.mode === 'columntoggle' ){
 			var table = new ColumnToggle( tablesaw.table );
@@ -191,7 +191,7 @@
 
 	} );
 
-	$( document ).on( "tablesawdestroy", function( e, tablesaw ){
+	$( document ).on( Tablesaw.events.destroy, function( e, tablesaw ){
 		if( tablesaw.mode === 'columntoggle' ){
 			$( tablesaw.table ).data( 'tablesaw-coltoggle' ).destroy();
 		}
