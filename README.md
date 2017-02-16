@@ -10,7 +10,7 @@ A set of plugins for responsive tables.
 
 * [Getting Started](#getting-started)
 * [Stack Mode](#stack-mode)
-* [Column Toggle Mode](#toggle-mode)
+* [Column Toggle Mode](#column-toggle-mode)
 * [Swipe Mode](#swipe-mode)
 * [Mini-Map](#mini-map)
 * [Mode Switcher](#mode-switcher)
@@ -39,7 +39,7 @@ If you only want to use the Stack Table and don’t want all the extra features 
 | Opt out of inline labels | To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-tablesaw-no-labels>`; on a per-row basis, use `<tr data-tablesaw-no-labels>`. |
 | Hide headers for empty body cells | When the table cell is empty, use `<table data-tablesaw-hide-empty>` to hide the header when stacked. |
 
-## Toggle Mode
+## Column Toggle Mode
 
 * [Column Toggle Demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html)
 
