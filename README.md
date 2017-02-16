@@ -92,6 +92,7 @@ Allows the user to use the swipe gesture (or use the left and right buttons) to 
 | Persist a Column | Columns also respect the `data-tablesaw-priority="persist"` attribute: `<th data-tablesaw-priority="persist"><!-- Always shows --></th>` |
 | Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="swipe" data-tablesaw-minimap>` |
 | All columns visible class | Tablesaw also exposes a `tablesaw-all-cols-visible` class that is toggled on when all of the table columns are visible (and off when not). You can use this in CSS to hide the minimap or navigation buttons if needed. |
+| Disable swipe touch events | Use the `<table data-tablesaw-no-touch>` attribute to opt-out of swiping left or right to navigate columns. User will need to use the provided buttons instead. |
 
 <details>
 <summary>_Advanced Option_: Configure Swipe Thresholds</summary>
