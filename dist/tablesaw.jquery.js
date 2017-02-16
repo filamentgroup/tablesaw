@@ -1172,8 +1172,8 @@ if( Tablesaw.mustard ) {
 							// This config code is a little awkward because shoestring doesn’t support deep $.extend
 							// Trying to work around when devs only override one of (not both) horizontalThreshold or
 							// verticalThreshold in their TablesawConfig.
-							var verticalThreshold = cfg.swipe.verticalThreshold || cfg.swipeVerticalThreshold;
-							var horizontalThreshold = cfg.swipe.horizontalThreshold || cfg.swipeHorizontalThreshold;
+							var verticalThreshold = cfg.swipe ? cfg.swipe.verticalThreshold : cfg.swipeVerticalThreshold;
+							var horizontalThreshold = cfg.swipe ? cfg.swipe.horizontalThreshold : cfg.swipeHorizontalThreshold;
 
 							var isPageScrolled = Math.abs( window.pageYOffset - scrollTop ) >= verticalThreshold;
 							var isVerticalSwipe = Math.abs( y - originY ) >= verticalThreshold;
