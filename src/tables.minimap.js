@@ -5,7 +5,7 @@
 * MIT License
 */
 
-;(function(){
+(function(){
 
 	var MiniMap = {
 		attr: {
@@ -14,11 +14,11 @@
 	};
 
 	function createMiniMap( $table ){
-
-		var $btns = $( '<div class="tablesaw-advance minimap">' ),
-			$dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns ),
-			hideDot = 'tablesaw-advance-dots-hide',
-			$headerCells = $table.find( 'thead th' );
+		var tbl = $table.data( "tablesaw" );
+		var $btns = $( '<div class="tablesaw-advance minimap">' );
+		var $dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns );
+		var hideDot = 'tablesaw-advance-dots-hide';
+		var $headerCells = tbl._getPrimaryHeaderCells();
 
 		// populate dots
 		$headerCells.each(function(){
@@ -41,7 +41,7 @@
 
 			// show/hide dots
 			var dots = $dotNav.find( "li" ).removeClass( hideDot );
-			$table.find( "thead th" ).each(function(i){
+			tbl._getPrimaryHeaderCells().each(function(i){
 				if( $( this ).css( "display" ) === "none" ){
 					dots.eq( i ).addClass( hideDot );
 				}

@@ -15,7 +15,8 @@
 		allColumnsVisible: 'tablesaw-all-cols-visible'
 	};
 	var attrs = {
-		disableTouchEvents: "data-tablesaw-no-touch"
+		disableTouchEvents: "data-tablesaw-no-touch",
+		swipeFeedback: "data-tablesaw-swipe-feedback"
 	};
 
 	function createSwipeTable( tbl, $table ){
@@ -228,7 +229,7 @@
 		}
 
 		if( !$table.is( "[" + attrs.disableTouchEvents + "]" ) ) {
-
+			var useSwipeFeedback = $table.is( "[" + attrs.swipeFeedback + "]" );
 			$table
 				.on( "touchstart.swipetoggle", function( e ){
 					var originX = getCoord( e, 'pageX' );
@@ -236,6 +237,32 @@
 					var x;
 					var y;
 					var scrollTop = window.pageYOffset;
+					var canGoPrev = canAdvance( getPrev() );
+					var canGoNext = canAdvance( getNext() );
+					var $translateCells;
+					if( useSwipeFeedback ) {
+						$translateCells = $table.find( "th, td" ).filter( ":not(.tablesaw-cell-persist)" );
+					}
+
+					var cfg = tbl.getConfig({
+						swipeHorizontalThreshold: 30,
+						swipeVerticalThreshold: 30
+					});
+
+					// This config code is a little awkward because shoestring doesn’t support deep $.extend
+					// Trying to work around when devs only override one of (not both) horizontalThreshold or
+					// verticalThreshold in their TablesawConfig.
+					var thresholds = {
+						vertical: cfg.swipe ? cfg.swipe.verticalThreshold : cfg.swipeVerticalThreshold,
+						horizontal: cfg.swipe ? cfg.swipe.horizontalThreshold : cfg.swipeHorizontalThreshold
+					};
+
+					function isVerticalSwipe() {
+						return Math.abs( y - originY ) >= thresholds.vertical;
+					}
+					function isPageScrolled() {
+						return Math.abs( window.pageYOffset - scrollTop ) >= thresholds.vertical;
+					}
 
 					$( win ).off( Tablesaw.events.resize, fakeBreakpoints );
 
@@ -243,27 +270,23 @@
 						.on( "touchmove.swipetoggle", function( e ){
 							x = getCoord( e, 'pageX' );
 							y = getCoord( e, 'pageY' );
+
+							if( useSwipeFeedback && !isVerticalSwipe() && !isPageScrolled() ) {
+								var min = canGoNext ? -25 : 0;
+								var max = canGoPrev ? 25 : 0;
+								var moveX = Math.max( Math.min( x - originX, max ), min );
+
+								$translateCells.css({
+									"transform": "translateX(" + moveX + "px)"
+								});
+							}
 						})
 						.on( "touchend.swipetoggle", function() {
-							var cfg = tbl.getConfig({
-								swipeHorizontalThreshold: 30,
-								swipeVerticalThreshold: 30
-							});
-
-							// This config code is a little awkward because shoestring doesn’t support deep $.extend
-							// Trying to work around when devs only override one of (not both) horizontalThreshold or
-							// verticalThreshold in their TablesawConfig.
-							var verticalThreshold = cfg.swipe ? cfg.swipe.verticalThreshold : cfg.swipeVerticalThreshold;
-							var horizontalThreshold = cfg.swipe ? cfg.swipe.horizontalThreshold : cfg.swipeHorizontalThreshold;
-
-							var isPageScrolled = Math.abs( window.pageYOffset - scrollTop ) >= verticalThreshold;
-							var isVerticalSwipe = Math.abs( y - originY ) >= verticalThreshold;
-
-							if( !isVerticalSwipe && !isPageScrolled ) {
-								if( x - originX < -1 * horizontalThreshold ){
+							if( !isVerticalSwipe() && !isPageScrolled() ) {
+								if( x - originX < -1 * thresholds.horizontal ){
 									advance( true );
 								}
-								if( x - originX > horizontalThreshold ){
+								if( x - originX > thresholds.horizontal ){
 									advance( false );
 								}
 							}
@@ -273,6 +296,10 @@
 							}, 300);
 
 							$( this ).off( "touchmove.swipetoggle touchend.swipetoggle" );
+
+							if( useSwipeFeedback ) {
+								$translateCells.css( "transform", "" );
+							}
 						});
 				});
 		}

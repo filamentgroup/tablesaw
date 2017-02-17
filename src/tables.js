@@ -52,7 +52,13 @@ if( Tablesaw.mustard ) {
 		this.table = element;
 		this.$table = $( element );
 
+		if( this.$table.data( pluginName ) ) {
+			return;
+		}
+
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
+
+		this.$table.data( pluginName, this );
 
 		this.init();
 	};
@@ -201,14 +207,7 @@ if( Tablesaw.mustard ) {
 	// Collection method.
 	$.fn[ pluginName ] = function() {
 		return this.each( function() {
-			var $t = $( this );
-
-			if( $t.data( pluginName ) ){
-				return;
-			}
-
-			var table = new Table( this );
-			$t.data( pluginName, table );
+			new Table( this );
 		});
 	};
 
