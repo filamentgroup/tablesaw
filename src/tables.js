@@ -232,12 +232,16 @@ if( Tablesaw.mustard ) {
 		win.clearTimeout( scrollTimeout );
 		scrollTimeout = win.setTimeout(function() {
 			isScrolling = false;
-		}, 300 );
+		}, 300 ); // must be greater than the resize timeout below
 	});
 
-	$doc.on( "resize.tablesaw", function() {
+	var resizeTimeout;
+	$( win ).on( "resize", function() {
 		if( !isScrolling ) {
-			$doc.trigger( events.resize );
+			win.clearTimeout( resizeTimeout );
+			resizeTimeout = win.setTimeout(function() {
+				$doc.trigger( events.resize );
+			}, 150 ); // must be less than the scrolling timeout above.
 		}
 	});
 
