@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1 - 2017-02-16
+/*! Tablesaw - v3.0.1 - 2017-02-28
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -64,7 +64,8 @@ if( Tablesaw.mustard ) {
 		resize: "tablesawresize"
 	};
 	var defaultMode = "stack";
-	var initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+	var initSelector = "table";
+	var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
 	var defaultConfig = {
 		getHeaderCells: function() {
 			return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
@@ -180,6 +181,7 @@ if( Tablesaw.mustard ) {
 
 				if( headerCol !== rowCell ) {
 					headerCol.cells.push( rowCell );
+					rowCell.headerCell = headerCol;
 				}
 
 				rowNumber++;
@@ -245,7 +247,7 @@ if( Tablesaw.mustard ) {
 	$doc.on( "enhance.tablesaw", function( e ) {
 		// Cut the mustard
 		if( Tablesaw.mustard ) {
-			$( e.target ).find( initSelector )[ pluginName ]();
+			$( e.target ).find( initSelector ).filter( initFilterSelector )[ pluginName ]();
 		}
 	});
 
@@ -261,12 +263,16 @@ if( Tablesaw.mustard ) {
 		win.clearTimeout( scrollTimeout );
 		scrollTimeout = win.setTimeout(function() {
 			isScrolling = false;
-		}, 300 );
+		}, 300 ); // must be greater than the resize timeout below
 	});
 
-	$doc.on( "resize.tablesaw", function() {
+	var resizeTimeout;
+	$( win ).on( "resize", function() {
 		if( !isScrolling ) {
-			$doc.trigger( events.resize );
+			win.clearTimeout( resizeTimeout );
+			resizeTimeout = win.setTimeout(function() {
+				$doc.trigger( events.resize );
+			}, 150 ); // must be less than the scrolling timeout above.
 		}
 	});
 
@@ -315,11 +321,11 @@ if( Tablesaw.mustard ) {
 			return !$( this ).closest( "tr" ).is( "[" + attrs.labelless + "]" ) &&
 				( !self.hideempty || !!$( this ).html() );
 		}).each(function() {
-			var html = [];
+			var $newHeader = $( document.createElement( "b" ) ).addClass( classes.cellLabels );
 			var $cell = $( this );
 
 			// headers
-			$( self.tablesaw._findHeadersForCell( this ) ).each(function() {
+			$( self.tablesaw._findHeadersForCell( this ) ).each(function( index ) {
 				var $header = $( this.cloneNode( true ) );
 				// TODO decouple from sortable better
 				// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
@@ -327,20 +333,30 @@ if( Tablesaw.mustard ) {
 				var $sortableButton = $header.find( ".tablesaw-sortable-btn" );
 				$header.find( ".tablesaw-sortable-arrow" ).remove();
 
-				html.push( $sortableButton.length ? $sortableButton.html() : $header.html() );
+				// TODO decouple from checkall better
+				var $checkall = $header.find( "[data-tablesaw-checkall]" );
+				$checkall.closest( "label" ).remove();
+				if( $checkall.length ) {
+					$newHeader = $([]);
+					return;
+				}
+
+				if( index > 0 ) {
+					$newHeader.append( document.createTextNode( ", " ) );
+				}
+				$newHeader.append( $sortableButton.length ? $sortableButton[ 0 ].childNodes : $header[ 0 ].childNodes );
 			});
 
-			if( !$cell.find( "." + classes.cellContentLabels ).length ) {
+			if( $newHeader.length && !$cell.find( "." + classes.cellContentLabels ).length ) {
 				$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
 			}
 
 			// Update if already exists.
 			var $label = $cell.find( "." + classes.cellLabels );
-			var newHtml = html.join( ", " );
 			if( !$label.length ) {
-				$cell.prepend( "<b class='" + classes.cellLabels + "'>" + newHtml + "</b>"  );
-			} else if( $label.html() !== newHtml ) { // only if changed
-				$label.html( newHtml );
+				$cell.prepend( $newHeader );
+			} else { // only if changed
+				$label.replaceWith( $newHeader );
 			}
 		});
 	};
