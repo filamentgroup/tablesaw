@@ -2028,11 +2028,11 @@ if( Tablesaw.mustard ) {
 			return !$( this ).closest( "tr" ).is( "[" + attrs.labelless + "]" ) &&
 				( !self.hideempty || !!$( this ).html() );
 		}).each(function() {
-			var html = [];
+			var $newHeader = $( document.createElement( "b" ) ).addClass( classes.cellLabels );
 			var $cell = $( this );
 
 			// headers
-			$( self.tablesaw._findHeadersForCell( this ) ).each(function() {
+			$( self.tablesaw._findHeadersForCell( this ) ).each(function( index ) {
 				var $header = $( this.cloneNode( true ) );
 				// TODO decouple from sortable better
 				// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
@@ -2040,20 +2040,30 @@ if( Tablesaw.mustard ) {
 				var $sortableButton = $header.find( ".tablesaw-sortable-btn" );
 				$header.find( ".tablesaw-sortable-arrow" ).remove();
 
-				html.push( $sortableButton.length ? $sortableButton.html() : $header.html() );
+				// TODO decouple from checkall better
+				var $checkall = $header.find( "[data-tablesaw-checkall]" );
+				$checkall.closest( "label" ).remove();
+				if( $checkall.length ) {
+					$newHeader = $([]);
+					return;
+				}
+
+				if( index > 0 ) {
+					$newHeader.append( document.createTextNode( ", " ) );
+				}
+				$newHeader.append( $sortableButton.length ? $sortableButton[ 0 ].childNodes : $header[ 0 ].childNodes );
 			});
 
-			if( !$cell.find( "." + classes.cellContentLabels ).length ) {
+			if( $newHeader.length && !$cell.find( "." + classes.cellContentLabels ).length ) {
 				$cell.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
 			}
 
 			// Update if already exists.
 			var $label = $cell.find( "." + classes.cellLabels );
-			var newHtml = html.join( ", " );
 			if( !$label.length ) {
-				$cell.prepend( "<b class='" + classes.cellLabels + "'>" + newHtml + "</b>"  );
-			} else if( $label.html() !== newHtml ) { // only if changed
-				$label.html( newHtml );
+				$cell.prepend( $newHeader );
+			} else { // only if changed
+				$label.replaceWith( $newHeader );
 			}
 		});
 	};
