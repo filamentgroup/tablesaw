@@ -35,7 +35,8 @@ if( Tablesaw.mustard ) {
 		resize: "tablesawresize"
 	};
 	var defaultMode = "stack";
-	var initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+	var initSelector = "table";
+	var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
 	var defaultConfig = {
 		getHeaderCells: function() {
 			return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
@@ -151,6 +152,7 @@ if( Tablesaw.mustard ) {
 
 				if( headerCol !== rowCell ) {
 					headerCol.cells.push( rowCell );
+					rowCell.headerCell = headerCol;
 				}
 
 				rowNumber++;
@@ -216,7 +218,7 @@ if( Tablesaw.mustard ) {
 	$doc.on( "enhance.tablesaw", function( e ) {
 		// Cut the mustard
 		if( Tablesaw.mustard ) {
-			$( e.target ).find( initSelector )[ pluginName ]();
+			$( e.target ).find( initSelector ).filter( initFilterSelector )[ pluginName ]();
 		}
 	});
 

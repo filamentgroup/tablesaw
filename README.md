@@ -199,6 +199,12 @@ $( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
 
 All of the above options combined into a single table.
 
+## Check All Plugin
+
+Added in 3.0.1. Add the `data-tablesaw-checkall` to a checkbox in a `thead` cell to enable that checkbox to toggle the other checkboxes in the same column.
+
+* [Check All Demo](http://filamentgroup.github.io/tablesaw/demo/checkall.html)
+
 ## Getting Started
 
 Available through npm:

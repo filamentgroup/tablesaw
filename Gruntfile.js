@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 		'src/tables.swipetoggle.js',
 		'src/tables.minimap.js',
 		'src/tables.modeswitch.js',
+		'src/tables.checkall.js',
 		'src/tables.outro.js'
 	];
 
