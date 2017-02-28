@@ -65,11 +65,10 @@
 						});
 					},
 					makeHeadsActionable = function( h , fn ){
-						$.each( h , function( i , v ){
+						$.each( h , function( i , col ){
 							var b = $( "<button class='" + classes.sortButton + "'/>" );
-							b.on( "click" , { col: v } , fn );
-							$( v ).wrapInner( b );
-							b.append( "<span class='tablesaw-sortable-arrow'>" );
+							b.on( "click" , { col: col } , fn );
+							$( col ).wrapInner( b ).find( "button" ).append( "<span class='tablesaw-sortable-arrow'>" );
 						});
 					},
 					clearOthers = function( sibs ){
