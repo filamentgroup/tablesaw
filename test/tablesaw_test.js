@@ -25,7 +25,7 @@
 			'<thead>',
 				'<tr>',
 					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
-					'<th data-tablesaw-sortable-col data-sortable-numeric>Header</th>',
+					'<th data-tablesaw-sortable-col data-tablesaw-sortable-numeric>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -187,11 +187,11 @@
 
 		$sortButton.trigger( "click" );
 
-		assert.notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
+		assert.equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
 
 		$sortButton.trigger( "click" );
 
-		assert.equal( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted ascending' );
+		assert.notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending' );
 	});
 
 	QUnit.test( 'Can sort numeric descending', function( assert ) {
@@ -199,11 +199,11 @@
 
 		$sortButton.trigger( "click" );
 
-		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '10', 'First row is sorted descending' );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '1', 'First row is sorted ascending' );
 
 		$sortButton.trigger( "click" );
 
-		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '1', 'First row is sorted ascending' );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 1 ).html(), '10', 'First row is sorted descending' );
 	});
 
 	QUnit.test( 'Sort works with floats', function( assert ) {
@@ -212,10 +212,10 @@
 			rows = $table.find( 'tbody tr' ).length;
 
 		$sortButton.trigger( "click" );
-		assert.equal( $table.find( "tbody tr" ).eq( rows - 2 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in row ' + ( rows - 2 ) + ' of ' + rows + ' (descending)' );
+		assert.equal( $table.find( "tbody tr" ).eq( 1 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the second row (descending)' );
 
 		$sortButton.trigger( "click" );
-		assert.equal( $table.find( "tbody tr" ).eq( 1 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the second row (ascending)' );
+		assert.equal( $table.find( "tbody tr" ).eq( rows - 2 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in row ' + ( rows - 2 ) + ' of ' + rows + ' (ascending)' );
 
 	});
 
@@ -224,10 +224,10 @@
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 0 );
 
 		$sortButton.trigger( "click" );
-		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the first row (descending)' );
+		assert.equal( $table.find( "tbody tr" ).eq( 4 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the fifth row (ascending)' );
 
 		$sortButton.trigger( "click" );
-		assert.equal( $table.find( "tbody tr" ).eq( 4 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the third row (ascending)' );
+		assert.equal( $table.find( "tbody tr" ).eq( 0 ).find( "td" ).eq( 0 ).text(), previousText, previousText + ' is in the first row (descending)' );
 
 	});
 
