@@ -50,7 +50,9 @@
 	.tablesaw-columntoggle th.tablesaw-priority-2,
 	.tablesaw-columntoggle td.tablesaw-priority-2,
 	.tablesaw-columntoggle th.tablesaw-priority-1,
-	.tablesaw-columntoggle td.tablesaw-priority-1 {
+	.tablesaw-columntoggle td.tablesaw-priority-1,
+	.tablesaw-columntoggle th.tablesaw-priority-0,
+	.tablesaw-columntoggle td.tablesaw-priority-0 {
 		display: none;
 	}
 }
@@ -134,6 +136,7 @@
 	display: block;
 	padding: .2em 0;
 	white-space: nowrap;
+	cursor: default;
 }
 .tablesaw-columntoggle-popup .btn-group > label input {
 	margin-right: .8em;

@@ -63,6 +63,7 @@ Table headers must have a `data-tablesaw-priority` attribute to be eligible to t
 
 ```html
 <th data-tablesaw-priority="persist"><!-- Not eligible for toggle, always shows --></th>
+<th data-tablesaw-priority="0"><!-- Hidden at all breakpoints by default, must be toggled back on manually --></th>
 <th data-tablesaw-priority="1"><!-- Shows at (min-width: 20em) (320px) --></th>
 <th data-tablesaw-priority="2"><!-- Shows at (min-width: 30em) (480px) --></th>
 <th data-tablesaw-priority="3"><!-- Shows at (min-width: 40em) (640px) --></th>
