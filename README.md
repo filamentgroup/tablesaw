@@ -16,6 +16,7 @@ A set of plugins for responsive tables.
 * [Mode Switcher](#mode-switcher)
 * [Sortable](#sortable)
 * [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
+* [Check All](#check-all)
 * [Limitations](#limitations)
 * [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 * [Browser Support](#browser-support)
@@ -199,7 +200,7 @@ $( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
 
 All of the above options combined into a single table.
 
-## Check All Plugin
+## Check All
 
 Added in 3.0.1. Add the `data-tablesaw-checkall` to a checkbox in a `thead` cell to enable that checkbox to toggle the other checkboxes in the same column.
 
