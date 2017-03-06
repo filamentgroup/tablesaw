@@ -19,6 +19,10 @@
 			return;
 		}
 
+		this.attributes = {
+			subrow: "data-tablesaw-subrow"
+		};
+
 		this.classes = {
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
@@ -31,6 +35,7 @@
 
 		// Expose headers and allHeaders properties on the widget
 		// headers references the THs within the first TR in the table
+		// TODO use tables.js getHeaderCells method
 		this.headers = this.$table.find( "tr" ).eq( 0 ).find( "th" );
 
 		this.$table.data( data.key, this );
@@ -76,6 +81,10 @@
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
+
+				if( priority === "0" ) {
+					self.updateSubrows( false );
+				}
 			}
 		});
 
@@ -89,10 +98,13 @@
 		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
 			var checked = e.target.checked;
 
-			var $cells = self.$getCellsFromCheckbox( e.target );
+			var header = self.getHeaderFromCheckbox( e.target );
+			var $cells = self.$getCells( header );
 
 			$cells[ !checked ? "addClass" : "removeClass" ]( "tablesaw-cell-hidden" );
 			$cells[ checked ? "addClass" : "removeClass" ]( "tablesaw-cell-visible" );
+
+			self.updateSubrows( checked );
 
 			self.$table.trigger( 'tablesawcolumns' );
 		});
@@ -146,31 +158,48 @@
 		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.$getCells = function( th ) {
-		return $( th ).add( th.cells );
+	ColumnToggle.prototype.updateSubrows = function( showing ) {
+		this.$table.find( "[" + this.attributes.subrow + "]" ).each(function() {
+			// filter out subrows
+			var $td = $( this ).find( "td[colspan]" ).eq( 0 );
+			$td.attr( "colspan", parseInt( $td.attr( "colspan" ), 10 ) + ( showing ? 1 : -1 ) );
+		});
 	};
 
-	ColumnToggle.prototype.$getCellsFromCheckbox = function( checkbox ) {
-		var th = $( checkbox ).data( "tablesaw-header" );
-		return this.$getCells( th );
+	ColumnToggle.prototype.$getCells = function( th ) {
+		var self = this;
+		return $( th ).add( th.cells ).filter(function() {
+			// no subrows
+			return !$( this ).parent().is( "[" + self.attributes.subrow + "]" );
+		});
+	};
+
+	ColumnToggle.prototype.getHeaderFromCheckbox = function( checkbox ) {
+		return $( checkbox ).data( "tablesaw-header" );
 	};
 
 	ColumnToggle.prototype.refreshToggle = function() {
 		var self = this;
 		this.$menu.find( "input" ).each( function() {
-			this.checked = self.$getCellsFromCheckbox( this ).eq( 0 ).css( "display" ) === "table-cell";
+			var header = self.getHeaderFromCheckbox( this );
+			this.checked = self.$getCells( header ).eq( 0 ).css( "display" ) === "table-cell";
 		});
 	};
 
+	// TODO code duplication with init
 	ColumnToggle.prototype.refreshPriority = function(){
 		var self = this;
-		$(this.headers).not( "td" ).each( function() {
+		$( this.headers ).each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
-				$cells = $this.add( this.cells );
+				$cells = self.$getCells( this );
 
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
+
+				if( priority === "0" ) {
+					self.updateSubrows( false );
+				}
 			}
 		});
 	};

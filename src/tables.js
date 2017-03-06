@@ -39,7 +39,7 @@ if( Tablesaw.mustard ) {
 	var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
 	var defaultConfig = {
 		getHeaderCells: function() {
-			return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+			return this.$thead.children().filter( "tr" ).eq( 0 ).find( "th" );
 		}
 	};
 
@@ -52,6 +52,8 @@ if( Tablesaw.mustard ) {
 
 		this.table = element;
 		this.$table = $( element );
+		this.$thead = this.$table.children().filter( "thead" );
+		this.$tbody = this.$table.children().filter( "tbody" );
 
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
 
@@ -96,8 +98,19 @@ if( Tablesaw.mustard ) {
 		return results;
 	};
 
+	Table.prototype.getRows = function() {
+		var self = this;
+		return this.$table.find( "tr" ).filter(function() {
+			return $( this ).closest( "table" ).is( self.$table );
+		});
+	};
+
+	Table.prototype.getBodyRows = function() {
+		return this.$tbody.children().filter( "tr" );
+	};
+
 	Table.prototype._initCells = function() {
-		var $rows = this.$table.find( "tr" );
+		var $rows = this.getRows();
 		var columnLookup = [];
 
 		$rows.each(function( rowNumber ) {
@@ -108,7 +121,6 @@ if( Tablesaw.mustard ) {
 			var coltally = 0;
 			var $t = $( this );
 			var children = $t.children();
-			// var isInHeader = $t.closest( "thead" ).length;
 
 			children.each(function() {
 				var colspan = parseInt( this.getAttribute( "colspan" ), 10 );

@@ -8,7 +8,6 @@
 ;(function() {
 	function getSortValue( cell ) {
 		var text = [];
-
 		$( cell.childNodes ).each(function() {
 			var $el = $( this );
 			if( $el.is( 'input, select' ) ) {
@@ -27,7 +26,8 @@
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		attrs = {
 			defaultCol: "data-tablesaw-sortable-default-col",
-			numericCol: "data-tablesaw-sortable-numeric"
+			numericCol: "data-tablesaw-sortable-numeric",
+			subRow: "data-tablesaw-subrow"
 		},
 		classes = {
 			head: pluginName + "-head",
@@ -56,10 +56,7 @@
 					heads,
 					$switcher;
 
-				var addClassToTable = function(){
-						el.addClass( pluginName );
-					},
-					addClassToHeads = function( h ){
+				var addClassToHeads = function( h ){
 						$.each( h , function( i , v ){
 							$( v ).addClass( classes.head );
 						});
@@ -163,33 +160,35 @@
 						});
 					};
 
-					addClassToTable();
-					heads = el.find( "thead th[data-" + pluginName + "-col]" );
+					el.addClass( pluginName );
+
+					heads = el.children().filter( "thead" ).find( "th[data-" + pluginName + "-col]" );
+
 					addClassToHeads( heads );
 					makeHeadsActionable( heads , headsOnAction );
 					handleDefault( heads );
 
 					if( el.is( sortableSwitchSelector ) ) {
-						addSwitcher( heads, el.find('tbody tr:nth-child(-n+3)') );
+						addSwitcher( heads );
 					}
-			},
-			getColumnNumber: function( col ){
-				return $( col ).prevAll().length;
-			},
-			getTableRows: function(){
-				return $( this ).find( "tbody tr" );
 			},
 			sortRows: function( rows , colNum , ascending, col ){
 				var cells, fn, sorted;
-				var getCells = function( rows ){
+				var convertCells = function( cellArr ){
 						var cells = [];
-						$.each( rows , function( i , r ){
-							var element = $( r ).children().get( colNum );
-							cells.push({
-								element: element,
-								cell: getSortValue( element ),
-								rowNum: i
-							});
+						$.each( cellArr, function( i , cell ){
+							var row = cell.parentNode;
+							var subrow = $( row ).next().filter( "[" + attrs.subRow + "]" );
+
+							if( $( row ).is( "[" + attrs.subRow + "]" ) ) {
+							} else {
+								cells.push({
+									element: cell,
+									cell: getSortValue( cell ),
+									row: row,
+									subrow: subrow.length ? subrow[ 0 ] : null
+								});
+							}
 						});
 						return cells;
 					},
@@ -215,31 +214,29 @@
 						}
 						return fn;
 					},
-					applyToRows = function( sorted , rows ){
-						var newRows = [], i, l, cur;
+					convertCellsToRows = function( sorted ){
+						var newRows = [], i, l;
 						for( i = 0, l = sorted.length ; i < l ; i++ ){
-							cur = sorted[ i ].rowNum;
-							newRows.push( rows[cur] );
+							newRows.push( sorted[ i ].row );
+							if( sorted[ i ].subrow ) {
+								newRows.push( sorted[ i ].subrow );
+							}
 						}
 						return newRows;
 					};
 
-				cells = getCells( rows );
+				cells = convertCells( col.cells );
+
 				var customFn = $( col ).data( 'tablesaw-sort' );
+
 				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
 					getSortFxn( ascending, $( col ).is( '[' + attrs.numericCol + ']' ) && !$( col ).is( '[' + attrs.numericCol + '="false"]' ) );
 
 				sorted = cells.sort( fn );
-				rows = applyToRows( sorted , rows );
-				return rows;
-			},
-			replaceTableRows: function( rows ){
-				var el = $( this ),
-					body = el.find( "tbody" );
 
-				for( var j = 0, k = rows.length; j < k; j++ ) {
-					body.append( rows[ j ] );
-				}
+				rows = convertCellsToRows( sorted , rows );
+
+				return rows;
 			},
 			makeColDefault: function( col , a ){
 				var c = $( col );
@@ -253,13 +250,29 @@
 				}
 			},
 			sortBy: function( col , ascending ){
-				var el = $( this ), colNum, rows;
+				var el = $( this );
+				var colNum;
+				var tbl = el.data( "tablesaw" );
+				var rows = tbl.getBodyRows();
+				var sortedRows;
+				var map = tbl.headerMapping[ 0 ];
 
-				colNum = el[ pluginName ]( "getColumnNumber" , col );
-				rows = el[ pluginName ]( "getTableRows" );
-				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending, col );
-				el[ pluginName ]( "replaceTableRows" , rows );
+				for( var j = 0, k = map.length; j < k; j++ ) {
+					if( map[ j ] === col ) {
+						colNum = j;
+						break;
+					}
+				}
+
+				sortedRows = el[ pluginName ]( "sortRows" , rows, colNum, ascending, col );
+
+				// replace Table rows
+				for( var j = 0, k = sortedRows.length; j < k; j++ ) {
+					tbl.$tbody.append( sortedRows[ j ] );
+				}
+
 				el[ pluginName ]( "makeColDefault" , col , ascending );
+
 				el.trigger( "tablesaw-sorted" );
 			}
 		};
