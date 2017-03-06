@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.3 - 2017-02-28
+/*! Tablesaw - v3.0.1-beta.4 - 2017-03-06
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -1775,7 +1775,7 @@ if( Tablesaw.mustard ) {
 	var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
 	var defaultConfig = {
 		getHeaderCells: function() {
-			return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
+			return this.$thead.children().filter( "tr" ).eq( 0 ).find( "th" );
 		}
 	};
 
@@ -1788,6 +1788,8 @@ if( Tablesaw.mustard ) {
 
 		this.table = element;
 		this.$table = $( element );
+		this.$thead = this.$table.children().filter( "thead" );
+		this.$tbody = this.$table.children().filter( "tbody" );
 
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
 
@@ -1832,8 +1834,19 @@ if( Tablesaw.mustard ) {
 		return results;
 	};
 
+	Table.prototype.getRows = function() {
+		var self = this;
+		return this.$table.find( "tr" ).filter(function() {
+			return $( this ).closest( "table" ).is( self.$table );
+		});
+	};
+
+	Table.prototype.getBodyRows = function() {
+		return this.$tbody.children().filter( "tr" );
+	};
+
 	Table.prototype._initCells = function() {
-		var $rows = this.$table.find( "tr" );
+		var $rows = this.getRows();
 		var columnLookup = [];
 
 		$rows.each(function( rowNumber ) {
@@ -1844,7 +1857,6 @@ if( Tablesaw.mustard ) {
 			var coltally = 0;
 			var $t = $( this );
 			var children = $t.children();
-			// var isInHeader = $t.closest( "thead" ).length;
 
 			children.each(function() {
 				var colspan = parseInt( this.getAttribute( "colspan" ), 10 );
@@ -2193,6 +2205,10 @@ if( Tablesaw.mustard ) {
 			return;
 		}
 
+		this.attributes = {
+			subrow: "data-tablesaw-subrow"
+		};
+
 		this.classes = {
 			columnToggleTable: 'tablesaw-columntoggle',
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
@@ -2205,6 +2221,7 @@ if( Tablesaw.mustard ) {
 
 		// Expose headers and allHeaders properties on the widget
 		// headers references the THs within the first TR in the table
+		// TODO use tables.js getHeaderCells method
 		this.headers = this.$table.find( "tr" ).eq( 0 ).find( "th" );
 
 		this.$table.data( data.key, this );
@@ -2250,6 +2267,10 @@ if( Tablesaw.mustard ) {
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
+
+				if( priority === "0" ) {
+					self.updateSubrows( false );
+				}
 			}
 		});
 
@@ -2263,10 +2284,13 @@ if( Tablesaw.mustard ) {
 		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
 			var checked = e.target.checked;
 
-			var $cells = self.$getCellsFromCheckbox( e.target );
+			var header = self.getHeaderFromCheckbox( e.target );
+			var $cells = self.$getCells( header );
 
 			$cells[ !checked ? "addClass" : "removeClass" ]( "tablesaw-cell-hidden" );
 			$cells[ checked ? "addClass" : "removeClass" ]( "tablesaw-cell-visible" );
+
+			self.updateSubrows( checked );
 
 			self.$table.trigger( 'tablesawcolumns' );
 		});
@@ -2320,31 +2344,48 @@ if( Tablesaw.mustard ) {
 		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.$getCells = function( th ) {
-		return $( th ).add( th.cells );
+	ColumnToggle.prototype.updateSubrows = function( showing ) {
+		this.$table.find( "[" + this.attributes.subrow + "]" ).each(function() {
+			// filter out subrows
+			var $td = $( this ).find( "td[colspan]" ).eq( 0 );
+			$td.attr( "colspan", parseInt( $td.attr( "colspan" ), 10 ) + ( showing ? 1 : -1 ) );
+		});
 	};
 
-	ColumnToggle.prototype.$getCellsFromCheckbox = function( checkbox ) {
-		var th = $( checkbox ).data( "tablesaw-header" );
-		return this.$getCells( th );
+	ColumnToggle.prototype.$getCells = function( th ) {
+		var self = this;
+		return $( th ).add( th.cells ).filter(function() {
+			// no subrows
+			return !$( this ).parent().is( "[" + self.attributes.subrow + "]" );
+		});
+	};
+
+	ColumnToggle.prototype.getHeaderFromCheckbox = function( checkbox ) {
+		return $( checkbox ).data( "tablesaw-header" );
 	};
 
 	ColumnToggle.prototype.refreshToggle = function() {
 		var self = this;
 		this.$menu.find( "input" ).each( function() {
-			this.checked = self.$getCellsFromCheckbox( this ).eq( 0 ).css( "display" ) === "table-cell";
+			var header = self.getHeaderFromCheckbox( this );
+			this.checked = self.$getCells( header ).eq( 0 ).css( "display" ) === "table-cell";
 		});
 	};
 
+	// TODO code duplication with init
 	ColumnToggle.prototype.refreshPriority = function(){
 		var self = this;
-		$(this.headers).not( "td" ).each( function() {
+		$( this.headers ).each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
-				$cells = $this.add( this.cells );
+				$cells = self.$getCells( this );
 
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
+
+				if( priority === "0" ) {
+					self.updateSubrows( false );
+				}
 			}
 		});
 	};
@@ -2380,7 +2421,6 @@ if( Tablesaw.mustard ) {
 ;(function() {
 	function getSortValue( cell ) {
 		var text = [];
-
 		$( cell.childNodes ).each(function() {
 			var $el = $( this );
 			if( $el.is( 'input, select' ) ) {
@@ -2399,7 +2439,8 @@ if( Tablesaw.mustard ) {
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		attrs = {
 			defaultCol: "data-tablesaw-sortable-default-col",
-			numericCol: "data-tablesaw-sortable-numeric"
+			numericCol: "data-tablesaw-sortable-numeric",
+			subRow: "data-tablesaw-subrow"
 		},
 		classes = {
 			head: pluginName + "-head",
@@ -2428,10 +2469,7 @@ if( Tablesaw.mustard ) {
 					heads,
 					$switcher;
 
-				var addClassToTable = function(){
-						el.addClass( pluginName );
-					},
-					addClassToHeads = function( h ){
+				var addClassToHeads = function( h ){
 						$.each( h , function( i , v ){
 							$( v ).addClass( classes.head );
 						});
@@ -2535,33 +2573,35 @@ if( Tablesaw.mustard ) {
 						});
 					};
 
-					addClassToTable();
-					heads = el.find( "thead th[data-" + pluginName + "-col]" );
+					el.addClass( pluginName );
+
+					heads = el.children().filter( "thead" ).find( "th[data-" + pluginName + "-col]" );
+
 					addClassToHeads( heads );
 					makeHeadsActionable( heads , headsOnAction );
 					handleDefault( heads );
 
 					if( el.is( sortableSwitchSelector ) ) {
-						addSwitcher( heads, el.find('tbody tr:nth-child(-n+3)') );
+						addSwitcher( heads );
 					}
-			},
-			getColumnNumber: function( col ){
-				return $( col ).prevAll().length;
-			},
-			getTableRows: function(){
-				return $( this ).find( "tbody tr" );
 			},
 			sortRows: function( rows , colNum , ascending, col ){
 				var cells, fn, sorted;
-				var getCells = function( rows ){
+				var convertCells = function( cellArr ){
 						var cells = [];
-						$.each( rows , function( i , r ){
-							var element = $( r ).children().get( colNum );
-							cells.push({
-								element: element,
-								cell: getSortValue( element ),
-								rowNum: i
-							});
+						$.each( cellArr, function( i , cell ){
+							var row = cell.parentNode;
+							var subrow = $( row ).next().filter( "[" + attrs.subRow + "]" );
+
+							if( $( row ).is( "[" + attrs.subRow + "]" ) ) {
+							} else {
+								cells.push({
+									element: cell,
+									cell: getSortValue( cell ),
+									row: row,
+									subrow: subrow.length ? subrow[ 0 ] : null
+								});
+							}
 						});
 						return cells;
 					},
@@ -2587,31 +2627,29 @@ if( Tablesaw.mustard ) {
 						}
 						return fn;
 					},
-					applyToRows = function( sorted , rows ){
-						var newRows = [], i, l, cur;
+					convertCellsToRows = function( sorted ){
+						var newRows = [], i, l;
 						for( i = 0, l = sorted.length ; i < l ; i++ ){
-							cur = sorted[ i ].rowNum;
-							newRows.push( rows[cur] );
+							newRows.push( sorted[ i ].row );
+							if( sorted[ i ].subrow ) {
+								newRows.push( sorted[ i ].subrow );
+							}
 						}
 						return newRows;
 					};
 
-				cells = getCells( rows );
+				cells = convertCells( col.cells );
+
 				var customFn = $( col ).data( 'tablesaw-sort' );
+
 				fn = ( customFn && typeof customFn === "function" ? customFn( ascending ) : false ) ||
 					getSortFxn( ascending, $( col ).is( '[' + attrs.numericCol + ']' ) && !$( col ).is( '[' + attrs.numericCol + '="false"]' ) );
 
 				sorted = cells.sort( fn );
-				rows = applyToRows( sorted , rows );
-				return rows;
-			},
-			replaceTableRows: function( rows ){
-				var el = $( this ),
-					body = el.find( "tbody" );
 
-				for( var j = 0, k = rows.length; j < k; j++ ) {
-					body.append( rows[ j ] );
-				}
+				rows = convertCellsToRows( sorted , rows );
+
+				return rows;
 			},
 			makeColDefault: function( col , a ){
 				var c = $( col );
@@ -2625,13 +2663,30 @@ if( Tablesaw.mustard ) {
 				}
 			},
 			sortBy: function( col , ascending ){
-				var el = $( this ), colNum, rows;
+				var el = $( this );
+				var colNum;
+				var tbl = el.data( "tablesaw" );
+				var rows = tbl.getBodyRows();
+				var sortedRows;
+				var map = tbl.headerMapping[ 0 ];
+				var j, k;
 
-				colNum = el[ pluginName ]( "getColumnNumber" , col );
-				rows = el[ pluginName ]( "getTableRows" );
-				rows = el[ pluginName ]( "sortRows" , rows , colNum , ascending, col );
-				el[ pluginName ]( "replaceTableRows" , rows );
+				for( j = 0, k = map.length; j < k; j++ ) {
+					if( map[ j ] === col ) {
+						colNum = j;
+						break;
+					}
+				}
+
+				sortedRows = el[ pluginName ]( "sortRows" , rows, colNum, ascending, col );
+
+				// replace Table rows
+				for( j = 0, k = sortedRows.length; j < k; j++ ) {
+					tbl.$tbody.append( sortedRows[ j ] );
+				}
+
 				el[ pluginName ]( "makeColDefault" , col , ascending );
+
 				el.trigger( "tablesaw-sorted" );
 			}
 		};

@@ -256,8 +256,9 @@
 				var rows = tbl.getBodyRows();
 				var sortedRows;
 				var map = tbl.headerMapping[ 0 ];
+				var j, k;
 
-				for( var j = 0, k = map.length; j < k; j++ ) {
+				for( j = 0, k = map.length; j < k; j++ ) {
 					if( map[ j ] === col ) {
 						colNum = j;
 						break;
@@ -267,7 +268,7 @@
 				sortedRows = el[ pluginName ]( "sortRows" , rows, colNum, ascending, col );
 
 				// replace Table rows
-				for( var j = 0, k = sortedRows.length; j < k; j++ ) {
+				for( j = 0, k = sortedRows.length; j < k; j++ ) {
 					tbl.$tbody.append( sortedRows[ j ] );
 				}
 
