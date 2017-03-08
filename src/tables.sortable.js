@@ -172,60 +172,66 @@
 						addSwitcher( heads );
 					}
 			},
-			sortRows: function( rows , colNum , ascending, col ){
-				var cells, fn, sorted;
-				var convertCells = function( cellArr ){
-						var cells = [];
-						$.each( cellArr, function( i , cell ){
-							var row = cell.parentNode;
-							var subrow = $( row ).next().filter( "[" + attrs.subRow + "]" );
+			sortRows: function( rows, colNum, ascending, col, tbody ){
+				function convertCells( cellArr, belongingToTbody ){
+					var cells = [];
+					$.each( cellArr, function( i , cell ){
+						var row = cell.parentNode;
+						var subrow = $( row ).next().filter( "[" + attrs.subRow + "]" );
 
-							if( $( row ).is( "[" + attrs.subRow + "]" ) ) {
+						if( $( row ).is( "[" + attrs.subRow + "]" ) ) {
+						} else if( row.parentNode === belongingToTbody ) {
+							cells.push({
+								element: cell,
+								cell: getSortValue( cell ),
+								row: row,
+								subrow: subrow.length ? subrow[ 0 ] : null
+							});
+						}
+					});
+					return cells;
+				}
+
+				function getSortFxn( ascending, forceNumeric ){
+					var fn,
+						regex = /[^\-\+\d\.]/g;
+					if( ascending ){
+						fn = function( a , b ){
+							if( forceNumeric ) {
+								return parseFloat( a.cell.replace( regex, '' ) ) - parseFloat( b.cell.replace( regex, '' ) );
 							} else {
-								cells.push({
-									element: cell,
-									cell: getSortValue( cell ),
-									row: row,
-									subrow: subrow.length ? subrow[ 0 ] : null
-								});
+								return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
 							}
-						});
-						return cells;
-					},
-					getSortFxn = function( ascending, forceNumeric ){
-						var fn,
-							regex = /[^\-\+\d\.]/g;
-						if( ascending ){
-							fn = function( a , b ){
-								if( forceNumeric ) {
-									return parseFloat( a.cell.replace( regex, '' ) ) - parseFloat( b.cell.replace( regex, '' ) );
-								} else {
-									return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
-								}
-							};
-						} else {
-							fn = function( a , b ){
-								if( forceNumeric ) {
-									return parseFloat( b.cell.replace( regex, '' ) ) - parseFloat( a.cell.replace( regex, '' ) );
-								} else {
-									return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
-								}
-							};
-						}
-						return fn;
-					},
-					convertCellsToRows = function( sorted ){
-						var newRows = [], i, l;
-						for( i = 0, l = sorted.length ; i < l ; i++ ){
-							newRows.push( sorted[ i ].row );
-							if( sorted[ i ].subrow ) {
-								newRows.push( sorted[ i ].subrow );
+						};
+					} else {
+						fn = function( a , b ){
+							if( forceNumeric ) {
+								return parseFloat( b.cell.replace( regex, '' ) ) - parseFloat( a.cell.replace( regex, '' ) );
+							} else {
+								return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
 							}
-						}
-						return newRows;
-					};
+						};
+					}
+					return fn;
+				}
 
-				cells = convertCells( col.cells );
+				function convertToRows( sorted ) {
+					var newRows = [], i, l;
+					for( i = 0, l = sorted.length ; i < l ; i++ ){
+						newRows.push( sorted[ i ].row );
+						if( sorted[ i ].subrow ) {
+							newRows.push( sorted[ i ].subrow );
+						}
+					}
+					return newRows;
+				}
+
+				var fn;
+				var sorted;
+				var cells;
+
+				// TODO get only cells from the tbody
+				cells = convertCells( col.cells, tbody );
 
 				var customFn = $( col ).data( 'tablesaw-sort' );
 
@@ -234,7 +240,7 @@
 
 				sorted = cells.sort( fn );
 
-				rows = convertCellsToRows( sorted , rows );
+				rows = convertToRows( sorted );
 
 				return rows;
 			},
@@ -253,24 +259,29 @@
 				var el = $( this );
 				var colNum;
 				var tbl = el.data( "tablesaw" );
-				var rows = tbl.getBodyRows();
-				var sortedRows;
-				var map = tbl.headerMapping[ 0 ];
-				var j, k;
+				tbl.$tbody.each(function() {
+					var tbody = this;
+					var $tbody = $( this );
+					var rows = tbl.getBodyRows( tbody );
+					var sortedRows;
+					var map = tbl.headerMapping[ 0 ];
+					var j, k;
 
-				for( j = 0, k = map.length; j < k; j++ ) {
-					if( map[ j ] === col ) {
-						colNum = j;
-						break;
+					// find the column number that we’re sorting
+					for( j = 0, k = map.length; j < k; j++ ) {
+						if( map[ j ] === col ) {
+							colNum = j;
+							break;
+						}
 					}
-				}
 
-				sortedRows = el[ pluginName ]( "sortRows" , rows, colNum, ascending, col );
+					sortedRows = el[ pluginName ]( "sortRows" , rows, colNum, ascending, col, tbody );
 
-				// replace Table rows
-				for( j = 0, k = sortedRows.length; j < k; j++ ) {
-					tbl.$tbody.append( sortedRows[ j ] );
-				}
+					// replace Table rows
+					for( j = 0, k = sortedRows.length; j < k; j++ ) {
+						$tbody.append( sortedRows[ j ] );
+					}
+				});
 
 				el[ pluginName ]( "makeColDefault" , col , ascending );
 

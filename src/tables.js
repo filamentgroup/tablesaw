@@ -52,7 +52,11 @@ if( Tablesaw.mustard ) {
 
 		this.table = element;
 		this.$table = $( element );
-		this.$thead = this.$table.children().filter( "thead" );
+
+		// only one <thead> and <tfoot> are allowed, per the specification
+		this.$thead = this.$table.children().filter( "thead" ).eq( 0 );
+
+		// multiple <tbody> are allowed, per the specification
 		this.$tbody = this.$table.children().filter( "tbody" );
 
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
@@ -105,8 +109,8 @@ if( Tablesaw.mustard ) {
 		});
 	};
 
-	Table.prototype.getBodyRows = function() {
-		return this.$tbody.children().filter( "tr" );
+	Table.prototype.getBodyRows = function( tbody ) {
+		return ( tbody ? $( tbody ) : this.$tbody ).children().filter( "tr" );
 	};
 
 	Table.prototype._initCells = function() {
