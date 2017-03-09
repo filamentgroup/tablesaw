@@ -25,6 +25,7 @@
 		initSelector = "table[data-" + pluginName + "]",
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
 		attrs = {
+			sortCol: "data-tablesaw-sortable-col",
 			defaultCol: "data-tablesaw-sortable-default-col",
 			numericCol: "data-tablesaw-sortable-numeric",
 			subRow: "data-tablesaw-subrow",
@@ -86,12 +87,12 @@
 					}
 
 					e.stopPropagation();
-					var head = $( this ).parent(),
+					var headCell = $( e.target ).closest( "[" + attrs.sortCol + "]" ),
 						v = e.data.col,
-						newSortValue = heads.index( head[0] );
+						newSortValue = heads.index( headCell[0] );
 
-					clearOthers( head.siblings() );
-					if( head.is( "." + classes.descend ) || !head.is( "." + classes.ascend ) ){
+					clearOthers( headCell.siblings() );
+					if( headCell.is( "." + classes.descend ) || !headCell.is( "." + classes.ascend ) ){
 						el[ pluginName ]( "sortBy" , v , true);
 						newSortValue += '_asc';
 					} else {
@@ -168,7 +169,7 @@
 
 				el.addClass( pluginName );
 
-				heads = el.children().filter( "thead" ).find( "th[data-" + pluginName + "-col]" );
+				heads = el.children().filter( "thead" ).find( "th[" + attrs.sortCol + "]" );
 
 				addClassToHeads( heads );
 				makeHeadsActionable( heads , headsOnAction );

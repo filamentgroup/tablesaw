@@ -162,7 +162,7 @@
 			var $td = $( this ).find( "td[colspan]" ).eq( 0 );
 
 			if( newColspanValue === true || newColspanValue === false ) {
-				newColspanValue = parseInt( $td.attr( "colspan" ), 10 ) + ( newColspanValue ? 1 : -1 )
+				newColspanValue = parseInt( $td.attr( "colspan" ), 10 ) + ( newColspanValue ? 1 : -1 );
 			}
 
 			// TODO add a colstart param so that this more appropriately selects colspan elements based on the column being hidden.
