@@ -66,7 +66,6 @@
 		$menu = $( "<div class='btn-group'></div>" );
 
 		var hasNonPersistentHeaders = false;
-		var notToggleableColumnCount = 0;
 		this.$headers.each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
@@ -82,8 +81,6 @@
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
-			} else {
-				notToggleableColumnCount++;
 			}
 		});
 
@@ -151,18 +148,21 @@
 		this.$menu = $menu;
 
 		$(window).on( Tablesaw.events.resize + "." + tableId, function(){
-			self.refreshToggle( notToggleableColumnCount );
+			self.refreshToggle();
 		});
 
-		this.refreshToggle( notToggleableColumnCount );
+		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.updateColspanIgnoredRows = function( newColspanValue ) {
+	ColumnToggle.prototype.updateColspanIgnoredRows = function( invisibleColumnCount ) {
 		this.$table.find( "[" + this.attributes.subrow + "],[" + this.attributes.ignorerow + "]" ).each(function() {
 			var $td = $( this ).find( "td[colspan]" ).eq( 0 );
+			var newColspanValue = parseInt( $td.attr( "colspan" ), 10 );
 
-			if( newColspanValue === true || newColspanValue === false ) {
-				newColspanValue = parseInt( $td.attr( "colspan" ), 10 ) + ( newColspanValue ? 1 : -1 );
+			if( invisibleColumnCount === true || invisibleColumnCount === false ) {
+				newColspanValue += invisibleColumnCount ? 1 : -1;
+			} else {
+				newColspanValue -= invisibleColumnCount;
 			}
 
 			// TODO add a colstart param so that this more appropriately selects colspan elements based on the column being hidden.
@@ -183,20 +183,20 @@
 		return $( checkbox ).data( "tablesaw-header" );
 	};
 
-	ColumnToggle.prototype.refreshToggle = function( notToggleableColumnCount ) {
+	ColumnToggle.prototype.refreshToggle = function() {
 		var self = this;
-		var visibleColumns = notToggleableColumnCount;
+		var invisibleColumns = 0;
 		this.$menu.find( "input" ).each( function() {
 			var header = self.getHeaderFromCheckbox( this );
 			var isVisible = self.$getCells( header ).eq( 0 ).css( "display" ) === "table-cell";
 			this.checked = isVisible;
-			
-			if( isVisible ) {
-				visibleColumns++;
+
+			if( !isVisible ) {
+				invisibleColumns++;
 			}
 		});
 
-		this.updateColspanIgnoredRows( visibleColumns );
+		this.updateColspanIgnoredRows( invisibleColumns );
 	};
 
 	ColumnToggle.prototype.destroy = function() {
