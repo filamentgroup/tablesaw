@@ -56,129 +56,136 @@
 					heads,
 					$switcher;
 
-				var addClassToHeads = function( h ){
-						$.each( h , function( i , v ){
-							$( v ).addClass( classes.head );
+				function addClassToHeads( h ){
+					$.each( h , function( i , v ){
+						$( v ).addClass( classes.head );
+					});
+				}
+
+				function makeHeadsActionable( h , fn ){
+					$.each( h , function( i , col ){
+						var b = $( "<button class='" + classes.sortButton + "'/>" );
+						b.on( "click" , { col: col } , fn );
+						$( col ).wrapInner( b ).find( "button" ).append( "<span class='tablesaw-sortable-arrow'>" );
+					});
+				}
+
+				function clearOthers( sibs ){
+					$.each( sibs , function( i , v ){
+						var col = $( v );
+						col.removeAttr( attrs.defaultCol );
+						col.removeClass( classes.ascend );
+						col.removeClass( classes.descend );
+					});
+				}
+
+				function headsOnAction( e ){
+					if( $( e.target ).is( 'a[href]' ) ) {
+						return;
+					}
+
+					e.stopPropagation();
+					var head = $( this ).parent(),
+						v = e.data.col,
+						newSortValue = heads.index( head[0] );
+
+					clearOthers( head.siblings() );
+					if( head.is( "." + classes.descend ) || !head.is( "." + classes.ascend ) ){
+						el[ pluginName ]( "sortBy" , v , true);
+						newSortValue += '_asc';
+					} else {
+						el[ pluginName ]( "sortBy" , v );
+						newSortValue += '_desc';
+					}
+					if( $switcher ) {
+						$switcher.find( 'select' ).val( newSortValue ).trigger( 'refresh' );
+					}
+
+					e.preventDefault();
+				}
+
+				function handleDefault( heads ){
+					$.each( heads , function( idx , el ){
+						var $el = $( el );
+						if( $el.is( "[" + attrs.defaultCol + "]" ) ){
+							if( !$el.is( "." + classes.descend ) ) {
+								$el.addClass( classes.ascend );
+							}
+						}
+					});
+				}
+
+				function addSwitcher( heads ){
+					$switcher = $( '<div>' ).addClass( classes.switcher ).addClass( classes.tableToolbar );
+
+					var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
+
+					html.push( '<span class="btn"><select>' );
+					heads.each(function( j ) {
+						var $t = $( this );
+						var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
+						var isDescending = $t.is( "." + classes.descend );
+
+						var hasNumericAttribute = $t.is( '[' + attrs.numericCol + ']' );
+						var numericCount = 0;
+						// Check only the first four rows to see if the column is numbers.
+						var numericCountMax = 5;
+						$( this.cells.slice( 0, numericCountMax ) ).each(function() {
+							if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
+								numericCount++;
+							}
 						});
-					},
-					makeHeadsActionable = function( h , fn ){
-						$.each( h , function( i , col ){
-							var b = $( "<button class='" + classes.sortButton + "'/>" );
-							b.on( "click" , { col: col } , fn );
-							$( col ).wrapInner( b ).find( "button" ).append( "<span class='tablesaw-sortable-arrow'>" );
-						});
-					},
-					clearOthers = function( sibs ){
-						$.each( sibs , function( i , v ){
-							var col = $( v );
-							col.removeAttr( attrs.defaultCol );
-							col.removeClass( classes.ascend );
-							col.removeClass( classes.descend );
-						});
-					},
-					headsOnAction = function( e ){
-						if( $( e.target ).is( 'a[href]' ) ) {
-							return;
+						var isNumeric = numericCount === numericCountMax;
+						if( !hasNumericAttribute ) {
+							$t.attr( attrs.numericCol, isNumeric ? "" : "false" );
 						}
 
-						e.stopPropagation();
-						var head = $( this ).parent(),
-							v = e.data.col,
-							newSortValue = heads.index( head[0] );
+						html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
+						html.push( '<option' + ( isDefaultCol && isDescending ? ' selected' : '' ) + ' value="' + j + '_desc">' + $t.text() + ' ' + ( isNumeric ? '&#x2193;' : '(Z-A)' ) + '</option>' );
+					});
+					html.push( '</select></span></label>' );
+
+					$switcher.html( html.join('') );
+
+					var $toolbar = el.prev().filter( '.tablesaw-bar' ),
+						$firstChild = $toolbar.children().eq( 0 );
+
+					if( $firstChild.length ) {
+						$switcher.insertBefore( $firstChild );
+					} else {
+						$switcher.appendTo( $toolbar );
+					}
+					$switcher.find( '.btn' ).tablesawbtn();
+					$switcher.find( 'select' ).on( 'change', function() {
+						var val = $( this ).val().split( '_' ),
+							head = heads.eq( val[ 0 ] );
 
 						clearOthers( head.siblings() );
-						if( head.is( "." + classes.descend ) || !head.is( "." + classes.ascend ) ){
-							el[ pluginName ]( "sortBy" , v , true);
-							newSortValue += '_asc';
-						} else {
-							el[ pluginName ]( "sortBy" , v );
-							newSortValue += '_desc';
-						}
-						if( $switcher ) {
-							$switcher.find( 'select' ).val( newSortValue ).trigger( 'refresh' );
-						}
+						el[ pluginName ]( 'sortBy', head.get( 0 ), val[ 1 ] === 'asc' );
+					});
+				}
 
-						e.preventDefault();
-					},
-					handleDefault = function( heads ){
-						$.each( heads , function( idx , el ){
-							var $el = $( el );
-							if( $el.is( "[" + attrs.defaultCol + "]" ) ){
-								if( !$el.is( "." + classes.descend ) ) {
-									$el.addClass( classes.ascend );
-								}
-							}
-						});
-					},
-					addSwitcher = function( heads ){
-						$switcher = $( '<div>' ).addClass( classes.switcher ).addClass( classes.tableToolbar );
+				el.addClass( pluginName );
 
-						var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
+				heads = el.children().filter( "thead" ).find( "th[data-" + pluginName + "-col]" );
 
-						html.push( '<span class="btn"><select>' );
-						heads.each(function( j ) {
-							var $t = $( this );
-							var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
-							var isDescending = $t.is( "." + classes.descend );
+				addClassToHeads( heads );
+				makeHeadsActionable( heads , headsOnAction );
+				handleDefault( heads );
 
-							var hasNumericAttribute = $t.is( '[' + attrs.numericCol + ']' );
-							var numericCount = 0;
-							// Check only the first four rows to see if the column is numbers.
-							var numericCountMax = 5;
-							$( this.cells.slice( 0, numericCountMax ) ).each(function() {
-								if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
-									numericCount++;
-								}
-							});
-							var isNumeric = numericCount === numericCountMax;
-							if( !hasNumericAttribute ) {
-								$t.attr( attrs.numericCol, isNumeric ? "" : "false" );
-							}
-
-							html.push( '<option' + ( isDefaultCol && !isDescending ? ' selected' : '' ) + ' value="' + j + '_asc">' + $t.text() + ' ' + ( isNumeric ? '&#x2191;' : '(A-Z)' ) + '</option>' );
-							html.push( '<option' + ( isDefaultCol && isDescending ? ' selected' : '' ) + ' value="' + j + '_desc">' + $t.text() + ' ' + ( isNumeric ? '&#x2193;' : '(Z-A)' ) + '</option>' );
-						});
-						html.push( '</select></span></label>' );
-
-						$switcher.html( html.join('') );
-
-						var $toolbar = el.prev().filter( '.tablesaw-bar' ),
-							$firstChild = $toolbar.children().eq( 0 );
-
-						if( $firstChild.length ) {
-							$switcher.insertBefore( $firstChild );
-						} else {
-							$switcher.appendTo( $toolbar );
-						}
-						$switcher.find( '.btn' ).tablesawbtn();
-						$switcher.find( 'select' ).on( 'change', function() {
-							var val = $( this ).val().split( '_' ),
-								head = heads.eq( val[ 0 ] );
-
-							clearOthers( head.siblings() );
-							el[ pluginName ]( 'sortBy', head.get( 0 ), val[ 1 ] === 'asc' );
-						});
-					};
-
-					el.addClass( pluginName );
-
-					heads = el.children().filter( "thead" ).find( "th[data-" + pluginName + "-col]" );
-
-					addClassToHeads( heads );
-					makeHeadsActionable( heads , headsOnAction );
-					handleDefault( heads );
-
-					if( el.is( sortableSwitchSelector ) ) {
-						addSwitcher( heads );
-					}
+				if( el.is( sortableSwitchSelector ) ) {
+					addSwitcher( heads );
+				}
 			},
 			sortRows: function( rows, colNum, ascending, col, tbody ){
 				function convertCells( cellArr, belongingToTbody ){
 					var cells = [];
 					$.each( cellArr, function( i , cell ){
 						var row = cell.parentNode;
+						// next row is a subrow
 						var subrow = $( row ).next().filter( "[" + attrs.subRow + "]" );
 
+						// current row is a subrow
 						if( $( row ).is( "[" + attrs.subRow + "]" ) ) {
 						} else if( row.parentNode === belongingToTbody ) {
 							cells.push({
