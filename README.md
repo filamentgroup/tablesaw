@@ -178,6 +178,11 @@ All other types of sorting must use a Custom Sort function on the individual col
 $( "th#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
     // return a function
     return function( a, b ) {
+        // Ignore rows with data-tablesaw-ignorerow (leave them where they were)
+        if( a.ignored || b.ignored ) {
+            return 0;
+        }
+
         // use a.cell and b.cell for cell values
         var dateA = a.cell.split( "/" ),
             dateB = b.cell.split( "/" ),

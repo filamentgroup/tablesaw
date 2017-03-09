@@ -37,11 +37,7 @@ if( Tablesaw.mustard ) {
 	var defaultMode = "stack";
 	var initSelector = "table";
 	var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
-	var defaultConfig = {
-		getHeaderCells: function() {
-			return this.$thead.children().filter( "tr" ).eq( 0 ).find( "th" );
-		}
-	};
+	var defaultConfig = {};
 
 	Tablesaw.events = events;
 
@@ -72,8 +68,9 @@ if( Tablesaw.mustard ) {
 
 		this.createToolbar();
 
-		// TODO this is used inside stack table init for some reason? what does it do?
 		this._initCells();
+
+		this.$table.data( pluginName, this );
 
 		this.$table.trigger( events.create, [ this ] );
 	};
@@ -84,15 +81,30 @@ if( Tablesaw.mustard ) {
 		return $.extend( configs, typeof TablesawConfig !== "undefined" ? TablesawConfig : {} );
 	};
 
-	Table.prototype._getPrimaryHeaderCells = function() {
-		return this.getConfig().getHeaderCells.call( this );
+	Table.prototype._getPrimaryHeaderRow = function() {
+		return this.$thead.children().filter( "tr" ).filter(function() {
+			return !$( this ).is( "[data-tablesaw-ignorerow]" );
+		}).eq( 0 );
 	};
 
-	Table.prototype._findHeadersForCell = function( cell ) {
-		var $headers = this._getPrimaryHeaderCells();
+	Table.prototype._getPrimaryHeaderRowIndex = function( $row ) {
+		return ( $row || this._getPrimaryHeaderRow() ).prevAll().length;
+	};
+
+	Table.prototype._getPrimaryHeaderCells = function( $row ) {
+		return ( $row || this._getPrimaryHeaderRow() ).find( "th" );
+	};
+
+	Table.prototype._findPrimaryHeadersForCell = function( cell ) {
+		var $headerRow = this._getPrimaryHeaderRow();
+		var $headers = this._getPrimaryHeaderCells( $headerRow );
+		var headerRowIndex = this._getPrimaryHeaderRowIndex( $headerRow );
 		var results = [];
 
-		for( var rowNumber = 1; rowNumber < this.headerMapping.length; rowNumber++ ) {
+		for( var rowNumber = 0; rowNumber < this.headerMapping.length; rowNumber++ ) {
+			if( rowNumber === headerRowIndex ) {
+				continue;
+			}
 			for( var colNumber = 0; colNumber < this.headerMapping[ rowNumber ].length; colNumber++ ) {
 				if( this.headerMapping[ rowNumber ][ colNumber ] === cell ) {
 					results.push( $headers[ colNumber ] );
@@ -102,6 +114,7 @@ if( Tablesaw.mustard ) {
 		return results;
 	};
 
+	// used by init cells
 	Table.prototype.getRows = function() {
 		var self = this;
 		return this.$table.find( "tr" ).filter(function() {
@@ -109,8 +122,20 @@ if( Tablesaw.mustard ) {
 		});
 	};
 
+	// used by sortable
 	Table.prototype.getBodyRows = function( tbody ) {
 		return ( tbody ? $( tbody ) : this.$tbody ).children().filter( "tr" );
+	};
+
+	Table.prototype.getHeaderCellIndex = function( cell ) {
+		var lookup = this.headerMapping[ 0 ];
+		for( var colIndex = 0; colIndex < lookup.length; colIndex++ ) {
+			if( lookup[ colIndex ] === cell ) {
+				return colIndex;
+			}
+		}
+
+		return -1;
 	};
 
 	Table.prototype._initCells = function() {
@@ -137,7 +162,7 @@ if( Tablesaw.mustard ) {
 
 				columnLookup[ rowNumber ][ coltally ] = this;
 
-				// TODO both colspan and rowspan
+				// TODO? both colspan and rowspan
 				if( colspan ) {
 					for( var k = 0; k < colspan - 1; k++ ){
 						coltally++;
@@ -154,8 +179,9 @@ if( Tablesaw.mustard ) {
 			});
 		});
 
+		var primaryHeaderRowIndex = this._getPrimaryHeaderRowIndex();
 		for( var colNumber = 0; colNumber < columnLookup[ 0 ].length; colNumber++ ) {
-			var headerCol = columnLookup[ 0 ][ colNumber ];
+			var headerCol = columnLookup[ primaryHeaderRowIndex ][ colNumber ];
 			var rowNumber = 0;
 			var rowCell;
 
@@ -225,8 +251,7 @@ if( Tablesaw.mustard ) {
 				return;
 			}
 
-			var table = new Table( this );
-			$t.data( pluginName, table );
+			new Table( this );
 		});
 	};
 

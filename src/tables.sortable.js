@@ -27,7 +27,8 @@
 		attrs = {
 			defaultCol: "data-tablesaw-sortable-default-col",
 			numericCol: "data-tablesaw-sortable-numeric",
-			subRow: "data-tablesaw-subrow"
+			subRow: "data-tablesaw-subrow",
+			ignoreRow: "data-tablesaw-ignorerow"
 		},
 		classes = {
 			head: pluginName + "-head",
@@ -182,17 +183,20 @@
 					var cells = [];
 					$.each( cellArr, function( i , cell ){
 						var row = cell.parentNode;
+						var $row = $( row );
 						// next row is a subrow
-						var subrow = $( row ).next().filter( "[" + attrs.subRow + "]" );
+						var subrow = $row.next().filter( "[" + attrs.subRow + "]" );
+						var tbody = row.parentNode;
 
 						// current row is a subrow
-						if( $( row ).is( "[" + attrs.subRow + "]" ) ) {
-						} else if( row.parentNode === belongingToTbody ) {
+						if( $row.is( "[" + attrs.subRow + "]" ) ) {
+						} else if( tbody === belongingToTbody ) {
 							cells.push({
 								element: cell,
 								cell: getSortValue( cell ),
 								row: row,
-								subrow: subrow.length ? subrow[ 0 ] : null
+								subrow: subrow.length ? subrow[ 0 ] : null,
+								ignored: $row.is( "[" + attrs.ignoreRow + "]" )
 							});
 						}
 					});
@@ -204,6 +208,9 @@
 						regex = /[^\-\+\d\.]/g;
 					if( ascending ){
 						fn = function( a , b ){
+							if( a.ignored || b.ignored ) {
+								return 0;
+							}
 							if( forceNumeric ) {
 								return parseFloat( a.cell.replace( regex, '' ) ) - parseFloat( b.cell.replace( regex, '' ) );
 							} else {
@@ -212,6 +219,9 @@
 						};
 					} else {
 						fn = function( a , b ){
+							if( a.ignored || b.ignored ) {
+								return 0;
+							}
 							if( forceNumeric ) {
 								return parseFloat( b.cell.replace( regex, '' ) ) - parseFloat( a.cell.replace( regex, '' ) );
 							} else {
@@ -235,10 +245,7 @@
 
 				var fn;
 				var sorted;
-				var cells;
-
-				// TODO get only cells from the tbody
-				cells = convertCells( col.cells, tbody );
+				var cells = convertCells( col.cells, tbody );
 
 				var customFn = $( col ).data( 'tablesaw-sort' );
 

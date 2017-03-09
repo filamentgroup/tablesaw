@@ -19,8 +19,11 @@
 			return;
 		}
 
+		this.tablesaw = this.$table.data( "tablesaw" );
+
 		this.attributes = {
-			subrow: "data-tablesaw-subrow"
+			subrow: "data-tablesaw-subrow",
+			ignorerow: "data-tablesaw-ignorerow"
 		};
 
 		this.classes = {
@@ -33,10 +36,7 @@
 			toolbar: 'tablesaw-bar'
 		};
 
-		// Expose headers and allHeaders properties on the widget
-		// headers references the THs within the first TR in the table
-		// TODO use tables.js getHeaderCells method
-		this.headers = this.$table.find( "tr" ).eq( 0 ).find( "th" );
+		this.$headers = this.tablesaw._getPrimaryHeaderCells();
 
 		this.$table.data( data.key, this );
 	};
@@ -66,7 +66,8 @@
 		$menu = $( "<div class='btn-group'></div>" );
 
 		var hasNonPersistentHeaders = false;
-		$( this.headers ).not( "td" ).each( function() {
+		var notToggleableColumnCount = 0;
+		this.$headers.each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
 				$cells = self.$getCells( this );
@@ -81,10 +82,8 @@
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
-
-				if( priority === "0" ) {
-					self.updateSubrows( false );
-				}
+			} else {
+				notToggleableColumnCount++;
 			}
 		});
 
@@ -104,7 +103,7 @@
 			$cells[ !checked ? "addClass" : "removeClass" ]( "tablesaw-cell-hidden" );
 			$cells[ checked ? "addClass" : "removeClass" ]( "tablesaw-cell-visible" );
 
-			self.updateSubrows( checked );
+			self.updateColspanIgnoredRows( checked );
 
 			self.$table.trigger( 'tablesawcolumns' );
 		});
@@ -152,17 +151,22 @@
 		this.$menu = $menu;
 
 		$(window).on( Tablesaw.events.resize + "." + tableId, function(){
-			self.refreshToggle();
+			self.refreshToggle( notToggleableColumnCount );
 		});
 
-		this.refreshToggle();
+		this.refreshToggle( notToggleableColumnCount );
 	};
 
-	ColumnToggle.prototype.updateSubrows = function( showing ) {
-		this.$table.find( "[" + this.attributes.subrow + "]" ).each(function() {
-			// filter out subrows
+	ColumnToggle.prototype.updateColspanIgnoredRows = function( newColspanValue ) {
+		this.$table.find( "[" + this.attributes.subrow + "],[" + this.attributes.ignorerow + "]" ).each(function() {
 			var $td = $( this ).find( "td[colspan]" ).eq( 0 );
-			$td.attr( "colspan", parseInt( $td.attr( "colspan" ), 10 ) + ( showing ? 1 : -1 ) );
+
+			if( newColspanValue === true || newColspanValue === false ) {
+				newColspanValue = parseInt( $td.attr( "colspan" ), 10 ) + ( newColspanValue ? 1 : -1 )
+			}
+
+			// TODO add a colstart param so that this more appropriately selects colspan elements based on the column being hidden.
+			$td.attr( "colspan", newColspanValue );
 		});
 	};
 
@@ -170,7 +174,8 @@
 		var self = this;
 		return $( th ).add( th.cells ).filter(function() {
 			// no subrows
-			return !$( this ).parent().is( "[" + self.attributes.subrow + "]" );
+			var $row = $( this ).parent();
+			return !$row.is( "[" + self.attributes.subrow + "],[" + self.attributes.ignorerow + "]" );
 		});
 	};
 
@@ -178,30 +183,20 @@
 		return $( checkbox ).data( "tablesaw-header" );
 	};
 
-	ColumnToggle.prototype.refreshToggle = function() {
+	ColumnToggle.prototype.refreshToggle = function( notToggleableColumnCount ) {
 		var self = this;
+		var visibleColumns = notToggleableColumnCount;
 		this.$menu.find( "input" ).each( function() {
 			var header = self.getHeaderFromCheckbox( this );
-			this.checked = self.$getCells( header ).eq( 0 ).css( "display" ) === "table-cell";
-		});
-	};
-
-	// TODO code duplication with init
-	ColumnToggle.prototype.refreshPriority = function(){
-		var self = this;
-		$( this.headers ).each( function() {
-			var $this = $( this ),
-				priority = $this.attr("data-tablesaw-priority"),
-				$cells = self.$getCells( this );
-
-			if( priority && priority !== "persist" ) {
-				$cells.addClass( self.classes.priorityPrefix + priority );
-
-				if( priority === "0" ) {
-					self.updateSubrows( false );
-				}
+			var isVisible = self.$getCells( header ).eq( 0 ).css( "display" ) === "table-cell";
+			this.checked = isVisible;
+			
+			if( isVisible ) {
+				visibleColumns++;
 			}
 		});
+
+		this.updateColspanIgnoredRows( visibleColumns );
 	};
 
 	ColumnToggle.prototype.destroy = function() {

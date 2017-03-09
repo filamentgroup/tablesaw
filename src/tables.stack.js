@@ -51,8 +51,7 @@
 			var $newHeader = $( document.createElement( "b" ) ).addClass( classes.cellLabels );
 			var $cell = $( this );
 
-			// headers
-			$( self.tablesaw._findHeadersForCell( this ) ).each(function( index ) {
+			$( self.tablesaw._findPrimaryHeadersForCell( this ) ).each(function( index ) {
 				var $header = $( this.cloneNode( true ) );
 				// TODO decouple from sortable better
 				// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
