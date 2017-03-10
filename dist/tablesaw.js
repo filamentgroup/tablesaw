@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.5 - 2017-03-09
+/*! Tablesaw - v3.0.1-beta.6 - 2017-03-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -2280,7 +2280,6 @@ if( Tablesaw.mustard ) {
 		$menu = $( "<div class='btn-group'></div>" );
 
 		var hasNonPersistentHeaders = false;
-		var notToggleableColumnCount = 0;
 		this.$headers.each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
@@ -2296,8 +2295,6 @@ if( Tablesaw.mustard ) {
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
-			} else {
-				notToggleableColumnCount++;
 			}
 		});
 
@@ -2317,7 +2314,7 @@ if( Tablesaw.mustard ) {
 			$cells[ !checked ? "addClass" : "removeClass" ]( "tablesaw-cell-hidden" );
 			$cells[ checked ? "addClass" : "removeClass" ]( "tablesaw-cell-visible" );
 
-			self.updateColspanIgnoredRows( checked );
+			self.updateColspanIgnoredRows( checked, $( header ).add( header.cells ) );
 
 			self.$table.trigger( 'tablesawcolumns' );
 		});
@@ -2365,31 +2362,62 @@ if( Tablesaw.mustard ) {
 		this.$menu = $menu;
 
 		$(window).on( Tablesaw.events.resize + "." + tableId, function(){
-			self.refreshToggle( notToggleableColumnCount );
+			self.refreshToggle();
 		});
 
-		this.refreshToggle( notToggleableColumnCount );
+		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.updateColspanIgnoredRows = function( newColspanValue ) {
+	ColumnToggle.prototype.updateColspanIgnoredRows = function( invisibleColumnCount, $cells ) {
 		this.$table.find( "[" + this.attributes.subrow + "],[" + this.attributes.ignorerow + "]" ).each(function() {
-			var $td = $( this ).find( "td[colspan]" ).eq( 0 );
+			var $t = $( this );
+			var $td = $t.find( "td[colspan]" ).eq( 0 );
+			var excludedInvisibleColumns;
 
-			if( newColspanValue === true || newColspanValue === false ) {
-				newColspanValue = parseInt( $td.attr( "colspan" ), 10 ) + ( newColspanValue ? 1 : -1 );
+			var colspan;
+			var originalColspan;
+			var modifier;
+
+			// increment or decrementing only (from a user triggered column show/hide)
+			if( invisibleColumnCount === true || invisibleColumnCount === false ) {
+				// unless the column being hidden is not included in the colspan
+				modifier = $cells.filter(function() {
+					return this === $td[ 0 ];
+				}).length ? ( invisibleColumnCount ? 1 : -1 ) : 0;
+
+				colspan = parseInt( $td.attr( "colspan" ), 10 ) + modifier;
+			} else {
+				// triggered from a resize or init
+				originalColspan = $td.data( "original-colspan" );
+
+				if( originalColspan ) {
+					colspan = originalColspan;
+				} else {
+					colspan = parseInt( $td.attr( "colspan" ), 10 );
+					$td.data( "original-colspan", colspan );
+				}
+
+				excludedInvisibleColumns = $t.find( "td" ).filter(function() {
+					return this !== $td[ 0 ] && $( this ).css( "display" ) === "none";
+				}).length;
+
+				colspan -= ( invisibleColumnCount - excludedInvisibleColumns );
 			}
 
 			// TODO add a colstart param so that this more appropriately selects colspan elements based on the column being hidden.
-			$td.attr( "colspan", newColspanValue );
+			$td.attr( "colspan", colspan );
 		});
 	};
 
 	ColumnToggle.prototype.$getCells = function( th ) {
 		var self = this;
 		return $( th ).add( th.cells ).filter(function() {
-			// no subrows
-			var $row = $( this ).parent();
-			return !$row.is( "[" + self.attributes.subrow + "],[" + self.attributes.ignorerow + "]" );
+			var $t = $( this );
+			var $row = $t.parent();
+			var hasColspan = $t.is( "[colspan]" );
+			// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+			return !$row.is( "[" + self.attributes.subrow + "]" ) &&
+				( !$row.is( "[" + self.attributes.ignorerow + "]" ) || !hasColspan );
 		});
 	};
 
@@ -2397,20 +2425,20 @@ if( Tablesaw.mustard ) {
 		return $( checkbox ).data( "tablesaw-header" );
 	};
 
-	ColumnToggle.prototype.refreshToggle = function( notToggleableColumnCount ) {
+	ColumnToggle.prototype.refreshToggle = function() {
 		var self = this;
-		var visibleColumns = notToggleableColumnCount;
+		var invisibleColumns = 0;
 		this.$menu.find( "input" ).each( function() {
 			var header = self.getHeaderFromCheckbox( this );
 			var isVisible = self.$getCells( header ).eq( 0 ).css( "display" ) === "table-cell";
 			this.checked = isVisible;
-			
-			if( isVisible ) {
-				visibleColumns++;
+
+			if( !isVisible ) {
+				invisibleColumns++;
 			}
 		});
 
-		this.updateColspanIgnoredRows( visibleColumns );
+		this.updateColspanIgnoredRows( invisibleColumns );
 	};
 
 	ColumnToggle.prototype.destroy = function() {
