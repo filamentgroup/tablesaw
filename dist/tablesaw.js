@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.6 - 2017-03-10
+/*! Tablesaw - v3.0.1-beta.7 - 2017-03-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -3278,6 +3278,7 @@ if( Tablesaw.mustard ) {
 		this.checkboxSelector = "input[type=\"checkbox\"]";
 
 		this.$checkbox = null;
+		this.$checkboxes = null;
 
 		if( this.$table.data( pluginName ) ) {
 			return;
@@ -3290,46 +3291,43 @@ if( Tablesaw.mustard ) {
 		this.$checkbox = this.$table.find( "thead" ).find( this.checkboxAllSelector );
 
 		if( this.$checkbox.length ) {
+			this.$checkboxes = $( this.$checkbox.closest( "th" )[ 0 ].cells ).filter(function() {
+				return !$( this ).closest( "tr" ).is( "[data-tablesaw-subrow],[data-tablesaw-ignorerow]" );
+			}).find( this.checkboxSelector ).not( this.checkboxAllSelector );
+
 			this.addEvents();
 		}
 	};
 
 	CheckAll.prototype.addEvents = function() {
 		var self = this;
+
 		// Update body checkboxes when header checkbox is changed
 		this.$checkbox.on( "change", function() {
 			var setChecked = this.checked;
-			var $th = $( this ).closest( "th" );
-			if( $th.length ) {
-				$( $th[ 0 ].cells ).find( self.checkboxSelector ).each(function() {
-					this.checked = setChecked;
-				});
-			}
+
+			// TODO? filter only visible checkboxes
+			self.$checkboxes.each(function() {
+				this.checked = setChecked;
+			});
 		});
 
 		// Update header checkbox when body checkboxes are changed
-		this.$table.find( "tbody " + this.checkboxSelector ).on( "change", function() {
-			var cells;
+		
+		this.$checkboxes.on( "change", function() {
 			var checkedCount = 0;
+			self.$checkboxes.each(function() {
+				if( this.checked ) {
+					checkedCount++;
+				}
+			});
 
-			var $td = $( this ).closest( "th,td" );
-			if( $td.length ) {
-				cells = $td[ 0 ].headerCell.cells;
+			var allSelected = checkedCount === self.$checkboxes.length;
 
-				$( cells ).find( self.checkboxSelector ).not( self.checkboxAllSelector ).each(function() {
-					if( this.checked ) {
-						checkedCount++;
-					}
-				});
+			self.$checkbox[ 0 ].checked = allSelected;
 
-				$( $td[ 0 ].headerCell ).find( self.checkboxSelector ).each(function() {
-					var allSelected = checkedCount === cells.length;
-					this.checked = allSelected;
-
-					// only indeterminate if some are selected (not all and not none)
-					this.indeterminate = checkedCount !== 0 && !allSelected;
-				});
-			}
+			// only indeterminate if some are selected (not all and not none)
+			self.$checkbox[ 0 ].indeterminate = checkedCount !== 0 && !allSelected;
 		});
 	};
 
