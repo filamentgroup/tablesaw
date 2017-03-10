@@ -100,7 +100,7 @@
 			$cells[ !checked ? "addClass" : "removeClass" ]( "tablesaw-cell-hidden" );
 			$cells[ checked ? "addClass" : "removeClass" ]( "tablesaw-cell-visible" );
 
-			self.updateColspanIgnoredRows( checked );
+			self.updateColspanIgnoredRows( checked, $( header ).add( header.cells ) );
 
 			self.$table.trigger( 'tablesawcolumns' );
 		});
@@ -154,28 +154,56 @@
 		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.updateColspanIgnoredRows = function( invisibleColumnCount ) {
+	ColumnToggle.prototype.updateColspanIgnoredRows = function( invisibleColumnCount, $cells ) {
 		this.$table.find( "[" + this.attributes.subrow + "],[" + this.attributes.ignorerow + "]" ).each(function() {
-			var $td = $( this ).find( "td[colspan]" ).eq( 0 );
-			var newColspanValue = parseInt( $td.attr( "colspan" ), 10 );
+			var $t = $( this );
+			var $td = $t.find( "td[colspan]" ).eq( 0 );
+			var excludedInvisibleColumns;
 
+			var colspan;
+			var originalColspan;
+			var modifier;
+
+			// increment or decrementing only (from a user triggered column show/hide)
 			if( invisibleColumnCount === true || invisibleColumnCount === false ) {
-				newColspanValue += invisibleColumnCount ? 1 : -1;
+				// unless the column being hidden is not included in the colspan
+				modifier = $cells.filter(function() {
+					return this === $td[ 0 ];
+				}).length ? ( invisibleColumnCount ? 1 : -1 ) : 0;
+
+				colspan = parseInt( $td.attr( "colspan" ), 10 ) + modifier;
 			} else {
-				newColspanValue -= invisibleColumnCount;
+				// triggered from a resize or init
+				originalColspan = $td.data( "original-colspan" );
+
+				if( originalColspan ) {
+					colspan = originalColspan;
+				} else {
+					colspan = parseInt( $td.attr( "colspan" ), 10 );
+					$td.data( "original-colspan", colspan );
+				}
+
+				excludedInvisibleColumns = $t.find( "td" ).filter(function() {
+					return this !== $td[ 0 ] && $( this ).css( "display" ) === "none";
+				}).length;
+
+				colspan -= ( invisibleColumnCount - excludedInvisibleColumns );
 			}
 
 			// TODO add a colstart param so that this more appropriately selects colspan elements based on the column being hidden.
-			$td.attr( "colspan", newColspanValue );
+			$td.attr( "colspan", colspan );
 		});
 	};
 
 	ColumnToggle.prototype.$getCells = function( th ) {
 		var self = this;
 		return $( th ).add( th.cells ).filter(function() {
-			// no subrows
-			var $row = $( this ).parent();
-			return !$row.is( "[" + self.attributes.subrow + "],[" + self.attributes.ignorerow + "]" );
+			var $t = $( this );
+			var $row = $t.parent();
+			var hasColspan = $t.is( "[colspan]" );
+			// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+			return !$row.is( "[" + self.attributes.subrow + "]" ) &&
+				( !$row.is( "[" + self.attributes.ignorerow + "]" ) || !hasColspan );
 		});
 	};
 
