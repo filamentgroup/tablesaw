@@ -50,14 +50,14 @@
 			<thead>
 				<tr>
 					<th scope="col"><label><input type="checkbox" data-tablesaw-checkall><span class="sr-only"> Check All</span></label></th>
-					<th scope="col">Movie Title</th>
+					<th scope="col">Movie Title <a href="#" data-tablesaw-checkall="#checkall-target input[type='checkbox']">Toggle All Checkboxes</a> <a href="#" data-tablesaw-checkall="#checkall-target input[type='checkbox']" data-tablesaw-checkall-checked>Check All</a> <a href="#" data-tablesaw-checkall="#checkall-target input[type='checkbox']" data-tablesaw-checkall-unchecked>Uncheck All</a></th>
 					<th scope="col">Rank</th>
 					<th scope="col">Year</th>
 					<th scope="col"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
 					<th scope="col">Gross</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="checkall-target">
 				<tr>
 					<td><label><input type="checkbox"><span class="sr-only"> Select Row</span></label></td>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>

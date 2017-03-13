@@ -11,10 +11,14 @@
 	function CheckAll( tablesaw ) {
 		this.tablesaw = tablesaw;
 		this.$table = tablesaw.$table;
-		this.checkboxAllSelector = "input[type=\"checkbox\"][data-tablesaw-checkall]";
+
+		this.attr = "data-tablesaw-checkall";
+		this.checkAllSelector = "[" + this.attr + "]";
+		this.forceCheckedSelector = "[" + this.attr + "-checked]";
+		this.forceUncheckedSelector = "[" + this.attr + "-unchecked]";
 		this.checkboxSelector = "input[type=\"checkbox\"]";
 
-		this.$checkbox = null;
+		this.$triggers = null;
 		this.$checkboxes = null;
 
 		if( this.$table.data( pluginName ) ) {
@@ -24,47 +28,97 @@
 		this.init();
 	}
 
-	CheckAll.prototype.init = function() {
-		this.$checkbox = this.$table.find( "thead" ).find( this.checkboxAllSelector );
-
-		if( this.$checkbox.length ) {
-			this.$checkboxes = $( this.$checkbox.closest( "th" )[ 0 ].cells ).filter(function() {
-				return !$( this ).closest( "tr" ).is( "[data-tablesaw-subrow],[data-tablesaw-ignorerow]" );
-			}).find( this.checkboxSelector ).not( this.checkboxAllSelector );
-
-			this.addEvents();
-		}
+	CheckAll.prototype._filterCells = function( $checkboxes ) {
+		return $checkboxes.filter(function() {
+			return !$( this ).closest( "tr" ).is( "[data-tablesaw-subrow],[data-tablesaw-ignorerow]" );
+		});
 	};
 
-	CheckAll.prototype.addEvents = function() {
+	// With buttons you can use a scoping selector like: data-tablesaw-checkall="#my-scoped-id input[type='checkbox']"
+	CheckAll.prototype.getCheckboxesForButton = function( button ) {
+		return this._filterCells( $( $( button ).attr( this.attr ) ) );
+	};
+
+	CheckAll.prototype.getCheckboxesForCheckbox = function( checkbox ) {
+		return this._filterCells( $( $( checkbox ).closest( "th" )[ 0 ].cells ) )
+			.find( this.checkboxSelector )
+			.not( this.checkAllSelector );
+	};
+
+	CheckAll.prototype.init = function() {
+		var self = this;
+		this.$table.find( this.checkAllSelector ).each(function() {
+			var $trigger = $( this );
+			if( $trigger.is( self.checkboxSelector ) ) {
+				self.addCheckboxEvents( this );
+			} else {
+				self.addButtonEvents( this );
+			}
+		});
+	};
+
+	CheckAll.prototype.addButtonEvents = function( trigger ) {
 		var self = this;
 
 		// Update body checkboxes when header checkbox is changed
-		this.$checkbox.on( "change", function() {
+		$( trigger ).on( "click", function( event ) {
+			event.preventDefault();
+
+			var $checkboxes = self.getCheckboxesForButton( this );
+
+			var allChecked = true;
+			$checkboxes.each(function() {
+				if( !this.checked ) {
+					allChecked = false;
+				}
+			});
+
+			var setChecked;
+			if( $( this ).is( self.forceCheckedSelector ) ) {
+				setChecked = true;
+			} else if( $( this ).is( self.forceUncheckedSelector ) ) {
+				setChecked = false;
+			} else {
+				setChecked = allChecked ? false : true;
+			}
+
+			$checkboxes.each(function() {
+				this.checked = setChecked;
+
+				$( this ).trigger( "change." + pluginName );
+			});
+		});
+	};
+
+	CheckAll.prototype.addCheckboxEvents = function( trigger ) {
+		var self = this;
+
+		// Update body checkboxes when header checkbox is changed
+		$( trigger ).on( "change", function() {
 			var setChecked = this.checked;
 
-			// TODO? filter only visible checkboxes
-			self.$checkboxes.each(function() {
+			self.getCheckboxesForCheckbox( this ).each(function() {
 				this.checked = setChecked;
 			});
 		});
 
+		var $checkboxes = self.getCheckboxesForCheckbox( trigger );
+
 		// Update header checkbox when body checkboxes are changed
-		
-		this.$checkboxes.on( "change", function() {
+		$checkboxes.on( "change." + pluginName, function() {
 			var checkedCount = 0;
-			self.$checkboxes.each(function() {
+			$checkboxes.each(function() {
 				if( this.checked ) {
 					checkedCount++;
 				}
 			});
 
-			var allSelected = checkedCount === self.$checkboxes.length;
+			var allSelected = checkedCount === $checkboxes.length;
 
-			self.$checkbox[ 0 ].checked = allSelected;
+			trigger.checked = allSelected;
 
 			// only indeterminate if some are selected (not all and not none)
-			self.$checkbox[ 0 ].indeterminate = checkedCount !== 0 && !allSelected;
+			trigger.indeterminate = checkedCount !== 0 && !allSelected;
 		});
 	};
 
