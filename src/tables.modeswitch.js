@@ -30,7 +30,8 @@
 				dataMode = $table.attr( 'data-tablesaw-mode' ),
 				isSelected;
 
-			html.push( '<span class="btn"><select>' );
+			// TODO next major version: remove .btn
+			html.push( '<span class="btn tablesaw-btn"><select>' );
 			for( var j=0, k = S.modes.length; j<k; j++ ) {
 				if( ignoreMode && ignoreMode.toLowerCase() === S.modes[ j ] ) {
 					continue;
@@ -57,7 +58,7 @@
 				$switcher.appendTo( $toolbar );
 			}
 
-			$switcher.find( '.btn' ).tablesawbtn();
+			$switcher.find( '.tablesaw-btn' ).tablesawbtn();
 			$switcher.find( 'select' ).on( 'change', S.onModeChange );
 		},
 		onModeChange: function() {

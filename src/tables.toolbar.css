@@ -14,7 +14,7 @@
 	--button-interaction-shadow: #4faeef;
 }
 
-.tablesaw-bar .btn {
+.tablesaw-btn {
 	border: 1px solid #ccc;
 	border-radius: .25em;
 	background: none;
@@ -33,28 +33,28 @@
 	-moz-appearance: none;
 	appearance: none;
 }
-.tablesaw-bar a.btn {
+a.tablesaw-btn {
 	color: var(--button-text);
 }
-.tablesaw-bar .btn:hover {
+.tablesaw-btn:hover {
 	text-decoration: none;
 }
 
 /* Default radio/checkbox styling horizonal controlgroups. */
-.tablesaw-bar .btn:active {
+.tablesaw-btn:active {
 	background-color: #ddd;
 }
 @supports ( box-shadow: none ) {
-	.tablesaw-bar .btn:focus {
+	.tablesaw-btn:focus {
 		background-color: #fff;
 		outline: none;
 	}
-	.tablesaw-bar .btn:focus {
+	.tablesaw-btn:focus {
 		box-shadow: 0 0 .35em var(--button-interaction-shadow) !important;
 	}
 }
 
-.tablesaw-bar .btn-select select {
+.tablesaw-btn-select select {
 	background: none;
 	border: none;
 	display:inline-block;
@@ -69,11 +69,11 @@
 	opacity: 0;
 	color: transparent;
 }
-.tablesaw-bar .btn select option {
+.tablesaw-btn select option {
 	background: #fff;
 	color: #000;
 }
-.tablesaw-bar .btn {
+.tablesaw-btn {
 	display: inline-block;
 	width: auto;
 	height: auto;
@@ -81,17 +81,17 @@
 	top: 0;
 }
 
-.tablesaw-bar .btn.btn-small {
+.tablesaw-btn.btn-small {
 	font-size: 1.0625em;
 	line-height: 19px;
 	padding: .3em 1em .3em 1em;
 }
-.tablesaw-bar .btn.btn-micro {
+.tablesaw-btn.btn-micro {
 	font-size: .8125em;
 	padding: .4em .7em .25em .7em;
 }
 
-.tablesaw-bar .btn-select {
+.tablesaw-btn-select {
 	padding-right: 1.5em;
 	text-align: left;
 	display: inline-block;
@@ -101,7 +101,7 @@
 	text-align: left;
 }
 
-.tablesaw-bar .btn-select:after {
+.tablesaw-btn-select:after {
 	content: " ";
 	position: absolute;
 	background: none;
@@ -118,8 +118,8 @@
 	bottom: 0;
 	width: 1.8em;
 }
-.tablesaw-bar .btn-select.btn-small:after,
-.tablesaw-bar .btn-select.btn-micro:after {
+.tablesaw-btn-select.btn-small:after,
+.tablesaw-btn-select.btn-micro:after {
 	width: 1.2em;
 	font-size: .5em;
 	padding-top: 1em;
@@ -131,24 +131,24 @@
 }
 
 /* Column navigation buttons for swipe and columntoggle tables */
-.tablesaw-advance .btn {
+.tablesaw-advance .tablesaw-btn {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	box-sizing: border-box;
 	text-shadow: 0 1px 0 #fff;
 	border-radius: .25em;
 }
-.tablesaw-advance .btn.btn-micro {
+.tablesaw-advance .tablesaw-btn.btn-micro {
 	font-size: .8125em;
 	padding: .3em .7em .25em .7em;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn:first-child {
+.tablesaw-advance a.tablesaw-nav-btn:first-child {
 	margin-left: 0;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn:last-child {
+.tablesaw-advance a.tablesaw-nav-btn:last-child {
 	margin-right: 0;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn {
+.tablesaw-advance a.tablesaw-nav-btn {
 	display: inline-block;
 	overflow: hidden;
 	width: 1.8em;
@@ -158,41 +158,41 @@
 	margin-right: .25em;
 	position: relative;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before,
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before,
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.up:before {
+.tablesaw-advance a.tablesaw-nav-btn.left:before,
+.tablesaw-advance a.tablesaw-nav-btn.right:before,
+.tablesaw-advance a.tablesaw-nav-btn.down:before,
+.tablesaw-advance a.tablesaw-nav-btn.up:before {
 	content: "\0020";
 	overflow: hidden;
 	width: 0;
 	height: 0;
 	position: absolute;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.down:before {
+.tablesaw-advance a.tablesaw-nav-btn.down:before {
 	left: .5em;
 	top: .65em;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
 	border-top: 5px solid #808080;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.up:before {
+.tablesaw-advance a.tablesaw-nav-btn.up:before {
 	left: .5em;
 	top: .65em;
 	border-left: 5px solid transparent;
 	border-right: 5px solid transparent;
 	border-bottom: 5px solid #808080;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before,
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before {
+.tablesaw-advance a.tablesaw-nav-btn.left:before,
+.tablesaw-advance a.tablesaw-nav-btn.right:before {
 	top: .45em;
 	border-top: 5px solid transparent;
 	border-bottom: 5px solid transparent;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.left:before {
+.tablesaw-advance a.tablesaw-nav-btn.left:before {
 	left: .6em;
 	border-right: 5px solid #808080;
 }
-.tablesaw-bar .tablesaw-advance a.tablesaw-nav-btn.right:before {
+.tablesaw-advance a.tablesaw-nav-btn.right:before {
 	left: .7em;
 	border-left: 5px solid #808080;
 }
@@ -218,16 +218,17 @@
 	margin-right: .5em;
 	text-transform:uppercase;
 }
-.tablesaw-bar .btn,
-.tablesaw-enhanced .tablesaw-bar .btn {
+.tablesaw-btn,
+.tablesaw-enhanced .tablesaw-btn {
 	margin-top: .5em;
 	margin-bottom: .5em;
 }
-.tablesaw-bar .btn-select,
-.tablesaw-enhanced .tablesaw-bar .btn-select {
+.tablesaw-btn-select,
+.tablesaw-enhanced .tablesaw-btn-select {
 	margin-bottom: 0;
 }
-.tablesaw-bar .tablesaw-toolbar .btn {
+/* TODO */
+.tablesaw-bar .tablesaw-toolbar .tablesaw-btn {
 	margin-left: .4em;
 	margin-top: 0;
 	text-transform:uppercase;

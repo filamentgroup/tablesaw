@@ -122,7 +122,8 @@
 
 					var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
 
-					html.push( '<span class="btn"><select>' );
+					// TODO next major version: remove .btn
+					html.push( '<span class="btn tablesaw-btn"><select>' );
 					heads.each(function( j ) {
 						var $t = $( this );
 						var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
@@ -157,7 +158,7 @@
 					} else {
 						$switcher.appendTo( $toolbar );
 					}
-					$switcher.find( '.btn' ).tablesawbtn();
+					$switcher.find( '.tablesaw-btn' ).tablesawbtn();
 					$switcher.find( 'select' ).on( 'change', function() {
 						var val = $( this ).val().split( '_' ),
 							head = heads.eq( val[ 0 ] );

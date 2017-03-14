@@ -20,8 +20,10 @@
 
 	function createSwipeTable( tbl, $table ){
 		var $btns = $( "<div class='tablesaw-advance'></div>" );
-		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
-		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
+		// TODO next major version: remove .btn
+		var $prevBtn = $( "<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
+		// TODO next major version: remove .btn
+		var $nextBtn = $( "<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
 
 		var $headerCells = tbl._getPrimaryHeaderCells();
 		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );

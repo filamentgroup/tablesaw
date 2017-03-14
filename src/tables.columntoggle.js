@@ -23,7 +23,8 @@
 
 		this.attributes = {
 			subrow: "data-tablesaw-subrow",
-			ignorerow: "data-tablesaw-ignorerow"
+			ignorerow: "data-tablesaw-ignorerow",
+			btnTarget: 'data-tablesaw-columntoggle-btn-target',
 		};
 
 		this.classes = {
@@ -60,7 +61,8 @@
 		tableId = this.$table.attr( "id" );
 		id = tableId + "-popup";
 		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
-		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
+		// TODO next major version: remove .btn
+		$menuButton = $( "<a href='#" + id + "' class='btn tablesaw-btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
 										"<span>" + Tablesaw.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
@@ -106,8 +108,9 @@
 		});
 
 		$menuButton.appendTo( $btnContain );
-		$btnContain.appendTo( this.$table.prev().filter( '.' + this.classes.toolbar ) );
 
+		var $btnTarget = $( this.$table.attr( this.attributes.btnTarget ) );
+		$btnContain.appendTo( $btnTarget.length ? $btnTarget : this.$table.prev().filter( '.' + this.classes.toolbar ) );
 
 		function closePopup( event ) {
 			// Click came from inside the popup, ignore.

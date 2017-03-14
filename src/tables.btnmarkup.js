@@ -20,8 +20,9 @@
 					sel = this.getElementsByTagName( "select" )[ 0 ];
 
 				if( sel ) {
+					// TODO next major version: remove .btn-select
 					$( this )
-						.addClass( "btn-select" )[ pluginName ]( "_select", sel );
+						.addClass( "btn-select tablesaw-btn-select" )[ pluginName ]( "_select", sel );
 				}
 				return oEl;
 			},
