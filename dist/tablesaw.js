@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.8 - 2017-03-13
+/*! Tablesaw - v3.0.1-beta.9 - 2017-03-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -3294,7 +3294,7 @@ if( Tablesaw.mustard ) {
 	CheckAll.prototype._filterCells = function( $checkboxes ) {
 		return $checkboxes.filter(function() {
 			return !$( this ).closest( "tr" ).is( "[data-tablesaw-subrow],[data-tablesaw-ignorerow]" );
-		});
+		}).find( this.checkboxSelector ).not( this.checkAllSelector );
 	};
 
 	// With buttons you can use a scoping selector like: data-tablesaw-checkall="#my-scoped-id input[type='checkbox']"
@@ -3303,9 +3303,7 @@ if( Tablesaw.mustard ) {
 	};
 
 	CheckAll.prototype.getCheckboxesForCheckbox = function( checkbox ) {
-		return this._filterCells( $( $( checkbox ).closest( "th" )[ 0 ].cells ) )
-			.find( this.checkboxSelector )
-			.not( this.checkAllSelector );
+		return this._filterCells( $( $( checkbox ).closest( "th" )[ 0 ].cells ) );
 	};
 
 	CheckAll.prototype.init = function() {
