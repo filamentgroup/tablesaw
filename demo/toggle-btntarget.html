@@ -6,6 +6,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>TableSaw Column Toggle Table</title>
 
+	<style>
+	.new-toolbar {
+		border: 1px dotted green;
+	}
+	.new-toolbar:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+	</style>
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
@@ -47,7 +57,8 @@
 
 		<h2>Column Toggle Table</h2>
 		<p>The Column Toggle Table allows the user to select which columns they want to be visible.</p>
-		<table class="tablesaw" data-tablesaw-mode="columntoggle">
+		<div id="btn-target-demo" class="new-toolbar">This is a separate div to test <code>data-tablesaw-columntoggle-btn-target</code>. This is a separate div to test <code>data-tablesaw-columntoggle-btn-target</code>. This is a separate div to test <code>data-tablesaw-columntoggle-btn-target</code>. This is a separate div to test <code>data-tablesaw-columntoggle-btn-target</code>. This is a separate div to test <code>data-tablesaw-columntoggle-btn-target</code>.</div>
+		<table class="tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-columntoggle-btn-target="#btn-target-demo">
 			<thead>
 				<tr>
 					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>

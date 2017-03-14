@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1 - 2017-02-28
+/*! Tablesaw - v3.0.1-beta.10 - 2017-03-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -1773,11 +1773,7 @@ if( Tablesaw.mustard ) {
 	var defaultMode = "stack";
 	var initSelector = "table";
 	var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
-	var defaultConfig = {
-		getHeaderCells: function() {
-			return this.$table.find( "thead" ).children().filter( "tr" ).eq( 0 ).find( "th" );
-		}
-	};
+	var defaultConfig = {};
 
 	Tablesaw.events = events;
 
@@ -1788,6 +1784,12 @@ if( Tablesaw.mustard ) {
 
 		this.table = element;
 		this.$table = $( element );
+
+		// only one <thead> and <tfoot> are allowed, per the specification
+		this.$thead = this.$table.children().filter( "thead" ).eq( 0 );
+
+		// multiple <tbody> are allowed, per the specification
+		this.$tbody = this.$table.children().filter( "tbody" );
 
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
 
@@ -1802,8 +1804,9 @@ if( Tablesaw.mustard ) {
 
 		this.createToolbar();
 
-		// TODO this is used inside stack table init for some reason? what does it do?
 		this._initCells();
+
+		this.$table.data( pluginName, this );
 
 		this.$table.trigger( events.create, [ this ] );
 	};
@@ -1814,15 +1817,30 @@ if( Tablesaw.mustard ) {
 		return $.extend( configs, typeof TablesawConfig !== "undefined" ? TablesawConfig : {} );
 	};
 
-	Table.prototype._getPrimaryHeaderCells = function() {
-		return this.getConfig().getHeaderCells.call( this );
+	Table.prototype._getPrimaryHeaderRow = function() {
+		return this.$thead.children().filter( "tr" ).filter(function() {
+			return !$( this ).is( "[data-tablesaw-ignorerow]" );
+		}).eq( 0 );
 	};
 
-	Table.prototype._findHeadersForCell = function( cell ) {
-		var $headers = this._getPrimaryHeaderCells();
+	Table.prototype._getPrimaryHeaderRowIndex = function( $row ) {
+		return ( $row || this._getPrimaryHeaderRow() ).prevAll().length;
+	};
+
+	Table.prototype._getPrimaryHeaderCells = function( $row ) {
+		return ( $row || this._getPrimaryHeaderRow() ).find( "th" );
+	};
+
+	Table.prototype._findPrimaryHeadersForCell = function( cell ) {
+		var $headerRow = this._getPrimaryHeaderRow();
+		var $headers = this._getPrimaryHeaderCells( $headerRow );
+		var headerRowIndex = this._getPrimaryHeaderRowIndex( $headerRow );
 		var results = [];
 
-		for( var rowNumber = 1; rowNumber < this.headerMapping.length; rowNumber++ ) {
+		for( var rowNumber = 0; rowNumber < this.headerMapping.length; rowNumber++ ) {
+			if( rowNumber === headerRowIndex ) {
+				continue;
+			}
 			for( var colNumber = 0; colNumber < this.headerMapping[ rowNumber ].length; colNumber++ ) {
 				if( this.headerMapping[ rowNumber ][ colNumber ] === cell ) {
 					results.push( $headers[ colNumber ] );
@@ -1832,8 +1850,32 @@ if( Tablesaw.mustard ) {
 		return results;
 	};
 
+	// used by init cells
+	Table.prototype.getRows = function() {
+		var self = this;
+		return this.$table.find( "tr" ).filter(function() {
+			return $( this ).closest( "table" ).is( self.$table );
+		});
+	};
+
+	// used by sortable
+	Table.prototype.getBodyRows = function( tbody ) {
+		return ( tbody ? $( tbody ) : this.$tbody ).children().filter( "tr" );
+	};
+
+	Table.prototype.getHeaderCellIndex = function( cell ) {
+		var lookup = this.headerMapping[ 0 ];
+		for( var colIndex = 0; colIndex < lookup.length; colIndex++ ) {
+			if( lookup[ colIndex ] === cell ) {
+				return colIndex;
+			}
+		}
+
+		return -1;
+	};
+
 	Table.prototype._initCells = function() {
-		var $rows = this.$table.find( "tr" );
+		var $rows = this.getRows();
 		var columnLookup = [];
 
 		$rows.each(function( rowNumber ) {
@@ -1844,7 +1886,6 @@ if( Tablesaw.mustard ) {
 			var coltally = 0;
 			var $t = $( this );
 			var children = $t.children();
-			// var isInHeader = $t.closest( "thead" ).length;
 
 			children.each(function() {
 				var colspan = parseInt( this.getAttribute( "colspan" ), 10 );
@@ -1857,7 +1898,7 @@ if( Tablesaw.mustard ) {
 
 				columnLookup[ rowNumber ][ coltally ] = this;
 
-				// TODO both colspan and rowspan
+				// TODO? both colspan and rowspan
 				if( colspan ) {
 					for( var k = 0; k < colspan - 1; k++ ){
 						coltally++;
@@ -1874,8 +1915,9 @@ if( Tablesaw.mustard ) {
 			});
 		});
 
+		var primaryHeaderRowIndex = this._getPrimaryHeaderRowIndex();
 		for( var colNumber = 0; colNumber < columnLookup[ 0 ].length; colNumber++ ) {
-			var headerCol = columnLookup[ 0 ][ colNumber ];
+			var headerCol = columnLookup[ primaryHeaderRowIndex ][ colNumber ];
 			var rowNumber = 0;
 			var rowCell;
 
@@ -1945,8 +1987,7 @@ if( Tablesaw.mustard ) {
 				return;
 			}
 
-			var table = new Table( this );
-			$t.data( pluginName, table );
+			new Table( this );
 		});
 	};
 
@@ -2031,8 +2072,7 @@ if( Tablesaw.mustard ) {
 			var $newHeader = $( document.createElement( "b" ) ).addClass( classes.cellLabels );
 			var $cell = $( this );
 
-			// headers
-			$( self.tablesaw._findHeadersForCell( this ) ).each(function( index ) {
+			$( self.tablesaw._findPrimaryHeadersForCell( this ) ).each(function( index ) {
 				var $header = $( this.cloneNode( true ) );
 				// TODO decouple from sortable better
 				// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
