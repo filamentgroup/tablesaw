@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.9 - 2017-03-14
+/*! Tablesaw - v3.0.1-beta.10 - 2017-03-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -441,8 +441,9 @@ if( Tablesaw.mustard ) {
 					sel = this.getElementsByTagName( "select" )[ 0 ];
 
 				if( sel ) {
+					// TODO next major version: remove .btn-select
 					$( this )
-						.addClass( "btn-select" )[ pluginName ]( "_select", sel );
+						.addClass( "btn-select tablesaw-btn-select" )[ pluginName ]( "_select", sel );
 				}
 				return oEl;
 			},
@@ -530,7 +531,8 @@ if( Tablesaw.mustard ) {
 
 		this.attributes = {
 			subrow: "data-tablesaw-subrow",
-			ignorerow: "data-tablesaw-ignorerow"
+			ignorerow: "data-tablesaw-ignorerow",
+			btnTarget: 'data-tablesaw-columntoggle-btn-target',
 		};
 
 		this.classes = {
@@ -567,7 +569,8 @@ if( Tablesaw.mustard ) {
 		tableId = this.$table.attr( "id" );
 		id = tableId + "-popup";
 		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
-		$menuButton = $( "<a href='#" + id + "' class='btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
+		// TODO next major version: remove .btn
+		$menuButton = $( "<a href='#" + id + "' class='btn tablesaw-btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
 										"<span>" + Tablesaw.i18n.columnBtnText + "</span></a>" );
 		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
@@ -613,8 +616,9 @@ if( Tablesaw.mustard ) {
 		});
 
 		$menuButton.appendTo( $btnContain );
-		$btnContain.appendTo( this.$table.prev().filter( '.' + this.classes.toolbar ) );
 
+		var $btnTarget = $( this.$table.attr( this.attributes.btnTarget ) );
+		$btnContain.appendTo( $btnTarget.length ? $btnTarget : this.$table.prev().filter( '.' + this.classes.toolbar ) );
 
 		function closePopup( event ) {
 			// Click came from inside the popup, ignore.
@@ -879,7 +883,8 @@ if( Tablesaw.mustard ) {
 
 					var html = [ '<label>' + Tablesaw.i18n.sort + ':' ];
 
-					html.push( '<span class="btn"><select>' );
+					// TODO next major version: remove .btn
+					html.push( '<span class="btn tablesaw-btn"><select>' );
 					heads.each(function( j ) {
 						var $t = $( this );
 						var isDefaultCol = $t.is( "[" + attrs.defaultCol + "]" );
@@ -914,7 +919,7 @@ if( Tablesaw.mustard ) {
 					} else {
 						$switcher.appendTo( $toolbar );
 					}
-					$switcher.find( '.btn' ).tablesawbtn();
+					$switcher.find( '.tablesaw-btn' ).tablesawbtn();
 					$switcher.find( 'select' ).on( 'change', function() {
 						var val = $( this ).val().split( '_' ),
 							head = heads.eq( val[ 0 ] );
@@ -1104,8 +1109,10 @@ if( Tablesaw.mustard ) {
 
 	function createSwipeTable( tbl, $table ){
 		var $btns = $( "<div class='tablesaw-advance'></div>" );
-		var $prevBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
-		var $nextBtn = $( "<a href='#' class='tablesaw-nav-btn btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
+		// TODO next major version: remove .btn
+		var $prevBtn = $( "<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
+		// TODO next major version: remove .btn
+		var $nextBtn = $( "<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro right' title='Next Column'></a>" ).appendTo( $btns );
 
 		var $headerCells = tbl._getPrimaryHeaderCells();
 		var $headerCellsNoPersist = $headerCells.not( '[data-tablesaw-priority="persist"]' );
@@ -1510,7 +1517,8 @@ if( Tablesaw.mustard ) {
 				dataMode = $table.attr( 'data-tablesaw-mode' ),
 				isSelected;
 
-			html.push( '<span class="btn"><select>' );
+			// TODO next major version: remove .btn
+			html.push( '<span class="btn tablesaw-btn"><select>' );
 			for( var j=0, k = S.modes.length; j<k; j++ ) {
 				if( ignoreMode && ignoreMode.toLowerCase() === S.modes[ j ] ) {
 					continue;
@@ -1537,7 +1545,7 @@ if( Tablesaw.mustard ) {
 				$switcher.appendTo( $toolbar );
 			}
 
-			$switcher.find( '.btn' ).tablesawbtn();
+			$switcher.find( '.tablesaw-btn' ).tablesawbtn();
 			$switcher.find( 'select' ).on( 'change', S.onModeChange );
 		},
 		onModeChange: function() {
