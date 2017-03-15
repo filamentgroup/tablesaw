@@ -1,27 +1,16 @@
-.tablesaw-sortable,
-.tablesaw-sortable thead,
-.tablesaw-sortable thead tr, 
-.tablesaw-sortable thead tr th {
+.tablesaw-sortable-head {
 	position: relative;
-}
-.tablesaw-sortable thead tr th {
 	vertical-align: top;
 }
-.tablesaw-sortable th.tablesaw-sortable-head.tablesaw-sortable-head {
+.tablesaw-sortable-head.tablesaw-sortable-head.tablesaw-sortable-head.tablesaw-sortable-head {
 	padding: 0;
 }
-.tablesaw-sortable th.tablesaw-sortable-head button {
-	padding-top: .9em;
-	padding-bottom: .7em;
-	padding-left: .6em;
-	padding-right: .6em;
-}
-.tablesaw-sortable .tablesaw-sortable-head button {
+.tablesaw-sortable-btn {
 	min-width: 100%;
 	color: inherit;
 	background: transparent;
 	border: 0;
-	padding: 0;
+	padding: .9em .6em .7em .6em;
 	text-align: inherit;
 	font: inherit;
 	text-transform: inherit;
@@ -33,21 +22,13 @@
 	content: " ";
 	margin-left: .3125em;
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
+.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
+.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
 	content: "\0020";
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
+.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
 	content: "\2191";
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
+.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
 	content: "\2193";
-}
-
-.tablesaw-sortable .not-applicable:after {
-	content: "--";
-	display: block;
-}
-.tablesaw-sortable .not-applicable span {
-	display: none;
 }
