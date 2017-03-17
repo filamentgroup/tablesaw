@@ -2,7 +2,8 @@
 	position: relative;
 	vertical-align: top;
 }
-.tablesaw-sortable-head.tablesaw-sortable-head.tablesaw-sortable-head.tablesaw-sortable-head {
+/* Override */
+.tablesaw .tablesaw-sortable-head {
 	padding: 0;
 }
 .tablesaw-sortable-btn {
@@ -10,7 +11,8 @@
 	color: inherit;
 	background: transparent;
 	border: 0;
-	padding: .9em .6em .7em .6em;
+	/* same as cell padding in tables.css */
+	padding: .5em .7em;
 	text-align: inherit;
 	font: inherit;
 	text-transform: inherit;

@@ -72,8 +72,8 @@
 					});
 				}
 
-				function clearOthers( sibs ){
-					$.each( sibs , function( i , v ){
+				function clearOthers( headcells ){
+					$.each( headcells , function( i , v ){
 						var col = $( v );
 						col.removeAttr( attrs.defaultCol );
 						col.removeClass( classes.ascend );
@@ -91,7 +91,9 @@
 						v = e.data.col,
 						newSortValue = heads.index( headCell[0] );
 
-					clearOthers( headCell.siblings() );
+					clearOthers( headCell.closest( "thead" ).find( "th" ).filter(function() {
+						return this !== headCell[ 0 ];
+					}) );
 					if( headCell.is( "." + classes.descend ) || !headCell.is( "." + classes.ascend ) ){
 						el[ pluginName ]( "sortBy" , v , true);
 						newSortValue += '_asc';
@@ -133,6 +135,7 @@
 						var numericCount = 0;
 						// Check only the first four rows to see if the column is numbers.
 						var numericCountMax = 5;
+
 						$( this.cells.slice( 0, numericCountMax ) ).each(function() {
 							if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
 								numericCount++;

@@ -16,7 +16,3 @@
 .tablesaw td {
 	padding: .5em .7em;
 }
-.tablesaw thead tr:first-child th {
-	padding-top: .9em;
-	padding-bottom: .7em;
-}
