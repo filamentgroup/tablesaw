@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.12 - 2017-03-17
+/*! Tablesaw - v3.0.1-beta.13 - 2017-03-21
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -2673,7 +2673,13 @@ if( Tablesaw.mustard ) {
 						var row = cell.parentNode;
 						var $row = $( row );
 						// next row is a subrow
-						var subrow = $row.next().filter( "[" + attrs.subRow + "]" );
+						var subrows = [];
+						var $next = $row.next();
+						while( $next.is( "[" + attrs.subRow + "]" ) ) {
+							subrows.push( $next[ 0 ] );
+							$next = $next.next();
+						}
+
 						var tbody = row.parentNode;
 
 						// current row is a subrow
@@ -2683,7 +2689,7 @@ if( Tablesaw.mustard ) {
 								element: cell,
 								cell: getSortValue( cell ),
 								row: row,
-								subrow: subrow.length ? subrow[ 0 ] : null,
+								subrows: subrows.length ? subrows : null,
 								ignored: $row.is( "[" + attrs.ignoreRow + "]" )
 							});
 						}
@@ -2724,8 +2730,8 @@ if( Tablesaw.mustard ) {
 					var newRows = [], i, l;
 					for( i = 0, l = sorted.length ; i < l ; i++ ){
 						newRows.push( sorted[ i ].row );
-						if( sorted[ i ].subrow ) {
-							newRows.push( sorted[ i ].subrow );
+						if( sorted[ i ].subrows ) {
+							newRows.push( sorted[ i ].subrows );
 						}
 					}
 					return newRows;
