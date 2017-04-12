@@ -84,8 +84,7 @@
 
 				$( cfg.getColumnToggleLabelTemplate( $this.text() ) )
 					.appendTo( $menu )
-					.children()
-					.first()
+					.find( "input[type=\"checkbox\"]" )
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
