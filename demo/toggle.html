@@ -10,6 +10,13 @@
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
 
+	<script>
+	TablesawConfig = {
+		getColumnToggleLabelTemplate: function( text ) {
+			return "<label><input type='checkbox' checked><span>" + text + "</span></label>";
+		}
+	};
+	</script>
 	<script src="../dist/tablesaw.js"></script>
 	<script src="../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>

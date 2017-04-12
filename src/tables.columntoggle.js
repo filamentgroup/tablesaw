@@ -56,6 +56,12 @@
 			$btnContain,
 			self = this;
 
+		var cfg = this.tablesaw.getConfig({
+			getColumnToggleLabelTemplate: function( text ) {
+				return "<label><input type='checkbox' checked>" + text + "</label>";
+			}
+		});
+
 		this.$table.addClass( this.classes.columnToggleTable );
 
 		tableId = this.$table.attr( "id" );
@@ -76,7 +82,7 @@
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
 
-				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
+				$( cfg.getColumnToggleLabelTemplate( $this.text() ) )
 					.appendTo( $menu )
 					.children()
 					.first()
