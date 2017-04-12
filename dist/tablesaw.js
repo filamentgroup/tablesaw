@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.14 - 2017-04-12
+/*! Tablesaw - v3.0.1-beta.15 - 2017-04-12
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -2314,8 +2314,7 @@ if( Tablesaw.mustard ) {
 
 				$( cfg.getColumnToggleLabelTemplate( $this.text() ) )
 					.appendTo( $menu )
-					.children()
-					.first()
+					.find( "input[type=\"checkbox\"]" )
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
