@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.13 - 2017-03-21
+/*! Tablesaw - v3.0.1-beta.14 - 2017-04-12
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -2286,6 +2286,12 @@ if( Tablesaw.mustard ) {
 			$btnContain,
 			self = this;
 
+		var cfg = this.tablesaw.getConfig({
+			getColumnToggleLabelTemplate: function( text ) {
+				return "<label><input type='checkbox' checked>" + text + "</label>";
+			}
+		});
+
 		this.$table.addClass( this.classes.columnToggleTable );
 
 		tableId = this.$table.attr( "id" );
@@ -2306,7 +2312,7 @@ if( Tablesaw.mustard ) {
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
 
-				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
+				$( cfg.getColumnToggleLabelTemplate( $this.text() ) )
 					.appendTo( $menu )
 					.children()
 					.first()
