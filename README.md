@@ -57,7 +57,7 @@ The Column Toggle Table allows the user to select which columns they want to be 
 | Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>` |
 
 <details>
-<summary>_Advanced Option_: Prioritize Columns</summary>
+<summary><em>Advanced Option</em>: Prioritize Columns</summary>
 
 Table headers must have a `data-tablesaw-priority` attribute to be eligible to toggle. `data-tablesaw-priority` is a numeric value from 1 to 6, which determine default breakpoints at which a column will show. The breakpoint defaults are:
 
@@ -97,17 +97,15 @@ Allows the user to use the swipe gesture (or use the left and right buttons) to 
 | Disable swipe touch events | Use the `<table data-tablesaw-no-touch>` attribute to opt-out of swiping left or right to navigate columns. Users will need to use the provided buttons instead. |
 
 <details>
-<summary>_Advanced Option_: Configure Swipe Thresholds</summary>
+<summary><em>Advanced Option</em>: Configure Swipe Thresholds</summary>
 
 Add a `TablesawConfig` object to your page in a `<script>` element. It doesn’t matter if it’s declared before or after the Tablesaw JavaScript.
 
 ```js
 <script>
 TablesawConfig = {
-  swipe: {
-    horizontalThreshold: 15,
-    verticalThreshold: 20
-  }
+  swipeHorizontalThreshold: 15,
+  swipeVerticalThreshold: 20
 };
 </script>
 ```
@@ -167,7 +165,7 @@ Use `data-tablesaw-sortable-switch` to add a select form element to manually cho
 ![](docs/sortable.png)
 
 <details>
-<summary>_Advanced Option_: Custom Sort Functions</summary>
+<summary><em>Advanced Option</em>: Custom Sort Functions</summary>
 
 Tablesaw provides two methods of sorting built-in: string and numeric. To use numeric sort, use the `data-tablesaw-sortable-numeric` class as shown in the above sorting markup example. Otherwise, tablesaw uses a case insensitive string sort.
 
