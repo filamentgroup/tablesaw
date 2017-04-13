@@ -15,11 +15,6 @@
   box-sizing: border-box;
 }
 
-.tablesaw th,
-.tablesaw td {
-  padding: .5em .7em;
-}
-
 .tablesaw-btn {
   border: 1px solid #ccc;
   border-radius: .25em;
@@ -234,6 +229,10 @@ a.tablesaw-btn {
   clear: both;
 }
 
+.tablesaw-bar * {
+  box-sizing: border-box;
+}
+
 .tablesaw-bar-section {
   float: left;
 }
@@ -308,8 +307,24 @@ a.tablesaw-btn {
   }
 }
 
+.tablesaw-overflow {
+  background: -webkit-linear-gradient(left, white 30%, rgba(255,255,255,0)) 0 0, -webkit-linear-gradient(left, rgba(255,255,255,0), white 70%) top right, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
+  background: linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
+		linear-gradient(to right, rgba(255,255,255,0), white 70%) top right,
+
+		
+		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
+		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
+  background-repeat: no-repeat;
+  background-color: white;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  /* Opera doesn't support this in the shorthand */
+  background-attachment: local, local, scroll, scroll;
+}
+
 .tablesaw th,
 .tablesaw td {
+  padding: .5em .7em;
   text-align: left;
   vertical-align: middle;
 }
@@ -491,18 +506,7 @@ a.tablesaw-btn {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  background: -webkit-linear-gradient(left, white 30%, rgba(255,255,255,0)) 0 0, -webkit-linear-gradient(left, rgba(255,255,255,0), white 70%) top right, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
-  background: linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
-		linear-gradient(to right, rgba(255,255,255,0), white 70%) top right,
-
-		
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
-  background-repeat: no-repeat;
-  background-color: white;
-  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-  /* Opera doesn't support this in the shorthand */
-  background-attachment: local, local, scroll, scroll;
+  /* More in skin.css */
 }
 
 /* Used for a11y text on button: "Columns" */
