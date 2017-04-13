@@ -11,8 +11,3 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-
-.tablesaw th,
-.tablesaw td {
-	padding: .5em .7em;
-}

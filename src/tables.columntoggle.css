@@ -8,20 +8,7 @@
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 
-	background:
-		/* Shadow covers */
-		linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
-		linear-gradient(to right, rgba(255,255,255,0), white 70%) top right,
-
-		/* Shadows */
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
-	background-repeat: no-repeat;
-	background-color: white;
-	background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-	
-	/* Opera doesn't support this in the shorthand */
-	background-attachment: local, local, scroll, scroll;
+	/* More in skin.css */
 }
 
 /* Used for a11y text on button: "Columns" */
