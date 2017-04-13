@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.10 - 2017-03-14
+/*! Tablesaw - v3.0.1-beta.16 - 2017-04-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -86,6 +86,8 @@ if( Tablesaw.mustard ) {
 
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
 
+		this.$toolbar = null;
+
 		this.init();
 	};
 
@@ -111,13 +113,26 @@ if( Tablesaw.mustard ) {
 	};
 
 	Table.prototype._getPrimaryHeaderRow = function() {
-		return this.$thead.children().filter( "tr" ).filter(function() {
-			return !$( this ).is( "[data-tablesaw-ignorerow]" );
-		}).eq( 0 );
+		return this._getHeaderRows().eq( 0 );
 	};
 
-	Table.prototype._getPrimaryHeaderRowIndex = function( $row ) {
-		return ( $row || this._getPrimaryHeaderRow() ).prevAll().length;
+	Table.prototype._getHeaderRows = function() {
+		return this.$thead.children().filter( "tr" ).filter(function() {
+			return !$( this ).is( "[data-tablesaw-ignorerow]" );
+		});
+	};
+
+	Table.prototype._getRowIndex = function( $row ) {
+		return $row.prevAll().length;
+	};
+
+	Table.prototype._getHeaderRowIndeces = function() {
+		var self = this;
+		var indeces = [];
+		this._getHeaderRows().each(function() {
+			indeces.push( self._getRowIndex( $( this ) ) );
+		});
+		return indeces;
 	};
 
 	Table.prototype._getPrimaryHeaderCells = function( $row ) {
@@ -127,7 +142,7 @@ if( Tablesaw.mustard ) {
 	Table.prototype._findPrimaryHeadersForCell = function( cell ) {
 		var $headerRow = this._getPrimaryHeaderRow();
 		var $headers = this._getPrimaryHeaderCells( $headerRow );
-		var headerRowIndex = this._getPrimaryHeaderRowIndex( $headerRow );
+		var headerRowIndex = this._getRowIndex( $headerRow );
 		var results = [];
 
 		for( var rowNumber = 0; rowNumber < this.headerMapping.length; rowNumber++ ) {
@@ -208,25 +223,27 @@ if( Tablesaw.mustard ) {
 			});
 		});
 
-		var primaryHeaderRowIndex = this._getPrimaryHeaderRowIndex();
+		var headerRowIndeces = this._getHeaderRowIndeces();
 		for( var colNumber = 0; colNumber < columnLookup[ 0 ].length; colNumber++ ) {
-			var headerCol = columnLookup[ primaryHeaderRowIndex ][ colNumber ];
-			var rowNumber = 0;
-			var rowCell;
+			for( var headerIndex = 0, k = headerRowIndeces.length; headerIndex < k; headerIndex++ ) {
+				var headerCol = columnLookup[ headerRowIndeces[ headerIndex ] ][ colNumber ];
 
-			if( !headerCol.cells ) {
-				headerCol.cells = [];
-			}
+				var rowNumber = headerRowIndeces[ headerIndex ];
+				var rowCell;
 
-			while( rowNumber < columnLookup.length ) {
-				rowCell = columnLookup[ rowNumber ][ colNumber ];
-
-				if( headerCol !== rowCell ) {
-					headerCol.cells.push( rowCell );
-					rowCell.headerCell = headerCol;
+				if( !headerCol.cells ) {
+					headerCol.cells = [];
 				}
 
-				rowNumber++;
+				while( rowNumber < columnLookup.length ) {
+					rowCell = columnLookup[ rowNumber ][ colNumber ];
+
+					if( headerCol !== rowCell ) {
+						headerCol.cells.push( rowCell );
+					}
+
+					rowNumber++;
+				}
 			}
 		}
 
@@ -239,14 +256,30 @@ if( Tablesaw.mustard ) {
 		this.$table.trigger( events.refresh, [ this ] );
 	};
 
+	Table.prototype._getToolbarAnchor = function() {
+		var $parent = this.$table.parent();
+		if( $parent.is( ".tablesaw-overflow" ) ) {
+			return $parent;
+		}
+		return this.$table;
+	};
+
+	Table.prototype._getToolbar = function( $anchor ) {
+		if( !$anchor ) {
+			$anchor = this._getToolbarAnchor();
+		}
+		return $anchor.prev().filter( "." + classes.toolbar );
+	};
+
 	Table.prototype.createToolbar = function() {
 		// Insert the toolbar
 		// TODO move this into a separate component
-		var $toolbar = this.$table.prev().filter( '.' + classes.toolbar );
+		var $anchor = this._getToolbarAnchor();
+		var $toolbar = this._getToolbar( $anchor );
 		if( !$toolbar.length ) {
 			$toolbar = $( '<div>' )
 				.addClass( classes.toolbar )
-				.insertBefore( this.$table );
+				.insertBefore( $anchor );
 		}
 		this.$toolbar = $toolbar;
 
@@ -256,8 +289,9 @@ if( Tablesaw.mustard ) {
 	};
 
 	Table.prototype.destroy = function() {
-		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
-		this.$table.prev().filter( '.' + classes.toolbar ).each(function() {
+		// Don’t remove the toolbar, just erase the classes on it.
+		// Some of the table features are not yet destroy-friendly.
+		this._getToolbar().each(function() {
 			this.className = this.className.replace( /\btablesaw-mode\-\w*\b/gi, '' );
 		});
 
@@ -540,9 +574,7 @@ if( Tablesaw.mustard ) {
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
 			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
 			popup: 'tablesaw-columntoggle-popup',
-			priorityPrefix: 'tablesaw-priority-',
-			// TODO duplicate class, also in tables.js
-			toolbar: 'tablesaw-bar'
+			priorityPrefix: 'tablesaw-priority-'
 		};
 
 		this.$headers = this.tablesaw._getPrimaryHeaderCells();
@@ -564,6 +596,12 @@ if( Tablesaw.mustard ) {
 			$btnContain,
 			self = this;
 
+		var cfg = this.tablesaw.getConfig({
+			getColumnToggleLabelTemplate: function( text ) {
+				return "<label><input type='checkbox' checked>" + text + "</label>";
+			}
+		});
+
 		this.$table.addClass( this.classes.columnToggleTable );
 
 		tableId = this.$table.attr( "id" );
@@ -584,10 +622,9 @@ if( Tablesaw.mustard ) {
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
 
-				$("<label><input type='checkbox' checked>" + $this.text() + "</label>" )
+				$( cfg.getColumnToggleLabelTemplate( $this.text() ) )
 					.appendTo( $menu )
-					.children()
-					.first()
+					.find( "input[type=\"checkbox\"]" )
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
@@ -617,8 +654,9 @@ if( Tablesaw.mustard ) {
 
 		$menuButton.appendTo( $btnContain );
 
+		// Use a different target than the toolbar
 		var $btnTarget = $( this.$table.attr( this.attributes.btnTarget ) );
-		$btnContain.appendTo( $btnTarget.length ? $btnTarget : this.$table.prev().filter( '.' + this.classes.toolbar ) );
+		$btnContain.appendTo( $btnTarget.length ? $btnTarget : this.tablesaw.$toolbar );
 
 		function closePopup( event ) {
 			// Click came from inside the popup, ignore.
@@ -797,7 +835,7 @@ if( Tablesaw.mustard ) {
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: pluginName + "-switch",
-			tableToolbar: 'tablesaw-toolbar',
+			tableToolbar: 'tablesaw-bar-section',
 			sortButton: pluginName + "-btn"
 		},
 		methods = {
@@ -815,9 +853,10 @@ if( Tablesaw.mustard ) {
 				});
 			},
 			_init: function(){
-				var el = $( this ),
-					heads,
-					$switcher;
+				var el = $( this );
+				var tblsaw = el.data( "tablesaw" );
+				var heads;
+				var $switcher;
 
 				function addClassToHeads( h ){
 					$.each( h , function( i , v ){
@@ -833,8 +872,8 @@ if( Tablesaw.mustard ) {
 					});
 				}
 
-				function clearOthers( sibs ){
-					$.each( sibs , function( i , v ){
+				function clearOthers( headcells ){
+					$.each( headcells , function( i , v ){
 						var col = $( v );
 						col.removeAttr( attrs.defaultCol );
 						col.removeClass( classes.ascend );
@@ -852,7 +891,9 @@ if( Tablesaw.mustard ) {
 						v = e.data.col,
 						newSortValue = heads.index( headCell[0] );
 
-					clearOthers( headCell.siblings() );
+					clearOthers( headCell.closest( "thead" ).find( "th" ).filter(function() {
+						return this !== headCell[ 0 ];
+					}) );
 					if( headCell.is( "." + classes.descend ) || !headCell.is( "." + classes.ascend ) ){
 						el[ pluginName ]( "sortBy" , v , true);
 						newSortValue += '_asc';
@@ -894,6 +935,7 @@ if( Tablesaw.mustard ) {
 						var numericCount = 0;
 						// Check only the first four rows to see if the column is numbers.
 						var numericCountMax = 5;
+
 						$( this.cells.slice( 0, numericCountMax ) ).each(function() {
 							if( !isNaN( parseInt( getSortValue( this ), 10 ) ) ) {
 								numericCount++;
@@ -911,13 +953,11 @@ if( Tablesaw.mustard ) {
 
 					$switcher.html( html.join('') );
 
-					var $toolbar = el.prev().filter( '.tablesaw-bar' ),
-						$firstChild = $toolbar.children().eq( 0 );
-
+					var $firstChild = tblsaw.$toolbar.children().eq( 0 );
 					if( $firstChild.length ) {
 						$switcher.insertBefore( $firstChild );
 					} else {
-						$switcher.appendTo( $toolbar );
+						$switcher.appendTo( tblsaw.$toolbar );
 					}
 					$switcher.find( '.tablesaw-btn' ).tablesawbtn();
 					$switcher.find( 'select' ).on( 'change', function() {
@@ -948,7 +988,13 @@ if( Tablesaw.mustard ) {
 						var row = cell.parentNode;
 						var $row = $( row );
 						// next row is a subrow
-						var subrow = $row.next().filter( "[" + attrs.subRow + "]" );
+						var subrows = [];
+						var $next = $row.next();
+						while( $next.is( "[" + attrs.subRow + "]" ) ) {
+							subrows.push( $next[ 0 ] );
+							$next = $next.next();
+						}
+
 						var tbody = row.parentNode;
 
 						// current row is a subrow
@@ -958,7 +1004,7 @@ if( Tablesaw.mustard ) {
 								element: cell,
 								cell: getSortValue( cell ),
 								row: row,
-								subrow: subrow.length ? subrow[ 0 ] : null,
+								subrows: subrows.length ? subrows : null,
 								ignored: $row.is( "[" + attrs.ignoreRow + "]" )
 							});
 						}
@@ -999,8 +1045,8 @@ if( Tablesaw.mustard ) {
 					var newRows = [], i, l;
 					for( i = 0, l = sorted.length ; i < l ; i++ ){
 						newRows.push( sorted[ i ].row );
-						if( sorted[ i ].subrow ) {
-							newRows.push( sorted[ i ].subrow );
+						if( sorted[ i ].subrows ) {
+							newRows.push( sorted[ i ].subrows );
 						}
 					}
 					return newRows;
@@ -1097,8 +1143,6 @@ if( Tablesaw.mustard ) {
 (function(){
 
 	var classes = {
-		// TODO duplicate class, also in tables.js
-		toolbar: "tablesaw-bar",
 		hideBtn: "disabled",
 		persistWidths: "tablesaw-fix-persist",
 		allColumnsVisible: 'tablesaw-all-cols-visible'
@@ -1108,6 +1152,8 @@ if( Tablesaw.mustard ) {
 	};
 
 	function createSwipeTable( tbl, $table ){
+		var tblsaw = $table.data( "tablesaw" );
+
 		var $btns = $( "<div class='tablesaw-advance'></div>" );
 		// TODO next major version: remove .btn
 		var $prevBtn = $( "<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
@@ -1132,7 +1178,7 @@ if( Tablesaw.mustard ) {
 			headerWidths.push( width );
 		});
 
-		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
+		$btns.appendTo( tblsaw.$toolbar );
 
 		if( !tableId ) {
 			tableId = 'tableswipe-' + Math.round( Math.random() * 10000 );
@@ -1344,6 +1390,7 @@ if( Tablesaw.mustard ) {
 							// This config code is a little awkward because shoestring doesn’t support deep $.extend
 							// Trying to work around when devs only override one of (not both) horizontalThreshold or
 							// verticalThreshold in their TablesawConfig.
+							// @TODO major version bump: remove cfg.swipe, move to just use the swipePrefix keys
 							var verticalThreshold = cfg.swipe ? cfg.swipe.verticalThreshold : cfg.swipeVerticalThreshold;
 							var horizontalThreshold = cfg.swipe ? cfg.swipe.horizontalThreshold : cfg.swipeHorizontalThreshold;
 
@@ -1375,7 +1422,7 @@ if( Tablesaw.mustard ) {
 				$prevBtn[ canGoPrev ? "removeClass" : "addClass" ]( classes.hideBtn );
 				$nextBtn[ canGoNext ? "removeClass" : "addClass" ]( classes.hideBtn );
 
-				$prevBtn.closest( "." + classes.toolbar )[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
+				tblsaw.$toolbar[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
 			})
 			.on( "tablesawnext.swipetoggle", function(){
 				advance( true );
@@ -1387,7 +1434,7 @@ if( Tablesaw.mustard ) {
 				var $t = $( this );
 
 				$t.removeClass( 'tablesaw-swipe' );
-				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
+				tblsaw.$toolbar.find( '.tablesaw-advance' ).remove();
 				$( win ).off( Tablesaw.events.resize, fakeBreakpoints );
 
 				$t.off( ".swipetoggle" );
@@ -1427,17 +1474,18 @@ if( Tablesaw.mustard ) {
 
 	function createMiniMap( $table ){
 
-		var $btns = $( '<div class="tablesaw-advance minimap">' ),
-			$dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns ),
-			hideDot = 'tablesaw-advance-dots-hide',
-			$headerCells = $table.find( 'thead th' );
+		var tblsaw = $table.data( "tablesaw" );
+		var $btns = $( '<div class="tablesaw-advance minimap">' );
+		var $dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns );
+		var hideDot = 'tablesaw-advance-dots-hide';
+		var $headerCells = $table.find( 'thead th' );
 
 		// populate dots
 		$headerCells.each(function(){
 			$dotNav.append( '<li><i></i></li>' );
 		});
 
-		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
+		$btns.appendTo( tblsaw.$toolbar );
 
 		function showMinimap( $table ) {
 			var mq = $table.attr( MiniMap.attr.init );
@@ -1472,7 +1520,7 @@ if( Tablesaw.mustard ) {
 			.on( Tablesaw.events.destroy + ".minimap", function(){
 				var $t = $( this );
 
-				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
+				tblsaw.$toolbar.find( '.tablesaw-advance' ).remove();
 				$( win ).off( Tablesaw.events.resize, showHideNav );
 
 				$t.off( ".minimap" );
@@ -1503,15 +1551,15 @@ if( Tablesaw.mustard ) {
 		},
 		classes: {
 			main: 'tablesaw-modeswitch',
-			toolbar: 'tablesaw-toolbar'
+			toolbar: 'tablesaw-bar-section'
 		},
 		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		init: function( table ) {
-			var $table = $( table ),
-				ignoreMode = $table.attr( S.attributes.excludeMode ),
-				$toolbar = $table.prev().filter( '.tablesaw-bar' ),
-				modeVal = '',
-				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar );
+			var $table = $( table );
+			var tblsaw = $table.data( "tablesaw" );
+			var ignoreMode = $table.attr( S.attributes.excludeMode );
+			var $toolbar = tblsaw.$toolbar;
+			var $switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar );
 
 			var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
 				dataMode = $table.attr( 'data-tablesaw-mode' ),
@@ -1525,10 +1573,6 @@ if( Tablesaw.mustard ) {
 				}
 
 				isSelected = dataMode === S.modes[ j ];
-
-				if( isSelected ) {
-					modeVal = S.modes[ j ];
-				}
 
 				html.push( '<option' +
 					( isSelected ? ' selected' : '' ) +
@@ -1546,16 +1590,17 @@ if( Tablesaw.mustard ) {
 			}
 
 			$switcher.find( '.tablesaw-btn' ).tablesawbtn();
-			$switcher.find( 'select' ).on( 'change', S.onModeChange );
+			$switcher.find( 'select' ).on( 'change', function( event ) {
+				return S.onModeChange.call( table, event, $( this ).val() );
+			});
 		},
-		onModeChange: function() {
-			var $t = $( this ),
-				$switcher = $t.closest( '.' + S.classes.main ),
-				$table = $t.closest( '.tablesaw-bar' ).next().eq( 0 ),
-				val = $t.val();
+		onModeChange: function( event, val ) {
+			var $table = $( this );
+			var tblsaw = $table.data( "tablesaw" );
+			var $switcher = tblsaw.$toolbar.find( '.' + S.classes.main );
 
 			$switcher.remove();
-			$table.data( 'tablesaw' ).destroy();
+			tblsaw.destroy();
 
 			$table.attr( 'data-tablesaw-mode', val );
 			$table.tablesaw();

@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.10 - 2017-03-14
+/*! Tablesaw - v3.0.1-beta.16 - 2017-04-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 
@@ -18,11 +18,6 @@
 .tablesaw th,
 .tablesaw td {
   padding: .5em .7em;
-}
-
-.tablesaw thead tr:first-child th {
-  padding-top: .9em;
-  padding-bottom: .7em;
 }
 
 .tablesaw-btn {
@@ -239,11 +234,11 @@ a.tablesaw-btn {
   clear: both;
 }
 
-.tablesaw-toolbar {
+.tablesaw-bar-section {
   float: left;
 }
 
-.tablesaw-toolbar label {
+.tablesaw-bar-section label {
   font-size: .875em;
   padding: .5em 0;
   clear: both;
@@ -266,7 +261,7 @@ a.tablesaw-btn {
 
 /* TODO */
 
-.tablesaw-bar .tablesaw-toolbar .tablesaw-btn {
+.tablesaw-bar .tablesaw-bar-section .tablesaw-btn {
   margin-left: .4em;
   margin-top: 0;
   text-transform: uppercase;
@@ -277,25 +272,25 @@ a.tablesaw-btn {
   padding-left: .3em;
 }
 
-.tablesaw-bar .tablesaw-toolbar .btn-select {
+.tablesaw-bar .tablesaw-bar-section .btn-select {
   min-width: 0;
 }
 
-.tablesaw-bar .tablesaw-toolbar .btn-select:after {
+.tablesaw-bar .tablesaw-bar-section .btn-select:after {
   padding-top: .9em;
 }
 
-.tablesaw-bar .tablesaw-toolbar select {
+.tablesaw-bar .tablesaw-bar-section select {
   color: #888;
   text-transform: none;
   background: transparent;
 }
 
-.tablesaw-toolbar ~ table {
+.tablesaw-bar-section ~ table {
   clear: both;
 }
 
-.tablesaw-toolbar .a11y-sm {
+.tablesaw-bar-section .a11y-sm {
   clip: rect(0 0 0 0);
   height: 1px;
   overflow: hidden;
@@ -304,7 +299,7 @@ a.tablesaw-btn {
 }
 
 @media (min-width: 24em) {
-  .tablesaw-toolbar .a11y-sm {
+  .tablesaw-bar-section .a11y-sm {
     clip: none;
     height: auto;
     width: auto;
@@ -490,6 +485,26 @@ a.tablesaw-btn {
   }
 }
 
+/* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
+
+.tablesaw-overflow {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: -webkit-linear-gradient(left, white 30%, rgba(255,255,255,0)) 0 0, -webkit-linear-gradient(left, rgba(255,255,255,0), white 70%) top right, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
+  background: linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
+		linear-gradient(to right, rgba(255,255,255,0), white 70%) top right,
+
+		
+		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
+		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
+  background-repeat: no-repeat;
+  background-color: white;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  /* Opera doesn't support this in the shorthand */
+  background-attachment: local, local, scroll, scroll;
+}
+
 /* Used for a11y text on button: "Columns" */
 
 .tablesaw-columntoggle-btn span {
@@ -654,34 +669,24 @@ a.tablesaw-btn {
   margin-right: .8em;
 }
 
-.tablesaw-sortable,
-.tablesaw-sortable thead,
-.tablesaw-sortable thead tr,
-.tablesaw-sortable thead tr th {
+.tablesaw-sortable-head {
   position: relative;
-}
-
-.tablesaw-sortable thead tr th {
   vertical-align: top;
 }
 
-.tablesaw-sortable th.tablesaw-sortable-head.tablesaw-sortable-head {
+/* Override */
+
+.tablesaw .tablesaw-sortable-head {
   padding: 0;
 }
 
-.tablesaw-sortable th.tablesaw-sortable-head button {
-  padding-top: .9em;
-  padding-bottom: .7em;
-  padding-left: .6em;
-  padding-right: .6em;
-}
-
-.tablesaw-sortable .tablesaw-sortable-head button {
+.tablesaw-sortable-btn {
   min-width: 100%;
   color: inherit;
   background: transparent;
   border: 0;
-  padding: 0;
+  /* same as cell padding in tables.css */
+  padding: .5em .7em;
   text-align: inherit;
   font: inherit;
   text-transform: inherit;
@@ -695,26 +700,17 @@ a.tablesaw-btn {
   margin-left: .3125em;
 }
 
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
+.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
+.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
   content: "\0020";
 }
 
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
+.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
   content: "\2191";
 }
 
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
+.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
   content: "\2193";
-}
-
-.tablesaw-sortable .not-applicable:after {
-  content: "--";
-  display: block;
-}
-
-.tablesaw-sortable .not-applicable span {
-  display: none;
 }
 
 .tablesaw-advance {

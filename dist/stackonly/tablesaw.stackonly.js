@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.10 - 2017-03-14
+/*! Tablesaw - v3.0.1-beta.16 - 2017-04-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -1793,6 +1793,8 @@ if( Tablesaw.mustard ) {
 
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
 
+		this.$toolbar = null;
+
 		this.init();
 	};
 
@@ -1818,13 +1820,26 @@ if( Tablesaw.mustard ) {
 	};
 
 	Table.prototype._getPrimaryHeaderRow = function() {
-		return this.$thead.children().filter( "tr" ).filter(function() {
-			return !$( this ).is( "[data-tablesaw-ignorerow]" );
-		}).eq( 0 );
+		return this._getHeaderRows().eq( 0 );
 	};
 
-	Table.prototype._getPrimaryHeaderRowIndex = function( $row ) {
-		return ( $row || this._getPrimaryHeaderRow() ).prevAll().length;
+	Table.prototype._getHeaderRows = function() {
+		return this.$thead.children().filter( "tr" ).filter(function() {
+			return !$( this ).is( "[data-tablesaw-ignorerow]" );
+		});
+	};
+
+	Table.prototype._getRowIndex = function( $row ) {
+		return $row.prevAll().length;
+	};
+
+	Table.prototype._getHeaderRowIndeces = function() {
+		var self = this;
+		var indeces = [];
+		this._getHeaderRows().each(function() {
+			indeces.push( self._getRowIndex( $( this ) ) );
+		});
+		return indeces;
 	};
 
 	Table.prototype._getPrimaryHeaderCells = function( $row ) {
@@ -1834,7 +1849,7 @@ if( Tablesaw.mustard ) {
 	Table.prototype._findPrimaryHeadersForCell = function( cell ) {
 		var $headerRow = this._getPrimaryHeaderRow();
 		var $headers = this._getPrimaryHeaderCells( $headerRow );
-		var headerRowIndex = this._getPrimaryHeaderRowIndex( $headerRow );
+		var headerRowIndex = this._getRowIndex( $headerRow );
 		var results = [];
 
 		for( var rowNumber = 0; rowNumber < this.headerMapping.length; rowNumber++ ) {
@@ -1915,25 +1930,27 @@ if( Tablesaw.mustard ) {
 			});
 		});
 
-		var primaryHeaderRowIndex = this._getPrimaryHeaderRowIndex();
+		var headerRowIndeces = this._getHeaderRowIndeces();
 		for( var colNumber = 0; colNumber < columnLookup[ 0 ].length; colNumber++ ) {
-			var headerCol = columnLookup[ primaryHeaderRowIndex ][ colNumber ];
-			var rowNumber = 0;
-			var rowCell;
+			for( var headerIndex = 0, k = headerRowIndeces.length; headerIndex < k; headerIndex++ ) {
+				var headerCol = columnLookup[ headerRowIndeces[ headerIndex ] ][ colNumber ];
 
-			if( !headerCol.cells ) {
-				headerCol.cells = [];
-			}
+				var rowNumber = headerRowIndeces[ headerIndex ];
+				var rowCell;
 
-			while( rowNumber < columnLookup.length ) {
-				rowCell = columnLookup[ rowNumber ][ colNumber ];
-
-				if( headerCol !== rowCell ) {
-					headerCol.cells.push( rowCell );
-					rowCell.headerCell = headerCol;
+				if( !headerCol.cells ) {
+					headerCol.cells = [];
 				}
 
-				rowNumber++;
+				while( rowNumber < columnLookup.length ) {
+					rowCell = columnLookup[ rowNumber ][ colNumber ];
+
+					if( headerCol !== rowCell ) {
+						headerCol.cells.push( rowCell );
+					}
+
+					rowNumber++;
+				}
 			}
 		}
 
@@ -1946,14 +1963,30 @@ if( Tablesaw.mustard ) {
 		this.$table.trigger( events.refresh, [ this ] );
 	};
 
+	Table.prototype._getToolbarAnchor = function() {
+		var $parent = this.$table.parent();
+		if( $parent.is( ".tablesaw-overflow" ) ) {
+			return $parent;
+		}
+		return this.$table;
+	};
+
+	Table.prototype._getToolbar = function( $anchor ) {
+		if( !$anchor ) {
+			$anchor = this._getToolbarAnchor();
+		}
+		return $anchor.prev().filter( "." + classes.toolbar );
+	};
+
 	Table.prototype.createToolbar = function() {
 		// Insert the toolbar
 		// TODO move this into a separate component
-		var $toolbar = this.$table.prev().filter( '.' + classes.toolbar );
+		var $anchor = this._getToolbarAnchor();
+		var $toolbar = this._getToolbar( $anchor );
 		if( !$toolbar.length ) {
 			$toolbar = $( '<div>' )
 				.addClass( classes.toolbar )
-				.insertBefore( this.$table );
+				.insertBefore( $anchor );
 		}
 		this.$toolbar = $toolbar;
 
@@ -1963,8 +1996,9 @@ if( Tablesaw.mustard ) {
 	};
 
 	Table.prototype.destroy = function() {
-		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
-		this.$table.prev().filter( '.' + classes.toolbar ).each(function() {
+		// Don’t remove the toolbar, just erase the classes on it.
+		// Some of the table features are not yet destroy-friendly.
+		this._getToolbar().each(function() {
 			this.className = this.className.replace( /\btablesaw-mode\-\w*\b/gi, '' );
 		});
 
