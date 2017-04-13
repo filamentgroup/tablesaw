@@ -36,7 +36,7 @@
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: pluginName + "-switch",
-			tableToolbar: 'tablesaw-toolbar',
+			tableToolbar: 'tablesaw-bar-section',
 			sortButton: pluginName + "-btn"
 		},
 		methods = {
@@ -54,9 +54,10 @@
 				});
 			},
 			_init: function(){
-				var el = $( this ),
-					heads,
-					$switcher;
+				var el = $( this );
+				var tblsaw = el.data( "tablesaw" );
+				var heads;
+				var $switcher;
 
 				function addClassToHeads( h ){
 					$.each( h , function( i , v ){
@@ -153,13 +154,11 @@
 
 					$switcher.html( html.join('') );
 
-					var $toolbar = el.prev().filter( '.tablesaw-bar' ),
-						$firstChild = $toolbar.children().eq( 0 );
-
+					var $firstChild = tblsaw.$toolbar.children().eq( 0 );
 					if( $firstChild.length ) {
 						$switcher.insertBefore( $firstChild );
 					} else {
-						$switcher.appendTo( $toolbar );
+						$switcher.appendTo( tblsaw.$toolbar );
 					}
 					$switcher.find( '.tablesaw-btn' ).tablesawbtn();
 					$switcher.find( 'select' ).on( 'change', function() {

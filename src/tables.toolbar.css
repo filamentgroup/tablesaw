@@ -206,10 +206,10 @@ a.tablesaw-btn {
 .tablesaw-bar {
 	clear: both;
 }
-.tablesaw-toolbar {
+.tablesaw-bar-section {
 	float: left;
 }
-.tablesaw-toolbar label {
+.tablesaw-bar-section label {
 	font-size: .875em;
 	padding: .5em 0;
 	clear: both;
@@ -228,7 +228,7 @@ a.tablesaw-btn {
 	margin-bottom: 0;
 }
 /* TODO */
-.tablesaw-bar .tablesaw-toolbar .tablesaw-btn {
+.tablesaw-bar .tablesaw-bar-section .tablesaw-btn {
 	margin-left: .4em;
 	margin-top: 0;
 	text-transform:uppercase;
@@ -238,21 +238,21 @@ a.tablesaw-btn {
 	font-size: 1em;
 	padding-left: .3em;
 }
-.tablesaw-bar .tablesaw-toolbar .btn-select {
+.tablesaw-bar .tablesaw-bar-section .btn-select {
 	min-width: 0;
 }
-.tablesaw-bar .tablesaw-toolbar .btn-select:after {
+.tablesaw-bar .tablesaw-bar-section .btn-select:after {
 	padding-top: .9em;
 }
-.tablesaw-bar .tablesaw-toolbar select {
+.tablesaw-bar .tablesaw-bar-section select {
 	color: #888;
 	text-transform: none;
 	background: transparent;
 }
-.tablesaw-toolbar ~ table {
+.tablesaw-bar-section ~ table {
 	clear: both;
 }
-.tablesaw-toolbar .a11y-sm {
+.tablesaw-bar-section .a11y-sm {
 	clip: rect(0 0 0 0);
 	height: 1px;
 	overflow: hidden;
@@ -260,7 +260,7 @@ a.tablesaw-btn {
 	width: 1px;
 }
 @media (min-width: 24em) {
-	.tablesaw-toolbar .a11y-sm {
+	.tablesaw-bar-section .a11y-sm {
 		clip: none;
 		height: auto;
 		width: auto;

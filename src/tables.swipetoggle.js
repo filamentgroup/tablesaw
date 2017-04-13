@@ -8,8 +8,6 @@
 (function(){
 
 	var classes = {
-		// TODO duplicate class, also in tables.js
-		toolbar: "tablesaw-bar",
 		hideBtn: "disabled",
 		persistWidths: "tablesaw-fix-persist",
 		allColumnsVisible: 'tablesaw-all-cols-visible'
@@ -19,6 +17,8 @@
 	};
 
 	function createSwipeTable( tbl, $table ){
+		var tblsaw = $table.data( "tablesaw" );
+
 		var $btns = $( "<div class='tablesaw-advance'></div>" );
 		// TODO next major version: remove .btn
 		var $prevBtn = $( "<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left' title='Previous Column'></a>" ).appendTo( $btns );
@@ -43,7 +43,7 @@
 			headerWidths.push( width );
 		});
 
-		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
+		$btns.appendTo( tblsaw.$toolbar );
 
 		if( !tableId ) {
 			tableId = 'tableswipe-' + Math.round( Math.random() * 10000 );
@@ -287,7 +287,7 @@
 				$prevBtn[ canGoPrev ? "removeClass" : "addClass" ]( classes.hideBtn );
 				$nextBtn[ canGoNext ? "removeClass" : "addClass" ]( classes.hideBtn );
 
-				$prevBtn.closest( "." + classes.toolbar )[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
+				tblsaw.$toolbar[ !canGoPrev && !canGoNext ? 'addClass' : 'removeClass' ]( classes.allColumnsVisible );
 			})
 			.on( "tablesawnext.swipetoggle", function(){
 				advance( true );
@@ -299,7 +299,7 @@
 				var $t = $( this );
 
 				$t.removeClass( 'tablesaw-swipe' );
-				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
+				tblsaw.$toolbar.find( '.tablesaw-advance' ).remove();
 				$( win ).off( Tablesaw.events.resize, fakeBreakpoints );
 
 				$t.off( ".swipetoggle" );

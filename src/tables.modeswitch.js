@@ -16,15 +16,15 @@
 		},
 		classes: {
 			main: 'tablesaw-modeswitch',
-			toolbar: 'tablesaw-toolbar'
+			toolbar: 'tablesaw-bar-section'
 		},
 		modes: [ 'stack', 'swipe', 'columntoggle' ],
 		init: function( table ) {
-			var $table = $( table ),
-				ignoreMode = $table.attr( S.attributes.excludeMode ),
-				$toolbar = $table.prev().filter( '.tablesaw-bar' ),
-				modeVal = '',
-				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar );
+			var $table = $( table );
+			var tblsaw = $table.data( "tablesaw" );
+			var ignoreMode = $table.attr( S.attributes.excludeMode );
+			var $toolbar = tblsaw.$toolbar;
+			var $switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar );
 
 			var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
 				dataMode = $table.attr( 'data-tablesaw-mode' ),
@@ -38,10 +38,6 @@
 				}
 
 				isSelected = dataMode === S.modes[ j ];
-
-				if( isSelected ) {
-					modeVal = S.modes[ j ];
-				}
 
 				html.push( '<option' +
 					( isSelected ? ' selected' : '' ) +
@@ -59,16 +55,17 @@
 			}
 
 			$switcher.find( '.tablesaw-btn' ).tablesawbtn();
-			$switcher.find( 'select' ).on( 'change', S.onModeChange );
+			$switcher.find( 'select' ).on( 'change', function( event ) {
+				return S.onModeChange.call( table, event, $( this ).val() );
+			});
 		},
-		onModeChange: function() {
-			var $t = $( this ),
-				$switcher = $t.closest( '.' + S.classes.main ),
-				$table = $t.closest( '.tablesaw-bar' ).next().eq( 0 ),
-				val = $t.val();
+		onModeChange: function( event, val ) {
+			var $table = $( this );
+			var tblsaw = $table.data( "tablesaw" );
+			var $switcher = tblsaw.$toolbar.find( '.' + S.classes.main );
 
 			$switcher.remove();
-			$table.data( 'tablesaw' ).destroy();
+			tblsaw.destroy();
 
 			$table.attr( 'data-tablesaw-mode', val );
 			$table.tablesaw();

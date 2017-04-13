@@ -15,17 +15,18 @@
 
 	function createMiniMap( $table ){
 
-		var $btns = $( '<div class="tablesaw-advance minimap">' ),
-			$dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns ),
-			hideDot = 'tablesaw-advance-dots-hide',
-			$headerCells = $table.find( 'thead th' );
+		var tblsaw = $table.data( "tablesaw" );
+		var $btns = $( '<div class="tablesaw-advance minimap">' );
+		var $dotNav = $( '<ul class="tablesaw-advance-dots">' ).appendTo( $btns );
+		var hideDot = 'tablesaw-advance-dots-hide';
+		var $headerCells = $table.find( 'thead th' );
 
 		// populate dots
 		$headerCells.each(function(){
 			$dotNav.append( '<li><i></i></li>' );
 		});
 
-		$btns.appendTo( $table.prev().filter( '.tablesaw-bar' ) );
+		$btns.appendTo( tblsaw.$toolbar );
 
 		function showMinimap( $table ) {
 			var mq = $table.attr( MiniMap.attr.init );
@@ -60,7 +61,7 @@
 			.on( Tablesaw.events.destroy + ".minimap", function(){
 				var $t = $( this );
 
-				$t.prev().filter( '.tablesaw-bar' ).find( '.tablesaw-advance' ).remove();
+				tblsaw.$toolbar.find( '.tablesaw-advance' ).remove();
 				$( win ).off( Tablesaw.events.resize, showHideNav );
 
 				$t.off( ".minimap" );

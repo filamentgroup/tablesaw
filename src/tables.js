@@ -57,6 +57,8 @@ if( Tablesaw.mustard ) {
 
 		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
 
+		this.$toolbar = null;
+
 		this.init();
 	};
 
@@ -225,14 +227,30 @@ if( Tablesaw.mustard ) {
 		this.$table.trigger( events.refresh, [ this ] );
 	};
 
+	Table.prototype._getToolbarAnchor = function() {
+		var $parent = this.$table.parent();
+		if( $parent.is( ".tablesaw-overflow" ) ) {
+			return $parent;
+		}
+		return this.$table;
+	};
+
+	Table.prototype._getToolbar = function( $anchor ) {
+		if( !$anchor ) {
+			$anchor = this._getToolbarAnchor();
+		}
+		return $anchor.prev().filter( "." + classes.toolbar );
+	};
+
 	Table.prototype.createToolbar = function() {
 		// Insert the toolbar
 		// TODO move this into a separate component
-		var $toolbar = this.$table.prev().filter( '.' + classes.toolbar );
+		var $anchor = this._getToolbarAnchor();
+		var $toolbar = this._getToolbar( $anchor );
 		if( !$toolbar.length ) {
 			$toolbar = $( '<div>' )
 				.addClass( classes.toolbar )
-				.insertBefore( this.$table );
+				.insertBefore( $anchor );
 		}
 		this.$toolbar = $toolbar;
 
@@ -242,8 +260,9 @@ if( Tablesaw.mustard ) {
 	};
 
 	Table.prototype.destroy = function() {
-		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
-		this.$table.prev().filter( '.' + classes.toolbar ).each(function() {
+		// Don’t remove the toolbar, just erase the classes on it.
+		// Some of the table features are not yet destroy-friendly.
+		this._getToolbar().each(function() {
 			this.className = this.className.replace( /\btablesaw-mode\-\w*\b/gi, '' );
 		});
 

@@ -32,9 +32,7 @@
 			columnBtnContain: 'tablesaw-columntoggle-btnwrap tablesaw-advance',
 			columnBtn: 'tablesaw-columntoggle-btn tablesaw-nav-btn down',
 			popup: 'tablesaw-columntoggle-popup',
-			priorityPrefix: 'tablesaw-priority-',
-			// TODO duplicate class, also in tables.js
-			toolbar: 'tablesaw-bar'
+			priorityPrefix: 'tablesaw-priority-'
 		};
 
 		this.$headers = this.tablesaw._getPrimaryHeaderCells();
@@ -114,8 +112,9 @@
 
 		$menuButton.appendTo( $btnContain );
 
+		// Use a different target than the toolbar
 		var $btnTarget = $( this.$table.attr( this.attributes.btnTarget ) );
-		$btnContain.appendTo( $btnTarget.length ? $btnTarget : this.$table.prev().filter( '.' + this.classes.toolbar ) );
+		$btnContain.appendTo( $btnTarget.length ? $btnTarget : this.tablesaw.$toolbar );
 
 		function closePopup( event ) {
 			// Click came from inside the popup, ignore.
