@@ -2,7 +2,6 @@
  Styles for the table columntoggle mode
 */
 
-/* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
 .tablesaw-overflow {
 	position: relative;
 	width: 100%;
