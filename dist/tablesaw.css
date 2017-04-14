@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.15 - 2017-04-12
+/*! Tablesaw - v3.0.1-beta.16 - 2017-04-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 
@@ -13,11 +13,6 @@
 
 .tablesaw * {
   box-sizing: border-box;
-}
-
-.tablesaw th,
-.tablesaw td {
-  padding: .5em .7em;
 }
 
 .tablesaw-btn {
@@ -234,11 +229,15 @@ a.tablesaw-btn {
   clear: both;
 }
 
-.tablesaw-toolbar {
+.tablesaw-bar * {
+  box-sizing: border-box;
+}
+
+.tablesaw-bar-section {
   float: left;
 }
 
-.tablesaw-toolbar label {
+.tablesaw-bar-section label {
   font-size: .875em;
   padding: .5em 0;
   clear: both;
@@ -261,7 +260,7 @@ a.tablesaw-btn {
 
 /* TODO */
 
-.tablesaw-bar .tablesaw-toolbar .tablesaw-btn {
+.tablesaw-bar .tablesaw-bar-section .tablesaw-btn {
   margin-left: .4em;
   margin-top: 0;
   text-transform: uppercase;
@@ -272,25 +271,25 @@ a.tablesaw-btn {
   padding-left: .3em;
 }
 
-.tablesaw-bar .tablesaw-toolbar .btn-select {
+.tablesaw-bar .tablesaw-bar-section .btn-select {
   min-width: 0;
 }
 
-.tablesaw-bar .tablesaw-toolbar .btn-select:after {
+.tablesaw-bar .tablesaw-bar-section .btn-select:after {
   padding-top: .9em;
 }
 
-.tablesaw-bar .tablesaw-toolbar select {
+.tablesaw-bar .tablesaw-bar-section select {
   color: #888;
   text-transform: none;
   background: transparent;
 }
 
-.tablesaw-toolbar ~ table {
+.tablesaw-bar-section ~ table {
   clear: both;
 }
 
-.tablesaw-toolbar .a11y-sm {
+.tablesaw-bar-section .a11y-sm {
   clip: rect(0 0 0 0);
   height: 1px;
   overflow: hidden;
@@ -299,7 +298,7 @@ a.tablesaw-btn {
 }
 
 @media (min-width: 24em) {
-  .tablesaw-toolbar .a11y-sm {
+  .tablesaw-bar-section .a11y-sm {
     clip: none;
     height: auto;
     width: auto;
@@ -308,8 +307,24 @@ a.tablesaw-btn {
   }
 }
 
+.tablesaw-overflow {
+  background: -webkit-linear-gradient(0deg, white 30%, rgba(255,255,255,0)) 0 0, -webkit-linear-gradient(0deg, rgba(255,255,255,0), white 70%) top right, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top 0 right -6px;
+  background: linear-gradient(90deg, white 30%, rgba(255,255,255,0)) 0 0,
+		linear-gradient(90deg, rgba(255,255,255,0), white 70%) top right,
+
+		
+		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
+		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top 0 right -6px;
+  background-repeat: no-repeat;
+  background-color: white;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  /* Opera doesn't support this in the shorthand */
+  background-attachment: local, local, scroll, scroll;
+}
+
 .tablesaw th,
 .tablesaw td {
+  padding: .5em .7em;
   text-align: left;
   vertical-align: middle;
 }
@@ -483,6 +498,22 @@ a.tablesaw-btn {
   .tablesaw-swipe td.tablesaw-cell-hidden {
     display: none;
   }
+}
+
+/* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
+
+.tablesaw-overflow {
+  position: relative;
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* More in skin.css */
+}
+
+.tablesaw-overflow > .tablesaw {
+  margin-top: 2px;
+  /* sortable focus rings are clipped */
 }
 
 /* Used for a11y text on button: "Columns" */
