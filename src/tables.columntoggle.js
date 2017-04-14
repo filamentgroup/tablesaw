@@ -52,7 +52,9 @@
 			$popup,
 			$menu,
 			$btnContain,
-			self = this;
+			self = this,
+			initiallyHidden = [],
+			initiallyShown = [];
 
 		var cfg = this.tablesaw.getConfig({
 			getColumnToggleLabelTemplate: function( text ) {
@@ -75,7 +77,19 @@
 		this.$headers.each( function() {
 			var $this = $( this ),
 				priority = $this.attr("data-tablesaw-priority"),
+				hidden = $this.data("tablesaw-hidden"),
 				$cells = self.$getCells( this );
+			if (hidden === undefined) {
+				// This secondary attribute check is only necessary when using shoestring, not jQuery.
+				hidden = $this.attr("data-tablesaw-hidden");
+				if (hidden !== undefined) {
+					if (hidden === "true") {
+						hidden = true;
+					} else if (hidden === "false") {
+						hidden = false;
+					}
+				}
+			}
 
 			if( priority && priority !== "persist" ) {
 				$cells.addClass( self.classes.priorityPrefix + priority );
@@ -86,6 +100,11 @@
 					.data( "tablesaw-header", this );
 
 				hasNonPersistentHeaders = true;
+				if (hidden === true) {
+					initiallyHidden.push(this);
+				} else if (hidden === false) {
+					initiallyShown.push(this);
+				}
 			}
 		});
 
@@ -174,6 +193,17 @@
 			self.refreshToggle();
 		});
 
+
+		$(initiallyHidden).each( function ( idx, th ) {
+			self.$getCells( th )
+				.addClass( "tablesaw-cell-hidden" )
+				.removeClass( "tablesaw-cell-visible" );
+		});
+		$(initiallyShown).each( function ( idx, th ) {
+			self.$getCells( th )
+				.removeClass( "tablesaw-cell-hidden" )
+				.addClass( "tablesaw-cell-visible" );
+		});
 		this.refreshToggle();
 	};
 

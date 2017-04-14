@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tablesaw Test Suite</title>
+  <link rel="stylesheet" href="../dist/dependencies/qunit.css">
+  <link rel="stylesheet" href="../dist/tablesaw.css">
+
+  <script src="../dist/dependencies/jquery.js"></script>
+  <script src="../dist/dependencies/qunit.js"></script>
+  <!-- The shoestring-based tests assume that jquery has been reassigned
+       to window.$jQ, doing something similar here to ensure that the
+       same tests can be used in both instances. -->
+  <script>
+    window.$jQ = $;
+  </script>
+
+  <script src="../dist/tablesaw.jquery.js"></script>
+  <script src="tablesaw_test.js"></script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+</body>
+</html>
