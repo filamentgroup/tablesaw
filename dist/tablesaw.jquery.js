@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.16 - 2017-04-13
+/*! Tablesaw - v3.0.1-beta.16 - 2017-04-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -695,6 +695,22 @@ if( Tablesaw.mustard ) {
 		$popup.appendTo( $btnContain );
 
 		this.$menu = $menu;
+
+		// Fix for iOS not rendering shadows correctly when using `-webkit-overflow-scrolling`
+		var $overflow = this.$table.closest( ".tablesaw-overflow" );
+		if( $overflow.css( "-webkit-overflow-scrolling" ) ) {
+			var timeout;
+			$overflow.on( "scroll", function() {
+				var $div = $( this );
+				window.clearTimeout( timeout );
+				timeout = window.setTimeout(function() {
+					$div.css( "-webkit-overflow-scrolling", "auto" );
+					window.setTimeout(function() {
+						$div.css( "-webkit-overflow-scrolling", "touch" );
+					}, 0 );
+				}, 100 );
+			});
+		}
 
 		$(window).on( Tablesaw.events.resize + "." + tableId, function(){
 			self.refreshToggle();
