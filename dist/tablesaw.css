@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.17 - 2017-04-14
+/*! Tablesaw - v3.0.1-beta.18 - 2017-04-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 
@@ -305,25 +305,6 @@ a.tablesaw-btn {
     position: static;
     overflow: visible;
   }
-}
-
-.tablesaw-overflow {
-  /* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
-  background: -webkit-linear-gradient(left, white 30%, rgba(255,255,255,0)) 0 0, -webkit-linear-gradient(left, rgba(255,255,255,0), white 70%) top right, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0, -webkit-radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
-  background: linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
-		linear-gradient(to right, rgba(255,255,255,0), white 70%) top right,
-
-		
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
-  background-repeat: no-repeat;
-  background-color: white;
-  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-  /* Note: Android Browser does not support `local` */
-  /* Note: Opera doesn't support this shorthand */
-  background-attachment: local, local, scroll, scroll;
-  /* Note: Chrome on Android only supports `background-attachment: local` when used with `border-radius` */
-  border-radius: .1px;
 }
 
 .tablesaw th,
