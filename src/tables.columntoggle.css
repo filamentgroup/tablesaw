@@ -4,11 +4,15 @@
 
 /* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
 .tablesaw-overflow {
+	position: relative;
 	width: 100%;
+	overflow-y: hidden;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
-
 	/* More in skin.css */
+}
+.tablesaw-overflow > .tablesaw {
+	margin-top: 2px; /* sortable focus rings are clipped */
 }
 
 /* Used for a11y text on button: "Columns" */
