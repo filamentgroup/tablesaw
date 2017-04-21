@@ -20,8 +20,15 @@
     vertical-align: top;
   }
   .tablesaw-cell-content {
-    max-width: 67%;
     display: inline-block;
+    max-width: 67%;
+  }
+  .tablesaw-stack .tablesaw-stack-block .tablesaw-cell-label,
+  .tablesaw-stack .tablesaw-stack-block .tablesaw-cell-content {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
   .tablesaw-stack td:empty,
   .tablesaw-stack th:empty {

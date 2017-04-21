@@ -26,10 +26,9 @@
 	/* Make the label elements a percentage width */
 	.tablesaw-stack td .tablesaw-cell-label,
 	.tablesaw-stack th .tablesaw-cell-label {
-		display: block;
+		display: inline-block;
 		padding: 0 .6em 0 0;
 		width: 30%;
-		display: inline-block;
 	}
 	/* For grouped headers, have a different style to visually separate the levels by classing the first label in each col group */
 	.tablesaw-stack th .tablesaw-cell-label-top,
