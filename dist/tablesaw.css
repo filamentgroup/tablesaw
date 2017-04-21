@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.18 - 2017-04-14
+/*! Tablesaw - v3.0.1-beta.19 - 2017-04-21
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 
@@ -378,10 +378,9 @@ a.tablesaw-btn {
 
   .tablesaw-stack td .tablesaw-cell-label,
   .tablesaw-stack th .tablesaw-cell-label {
-    display: block;
+    display: inline-block;
     padding: 0 .6em 0 0;
     width: 30%;
-    display: inline-block;
   }
 
   /* For grouped headers, have a different style to visually separate the levels by classing the first label in each col group */
@@ -437,8 +436,16 @@ a.tablesaw-btn {
   }
 
   .tablesaw-cell-content {
-    max-width: 67%;
     display: inline-block;
+    max-width: 67%;
+  }
+
+  .tablesaw-stack .tablesaw-stack-block .tablesaw-cell-label,
+  .tablesaw-stack .tablesaw-stack-block .tablesaw-cell-content {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
 
   .tablesaw-stack td:empty,
