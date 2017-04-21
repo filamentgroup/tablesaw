@@ -25,6 +25,7 @@
 			subrow: "data-tablesaw-subrow",
 			ignorerow: "data-tablesaw-ignorerow",
 			btnTarget: 'data-tablesaw-columntoggle-btn-target',
+			set: 'data-tablesaw-columntoggle-set'
 		};
 
 		this.classes = {
@@ -35,9 +36,22 @@
 			priorityPrefix: 'tablesaw-priority-'
 		};
 
+		this.set = [];
 		this.$headers = this.tablesaw._getPrimaryHeaderCells();
 
 		this.$table.data( data.key, this );
+	};
+
+	// Column Toggle Sets (one column chooser can control multiple tables)
+	ColumnToggle.prototype.initSet = function() {
+		var set = this.$table.attr( this.attributes.set );
+		if( set ) {
+			// Should not include the current table
+			var table = this.$table[ 0 ];
+			this.set = $( "table[" + this.attributes.set + "='" + set + "']" ).filter(function() {
+				return this !== table;
+			}).get();
+		}
 	};
 
 	ColumnToggle.prototype.init = function() {
@@ -68,8 +82,10 @@
 		// TODO next major version: remove .btn
 		$menuButton = $( "<a href='#" + id + "' class='btn tablesaw-btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
 										"<span>" + Tablesaw.i18n.columnBtnText + "</span></a>" );
-		$popup = $( "<div class='dialog-table-coltoggle " + this.classes.popup + "' id='" + id + "'></div>" );
+		$popup = $( "<div class='" + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
+
+		this.$popup = $popup;
 
 		var hasNonPersistentHeaders = false;
 		this.$headers.each( function() {
@@ -95,11 +111,10 @@
 
 		$menu.appendTo( $popup );
 
-		// bind change event listeners to inputs - TODO: move to a private method?
-		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
-			var checked = e.target.checked;
+		function onToggleCheckboxChange( checkbox ) {
+			var checked = checkbox.checked;
 
-			var header = self.getHeaderFromCheckbox( e.target );
+			var header = self.getHeaderFromCheckbox( checkbox );
 			var $cells = self.$getCells( header );
 
 			$cells[ !checked ? "addClass" : "removeClass" ]( "tablesaw-cell-hidden" );
@@ -108,6 +123,29 @@
 			self.updateColspanIgnoredRows( checked, $( header ).add( header.cells ) );
 
 			self.$table.trigger( 'tablesawcolumns' );
+		}
+
+		// bind change event listeners to inputs - TODO: move to a private method?
+		$menu.find( 'input[type="checkbox"]' ).on( "change", function(e) {
+			onToggleCheckboxChange( e.target );
+
+			if( self.set.length ) {
+				var index;
+				$( self.$popup ).find( "input[type='checkbox']" ).each(function( j ) {
+					if( this === e.target ) {
+						index = j;
+						return false;
+					}
+				});
+
+				$( self.set ).each(function() {
+					var checkbox = $( this ).data( data.key ).$popup.find( "input[type='checkbox']" ).get( index );
+					if( checkbox ) {
+						checkbox.checked = e.target.checked;
+						onToggleCheckboxChange( checkbox );
+					}
+				});
+			}
 		});
 
 		$menuButton.appendTo( $btnContain );
@@ -174,6 +212,7 @@
 			self.refreshToggle();
 		});
 
+		this.initSet();
 		this.refreshToggle();
 	};
 
