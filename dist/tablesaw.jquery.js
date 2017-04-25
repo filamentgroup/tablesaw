@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1-beta.19 - 2017-04-21
+/*! Tablesaw - v3.0.1-beta.20 - 2017-04-25
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
