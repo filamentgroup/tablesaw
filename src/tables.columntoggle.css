@@ -6,7 +6,6 @@
 	position: relative;
 	width: 100%;
 	overflow-y: hidden;
-	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	/* More in skin.css */
 }
