@@ -355,3 +355,14 @@ Other legacy browsers and Opera Mini receive unenhanced table markup.
 
 Run `npm install` to install dependencies and then `grunt` to build the project files into the `dist` folder.
 
+## Release Names
+
+* [3.0.1: Cypress](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.1)
+* [3.0.0: Rosewood](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.0)
+* [2.0.1: Mountain Hemlock](https://github.com/filamentgroup/tablesaw/releases/tag/v2.0.1)
+* [2.0.0: Hemlock](https://github.com/filamentgroup/tablesaw/releases/tag/v2.0.0)
+* [1.0.5: Hickory](https://github.com/filamentgroup/tablesaw/releases/tag/v1.0.5)
+* [1.0.4: Ironwood](https://github.com/filamentgroup/tablesaw/releases/tag/v1.0.4)
+* [1.0.3: Red Mahogany](https://github.com/filamentgroup/tablesaw/releases/tag/v1.0.3)
+
+_Previous versions didn’t have names._
