@@ -274,6 +274,8 @@ if( Tablesaw.mustard ) {
 		this.$table.trigger( events.destroy, [ this ] );
 
 		this.$table.removeData( pluginName );
+		this.$table.removeData( pluginName + '-init');
+		this.$table.removeData( pluginName + '-active');
 	};
 
 	// Collection method.
