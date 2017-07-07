@@ -20,7 +20,15 @@
     "node": ">= 4"
   },
   "scripts": {
-    "test": "./node_modules/.bin/grunt travis"
+    "test": "./node_modules/.bin/grunt travis",
+    "precommit": "lint-staged",
+    "prepush": "grunt qunit"
+  },
+  "lint-staged": {
+    "src/*.js": [
+      "prettier --write --print-width 100 --use-tabs",
+      "git add"
+    ]
   },
   "main": "dist/tablesaw.js",
   "dependencies": {
@@ -40,9 +48,12 @@
     "grunt-contrib-watch": "~1.0.0",
     "grunt-gh-pages": "~2.0.0",
     "grunt-myth": "~1.1.0",
+    "husky": "^0.14.3",
+    "jquery": "^3.1.0",
+    "lint-staged": "^4.0.1",
     "matchdep": "~1.0.1",
-    "qunitjs": "^2.0.0",
-    "jquery": "^3.1.0"
+    "prettier": "^1.5.2",
+    "qunitjs": "^2.0.0"
   },
   "optionalDependencies": {
     "javascript-natural-sort": "^0.7.1"
