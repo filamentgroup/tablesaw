@@ -7,17 +7,31 @@
 
 var Tablesaw = {
 	i18n: {
-		modes: [ 'Stack', 'Swipe', 'Toggle' ],
-		columns: 'Col<span class=\"a11y-sm\">umn</span>s',
-		columnBtnText: 'Columns',
-		columnsDialogError: 'No eligible columns.',
-		sort: 'Sort'
+		modeStack: 'Stack',
+		modeSwipe: 'Swipe',
+		modeToggle: 'Toggle',
+		modeSwitchColumnsAbbreviated: 'Cols',
+		modeSwitchColumns: 'Columns',
+		columnToggleButton: 'Columns',
+		columnToggleError: 'No eligible columns.',
+		sort: 'Sort',
+		swipePreviousColumn: 'Previous column',
+		swipeNextColumn: 'Next column'
 	},
 	// cut the mustard
 	mustard: ( 'head' in document ) && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
 		( !window.blackberry || window.WebKitPoint ) && // only WebKit Blackberry (OS 6+)
 		!window.operamini
 };
+
+$( win.document ).on( "enhance.tablesaw", function( e ) {
+	// Extend i18n config, if one exists.
+	if( typeof TablesawConfig !== "undefined" && TablesawConfig.i18n ) {
+		Tablesaw.i18n = $.extend( Tablesaw.i18n, TablesawConfig.i18n || {} );
+	}
+
+	Tablesaw.i18n.modes = [ Tablesaw.i18n.modeStack, Tablesaw.i18n.modeSwipe, Tablesaw.i18n.modeToggle ];
+});
 
 if( Tablesaw.mustard ) {
 	$( document.documentElement ).addClass( 'tablesaw-enhanced' );

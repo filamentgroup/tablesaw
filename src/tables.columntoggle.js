@@ -81,7 +81,7 @@
 		$btnContain = $( "<div class='" + this.classes.columnBtnContain + "'></div>" );
 		// TODO next major version: remove .btn
 		$menuButton = $( "<a href='#" + id + "' class='btn tablesaw-btn btn-micro " + this.classes.columnBtn +"' data-popup-link>" +
-										"<span>" + Tablesaw.i18n.columnBtnText + "</span></a>" );
+										"<span>" + Tablesaw.i18n.columnToggleButton + "</span></a>" );
 		$popup = $( "<div class='" + this.classes.popup + "' id='" + id + "'></div>" );
 		$menu = $( "<div class='btn-group'></div>" );
 
@@ -106,7 +106,7 @@
 		});
 
 		if( !hasNonPersistentHeaders ) {
-			$menu.append( '<label>' + Tablesaw.i18n.columnsDialogError + '</label>' );
+			$menu.append( '<label>' + Tablesaw.i18n.columnToggleError + '</label>' );
 		}
 
 		$menu.appendTo( $popup );

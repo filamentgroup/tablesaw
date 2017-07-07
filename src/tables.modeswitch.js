@@ -26,7 +26,7 @@
 			var $toolbar = tblsaw.$toolbar;
 			var $switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar );
 
-			var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
+			var html = [ '<label><span class="abbreviated">' + Tablesaw.i18n.modeSwitchColumnsAbbreviated + '</span><span class="longform">' + Tablesaw.i18n.modeSwitchColumns + '</span>:' ],
 				dataMode = $table.attr( 'data-tablesaw-mode' ),
 				isSelected;
 

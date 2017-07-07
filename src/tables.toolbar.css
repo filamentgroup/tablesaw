@@ -257,19 +257,17 @@ a.tablesaw-btn {
 .tablesaw-bar-section ~ table {
 	clear: both;
 }
-.tablesaw-bar-section .a11y-sm {
-	clip: rect(0 0 0 0);
-	height: 1px;
-	overflow: hidden;
-	position: absolute;
-	width: 1px;
+.tablesaw-bar-section .abbreviated {
+	display: inline;
+}
+.tablesaw-bar-section .longform {
+	display: none;
 }
 @media (min-width: 24em) {
-	.tablesaw-bar-section .a11y-sm {
-		clip: none;
-		height: auto;
-		width: auto;
-		position: static;
-		overflow: visible;
+	.tablesaw-bar-section .abbreviated {
+		display: none;
+	}
+	.tablesaw-bar-section .longform {
+		display: inline;
 	}
 }

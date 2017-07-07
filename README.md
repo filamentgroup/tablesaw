@@ -17,6 +17,7 @@ A set of plugins for responsive tables.
 * [Sortable](#sortable)
 * [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
 * [Check All](#check-all)
+* [Internationalization i18n](#internationalization-i18n)
 * [Limitations](#limitations)
 * [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
 * [Browser Support](#browser-support)
@@ -206,9 +207,32 @@ All of the above options combined into a single table.
 
 ## Check All
 
-Added in 3.0.1. Add the `data-tablesaw-checkall` to a checkbox in a `thead` cell to enable that checkbox to toggle the other checkboxes in the same column.
+_Added in 3.0.1._  Add the `data-tablesaw-checkall` to a checkbox in a `thead` cell to enable that checkbox to toggle the other checkboxes in the same column.
 
 * [Check All Demo](http://filamentgroup.github.io/tablesaw/demo/checkall.html)
+
+## Internationalization i18n
+
+_Added in 3.0.2._ Use the `TablesawConfig` global on your page to override internationalization strings. It doesn’t matter if it’s declared before or after the Tablesaw JavaScript library.
+
+```js
+<script>
+TablesawConfig = {
+  i18n: {
+    modeStack: 'Stack',
+    modeSwipe: 'Swipe',
+    modeToggle: 'Toggle',
+    modeSwitchColumnsAbbreviated: 'Cols',
+    modeSwitchColumns: 'Columns',
+    columnToggleButton: 'Columns',
+    columnToggleError: 'No eligible columns.',
+    sort: 'Sort',
+    swipePreviousColumn: 'Previous column',
+    swipeNextColumn: 'Next column'
+  }
+};
+</script>
+```
 
 ## Getting Started
 
