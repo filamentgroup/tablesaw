@@ -24,7 +24,7 @@ var Tablesaw = {
 		!window.operamini
 };
 
-$( win.document ).on( "enhance.tablesaw", function( e ) {
+$( win.document ).on( "enhance.tablesaw", function() {
 	// Extend i18n config, if one exists.
 	if( typeof TablesawConfig !== "undefined" && TablesawConfig.i18n ) {
 		Tablesaw.i18n = $.extend( Tablesaw.i18n, TablesawConfig.i18n || {} );
