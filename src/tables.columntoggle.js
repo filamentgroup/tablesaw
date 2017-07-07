@@ -316,4 +316,11 @@
 		}
 	} );
 
+	$( document ).on( Tablesaw.events.refresh, function( e, tablesaw ){
+		if( tablesaw.mode === 'columntoggle' ){
+			$( tablesaw.table ).data( data.key ).refreshPriority();
+		}
+	} );
+
+
 }());
