@@ -129,40 +129,11 @@ module.exports = function(grunt) {
 		qunit: {
 			files: ['test/**/*.html']
 		},
-		jshint: {
-			gruntfile: {
-				options: {
-					jshintrc: '.jshintrc'
-				},
-				src: 'Gruntfile.js'
-			},
-			src: {
-				options: {
-					jshintrc: 'src/.jshintrc',
-					ignores: []
-				},
-				src: ['dist/tablesaw-init.js', 'dist/tablesaw.jquery.js']
-			},
-			test: {
-				options: {
-					jshintrc: 'test/.jshintrc'
-				},
-				src: ['test/**/*.js']
-			},
-		},
 		watch: {
-			gruntfile: {
-				files: '<%= jshint.gruntfile.src %>',
-				tasks: ['jshint:gruntfile']
-			},
 			src: {
 				files: ['dist/<%= pkg.name %>.js', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>', '<%= concat.cssall.src %>' ],
 				tasks: ['src']
-			},
-			test: {
-				files: '<%= jshint.test.src %>',
-				tasks: ['jshint:test', 'qunit']
-			},
+			}
 		},
 		uglify: {
 			js: {
@@ -226,13 +197,13 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('travis', ['jshint', 'qunit']);
+	grunt.registerTask('travis', ['qunit']);
 	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsjquery', 'concat:jsstack', 'concat:jsstackjquery', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);
 
-	grunt.registerTask('default', ['src', 'jshint', 'qunit', 'filesize']);
+	grunt.registerTask('default', ['src', 'qunit', 'filesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);

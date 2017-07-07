@@ -2,7 +2,7 @@
   "name": "tablesaw",
   "title": "Tablesaw",
   "description": "A set of plugins for responsive tables.",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "homepage": "https://github.com/filamentgroup/tablesaw",
   "author": {
     "name": "Zach Leatherman",
@@ -42,7 +42,6 @@
     "grunt-contrib-concat": "~1.0.1",
     "grunt-contrib-copy": "~1.0.0",
     "grunt-contrib-cssmin": "^2.2.0",
-    "grunt-contrib-jshint": "~1.1.0",
     "grunt-contrib-qunit": "~2.0.0",
     "grunt-contrib-uglify": "^3.0.1",
     "grunt-contrib-watch": "~1.0.0",
