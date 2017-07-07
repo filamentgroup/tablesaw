@@ -11,8 +11,6 @@
 	color: inherit;
 	background: transparent;
 	border: 0;
-	/* same as cell padding in tables.css */
-	padding: .5em .7em;
 	text-align: inherit;
 	font: inherit;
 	text-transform: inherit;

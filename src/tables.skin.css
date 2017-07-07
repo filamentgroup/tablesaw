@@ -4,6 +4,10 @@
 	text-align: left;
 	vertical-align: middle;
 }
+.tablesaw-sortable-btn {
+	/* same as cell padding above */
+	padding: .5em .7em;
+}
 .tablesaw thead th {
 	text-align: left;
 }
