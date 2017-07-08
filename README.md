@@ -268,7 +268,23 @@ npm install tablesaw
 
 </details>
 
-Don’t forget to add your table markup! For a stack table, this is how it’d look: 
+<details open>
+<summary>or Tablesaw (jQuery ES6 module import)</summary>
+
+```html
+<link rel="stylesheet" href="tablesaw.css">
+```
+
+```javascript
+<!-- load your own jQuery -->
+import tablesaw from 'tablesaw/dist/tablesaw.jquery.js',
+
+tablesaw();
+```
+
+</details>
+
+Don’t forget to add your table markup! For a stack table, this is how it’d look:
 
 ```html
 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
@@ -318,6 +334,20 @@ As shown above, we provide a Stack-mode-only package of Tablesaw. It’s a bareb
 ```
 
 </details>
+
+<details open>
+<summary>or Stack-only Tablesaw (jQuery ES6 module import)</summary>
+
+```html
+<link rel="stylesheet" href="tablesaw.css">
+```
+
+```javascript
+<!-- load your own jQuery -->
+import tablesaw from 'tablesaw/dist/stackonly/tablesaw.stackonly.jquery.js',
+
+tablesaw();
+```
 
 And then:
 
