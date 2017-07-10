@@ -41,9 +41,7 @@
 		var tableId = $table.attr("id");
 
 		if (!$headerCells.length) {
-			throw new Error(
-				"tablesaw swipe: no header cells found. Are you using <th> inside of <thead>?"
-			);
+			throw new Error("tablesaw swipe: no header cells found.");
 		}
 
 		$table.addClass("tablesaw-swipe");
