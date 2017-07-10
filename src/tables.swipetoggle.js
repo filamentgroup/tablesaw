@@ -9,6 +9,8 @@
 	var classes = {
 		hideBtn: "disabled",
 		persistWidths: "tablesaw-fix-persist",
+		hiddenCol: "tablesaw-swipe-cellhidden",
+		persistCol: "tablesaw-swipe-cellpersist",
 		allColumnsVisible: "tablesaw-all-cols-visible"
 	};
 	var attrs = {
@@ -46,6 +48,8 @@
 
 		$table.addClass("tablesaw-swipe");
 
+		$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
+
 		// Calculate initial widths
 		$headerCells.each(function() {
 			var width = this.offsetWidth;
@@ -64,15 +68,15 @@
 		}
 
 		function showColumn(headerCell) {
-			$getCells(headerCell).removeClass("tablesaw-cell-hidden");
+			$getCells(headerCell).removeClass(classes.hiddenCol);
 		}
 
 		function hideColumn(headerCell) {
-			$getCells(headerCell).addClass("tablesaw-cell-hidden");
+			$getCells(headerCell).addClass(classes.hiddenCol);
 		}
 
 		function persistColumn(headerCell) {
-			$getCells(headerCell).addClass("tablesaw-cell-persist");
+			$getCells(headerCell).addClass(classes.persistCol);
 		}
 
 		function isPersistent(headerCell) {
@@ -101,7 +105,9 @@
 						hash.push(index + "-" + width);
 						styles.push(
 							prefix +
-								" .tablesaw-cell-persist:nth-child(" +
+								" ." +
+								classes.persistCol +
+								":nth-child(" +
 								(index + 1) +
 								") { width: " +
 								width +
@@ -134,7 +140,7 @@
 
 			$headerCellsNoPersist.each(function(i) {
 				var $t = $(this),
-					isHidden = $t.css("display") === "none" || $t.is(".tablesaw-cell-hidden");
+					isHidden = $t.css("display") === "none" || $t.is("." + classes.hiddenCol);
 
 				if (!isHidden && !checkFound) {
 					checkFound = true;

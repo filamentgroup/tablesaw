@@ -124,8 +124,8 @@
 			var header = self.getHeaderFromCheckbox(checkbox);
 			var $cells = self.$getCells(header);
 
-			$cells[!checked ? "addClass" : "removeClass"]("tablesaw-cell-hidden");
-			$cells[checked ? "addClass" : "removeClass"]("tablesaw-cell-visible");
+			$cells[!checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellhidden");
+			$cells[checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellvisible");
 
 			self.updateColspanIgnoredRows(checked, $(header).add(header.cells));
 
@@ -306,7 +306,7 @@
 		this.$table.removeClass(this.classes.columnToggleTable);
 		this.$table.find("th, td").each(function() {
 			var $cell = $(this);
-			$cell.removeClass("tablesaw-cell-hidden").removeClass("tablesaw-cell-visible");
+			$cell.removeClass("tablesaw-toggle-cellhidden").removeClass("tablesaw-toggle-cellvisible");
 
 			this.className = this.className.replace(/\bui\-table\-priority\-\d\b/g, "");
 		});
