@@ -14,7 +14,9 @@
 		allColumnsVisible: "tablesaw-all-cols-visible"
 	};
 	var attrs = {
-		disableTouchEvents: "data-tablesaw-no-touch"
+		disableTouchEvents: "data-tablesaw-no-touch",
+		ignorerow: "data-tablesaw-ignorerow",
+		subrow: "data-tablesaw-subrow"
 	};
 
 	function createSwipeTable(tbl, $table) {
@@ -62,7 +64,9 @@
 		}
 
 		function $getCells(headerCell) {
-			return $(headerCell.cells).add(headerCell);
+			return $(headerCell.cells).add(headerCell).filter(function() {
+				return !$(this).parent().is("[" + attrs.ignorerow + "],[" + attrs.subrow + "]");
+			});
 		}
 
 		function showColumn(headerCell) {
@@ -79,6 +83,32 @@
 
 		function isPersistent(headerCell) {
 			return $(headerCell).is('[data-tablesaw-priority="persist"]');
+		}
+
+		function countVisibleColspan() {
+			var count = 0;
+			$headerCells.each(function() {
+				var $t = $(this);
+				if ($t.is("." + classes.hiddenCol)) {
+					return;
+				}
+				count += parseInt($t.attr("colspan") || 1, 10);
+			});
+			return count;
+		}
+
+		function updateColspanOnIgnoredRows(newColspan) {
+			if (!newColspan) {
+				newColspan = countVisibleColspan();
+			}
+			$table
+				.find("[" + attrs.ignorerow + "],[" + attrs.subrow + "]")
+				.find("td[colspan]")
+				.each(function() {
+					var $t = $(this);
+					var colspan = parseInt($t.attr("colspan"), 10);
+					$t.attr("colspan", newColspan);
+				});
 		}
 
 		function unmaintainWidths() {
@@ -198,15 +228,19 @@
 
 			// We need at least one column to swipe.
 			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
+			var visibleColumnCount = 0;
 
 			$headerCells.each(function(index) {
+				var colspan = parseInt($(this).attr("colspan") || 1, 10);
 				if (persist[index]) {
+					visibleColumnCount += colspan;
 					// for visual box-shadow
 					persistColumn(this);
 					return;
 				}
 
 				if (sums[index] <= containerWidth || needsNonPersistentColumn) {
+					visibleColumnCount += colspan;
 					needsNonPersistentColumn = false;
 					showColumn(this);
 				} else {
@@ -214,7 +248,9 @@
 				}
 			});
 
+			updateColspanOnIgnoredRows(visibleColumnCount);
 			unmaintainWidths();
+
 			$table.trigger("tablesawcolumns");
 		}
 
@@ -233,6 +269,7 @@
 
 				hideColumn($headerCellsNoPersist.get(pair[0]));
 				showColumn($headerCellsNoPersist.get(pair[1]));
+				updateColspanOnIgnoredRows();
 
 				$table.trigger("tablesawcolumns");
 			}
