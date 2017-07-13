@@ -4,6 +4,10 @@ body {
 	font: 100%/1.2 sans-serif;
 }
 
+abbr {
+	text-decoration: none;
+}
+
 :link {
 	color: #1593D3;
 }

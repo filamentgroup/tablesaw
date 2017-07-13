@@ -1,25 +1,23 @@
-/*! Tablesaw - v3.0.1 - 2017-06-01
+/*! Tablesaw - v3.0.3 - 2017-07-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
-(function( win ) {
+(function(win) {
 	"use strict";
-
 	var $;
-	if( 'shoestring' in win ) {
+	if ("shoestring" in win) {
 		$ = win.shoestring;
-	} else if( 'jQuery' in win ) {
+	} else if ("jQuery" in win) {
 		$ = win.jQuery;
 	} else {
-		throw new Error( "tablesaw: DOM library not found." );
+		throw new Error("tablesaw: DOM library not found.");
 	}
 
 	// DOM-ready auto-init of plugins.
 	// Many plugins bind to an "enhance" event to init themselves on dom ready, or when new markup is inserted into the DOM
 	// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
-	if( "addEventListener" in document ) {
-		document.addEventListener( "DOMContentLoaded", function() {
-			$( document ).trigger( "enhance.tablesaw" );
+	if ("addEventListener" in document) {
+		document.addEventListener("DOMContentLoaded", function() {
+			$(document).trigger("enhance.tablesaw");
 		});
 	}
-
-})( typeof window !== "undefined" ? window : this );
+})(typeof window !== "undefined" ? window : this);

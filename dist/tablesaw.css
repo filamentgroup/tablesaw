@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.1 - 2017-06-01
+/*! Tablesaw - v3.0.3 - 2017-07-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 
@@ -289,21 +289,21 @@ a.tablesaw-btn {
   clear: both;
 }
 
-.tablesaw-bar-section .a11y-sm {
-  clip: rect(0 0 0 0);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  width: 1px;
+.tablesaw-bar-section .abbreviated {
+  display: inline;
+}
+
+.tablesaw-bar-section .longform {
+  display: none;
 }
 
 @media (min-width: 24em) {
-  .tablesaw-bar-section .a11y-sm {
-    clip: none;
-    height: auto;
-    width: auto;
-    position: static;
-    overflow: visible;
+  .tablesaw-bar-section .abbreviated {
+    display: none;
+  }
+
+  .tablesaw-bar-section .longform {
+    display: inline;
   }
 }
 
@@ -312,6 +312,11 @@ a.tablesaw-btn {
   padding: .5em .7em;
   text-align: left;
   vertical-align: middle;
+}
+
+.tablesaw-sortable-btn {
+  /* same as cell padding above */
+  padding: .5em .7em;
 }
 
 .tablesaw thead th {
@@ -335,15 +340,15 @@ a.tablesaw-btn {
   margin: .59375em 0;
 }
 
-.tablesaw-swipe .tablesaw-cell-persist {
+.tablesaw-swipe .tablesaw-swipe-cellpersist {
   border-right: 2px solid #e4e1de;
 }
 
-.tablesaw-swipe-shadow .tablesaw-cell-persist {
+.tablesaw-swipe-shadow .tablesaw-swipe-cellpersist {
   border-right-width: 1px;
 }
 
-.tablesaw-swipe-shadow .tablesaw-cell-persist {
+.tablesaw-swipe-shadow .tablesaw-swipe-cellpersist {
   box-shadow: 3px 0 4px -1px #e4e1de;
 }
 
@@ -486,8 +491,8 @@ a.tablesaw-btn {
 @media only all {
   /* Unchecked manually: Always hide */
 
-  .tablesaw-swipe th.tablesaw-cell-hidden,
-  .tablesaw-swipe td.tablesaw-cell-hidden {
+  .tablesaw-swipe th.tablesaw-swipe-cellhidden,
+  .tablesaw-swipe td.tablesaw-swipe-cellhidden {
     display: none;
   }
 }
@@ -645,15 +650,15 @@ a.tablesaw-btn {
 @media only all {
   /* Unchecked manually: Always hide */
 
-  .tablesaw-columntoggle th.tablesaw-cell-hidden,
-  .tablesaw-columntoggle td.tablesaw-cell-hidden {
+  .tablesaw-columntoggle th.tablesaw-toggle-cellhidden,
+  .tablesaw-columntoggle td.tablesaw-toggle-cellhidden {
     display: none;
   }
 
   /* Checked manually: Always show */
 
-  .tablesaw-columntoggle th.tablesaw-cell-visible,
-  .tablesaw-columntoggle td.tablesaw-cell-visible {
+  .tablesaw-columntoggle th.tablesaw-toggle-cellvisible,
+  .tablesaw-columntoggle td.tablesaw-toggle-cellvisible {
     display: table-cell;
   }
 }
@@ -685,8 +690,6 @@ a.tablesaw-btn {
   color: inherit;
   background: transparent;
   border: 0;
-  /* same as cell padding in tables.css */
-  padding: .5em .7em;
   text-align: inherit;
   font: inherit;
   text-transform: inherit;
