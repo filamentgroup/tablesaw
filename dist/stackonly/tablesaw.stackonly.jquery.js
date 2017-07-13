@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.2 - 2017-07-07
+/*! Tablesaw - v3.0.3 - 2017-07-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -111,6 +111,14 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype.init = function() {
+		if (!this.$thead.length) {
+			throw new Error("tablesaw: a <thead> is required, but none was found.");
+		}
+
+		if (!this.$thead.find("th").length) {
+			throw new Error("tablesaw: no header cells found. Are you using <th> inside of <thead>?");
+		}
+
 		// assign an id if there is none
 		if (!this.$table.attr("id")) {
 			this.$table.attr("id", pluginName + "-" + Math.round(Math.random() * 10000));

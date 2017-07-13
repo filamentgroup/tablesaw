@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.2 - 2017-07-07
+/*! Tablesaw - v3.0.3 - 2017-07-13
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 
@@ -340,15 +340,15 @@ a.tablesaw-btn {
   margin: .59375em 0;
 }
 
-.tablesaw-swipe .tablesaw-cell-persist {
+.tablesaw-swipe .tablesaw-swipe-cellpersist {
   border-right: 2px solid #e4e1de;
 }
 
-.tablesaw-swipe-shadow .tablesaw-cell-persist {
+.tablesaw-swipe-shadow .tablesaw-swipe-cellpersist {
   border-right-width: 1px;
 }
 
-.tablesaw-swipe-shadow .tablesaw-cell-persist {
+.tablesaw-swipe-shadow .tablesaw-swipe-cellpersist {
   box-shadow: 3px 0 4px -1px #e4e1de;
 }
 
@@ -491,8 +491,8 @@ a.tablesaw-btn {
 @media only all {
   /* Unchecked manually: Always hide */
 
-  .tablesaw-swipe th.tablesaw-cell-hidden,
-  .tablesaw-swipe td.tablesaw-cell-hidden {
+  .tablesaw-swipe th.tablesaw-swipe-cellhidden,
+  .tablesaw-swipe td.tablesaw-swipe-cellhidden {
     display: none;
   }
 }
@@ -650,15 +650,15 @@ a.tablesaw-btn {
 @media only all {
   /* Unchecked manually: Always hide */
 
-  .tablesaw-columntoggle th.tablesaw-cell-hidden,
-  .tablesaw-columntoggle td.tablesaw-cell-hidden {
+  .tablesaw-columntoggle th.tablesaw-toggle-cellhidden,
+  .tablesaw-columntoggle td.tablesaw-toggle-cellhidden {
     display: none;
   }
 
   /* Checked manually: Always show */
 
-  .tablesaw-columntoggle th.tablesaw-cell-visible,
-  .tablesaw-columntoggle td.tablesaw-cell-visible {
+  .tablesaw-columntoggle th.tablesaw-toggle-cellvisible,
+  .tablesaw-columntoggle td.tablesaw-toggle-cellvisible {
     display: table-cell;
   }
 }
