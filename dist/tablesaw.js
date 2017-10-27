@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.3 - 2017-07-13
+/*! Tablesaw - v3.0.4 - 2017-10-27
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -3376,7 +3376,7 @@ if (Tablesaw.mustard) {
 		var $btns = $('<div class="tablesaw-advance minimap">');
 		var $dotNav = $('<ul class="tablesaw-advance-dots">').appendTo($btns);
 		var hideDot = "tablesaw-advance-dots-hide";
-		var $headerCells = $table.find("thead th");
+		var $headerCells = $table.data("tablesaw")._getPrimaryHeaderCells();
 
 		// populate dots
 		$headerCells.each(function() {
