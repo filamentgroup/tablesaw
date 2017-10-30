@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.4 - 2017-10-27
+/*! Tablesaw - v3.0.5 - 2017-10-30
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 // UMD module definition
@@ -1296,15 +1296,15 @@ if (Tablesaw.mustard) {
 		var $btns = $("<div class='tablesaw-advance'></div>");
 		// TODO next major version: remove .btn
 		var $prevBtn = $(
-			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left' title='" +
+			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left'>" +
 				Tablesaw.i18n.swipePreviousColumn +
-				"'></a>"
+				"</a>"
 		).appendTo($btns);
 		// TODO next major version: remove .btn
 		var $nextBtn = $(
-			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro right' title='" +
+			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro right'>" +
 				Tablesaw.i18n.swipeNextColumn +
-				"'></a>"
+				"</a>"
 		).appendTo($btns);
 
 		var $headerCells = tbl._getPrimaryHeaderCells();
