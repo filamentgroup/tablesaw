@@ -47,14 +47,18 @@
 		}
 
 		$table.addClass("tablesaw-swipe");
-
 		$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
 
-		// Calculate initial widths
-		$headerCells.each(function() {
-			var width = this.offsetWidth;
-			headerWidths.push(width);
-		});
+		function initMinHeaderWidths() {
+			headerWidths = [];
+			// Calculate initial widths
+			$headerCells.each(function() {
+				var width = this.offsetWidth;
+				headerWidths.push(width);
+			});
+		}
+
+		initMinHeaderWidths();
 
 		$btns.appendTo(tblsaw.$toolbar);
 
@@ -63,52 +67,20 @@
 			$table.attr("id", tableId);
 		}
 
-		function $getCells(headerCell) {
-			return $(headerCell.cells).add(headerCell).filter(function() {
-				return !$(this).parent().is("[" + attrs.ignorerow + "],[" + attrs.subrow + "]");
-			});
-		}
-
 		function showColumn(headerCell) {
-			$getCells(headerCell).removeClass(classes.hiddenCol);
+			tblsaw._$getCells(headerCell).removeClass(classes.hiddenCol);
 		}
 
 		function hideColumn(headerCell) {
-			$getCells(headerCell).addClass(classes.hiddenCol);
+			tblsaw._$getCells(headerCell).addClass(classes.hiddenCol);
 		}
 
 		function persistColumn(headerCell) {
-			$getCells(headerCell).addClass(classes.persistCol);
+			tblsaw._$getCells(headerCell).addClass(classes.persistCol);
 		}
 
 		function isPersistent(headerCell) {
 			return $(headerCell).is('[data-tablesaw-priority="persist"]');
-		}
-
-		function countVisibleColspan() {
-			var count = 0;
-			$headerCells.each(function() {
-				var $t = $(this);
-				if ($t.is("." + classes.hiddenCol)) {
-					return;
-				}
-				count += parseInt($t.attr("colspan") || 1, 10);
-			});
-			return count;
-		}
-
-		function updateColspanOnIgnoredRows(newColspan) {
-			if (!newColspan) {
-				newColspan = countVisibleColspan();
-			}
-			$table
-				.find("[" + attrs.ignorerow + "],[" + attrs.subrow + "]")
-				.find("td[colspan]")
-				.each(function() {
-					var $t = $(this);
-					var colspan = parseInt($t.attr("colspan"), 10);
-					$t.attr("colspan", newColspan);
-				});
 		}
 
 		function unmaintainWidths() {
@@ -228,27 +200,27 @@
 
 			// We need at least one column to swipe.
 			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
-			var visibleColumnCount = 0;
 
 			$headerCells.each(function(index) {
-				var colspan = parseInt($(this).attr("colspan") || 1, 10);
+				if (sums[index] > containerWidth) {
+					hideColumn(this);
+				}
+			});
+
+			$headerCells.each(function(index) {
 				if (persist[index]) {
-					visibleColumnCount += colspan;
 					// for visual box-shadow
 					persistColumn(this);
 					return;
 				}
 
 				if (sums[index] <= containerWidth || needsNonPersistentColumn) {
-					visibleColumnCount += colspan;
 					needsNonPersistentColumn = false;
 					showColumn(this);
-				} else {
-					hideColumn(this);
+					tblsaw.updateColspanCells(classes.hiddenCol, this, true);
 				}
 			});
 
-			updateColspanOnIgnoredRows(visibleColumnCount);
 			unmaintainWidths();
 
 			$table.trigger("tablesawcolumns");
@@ -266,10 +238,11 @@
 				}
 
 				maintainWidths();
-
 				hideColumn($headerCellsNoPersist.get(pair[0]));
+				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
+
 				showColumn($headerCellsNoPersist.get(pair[1]));
-				updateColspanOnIgnoredRows();
+				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true);
 
 				$table.trigger("tablesawcolumns");
 			}
@@ -364,13 +337,7 @@
 				$t.off(".swipetoggle");
 			})
 			.on(Tablesaw.events.refresh, function() {
-				// manual refresh
-				headerWidths = [];
-				$headerCells.each(function() {
-					var width = this.offsetWidth;
-					headerWidths.push(width);
-				});
-
+				initMinHeaderWidths();
 				fakeBreakpoints();
 			});
 

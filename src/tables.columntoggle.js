@@ -20,8 +20,6 @@
 		this.tablesaw = this.$table.data("tablesaw");
 
 		this.attributes = {
-			subrow: "data-tablesaw-subrow",
-			ignorerow: "data-tablesaw-ignorerow",
 			btnTarget: "data-tablesaw-columntoggle-btn-target",
 			set: "data-tablesaw-columntoggle-set"
 		};
@@ -98,7 +96,7 @@
 		this.$headers.each(function() {
 			var $this = $(this),
 				priority = $this.attr("data-tablesaw-priority"),
-				$cells = self.$getCells(this);
+				$cells = self.tablesaw._$getCells(this);
 
 			if (priority && priority !== "persist") {
 				$cells.addClass(self.classes.priorityPrefix + priority);
@@ -122,12 +120,12 @@
 			var checked = checkbox.checked;
 
 			var header = self.getHeaderFromCheckbox(checkbox);
-			var $cells = self.$getCells(header);
+			var $cells = self.tablesaw._$getCells(header);
 
 			$cells[!checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellhidden");
 			$cells[checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellvisible");
 
-			self.updateColspanIgnoredRows(checked, $(header).add(header.cells));
+			self.updateColspanCells(header, checked);
 
 			self.$table.trigger("tablesawcolumns");
 		}
@@ -223,65 +221,6 @@
 		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.updateColspanIgnoredRows = function(invisibleColumnCount, $cells) {
-		this.$table
-			.find("[" + this.attributes.subrow + "],[" + this.attributes.ignorerow + "]")
-			.each(function() {
-				var $t = $(this);
-				var $td = $t.find("td[colspan]").eq(0);
-				var excludedInvisibleColumns;
-
-				var colspan;
-				var originalColspan;
-				var modifier;
-
-				// increment or decrementing only (from a user triggered column show/hide)
-				if (invisibleColumnCount === true || invisibleColumnCount === false) {
-					// unless the column being hidden is not included in the colspan
-					modifier = $cells.filter(function() {
-						return this === $td[0];
-					}).length
-						? invisibleColumnCount ? 1 : -1
-						: 0;
-
-					colspan = parseInt($td.attr("colspan"), 10) + modifier;
-				} else {
-					// triggered from a resize or init
-					originalColspan = $td.data("original-colspan");
-
-					if (originalColspan) {
-						colspan = originalColspan;
-					} else {
-						colspan = parseInt($td.attr("colspan"), 10);
-						$td.data("original-colspan", colspan);
-					}
-
-					excludedInvisibleColumns = $t.find("td").filter(function() {
-						return this !== $td[0] && $(this).css("display") === "none";
-					}).length;
-
-					colspan -= invisibleColumnCount - excludedInvisibleColumns;
-				}
-
-				// TODO add a colstart param so that this more appropriately selects colspan elements based on the column being hidden.
-				$td.attr("colspan", colspan);
-			});
-	};
-
-	ColumnToggle.prototype.$getCells = function(th) {
-		var self = this;
-		return $(th).add(th.cells).filter(function() {
-			var $t = $(this);
-			var $row = $t.parent();
-			var hasColspan = $t.is("[colspan]");
-			// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
-			return (
-				!$row.is("[" + self.attributes.subrow + "]") &&
-				(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
-			);
-		});
-	};
-
 	ColumnToggle.prototype.getHeaderFromCheckbox = function(checkbox) {
 		return $(checkbox).data("tablesaw-header");
 	};
@@ -291,15 +230,14 @@
 		var invisibleColumns = 0;
 		this.$menu.find("input").each(function() {
 			var header = self.getHeaderFromCheckbox(this);
-			var isVisible = self.$getCells(header).eq(0).css("display") === "table-cell";
-			this.checked = isVisible;
-
-			if (!isVisible) {
-				invisibleColumns++;
-			}
+			this.checked = self.tablesaw._$getCells(header).eq(0).css("display") === "table-cell";
 		});
 
-		this.updateColspanIgnoredRows(invisibleColumns);
+		this.updateColspanCells();
+	};
+
+	ColumnToggle.prototype.updateColspanCells = function(header, userAction) {
+		this.tablesaw.updateColspanCells("tablesaw-toggle-cellhidden", header, userAction);
 	};
 
 	ColumnToggle.prototype.destroy = function() {
