@@ -205,7 +205,7 @@
 				}
 			},
 			sortRows: function(rows, colNum, ascending, col, tbody) {
-				function convertCells(cellArr, belongingToTbody, sortCols) {
+				function convertCells(cellArr, belongingToTbody, sortOrder) {
 					var cells = [];
 					$.each(cellArr, function(i, cell) {
 						var row = cell.parentNode;
@@ -218,10 +218,10 @@
 							$next = $next.next();
 						}
 
-						var sortData = [];
+						var sortValues = [];
 						var $cells = $row.children();
-						for(var c in sortCols) {
-							sortData.push(getSortValue( $cells.get( sortCols[c] ) ));
+						for(var c in sortOrder) {
+							sortValues.push(getSortValue( $cells.get( sortOrder[c] ) ));
 						}
 
 						var tbody = row.parentNode;
@@ -230,7 +230,7 @@
 						if ($row.is("[" + attrs.subRow + "]")) {
 						} else if (tbody === belongingToTbody) {
 							cells.push({
-								cell: sortData,
+								cell: sortValues,
 								row: row,
 								subrows: subrows.length ? subrows : null,
 								ignored: $row.is("[" + attrs.ignoreRow + "]")
@@ -239,7 +239,7 @@
 					});
 					return cells;
 				}
-				function getSortFxn( ascending, col, sortCols) {
+				function getSortFxn( ascending, col, sortOrder) {
 					var _sortFxn = function (valueA, valueB, forceNumeric) {
 						if( forceNumeric ){
 							var regex = /[^\-\+\d\.]/g;
@@ -269,7 +269,7 @@
 					return function( a , b ) {
 						var fn = _sortFxn(a.cell[0], b.cell[0], _forceNumeric(col) );
 						for (var i = 1; i < a.cell.length; i++) {
-							var forceNumeric = _forceNumeric(col.parentElement.children[sortCols[i]]);
+							var forceNumeric = _forceNumeric(col.parentElement.children[sortOrder[i]]);
 							fn = fn || _sortFxn(a.cell[i], b.cell[i], forceNumeric);
 						}
 						return fn;
@@ -290,14 +290,14 @@
 
 				var fn;
 				var sorted;
-				var sortCols = col.dataset.tablesawSortableMulticol ? JSON.parse(col.dataset.tablesawSortableMulticol) : [ colNum ];
-				var cells = convertCells(col.cells, tbody, sortCols);
+				var sortOrder = col.dataset.tablesawSortableMulticol ? JSON.parse(col.dataset.tablesawSortableMulticol) : [ colNum ];
+				var cells = convertCells(col.cells, tbody, sortOrder);
 
 				var customFn = $(col).data("tablesaw-sort");
 
 				fn =
 					(customFn && typeof customFn === "function" ? customFn(ascending) : false) ||
-					getSortFxn(ascending, col, sortCols);
+					getSortFxn(ascending, col, sortOrder);
 
 				sorted = cells.sort(fn);
 
