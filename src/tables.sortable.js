@@ -265,9 +265,9 @@
 						}
 					};
 					return function( a , b ) {
-						var fn = _sortFxn(a.cell[0], b.cell[0], $(col) );
+						var fn = _sortFxn(a.cell[0], b.cell[0], col );
 						for (var i = 1; i < a.cell.length; i++) {
-							fn = fn || _sortFxn(a.cell[i], b.cell[i], $(col).parent().children("th:nth-child("+(sortCols[i]+1)+")"));
+							fn = fn || _sortFxn(a.cell[i], b.cell[i], col.parentElement.children[sortCols[i]+1]);
 						}
 						return fn;
 					};
@@ -287,7 +287,7 @@
 
 				var fn;
 				var sorted;
-				var sortCols = $(col).data("tablesaw-multicol-sort") ? $(col).data("tablesaw-multicol-sort") : [ colNum ];
+				var sortCols = col.dataset.tablesawSortableMulticol ? JSON.parse(col.dataset.tablesawSortableMulticol) : [ colNum ];
 				var cells = convertCells(col.cells, tbody, sortCols);
 
 				var customFn = $(col).data("tablesaw-sort");
