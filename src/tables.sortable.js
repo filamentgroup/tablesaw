@@ -205,7 +205,7 @@
 				}
 			},
 			sortRows: function(rows, colNum, ascending, col, tbody) {
-				function convertCells(cellArr, belongingToTbody) {
+				function convertCells(cellArr, belongingToTbody, sortCols) {
 					var cells = [];
 					$.each(cellArr, function(i, cell) {
 						var row = cell.parentNode;
@@ -218,14 +218,19 @@
 							$next = $next.next();
 						}
 
+						var sortData = [];
+						var $cells = $row.children();
+						for(var c in sortCols) {
+							sortData.push(getSortValue( $cells.get( sortCols[c] ) ));
+						}
+
 						var tbody = row.parentNode;
 
 						// current row is a subrow
 						if ($row.is("[" + attrs.subRow + "]")) {
 						} else if (tbody === belongingToTbody) {
 							cells.push({
-								element: cell,
-								cell: getSortValue(cell),
+								cell: sortData,
 								row: row,
 								subrows: subrows.length ? subrows : null,
 								ignored: $row.is("[" + attrs.ignoreRow + "]")
@@ -234,40 +239,39 @@
 					});
 					return cells;
 				}
-
-				function getSortFxn(ascending, forceNumeric) {
-					var fn,
-						regex = /[^\-\+\d\.]/g;
-					if (ascending) {
-						fn = function(a, b) {
-							if (a.ignored || b.ignored) {
-								return 0;
-							}
-							if (forceNumeric) {
-								return (
-									parseFloat(a.cell.replace(regex, "")) - parseFloat(b.cell.replace(regex, ""))
-								);
+				function getSortFxn( ascending, col, sortCols) {
+					var _sortFxn = function (valueA, valueB, $col) {
+						var forceNumeric = $(col).is("[" + attrs.numericCol + "]") &&
+							!$(col).is("[" + attrs.numericCol + '="false"]');
+						if( forceNumeric ){
+							var regex = /[^\-\+\d\.]/g;
+							valueA = parseFloat(valueA.replace(regex, ""));
+							valueB = parseFloat(valueB.replace(regex, ""));
+							if( ascending ) {
+								return valueA - valueB;
 							} else {
-								return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
+								// descending
+								return valueB - valueA;
 							}
-						};
-					} else {
-						fn = function(a, b) {
-							if (a.ignored || b.ignored) {
-								return 0;
-							}
-							if (forceNumeric) {
-								return (
-									parseFloat(b.cell.replace(regex, "")) - parseFloat(a.cell.replace(regex, ""))
-								);
+						} else {
+							valueA = valueA.toLowerCase();
+							valueB = valueB.toLowerCase();
+							if( ascending ) {
+								return valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
 							} else {
-								return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
+								// descending
+								return valueA > valueB ? -1 : (valueA < valueB ? 1 : 0);
 							}
-						};
-					}
-					return fn;
+						}
+					};
+					return function( a , b ) {
+						var fn = _sortFxn(a.cell[0], b.cell[0], $(col) );
+						for (var i = 1; i < a.cell.length; i++) {
+							fn = fn || _sortFxn(a.cell[i], b.cell[i], $(col).parent().children("th:nth-child("+(sortCols[i]+1)+")"));
+						}
+						return fn;
+					};
 				}
-
 				function convertToRows(sorted) {
 					var newRows = [],
 						i,
@@ -283,17 +287,14 @@
 
 				var fn;
 				var sorted;
-				var cells = convertCells(col.cells, tbody);
+				var sortCols = $(col).data("tablesaw-multicol-sort") ? $(col).data("tablesaw-multicol-sort") : [ colNum ];
+				var cells = convertCells(col.cells, tbody, sortCols);
 
 				var customFn = $(col).data("tablesaw-sort");
 
 				fn =
 					(customFn && typeof customFn === "function" ? customFn(ascending) : false) ||
-					getSortFxn(
-						ascending,
-						$(col).is("[" + attrs.numericCol + "]") &&
-							!$(col).is("[" + attrs.numericCol + '="false"]')
-					);
+					getSortFxn(ascending, col, sortCols);
 
 				sorted = cells.sort(fn);
 
