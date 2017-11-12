@@ -240,9 +240,7 @@
 					return cells;
 				}
 				function getSortFxn( ascending, col, sortCols) {
-					var _sortFxn = function (valueA, valueB, $col) {
-						var forceNumeric = $(col).is("[" + attrs.numericCol + "]") &&
-							!$(col).is("[" + attrs.numericCol + '="false"]');
+					var _sortFxn = function (valueA, valueB, forceNumeric) {
 						if( forceNumeric ){
 							var regex = /[^\-\+\d\.]/g;
 							valueA = parseFloat(valueA.replace(regex, ""));
@@ -264,10 +262,15 @@
 							}
 						}
 					};
+					var _forceNumeric = function(col) {
+						return $(col).is("[" + attrs.numericCol + "]") &&
+							!$(col).is("[" + attrs.numericCol + '="false"]');
+					};
 					return function( a , b ) {
-						var fn = _sortFxn(a.cell[0], b.cell[0], col );
+						var fn = _sortFxn(a.cell[0], b.cell[0], _forceNumeric(col) );
 						for (var i = 1; i < a.cell.length; i++) {
-							fn = fn || _sortFxn(a.cell[i], b.cell[i], col.parentElement.children[sortCols[i]+1]);
+							var forceNumeric = _forceNumeric(col.parentElement.children[sortCols[i]]);
+							fn = fn || _sortFxn(a.cell[i], b.cell[i], forceNumeric);
 						}
 						return fn;
 					};

@@ -26,7 +26,7 @@
 				'<tr>',
 					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
 					'<th data-tablesaw-sortable-col data-tablesaw-sortable-numeric>Header</th>',
-					'<th data-tablesaw-sortable-col data-tablesaw-sortable-multicol=[2,1,0]>Header</th>',
+					'<th data-tablesaw-sortable-col data-tablesaw-sortable-multicol="[2,1,0]">Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -231,18 +231,19 @@
 
 	});
 
-	// QUnit.test( 'Multiple Column sort is working', function(assert) {
-	// 	var maximumRow1Text = "body row 4",
-	// 		previousRow1Text = $table.find( 'tbody tr td' ).eq( 0 ).text(),
-	// 		$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 2 );
-	//
-	// 	$sortButton.trigger("click");
-	// 	notEqual( $table.find( 'tbody tr td' ).eq( 0 ).text(), previousRow1Text, 'First row is sorted descending by 3rd, than by 2nd and than by 1st column' );
-	// 	equal( $table.find( 'tbody tr:eq(0) td:eq(0)' ).html(), maximumRow1Text, maximumRow1Text+' is in the first row sorted descencing by 3rd, than by 2nd and than by 1st column' );
-	//
-	// 	$sortButton.trigger("click");
-	// 	equal( $table.find( 'tbody tr:eq(4) td:eq(0)' ).html(), maximumRow1Text, maximumRow1Text+' is in the third row sorted ascending by 3rd, than by 2nd and than by 1st column' );
-	// });
+	QUnit.test( 'Multiple Column sort is working', function(assert) {
+		var maximumRow1Text = "body row 4",
+			rowsNumber = $table.find( 'tbody tr' ).length,
+			previousRow1Text = $table.find( 'tbody tr').eq(rowsNumber-1).find('td' ).eq( 0 ).text(),
+			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 2 );
+
+		$sortButton.trigger("click");
+		notEqual( $table.find( 'tbody tr').eq(0).find('td').eq( rowsNumber - 1 ).text(), previousRow1Text, 'First row is sorted ascending by 3rd, than by 2nd and than by 1st column' );
+		equal( $table.find( 'tbody tr').eq(rowsNumber - 1).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the last row sorted ascending by 3rd, than by 2nd and than by 1st column' );
+
+		$sortButton.trigger("click");
+		equal( $table.find( 'tbody tr').eq(0).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the third first sorted descending by 3rd, than by 2nd and than by 1st column' );
+	});
 
 	QUnit.module( 'tablesaw Sortable Switcher', {
 		beforeEach: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable data-tablesaw-sortable-switch' )
