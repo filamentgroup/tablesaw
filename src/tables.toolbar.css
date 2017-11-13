@@ -157,6 +157,7 @@ a.tablesaw-btn {
 	margin-left: .25em;
 	margin-right: .25em;
 	position: relative;
+	text-indent: -9999px;
 }
 .tablesaw-advance a.tablesaw-nav-btn.left:before,
 .tablesaw-advance a.tablesaw-nav-btn.right:before,

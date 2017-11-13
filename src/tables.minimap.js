@@ -17,7 +17,7 @@
 		var $btns = $('<div class="tablesaw-advance minimap">');
 		var $dotNav = $('<ul class="tablesaw-advance-dots">').appendTo($btns);
 		var hideDot = "tablesaw-advance-dots-hide";
-		var $headerCells = $table.find("thead th");
+		var $headerCells = $table.data("tablesaw")._getPrimaryHeaderCells();
 
 		// populate dots
 		$headerCells.each(function() {

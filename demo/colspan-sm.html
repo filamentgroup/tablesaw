@@ -49,16 +49,20 @@
 	</div>
 	<div class="docs-main">
 		<h2>Colspans</h2>
-		<table class="tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap data-tablesaw-mode-switch>
+		<table class="tablesaw" data-tablesaw-mode="swipe" data-tablesaw-minimap data-tablesaw-mode-switch>
 			<thead>
 				<tr>
 					<th data-tablesaw-priority="1">Header 1</th>
 					<th data-tablesaw-priority="1">Header 2</th>
 					<th data-tablesaw-priority="1">Header 3</th>
+					<th data-tablesaw-priority="2">Header 4</th>
+					<th data-tablesaw-priority="2">Header 5</th>
 				</tr>
 				<tr>
 					<th data-tablesaw-priority="1">Header 1</th>
-					<th data-tablesaw-priority="1" colspan="2">Header 2 (colspan=2)</th>
+					<th data-tablesaw-priority="1" colspan="2">Header 2,3</th>
+					<th data-tablesaw-priority="2">Header 4</th>
+					<th data-tablesaw-priority="2">Header 5</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -66,10 +70,13 @@
 					<td>1</td>
 					<td>2</td>
 					<td>3</td>
+					<td>4</td>
+					<td>5</td>
 				</tr>
 				<tr>
-					<td colspan="2">colspan="2"</td>
+					<td colspan="2">1,2</td>
 					<td>3</td>
+					<td colspan="2">4,5</td>
 				</tr>
 			</tbody>
 		</table>

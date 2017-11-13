@@ -50,32 +50,75 @@
 	</div>
 	<div class="docs-main">
 		<h2>Colspans</h2>
-		<table class="tablesaw" data-tablesaw-mode="columntoggle" data-tablesaw-minimap data-tablesaw-mode-switch>
+		<table class="tablesaw" data-tablesaw-mode="swipe" data-tablesaw-minimap data-tablesaw-mode-switch>
 			<thead>
 				<tr>
-					<th data-tablesaw-priority="1" colspan="2">Header 1</th>
-					<th data-tablesaw-priority="3">Header 1.5</th>
-					<th data-tablesaw-priority="2" colspan="2">Header 2</th>
-					<th data-tablesaw-priority="6">Header 3</th>
-					<th data-tablesaw-priority="6">Header 4</th>
-					<th data-tablesaw-priority="6">Header 5</th>
+					<th data-tablesaw-priority="1" colspan="2">H1,2</th>
+					<th data-tablesaw-priority="3">H3</th>
+					<th data-tablesaw-priority="2" colspan="2">H4,5</th>
+					<th data-tablesaw-priority="6">H6</th>
+					<th data-tablesaw-priority="6">H7</th>
+					<th data-tablesaw-priority="6">H8</th>
+				</tr>
+				<tr>
+					<th data-tablesaw-priority="1">H1</th>
+					<th data-tablesaw-priority="3" colspan="3">H2,3,4</th>
+					<th data-tablesaw-priority="6">H5</th>
+					<th data-tablesaw-priority="6">H6</th>
+					<th data-tablesaw-priority="6">H7</th>
+					<th data-tablesaw-priority="6">H8</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td>Body Row 1 Col 1</td>
-					<td>Col 1</td>
-					<td>Col 1.5</td>
-					<td>Col 2</td>
-					<td>Col 2</td>
-					<td>Col 3</td>
-					<td>Col 4</td>
-					<td>Col 5</td>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
 				</tr>
-				<tr><td>Body Row 2 Col 1</td><td>Col 1</td><td>Col 1.5</td><td colspan="2">Col 2 (colspan=2)</td><td>Col 3</td><td>Col 4</td><td>Col 5</td></tr>
-				<tr><td>Body Row 10</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
-				<tr><td>body row 4</td><td>10</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
-				<tr><td>Body Row 1.2</td><td>1.2</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td><td>A</td></tr>
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td colspan="2">4,5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
+				</tr>
 				<tr data-tablesaw-ignorerow><td colspan="8">Big long ignored row Big long ignored row Big long ignored row Big long ignored row Big long ignored row Big long ignored row Big long ignored row Big long ignored row Big long ignored row Big long ignored row</td></tr>
 			</tbody>
 		</table>

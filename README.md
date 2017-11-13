@@ -356,21 +356,7 @@ Some of the more intrusive default styles have instead moved to opt-in classes y
 
 ## Limitations
 
-* Simple `colspan` and `rowspan` are supported, in part thanks to a [lovely PR](https://github.com/filamentgroup/tablesaw/pull/225) from @jgibson. More complex `colspan` scenarios (where table cells cross Tablesaw top-level column boundaries) are not supported. Tablesaw top-level column boundaries are defined by the cells in the first table header row and determine what columns are listed in the Column Toggle switcher or what hides/shows when the user navigates on a Swipe table.
-
-For example:
-
-```
-<tr>
-  <th colspan="2">First column</th>
-  <th>Second column</th>
-</tr>
-<tr>
-  <th>Included with first column</th>
-  <th colspan="2">Crosses top-level boundary between First and Second column, don’t do this.</th>
-</tr>
-```
-
+* Simple `colspan` and `rowspan` are supported, in part thanks to a [lovely PR](https://github.com/filamentgroup/tablesaw/pull/225) from @jgibson.
 
 | | Stack | Column Toggle | Swipe | Sortable |
 | --- | --- | --- | --- | --- |
