@@ -205,7 +205,7 @@
 				}
 			},
 			sortRows: function(rows, colNum, ascending, col, tbody) {
-				function convertCells(cellArr, belongingToTbody) {
+				function convertCells(cellArr, belongingToTbody, multiColSortOrder) {
 					var cells = [];
 					$.each(cellArr, function(i, cell) {
 						var row = cell.parentNode;
@@ -218,14 +218,22 @@
 							$next = $next.next();
 						}
 
+						var multiColSortValues = [];
+						if(multiColSortOrder) {
+							var $cells = $row.children();
+							$.each(multiColSortOrder, function(i, colNum){
+								multiColSortValues.push(getSortValue( $cells.get( colNum ) ));
+							});
+						}
+
 						var tbody = row.parentNode;
 
 						// current row is a subrow
 						if ($row.is("[" + attrs.subRow + "]")) {
 						} else if (tbody === belongingToTbody) {
 							cells.push({
-								element: cell,
 								cell: getSortValue(cell),
+								multiCol: multiColSortValues,
 								row: row,
 								subrows: subrows.length ? subrows : null,
 								ignored: $row.is("[" + attrs.ignoreRow + "]")
@@ -234,40 +242,44 @@
 					});
 					return cells;
 				}
-
-				function getSortFxn(ascending, forceNumeric) {
-					var fn,
-						regex = /[^\-\+\d\.]/g;
-					if (ascending) {
-						fn = function(a, b) {
-							if (a.ignored || b.ignored) {
-								return 0;
-							}
-							if (forceNumeric) {
-								return (
-									parseFloat(a.cell.replace(regex, "")) - parseFloat(b.cell.replace(regex, ""))
-								);
+				function getSortFxn( ascending, col, multiColSortOrder) {
+					var _sortFxn = function (valueA, valueB, forceNumeric) {
+						if( forceNumeric ){
+							var regex = /[^\-\+\d\.]/g;
+							valueA = parseFloat(valueA.replace(regex, ""));
+							valueB = parseFloat(valueB.replace(regex, ""));
+							if( ascending ) {
+								return valueA - valueB;
 							} else {
-								return a.cell.toLowerCase() > b.cell.toLowerCase() ? 1 : -1;
+								// descending
+								return valueB - valueA;
 							}
-						};
-					} else {
-						fn = function(a, b) {
-							if (a.ignored || b.ignored) {
-								return 0;
-							}
-							if (forceNumeric) {
-								return (
-									parseFloat(b.cell.replace(regex, "")) - parseFloat(a.cell.replace(regex, ""))
-								);
+						} else {
+							valueA = valueA.toLowerCase();
+							valueB = valueB.toLowerCase();
+							if( ascending ) {
+								return valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
 							} else {
-								return a.cell.toLowerCase() < b.cell.toLowerCase() ? 1 : -1;
+								// descending
+								return valueA > valueB ? -1 : (valueA < valueB ? 1 : 0);
 							}
-						};
-					}
-					return fn;
+						}
+					};
+					var _forceNumeric = function(col) {
+						return $(col).is("[" + attrs.numericCol + "]") &&
+							!$(col).is("[" + attrs.numericCol + '="false"]');
+					};
+					return function( a , b ) {
+						var fn = _sortFxn(a.cell, b.cell, _forceNumeric(col) );
+						if(multiColSortOrder && a.multiCol.length > 0 ) {
+							for (var i = 0; i < a.multiCol.length; i++) {
+								var forceNumeric = _forceNumeric(col.parentElement.children[multiColSortOrder[i]]);
+								fn = fn || _sortFxn(a.multiCol[i], b.multiCol[i], forceNumeric);
+							}
+						}
+						return fn;
+					};
 				}
-
 				function convertToRows(sorted) {
 					var newRows = [],
 						i,
@@ -280,20 +292,28 @@
 					}
 					return newRows;
 				}
+				function getMultiColSortOrder() {
+					var sortOrderArr;
+					var dataSortableMulticol = col.dataset.tablesawSortableMulticol;
+					if(dataSortableMulticol) {
+						try {
+							sortOrderArr = JSON.parse(col.dataset.tablesawSortableMulticol)
+						} catch (e) {
+							console.error("The sort order for the multicolumn sort is not a valid array: "+dataSortableMulticol+"\n"+e);
+						}
+					}
+					return sortOrderArr;
+				}
 
 				var fn;
 				var sorted;
-				var cells = convertCells(col.cells, tbody);
-
+				var multiColSortOrder = getMultiColSortOrder();
+				var cells = convertCells(col.cells, tbody, multiColSortOrder);
 				var customFn = $(col).data("tablesaw-sort");
 
 				fn =
 					(customFn && typeof customFn === "function" ? customFn(ascending) : false) ||
-					getSortFxn(
-						ascending,
-						$(col).is("[" + attrs.numericCol + "]") &&
-							!$(col).is("[" + attrs.numericCol + '="false"]')
-					);
+					getSortFxn(ascending, col, multiColSortOrder);
 
 				sorted = cells.sort(fn);
 

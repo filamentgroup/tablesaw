@@ -26,7 +26,7 @@
 				'<tr>',
 					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
 					'<th data-tablesaw-sortable-col data-tablesaw-sortable-numeric>Header</th>',
-					'<th>Header</th>',
+					'<th data-tablesaw-sortable-col data-tablesaw-sortable-multicol="[1,0]">Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -49,7 +49,7 @@
 				'<tr>',
 					'<td>Body Row 1</td>',
 					'<td>1</td>',
-					'<td>This column text is designed to make the columns really wide.</td>',
+					'<td>A</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
 					'<td>This column text is designed to make the columns really wide.</td>',
@@ -231,6 +231,20 @@
 
 	});
 
+	QUnit.test( 'Multiple column sort is working', function(assert) {
+		var maximumRow1Text = "body row 4",
+			rowsNumber = $table.find( 'tbody tr' ).length,
+			previousRow1Text = $table.find( 'tbody tr').eq(rowsNumber-1).find('td' ).eq( 0 ).text(),
+			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 2 );
+
+		$sortButton.trigger("click");
+		assert.notEqual( $table.find( 'tbody tr').eq(0).find('td').eq( rowsNumber - 1 ).text(), previousRow1Text, 'First row is sorted ascending by 3rd, than by 2nd and than by 1st column' );
+		assert.equal( $table.find( 'tbody tr').eq(rowsNumber - 1).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the last row sorted ascending by 3rd, than by 2nd and than by 1st column' );
+
+		$sortButton.trigger("click");
+		assert.equal( $table.find( 'tbody tr').eq(0).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the third first sorted descending by 3rd, than by 2nd and than by 1st column' );
+	});
+
 	QUnit.module( 'tablesaw Sortable Switcher', {
 		beforeEach: setup( 'data-tablesaw-mode="columntoggle" data-tablesaw-sortable data-tablesaw-sortable-switch' )
 	});
@@ -298,7 +312,7 @@
 			$fixture = $( '#qunit-fixture' );
 			$fixture.html( tableHtml.replace( /\%s/, 'data-tablesaw-mode="stack" data-tablesaw-hide-empty' ) );
 			$fixture.find( 'table tbody tr' ).eq( 3 ).find( 'td' ).eq( 4 ).html('');
-			$( document ).trigger( 'enhance.tablesaw' );		
+			$( document ).trigger( 'enhance.tablesaw' );
 		}
 	});
 
