@@ -238,11 +238,11 @@
 			$sortButton = $table.find( '.tablesaw-sortable-head button' ).eq( 2 );
 
 		$sortButton.trigger("click");
-		notEqual( $table.find( 'tbody tr').eq(0).find('td').eq( rowsNumber - 1 ).text(), previousRow1Text, 'First row is sorted ascending by 3rd, than by 2nd and than by 1st column' );
-		equal( $table.find( 'tbody tr').eq(rowsNumber - 1).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the last row sorted ascending by 3rd, than by 2nd and than by 1st column' );
+		assert.notEqual( $table.find( 'tbody tr').eq(0).find('td').eq( rowsNumber - 1 ).text(), previousRow1Text, 'First row is sorted ascending by 3rd, than by 2nd and than by 1st column' );
+		assert.equal( $table.find( 'tbody tr').eq(rowsNumber - 1).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the last row sorted ascending by 3rd, than by 2nd and than by 1st column' );
 
 		$sortButton.trigger("click");
-		equal( $table.find( 'tbody tr').eq(0).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the third first sorted descending by 3rd, than by 2nd and than by 1st column' );
+		assert.equal( $table.find( 'tbody tr').eq(0).find('td').eq(0).text(), maximumRow1Text, maximumRow1Text+' is in the third first sorted descending by 3rd, than by 2nd and than by 1st column' );
 	});
 
 	QUnit.module( 'tablesaw Sortable Switcher', {
