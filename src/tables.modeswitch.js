@@ -5,79 +5,87 @@
 * MIT License
 */
 
-;(function( win, $ ) {
-
+(function() {
 	var S = {
 		selectors: {
-			init: 'table[data-tablesaw-mode-switch]'
+			init: "table[data-tablesaw-mode-switch]"
 		},
 		attributes: {
-			excludeMode: 'data-tablesaw-mode-exclude'
+			excludeMode: "data-tablesaw-mode-exclude"
 		},
 		classes: {
-			main: 'tablesaw-modeswitch',
-			toolbar: 'tablesaw-toolbar'
+			main: "tablesaw-modeswitch",
+			toolbar: "tablesaw-bar-section"
 		},
-		modes: [ 'stack', 'swipe', 'columntoggle' ],
-		init: function( table ) {
-			var $table = $( table ),
-				ignoreMode = $table.attr( S.attributes.excludeMode ),
-				$toolbar = $table.prev().filter( '.tablesaw-bar' ),
-				modeVal = '',
-				$switcher = $( '<div>' ).addClass( S.classes.main + ' ' + S.classes.toolbar ).html(function() {
-					var html = [ '<label>' + Tablesaw.i18n.columns + ':' ],
-						dataMode = $table.attr( 'data-tablesaw-mode' ),
-						isSelected;
+		modes: ["stack", "swipe", "columntoggle"],
+		init: function(table) {
+			var $table = $(table);
+			var tblsaw = $table.data("tablesaw");
+			var ignoreMode = $table.attr(S.attributes.excludeMode);
+			var $toolbar = tblsaw.$toolbar;
+			var $switcher = $("<div>").addClass(S.classes.main + " " + S.classes.toolbar);
 
-					html.push( '<span class="btn btn-small">&#160;<select>' );
-					for( var j=0, k = S.modes.length; j<k; j++ ) {
-						if( ignoreMode && ignoreMode.toLowerCase() === S.modes[ j ] ) {
-							continue;
-						}
+			var html = [
+					'<label><span class="abbreviated">' +
+						Tablesaw.i18n.modeSwitchColumnsAbbreviated +
+						'</span><span class="longform">' +
+						Tablesaw.i18n.modeSwitchColumns +
+						"</span>:"
+				],
+				dataMode = $table.attr("data-tablesaw-mode"),
+				isSelected;
 
-						isSelected = dataMode === S.modes[ j ];
+			// TODO next major version: remove .btn
+			html.push('<span class="btn tablesaw-btn"><select>');
+			for (var j = 0, k = S.modes.length; j < k; j++) {
+				if (ignoreMode && ignoreMode.toLowerCase() === S.modes[j]) {
+					continue;
+				}
 
-						if( isSelected ) {
-							modeVal = S.modes[ j ];
-						}
+				isSelected = dataMode === S.modes[j];
 
-						html.push( '<option' +
-							( isSelected ? ' selected' : '' ) +
-							' value="' + S.modes[ j ] + '">' + Tablesaw.i18n.modes[ j ] + '</option>' );
-					}
-					html.push( '</select></span></label>' );
+				html.push(
+					"<option" +
+						(isSelected ? " selected" : "") +
+						' value="' +
+						S.modes[j] +
+						'">' +
+						Tablesaw.i18n.modes[j] +
+						"</option>"
+				);
+			}
+			html.push("</select></span></label>");
 
-					return html.join('');
-				});
+			$switcher.html(html.join(""));
 
-			var $otherToolbarItems = $toolbar.find( '.tablesaw-advance' ).eq( 0 );
-			if( $otherToolbarItems.length ) {
-				$switcher.insertBefore( $otherToolbarItems );
+			var $otherToolbarItems = $toolbar.find(".tablesaw-advance").eq(0);
+			if ($otherToolbarItems.length) {
+				$switcher.insertBefore($otherToolbarItems);
 			} else {
-				$switcher.appendTo( $toolbar );
+				$switcher.appendTo($toolbar);
 			}
 
-			$switcher.find( '.btn' ).tablesawbtn();
-			$switcher.find( 'select' ).bind( 'change', S.onModeChange );
+			$switcher.find(".tablesaw-btn").tablesawbtn();
+			$switcher.find("select").on("change", function(event) {
+				return S.onModeChange.call(table, event, $(this).val());
+			});
 		},
-		onModeChange: function() {
-			var $t = $( this ),
-				$switcher = $t.closest( '.' + S.classes.main ),
-				$table = $t.closest( '.tablesaw-bar' ).nextUntil( $table ).eq( 0 ),
-				val = $t.val();
+		onModeChange: function(event, val) {
+			var $table = $(this);
+			var tblsaw = $table.data("tablesaw");
+			var $switcher = tblsaw.$toolbar.find("." + S.classes.main);
 
 			$switcher.remove();
-			$table.data( 'table' ).destroy();
+			tblsaw.destroy();
 
-			$table.attr( 'data-tablesaw-mode', val );
-			$table.table();
+			$table.attr("data-tablesaw-mode", val);
+			$table.tablesaw();
 		}
 	};
 
-	$( win.document ).on( "tablesawcreate", function( e, Tablesaw ) {
-		if( Tablesaw.$table.is( S.selectors.init ) ) {
-			S.init( Tablesaw.table );
+	$(win.document).on(Tablesaw.events.create, function(e, Tablesaw) {
+		if (Tablesaw.$table.is(S.selectors.init)) {
+			S.init(Tablesaw.table);
 		}
 	});
-
-})( this, jQuery );
+})();

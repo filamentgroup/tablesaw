@@ -1,53 +1,34 @@
-.tablesaw-sortable,
-.tablesaw-sortable thead,
-.tablesaw-sortable thead tr, 
-.tablesaw-sortable thead tr th {
+.tablesaw-sortable-head {
 	position: relative;
-}
-.tablesaw-sortable thead tr th {
-	padding-right: 1.6em;
 	vertical-align: top;
 }
-.tablesaw-sortable th.tablesaw-sortable-head,
-.tablesaw-sortable tr:first-child th.tablesaw-sortable-head {
+/* Override */
+.tablesaw .tablesaw-sortable-head {
 	padding: 0;
 }
-.tablesaw-sortable th.tablesaw-sortable-head button {
-	padding-top: .9em;
-	padding-bottom: .7em;
-	padding-left: .6em;
-	padding-right: 1.6em;
-}
-.tablesaw-sortable .tablesaw-sortable-head button {
+.tablesaw-sortable-btn {
 	min-width: 100%;
 	color: inherit;
 	background: transparent;
 	border: 0;
-	padding: 0;
-	text-align: left;
+	text-align: inherit;
 	font: inherit;
 	text-transform: inherit;
-	position: relative;
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after,
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
-	width: 7px;
-	height: 10px;
+.tablesaw-sortable-arrow:after {
+	display: inline-block;
+	width: 10px;
+	height: 14px;
+	content: " ";
+	margin-left: .3125em;
+}
+.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after,
+.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
 	content: "\0020";
-	position: absolute;
-	right: .5em;
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-ascending button:after {
+.tablesaw-sortable-ascending .tablesaw-sortable-arrow:after {
 	content: "\2191";
 }
-.tablesaw-sortable .tablesaw-sortable-head.tablesaw-sortable-descending button:after {
+.tablesaw-sortable-descending .tablesaw-sortable-arrow:after {
 	content: "\2193";
-}
-
-.tablesaw-sortable .not-applicable:after {
-	content: "--";
-	display: block;
-}
-.tablesaw-sortable .not-applicable span {
-	display: none;
 }

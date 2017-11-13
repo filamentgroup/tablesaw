@@ -1,7 +1,20 @@
 /*
  Styles for the table columntoggle mode
 */
-.btn.tablesaw-columntoggle-btn span {
+
+.tablesaw-overflow {
+	position: relative;
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	/* More in skin.css */
+}
+.tablesaw-overflow > .tablesaw {
+	margin-top: 2px; /* sortable focus rings are clipped */
+}
+
+/* Used for a11y text on button: "Columns" */
+.tablesaw-columntoggle-btn span {
 	text-indent: -9999px;
 	display: inline-block;
 }
@@ -50,7 +63,9 @@
 	.tablesaw-columntoggle th.tablesaw-priority-2,
 	.tablesaw-columntoggle td.tablesaw-priority-2,
 	.tablesaw-columntoggle th.tablesaw-priority-1,
-	.tablesaw-columntoggle td.tablesaw-priority-1 {
+	.tablesaw-columntoggle td.tablesaw-priority-1,
+	.tablesaw-columntoggle th.tablesaw-priority-0,
+	.tablesaw-columntoggle td.tablesaw-priority-0 {
 		display: none;
 	}
 }
@@ -118,14 +133,14 @@
 
 @media only all {
 	/* Unchecked manually: Always hide */
-	.tablesaw-columntoggle th.tablesaw-cell-hidden,
-	.tablesaw-columntoggle td.tablesaw-cell-hidden {
+	.tablesaw-columntoggle th.tablesaw-toggle-cellhidden,
+	.tablesaw-columntoggle td.tablesaw-toggle-cellhidden {
 		display: none;
 	}
 
 	/* Checked manually: Always show */
-	.tablesaw-columntoggle th.tablesaw-cell-visible,
-	.tablesaw-columntoggle td.tablesaw-cell-visible {
+	.tablesaw-columntoggle th.tablesaw-toggle-cellvisible,
+	.tablesaw-columntoggle td.tablesaw-toggle-cellvisible {
 		display: table-cell;
 	}
 }
@@ -134,6 +149,7 @@
 	display: block;
 	padding: .2em 0;
 	white-space: nowrap;
+	cursor: default;
 }
 .tablesaw-columntoggle-popup .btn-group > label input {
 	margin-right: .8em;

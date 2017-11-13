@@ -10,6 +10,10 @@
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
 
+	<script>window.module = {};</script>
+	<script src="../dist/dependencies/naturalsort.js"></script>
+	<script>window.naturalSort = module.exports;</script>
+
 	<script src="../dist/tablesaw.js"></script>
 	<script src="../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
@@ -17,20 +21,16 @@
 	$(function() {
 		$( "#custom-sort" ).data( "tablesaw-sort", function( ascending ) {
 			return function( a, b ) {
-				if( a.ignored || b.ignored ) {
-					return 0;
-				}
 				// a.cell
 				// a.element
 				// a.rowNum
-				var yearA = a.cell.split( "/" ),
-					yearB = b.cell.split( "/" );
+				var cellA = a.cell,
+					cellB = b.cell;
 
 				if( ascending ) {
-					return parseInt( yearA[ 1 ], 10 ) - parseInt( yearB[ 1 ], 10 );
+					return naturalSort( cellA, cellB );
 				} else {
-					// descending
-					return parseInt( yearB[ 1 ], 10 ) - parseInt( yearA[ 1 ], 10 );
+					return naturalSort( cellB, cellA );
 				}
 			};
 		});
@@ -58,7 +58,6 @@
 			<a href="kitchensink.html">Kitchen Sink</a>
 			<a href="modeswitch.html">Mode Switch</a>
 			<a href="sort.html" class="current">Sortable</a>
-			<a href="sort-multicol.html" class="current">Sortable Multi Column</a>
 			<a href="stack.html">Stack</a>
 			<a href="stackonly.html">Stack Only</a>
 			<a href="swipe.html">Swipe Table</a>
@@ -75,81 +74,81 @@
 				<tr>
 					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>
 					<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="3">Rank</th>
-					<th id="custom-sort" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Year</th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Gross</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Year</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1">Not Natural</th>
+					<th id="custom-sort" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Natural</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>
 					<td>1</td>
-					<td>11/2009</td>
-					<td>83%</td>
-					<td>$2.7B</td>
+					<td>2009/11</td>
+					<td>test 1</td>
+					<td>test 1</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Titanic_(1997_film)">Titanic</a></td>
 					<td>2</td>
-					<td>12/1997</td>
-					<td>88%</td>
-					<td>$2.1B</td>
+					<td>1997/12</td>
+					<td>test 2</td>
+					<td>test 2</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/The_Avengers_(2012_film)">The Avengers</a></td>
 					<td>3</td>
-					<td>3/2012</td>
-					<td>92%</td>
-					<td>$1.5B</td>
+					<td>2012/3</td>
+					<td>test 10</td>
+					<td>test 10</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Harry_Potter_and_the_Deathly_Hallows_%E2%80%93_Part_2">Harry Potter and the Deathly Hallows—Part 2</a></td>
 					<td>4</td>
-					<td>5/2011</td>
-					<td>96%</td>
-					<td>$1.3B</td>
+					<td>2011/5</td>
+					<td>test 13</td>
+					<td>test 13</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Frozen_(2013_film)">Frozen</a></td>
 					<td>5</td>
-					<td>9/2013</td>
-					<td>89%</td>
-					<td>$1.2B</td>
+					<td>2013/9</td>
+					<td>test 12</td>
+					<td>test 12</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Iron_Man_3">Iron Man 3</a></td>
 					<td>6</td>
-					<td>1/2013</td>
-					<td>78%</td>
-					<td>$1.2B</td>
+					<td>2013/1</td>
+					<td>test 22</td>
+					<td>test 22</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Transformers:_Dark_of_the_Moon">Transformers: Dark of the Moon</a></td>
 					<td>7</td>
-					<td>3/2011</td>
-					<td>36%</td>
-					<td>$1.1B</td>
+					<td>2011/3</td>
+					<td>test 5</td>
+					<td>test 5</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/The_Lord_of_the_Rings:_The_Return_of_the_King">The Lord of the Rings: The Return of the King</a></td>
 					<td>8</td>
-					<td>4/2003</td>
-					<td>95%</td>
-					<td>$1.1B</td>
+					<td>2003/4</td>
+					<td>test 8</td>
+					<td>test 8</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Skyfall">Skyfall</a></td>
 					<td>9</td>
-					<td>11/2012</td>
-					<td>92%</td>
-					<td>$1.1B</td>
+					<td>2012/11</td>
+					<td>test 9</td>
+					<td>test 9</td>
 				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Transformers:_Age_of_Extinction">Transformers: Age of Extinction</a></td>
 					<td>10</td>
-					<td>12/2014</td>
-					<td>18%</td>
-					<td>$1.0B</td>
+					<td>2014/12</td>
+					<td>test 80</td>
+					<td>test 80</td>
 				</tr>
 			</tbody>
 		</table>

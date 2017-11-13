@@ -9,9 +9,20 @@
 	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
-
-	<!--[if lt IE 9]><script src="../dist/dependencies/respond.js"></script><![endif]-->
-	<script src="../dist/dependencies/jquery.js"></script>
+	<script>
+	var TablesawConfig = {
+		i18n: {
+			swipePreviousColumn: "The column before",
+			swipeNextColumn: "The column after"
+		},
+		swipe: {
+			horizontalThreshold: 45,
+			verticalThreshold: 45
+		}
+	};
+	</script>
+	<!-- <script src="../dist/dependencies/jquery.js"></script>
+	<script src="../dist/tablesaw.jquery.js"></script> -->
 	<script src="../dist/tablesaw.js"></script>
 	<script src="../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
@@ -42,14 +53,14 @@
 			<a href="stackonly.html">Stack Only</a>
 			<a href="swipe.html" class="current">Swipe Table</a>
 			<a href="toggle.html">Toggle</a>
-			<a href="bare.html">Bare</a>
+			<a href="checkall.html">Check All</a>
 			</nav>
 		</div>
 	</div>
 	<div class="docs-main">
 		<h2>Swipe Table</h2>
 
-		<table class="tablesaw" data-tablesaw-mode="swipe">
+		<table class="tablesaw tablesaw-swipe" data-tablesaw-mode="swipe">
 			<thead>
 				<tr>
 					<th class="title" scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>

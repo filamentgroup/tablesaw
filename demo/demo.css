@@ -4,6 +4,10 @@ body {
 	font: 100%/1.2 sans-serif;
 }
 
+abbr {
+	text-decoration: none;
+}
+
 :link {
 	color: #1593D3;
 }
@@ -36,18 +40,11 @@ body {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 10em;
+	max-width: 10em;
+	max-width: 40vw;
 }
 @media (min-width: 40em) {
 	td.title {
 		max-width: 12em;
-	}
-	.tablesaw-stack td.title a {
-		display: block;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		max-width: 10em;
-		max-width: 40vw;
 	}
 }

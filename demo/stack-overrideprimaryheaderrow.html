@@ -4,14 +4,19 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>TableSaw Column Toggle Table</title>
+	<title>TableSaw Stack Table</title>
 
-	<link rel="stylesheet" href="../dist/bare/tablesaw.bare.css">
+	<link rel="stylesheet" href="../dist/tablesaw.css">
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
+	<style>
+	.democolwidth {
+		width: 150px;
+	}
+	</style>
 
-	<!--[if lt IE 9]><script src="../dist/dependencies/respond.js"></script><![endif]-->
-	<script src="../dist/dependencies/jquery.js"></script>
+	<!-- <script src="../dist/dependencies/jquery.js"></script>
+	<script src="../dist/tablesaw.jquery.js"></script> -->
 	<script src="../dist/tablesaw.js"></script>
 	<script src="../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
@@ -37,29 +42,34 @@
 			<a href="kitchensink.html">Kitchen Sink</a>
 			<a href="modeswitch.html">Mode Switch</a>
 			<a href="sort.html">Sortable</a>
-			<a href="sort-multicol.html" class="current">Sortable Multi Column</a>
-			<a href="stack.html">Stack</a>
+			<a href="stack.html" class="current">Stack</a>
 			<a href="stackonly.html">Stack Only</a>
 			<a href="swipe.html">Swipe Table</a>
 			<a href="toggle.html">Toggle</a>
-			<a href="bare.html" class="current">Bare</a>
+			<a href="checkall.html">Check All</a>
 			</nav>
 		</div>
 	</div>
 	<div class="docs-main">
-		<h2>Bare Table</h2>
-		<p>A demo which includes all TableSaw functionality, as per the <a href="kitchensink.html">Kitchen Sink</a> demo, but uses the "bare" css file. This file removes much of the default styling provided by the TableSaw plugin, allowing users to more easily customize table styles to better suit the needs of their projects..</p>
-		<table id="table2" class="tablesaw" data-tablesaw-mode="swipe" data-tablesaw-sortable data-tablesaw-sortable-switch data-tablesaw-minimap data-tablesaw-mode-switch>
+		<h2>Stack Table</h2>
+		<p>The Stack Table stacks the table headers to a two column layout with headers on the left. Resize your viewport to across the 40em (640px) breakpoint to see the change.</p>
+		<table class="tablesaw" data-tablesaw-mode="stack">
 			<thead>
+				<tr data-tablesaw-ignorerow>
+					<td colspan="5">Big Row</td>
+				</tr>
 				<tr>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="3">Rank</th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Year</th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
-					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Gross</th>
+					<th scope="col" data-tablesaw-priority="persist">Movie Title</th>
+					<th scope="col" data-tablesaw-sortable-default-col data-tablesaw-priority="3">Rank</th>
+					<th scope="col" data-tablesaw-priority="2">Year</th>
+					<th scope="col" data-tablesaw-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+					<th scope="col" data-tablesaw-priority="4">Gross</th>
 				</tr>
 			</thead>
 			<tbody>
+				<tr data-tablesaw-ignorerow>
+					<td colspan="5">Big Row</td>
+				</tr>
 				<tr>
 					<td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>
 					<td>1</td>

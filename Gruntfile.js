@@ -2,6 +2,25 @@
 
 module.exports = function(grunt) {
 
+	var jsFiles = [
+		'src/tables.js',
+		'src/tables.stack.js',
+		'src/tables.btnmarkup.js',
+		'src/tables.columntoggle.js',
+		'src/tables.sortable.js',
+		'src/tables.swipetoggle.js',
+		'src/tables.minimap.js',
+		'src/tables.modeswitch.js',
+		'src/tables.checkall.js',
+		'src/tables.outro.js'
+	];
+
+	var jsStackOnlyFiles = [
+		'src/tables.js',
+		'src/tables.stack.js',
+		'src/tables.outro.js'
+	];
+
 	// Project configuration.
 	grunt.initConfig({
 		// Metadata.
@@ -10,7 +29,7 @@ module.exports = function(grunt) {
 			'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			'<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
 			'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.company %>;' +
-			' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+			' Licensed <%= pkg.license %> */\n',
 		// Task configuration.
 		clean: {
 			dependencies: ['dist/dependencies/'],
@@ -21,9 +40,9 @@ module.exports = function(grunt) {
 				src: 'node_modules/jquery/dist/jquery.js',
 				dest: 'dist/dependencies/jquery.js'
 			},
-			respond: {
-				src: 'node_modules/respond.js/dest/respond.src.js',
-				dest: 'dist/dependencies/respond.js'
+			naturalsort: {
+				src: 'node_modules/javascript-natural-sort/naturalSort.js',
+				dest: 'dist/dependencies/naturalsort.js'
 			},
 			qunit: {
 				files: [{
@@ -46,23 +65,29 @@ module.exports = function(grunt) {
 			},
 			jsall: {
 				src: [
-					'src/tables.js',
-					'src/tables.stack.js',
-					'src/tables.btnmarkup.js',
-					'src/tables.columntoggle.js',
-					'src/tables.swipetoggle.js',
-					'src/tables.sortable.js',
-					'src/tables.minimap.js',
-					'src/tables.modeswitch.js'
-				],
+					'src/lib/shoestring-custom.js',
+					'src/tables.intro.shoestring.js'
+				].concat( jsFiles ),
 				dest: 'dist/<%= pkg.name %>.js'
+			},
+			jsjquery: {
+				src: [
+					'src/tables.intro.jquery.js'
+				].concat( jsFiles ),
+				dest: 'dist/<%= pkg.name %>.jquery.js'
 			},
 			jsstack: {
 				src: [
-					'src/tables.js',
-					'src/tables.stack.js'
-				],
+					'src/lib/shoestring-custom.js',
+					'src/tables.intro.shoestring.js'
+				].concat( jsStackOnlyFiles ),
 				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.js'
+			},
+			jsstackjquery: {
+				src: [
+					'src/tables.intro.jquery.js'
+				].concat( jsStackOnlyFiles ),
+				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.jquery.js'
 			},
 			cssall: {
 				src: [
@@ -77,20 +102,6 @@ module.exports = function(grunt) {
 					'src/tables.minimap.css'
 				],
 				dest: 'dist/tmp/<%= pkg.name %>.myth.css'
-			},
-			cssbare: {
-				src: [
-					'src/tables.css',
-					'src/tables.toolbar.css',
-					'src/tables.stack.css',
-					'src/tables.stack-default-breakpoint.css',
-					'src/tables.swipetoggle.css',
-					'src/tables.columntoggle.css',
-					'src/tables.sortable.css',
-					'src/tables.minimap.css',
-					'src/tables.modeswitch.css'
-				],
-				dest: 'dist/tmp/<%= pkg.name %>.bare.myth.css'
 			},
 			cssstack: {
 				src: [
@@ -118,45 +129,19 @@ module.exports = function(grunt) {
 		qunit: {
 			files: ['test/**/*.html']
 		},
-		jshint: {
-			gruntfile: {
-				options: {
-					jshintrc: '.jshintrc'
-				},
-				src: 'Gruntfile.js'
-			},
-			src: {
-				options: {
-					jshintrc: 'src/.jshintrc'
-				},
-				src: ['src/**/*.js']
-			},
-			test: {
-				options: {
-					jshintrc: 'test/.jshintrc'
-				},
-				src: ['test/**/*.js']
-			},
-		},
 		watch: {
-			gruntfile: {
-				files: '<%= jshint.gruntfile.src %>',
-				tasks: ['jshint:gruntfile']
-			},
 			src: {
-				files: ['<%= concat.cssall.src %>', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>'],
+				files: ['dist/<%= pkg.name %>.js', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>', '<%= concat.cssall.src %>' ],
 				tasks: ['src']
-			},
-			test: {
-				files: '<%= jshint.test.src %>',
-				tasks: ['jshint:test', 'qunit']
-			},
+			}
 		},
 		uglify: {
 			js: {
 				files: {
 					'dist/<%= pkg.name %>.min.js': [ 'dist/<%= pkg.name %>.js' ],
-					'dist/stackonly/<%= pkg.name %>.stackonly.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.js' ]
+					'dist/<%= pkg.name %>.jquery.min.js': [ 'dist/<%= pkg.name %>.jquery.js' ],
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.js' ],
+					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.jquery.js' ]
 				}
 			}
 		},
@@ -164,7 +149,6 @@ module.exports = function(grunt) {
 			css: {
 				files: {
 					'dist/<%= pkg.name %>.min.css': [ 'dist/<%= pkg.name %>.css' ],
-					'dist/bare/<%= pkg.name %>.bare.min.css': [ 'dist/bare/<%= pkg.name %>.bare.css' ],
 					'dist/stackonly/<%= pkg.name %>.stackonly.min.css': [ 'dist/stackonly/<%= pkg.name %>.stackonly.css' ]
 				}
 			}
@@ -174,9 +158,10 @@ module.exports = function(grunt) {
 				src: [
 					'dist/<%= pkg.name %>.min.css',
 					'dist/<%= pkg.name %>.min.js',
-					'dist/bare/<%= pkg.name %>.bare.min.css',
+					'dist/<%= pkg.name %>.jquery.min.js',
 					'dist/stackonly/<%= pkg.name %>.stackonly.min.css',
-					'dist/stackonly/<%= pkg.name %>.stackonly.min.js'
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.js',
+					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js'
 				]
 			}
 		},
@@ -188,7 +173,6 @@ module.exports = function(grunt) {
 			dist: {
 				files: {
 					'dist/<%= pkg.name %>.css': '<%= concat.cssall.dest %>',
-					'dist/bare/<%= pkg.name %>.bare.css': '<%= concat.cssbare.dest %>',
 					'dist/stackonly/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>',
 					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>'
 				}
@@ -204,8 +188,7 @@ module.exports = function(grunt) {
 				files: [
 					{expand: true, cwd: 'dist/', src: ['*'], dest: 'tablesaw/'},
 					{expand: true, cwd: 'dist/', src: ['dependencies/*'], dest: 'tablesaw/'},
-					{expand: true, cwd: 'dist/', src: ['stackonly/*'], dest: 'tablesaw/'},
-					{expand: true, cwd: 'dist/', src: ['bare/*'], dest: 'tablesaw/'}
+					{expand: true, cwd: 'dist/', src: ['stackonly/*'], dest: 'tablesaw/'}
 				]
 			}
 		}
@@ -214,13 +197,13 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('travis', ['jshint', 'qunit']);
-	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsstack', 'concat:cssall', 'concat:cssbare', 'concat:cssstack', 'concat:cssstackmixinpre']);
+	grunt.registerTask('travis', ['qunit']);
+	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsjquery', 'concat:jsstack', 'concat:jsstackjquery', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);
 
-	grunt.registerTask('default', ['jshint', 'src', 'qunit', 'filesize']);
+	grunt.registerTask('default', ['src', 'qunit', 'filesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);

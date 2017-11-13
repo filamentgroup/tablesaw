@@ -5,100 +5,119 @@
 * MIT License
 */
 
-;(function( win, $, undefined ){
-
+(function() {
 	var classes = {
-		stackTable: 'tablesaw-stack',
-		cellLabels: 'tablesaw-cell-label',
-		cellContentLabels: 'tablesaw-cell-content'
+		stackTable: "tablesaw-stack",
+		cellLabels: "tablesaw-cell-label",
+		cellContentLabels: "tablesaw-cell-content"
 	};
 
 	var data = {
-		obj: 'tablesaw-stack'
+		key: "tablesaw-stack"
 	};
 
 	var attrs = {
-		labelless: 'data-tablesaw-no-labels',
-		hideempty: 'data-tablesaw-hide-empty'
+		labelless: "data-tablesaw-no-labels",
+		hideempty: "data-tablesaw-hide-empty"
 	};
 
-	var Stack = function( element ) {
+	var Stack = function(element, tablesaw) {
+		this.tablesaw = tablesaw;
+		this.$table = $(element);
 
-		this.$table = $( element );
+		this.labelless = this.$table.is("[" + attrs.labelless + "]");
+		this.hideempty = this.$table.is("[" + attrs.hideempty + "]");
 
-		this.labelless = this.$table.is( '[' + attrs.labelless + ']' );
-		this.hideempty = this.$table.is( '[' + attrs.hideempty + ']' );
-
-		if( !this.labelless ) {
-			// allHeaders references headers, plus all THs in the thead, which may include several rows, or not
-			this.allHeaders = this.$table.find( "th" );
-		}
-
-		this.$table.data( data.obj, this );
+		this.$table.data(data.key, this);
 	};
 
-	Stack.prototype.init = function( colstart ) {
-		this.$table.addClass( classes.stackTable );
+	Stack.prototype.init = function() {
+		this.$table.addClass(classes.stackTable);
 
-		if( this.labelless ) {
+		if (this.labelless) {
 			return;
 		}
 
-		// get headers in reverse order so that top-level headers are appended last
-		var reverseHeaders = $( this.allHeaders );
-		var hideempty = this.hideempty;
-		
-		// create the hide/show toggles
-		reverseHeaders.each(function(){
-			var $t = $( this ),
-				$cells = $( this.cells ).filter(function() {
-					return !$( this ).parent().is( "[" + attrs.labelless + "]" ) && ( !hideempty || !$( this ).is( ":empty" ) );
-				}),
-				hierarchyClass = $cells.not( this ).filter( "thead th" ).length && " tablesaw-cell-label-top",
-				// TODO reduce coupling with sortable
-				$sortableButton = $t.find( ".tablesaw-sortable-btn" ),
-				html = $sortableButton.length ? $sortableButton.html() : $t.html();
+		var self = this;
 
-			if( html !== "" ){
-				if( hierarchyClass ){
-					var iteration = parseInt( $( this ).attr( "colspan" ), 10 ),
-						filter = "";
+		this.$table
+			.find("th, td")
+			.filter(function() {
+				return !$(this).closest("thead").length;
+			})
+			.filter(function() {
+				return (
+					!$(this).closest("tr").is("[" + attrs.labelless + "]") &&
+					(!self.hideempty || !!$(this).html())
+				);
+			})
+			.each(function() {
+				var $newHeader = $(document.createElement("b")).addClass(classes.cellLabels);
+				var $cell = $(this);
 
-					if( iteration ){
-						filter = "td:nth-child("+ iteration +"n + " + ( colstart ) +")";
+				$(self.tablesaw._findPrimaryHeadersForCell(this)).each(function(index) {
+					var $header = $(this.cloneNode(true));
+					// TODO decouple from sortable better
+					// Changed from .text() in https://github.com/filamentgroup/tablesaw/commit/b9c12a8f893ec192830ec3ba2d75f062642f935b
+					// to preserve structural html in headers, like <a>
+					var $sortableButton = $header.find(".tablesaw-sortable-btn");
+					$header.find(".tablesaw-sortable-arrow").remove();
+
+					// TODO decouple from checkall better
+					var $checkall = $header.find("[data-tablesaw-checkall]");
+					$checkall.closest("label").remove();
+					if ($checkall.length) {
+						$newHeader = $([]);
+						return;
 					}
-					$cells.filter( filter ).prepend( "<b class='" + classes.cellLabels + hierarchyClass + "'>" + html + "</b>"  );
-				} else {
-					$cells.wrapInner( "<span class='" + classes.cellContentLabels + "'></span>" );
-					$cells.prepend( "<b class='" + classes.cellLabels + "'>" + html + "</b>"  );
+
+					if (index > 0) {
+						$newHeader.append(document.createTextNode(", "));
+					}
+					$newHeader.append(
+						$sortableButton.length ? $sortableButton[0].childNodes : $header[0].childNodes
+					);
+				});
+
+				if ($newHeader.length && !$cell.find("." + classes.cellContentLabels).length) {
+					$cell.wrapInner("<span class='" + classes.cellContentLabels + "'></span>");
 				}
-			}
-		});
+
+				// Update if already exists.
+				var $label = $cell.find("." + classes.cellLabels);
+				if (!$label.length) {
+					$cell.prepend($newHeader);
+				} else {
+					// only if changed
+					$label.replaceWith($newHeader);
+				}
+			});
 	};
 
 	Stack.prototype.destroy = function() {
-		this.$table.removeClass( classes.stackTable );
-		this.$table.find( '.' + classes.cellLabels ).remove();
-		this.$table.find( '.' + classes.cellContentLabels ).each(function() {
-			$( this ).replaceWith( this.childNodes );
+		this.$table.removeClass(classes.stackTable);
+		this.$table.find("." + classes.cellLabels).remove();
+		this.$table.find("." + classes.cellContentLabels).each(function() {
+			$(this).replaceWith(this.childNodes);
 		});
 	};
 
 	// on tablecreate, init
-	$( document ).on( "tablesawcreate", function( e, Tablesaw, colstart ){
-		if( Tablesaw.mode === 'stack' ){
-			var table = new Stack( Tablesaw.table );
-			table.init( colstart );
-		}
-
-	} );
-
-	$( document ).on( "tablesawdestroy", function( e, Tablesaw ){
-
-		if( Tablesaw.mode === 'stack' ){
-			$( Tablesaw.table ).data( data.obj ).destroy();
-		}
-
-	} );
-
-}( this, jQuery ));
+	$(document)
+		.on(Tablesaw.events.create, function(e, tablesaw) {
+			if (tablesaw.mode === "stack") {
+				var table = new Stack(tablesaw.table, tablesaw);
+				table.init();
+			}
+		})
+		.on(Tablesaw.events.refresh, function(e, tablesaw) {
+			if (tablesaw.mode === "stack") {
+				$(tablesaw.table).data(data.key).init();
+			}
+		})
+		.on(Tablesaw.events.destroy, function(e, tablesaw) {
+			if (tablesaw.mode === "stack") {
+				$(tablesaw.table).data(data.key).destroy();
+			}
+		});
+})();

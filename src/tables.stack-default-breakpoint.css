@@ -1,20 +1,34 @@
 @media (max-width: 39.9375em) {
+  /* Table rows have a gray bottom stroke by default */
+  .tablesaw-stack tbody tr {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #dfdfdf;
+  }
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
     display: none;
   }
   .tablesaw-stack tbody td,
   .tablesaw-stack tbody th {
-    clear: left;
+    display: block;
     float: left;
+    clear: left;
     width: 100%;
   }
   .tablesaw-cell-label {
     vertical-align: top;
   }
   .tablesaw-cell-content {
-    max-width: 67%;
     display: inline-block;
+    max-width: 67%;
+  }
+  .tablesaw-stack .tablesaw-stack-block .tablesaw-cell-label,
+  .tablesaw-stack .tablesaw-stack-block .tablesaw-cell-content {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
   .tablesaw-stack td:empty,
   .tablesaw-stack th:empty {

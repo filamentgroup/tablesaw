@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TableSaw Column Toggle Table</title>
+
+  <link rel="stylesheet" href="../dist/tablesaw.css">
+  <link rel="stylesheet" href="demo.css">
+  <link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
+
+  <!-- <script src="../dist/dependencies/jquery.js"></script>
+  <script src="../dist/tablesaw.jquery.js"></script> -->
+  <script src="../dist/tablesaw.js"></script>
+  <script src="../dist/tablesaw-init.js"></script>
+  <script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
+</head>
+<body>
+  <div class="demo-header">
+    <div class="company">
+      <img src="http://filamentgroup.com/images/fg-logo-positive-sm-crop.png">
+    </div>
+    <div class="details">
+      <h1 class="description-container">Demo of <span class="repo-name">Tablesaw</span>
+        <span class="description">A group of plugins for responsive tables.</span>
+      </h1>
+      <ul class="outbound-links">
+        <li><a href="https://github.com/filamentgroup/tablesaw">Code</a></li>
+        <li><a href="https://github.com/filamentgroup/tablesaw/issues">Issues</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="nav-container">
+    <div class="docs-globalnav">
+      <nav class="docs-nav">
+      <a href="kitchensink.html" class="current">Kitchen Sink</a>
+      <a href="modeswitch.html">Mode Switch</a>
+      <a href="sort.html">Sortable</a>
+      <a href="stack.html">Stack</a>
+      <a href="stackonly.html">Stack Only</a>
+      <a href="swipe.html">Swipe Table</a>
+      <a href="toggle.html">Toggle</a>
+      <a href="checkall.html">Check All</a>
+      </nav>
+    </div>
+  </div>
+  <div class="docs-main">
+    <h2>Kitchen Sink</h2>
+    <p>This demonstration table contains all of the bells and whistles available in tablesaw: Swipe Mode, ModeSwitch, Minimap, Sortable, and SortableSwitch.</p>
+
+  <table class="table sa-table tablesaw" data-tablesaw-sortable data-tablesaw-mode="columntoggle">
+    <thead>
+      <tr>
+        <th scope="col" data-tablesaw-priority="persist"><label class="container-fluid sa-table-checkbox"><input type="checkbox" data-tablesaw-checkall><span class="sr-only"> Check All</span></label></th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="persist" class="sa-table-primarycol">Job Title</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Level</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="3">Sub-family</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="0">Experience</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="0">Education</th>
+        <th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="6" data-tablesaw-sortable-numeric>*Base 50th (USD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-tablesaw-ignorerow>
+        <td colspan="7"><strong>Header Row</strong></td>
+      </tr>
+      <tr>
+        <td><label class="container-fluid sa-table-checkbox"><input type="checkbox"><span class="sr-only"> Select Row</span></label></td>
+        <td class="sa-table-primarycol"><a href="#">Application Systems Architect</a></td>
+        <td>Senior</td>
+        <td><a href="#">Application Systems</a></td>
+        <td>5</td>
+        <td>BA</td>
+        <td>135,200</td>
+      </tr>
+      <tr data-tablesaw-subrow class="sa-table-collapse collapse" id="expandable-row-example-1">
+        <td colspan="7">
+        <h3 class="sa-table-collapse-hed">Subrow 1</h3>
+          <!-- Start subtable -->
+          <table class="table sa-table tablesaw" data-tablesaw-mode="stack" data-tablesaw-sortable>
+            <thead>
+              <tr>
+                <th>Job Code</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>EXT3440</td>
+              </tr>
+              <tr>
+                <td>EXT3441</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- End subtable -->
+        </td>
+      </tr>
+      <tr data-tablesaw-subrow>
+        <td colspan="7">
+        <h3 class="sa-table-collapse-hed">Subrow 2</h3>
+        </td>
+      </tr>
+      <tr>
+        <td><label class="container-fluid sa-table-checkbox"><input type="checkbox" checked><span class="sr-only"> Select Row</span></label></td>
+        <td class="sa-table-primarycol"><a href="#">Application Development Director</a></td>
+        <td>Senior</td>
+        <td><a href="#">Application Development</a></td>
+        <td>5</td>
+        <td>MS</td>
+        <td>145,200</td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <td><label class="container-fluid sa-table-checkbox"><input type="checkbox" checked><span class="sr-only"> Select Row</span></label></td>
+        <td class="sa-table-primarycol"><a href="#">Application Development Manager</a></td>
+        <td>Senior</td>
+        <td><a href="#">Application Development</a></td>
+        <td>5</td>
+        <td>MS</td>
+        <td>122,200</td>
+      </tr>
+      <tr>
+        <td><label class="container-fluid sa-table-checkbox"><input type="checkbox"><span class="sr-only"> Select Row</span></label></td>
+        <td class="sa-table-primarycol"><a href="#">Applications Programmer I</a></td>
+        <td>I</td>
+        <td><a href="#">Applications Programming</a></td>
+        <td>5</td>
+        <td>MS</td>
+        <td>56,200</td>
+      </tr>
+      <tr>
+        <td><label class="container-fluid sa-table-checkbox"><input type="checkbox"><span class="sr-only"> Select Row</span></label></td>
+        <td class="sa-table-primarycol"><a href="#">Applications Programmer II</a></td>
+        <td>II</td>
+        <td><a href="#">Applications Programming</a></td>
+        <td>5</td>
+        <td>MS</td>
+        <td>67,200</td>
+      </tr>
+      <tr>
+        <td><label class="container-fluid sa-table-checkbox"><input type="checkbox"><span class="sr-only"> Select Row</span></label></td>
+        <td class="sa-table-primarycol"><a href="#">Application Designer</a></td>
+        <td></td>
+        <td>
+        </td>
+        <td></td>
+        <td></td>
+        <td>88,200</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

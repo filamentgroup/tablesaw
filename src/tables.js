@@ -1,5 +1,3 @@
-/*global Tablesaw:true */
-
 /*
 * tablesaw: A set of plugins for responsive tables
 * Stack and Column Toggle tables
@@ -7,156 +5,345 @@
 * MIT License
 */
 
-if( typeof Tablesaw === "undefined" ) {
-	Tablesaw = {
-		i18n: {
-			modes: [ 'Stack', 'Swipe', 'Toggle' ],
-			columns: 'Col<span class=\"a11y-sm\">umn</span>s',
-			columnBtnText: 'Columns',
-			columnsDialogError: 'No eligible columns.',
-			sort: 'Sort'
-		},
-		// cut the mustard
-		mustard: 'querySelector' in document &&
-			( !window.blackberry || window.WebKitPoint ) &&
-			!window.operamini
+var Tablesaw = {
+	i18n: {
+		modeStack: "Stack",
+		modeSwipe: "Swipe",
+		modeToggle: "Toggle",
+		modeSwitchColumnsAbbreviated: "Cols",
+		modeSwitchColumns: "Columns",
+		columnToggleButton: "Columns",
+		columnToggleError: "No eligible columns.",
+		sort: "Sort",
+		swipePreviousColumn: "Previous column",
+		swipeNextColumn: "Next column"
+	},
+	// cut the mustard
+	mustard:
+		"head" in document && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
+		(!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
+		!window.operamini
+};
+
+$(win.document).on("enhance.tablesaw", function() {
+	// Extend i18n config, if one exists.
+	if (typeof TablesawConfig !== "undefined" && TablesawConfig.i18n) {
+		Tablesaw.i18n = $.extend(Tablesaw.i18n, TablesawConfig.i18n || {});
+	}
+
+	Tablesaw.i18n.modes = [
+		Tablesaw.i18n.modeStack,
+		Tablesaw.i18n.modeSwipe,
+		Tablesaw.i18n.modeToggle
+	];
+});
+
+if (Tablesaw.mustard) {
+	$(document.documentElement).addClass("tablesaw-enhanced");
+}
+
+(function() {
+	var pluginName = "tablesaw";
+	var classes = {
+		toolbar: "tablesaw-bar"
 	};
-}
-if( !Tablesaw.config ) {
-	Tablesaw.config = {};
-}
-if( Tablesaw.mustard ) {
-	jQuery( document.documentElement ).addClass( 'tablesaw-enhanced' );
-}
+	var events = {
+		create: "tablesawcreate",
+		destroy: "tablesawdestroy",
+		refresh: "tablesawrefresh",
+		resize: "tablesawresize"
+	};
+	var defaultMode = "stack";
+	var initSelector = "table";
+	var initFilterSelector = "[data-tablesaw],[data-tablesaw-mode],[data-tablesaw-sortable]";
+	var defaultConfig = {};
 
-;(function( $ ) {
-	var pluginName = "table",
-		classes = {
-			toolbar: "tablesaw-bar"
-		},
-		events = {
-			create: "tablesawcreate",
-			destroy: "tablesawdestroy",
-			refresh: "tablesawrefresh"
-		},
-		defaultMode = "stack",
-		initSelector = "table[data-tablesaw-mode],table[data-tablesaw-sortable]";
+	Tablesaw.events = events;
 
-	var Table = function( element ) {
-		if( !element ) {
-			throw new Error( "Tablesaw requires an element." );
+	var Table = function(element) {
+		if (!element) {
+			throw new Error("Tablesaw requires an element.");
 		}
 
 		this.table = element;
-		this.$table = $( element );
+		this.$table = $(element);
 
-		this.mode = this.$table.attr( "data-tablesaw-mode" ) || defaultMode;
+		// only one <thead> and <tfoot> are allowed, per the specification
+		this.$thead = this.$table.children().filter("thead").eq(0);
+
+		// multiple <tbody> are allowed, per the specification
+		this.$tbody = this.$table.children().filter("tbody");
+
+		this.mode = this.$table.attr("data-tablesaw-mode") || defaultMode;
+
+		this.$toolbar = null;
 
 		this.init();
 	};
 
 	Table.prototype.init = function() {
+		if (!this.$thead.length) {
+			throw new Error("tablesaw: a <thead> is required, but none was found.");
+		}
+
+		if (!this.$thead.find("th").length) {
+			throw new Error("tablesaw: no header cells found. Are you using <th> inside of <thead>?");
+		}
+
 		// assign an id if there is none
-		if ( !this.$table.attr( "id" ) ) {
-			this.$table.attr( "id", pluginName + "-" + Math.round( Math.random() * 10000 ) );
+		if (!this.$table.attr("id")) {
+			this.$table.attr("id", pluginName + "-" + Math.round(Math.random() * 10000));
 		}
 
 		this.createToolbar();
 
-		var colstart = this._initCells();
+		this._initCells();
 
-		this.$table.trigger( events.create, [ this, colstart ] );
+		this.$table.data(pluginName, this);
+
+		this.$table.trigger(events.create, [this]);
+	};
+
+	Table.prototype.getConfig = function(pluginSpecificConfig) {
+		// shoestring extend doesn’t support arbitrary args
+		var configs = $.extend(defaultConfig, pluginSpecificConfig || {});
+		return $.extend(configs, typeof TablesawConfig !== "undefined" ? TablesawConfig : {});
+	};
+
+	Table.prototype._getPrimaryHeaderRow = function() {
+		return this._getHeaderRows().eq(0);
+	};
+
+	Table.prototype._getHeaderRows = function() {
+		return this.$thead.children().filter("tr").filter(function() {
+			return !$(this).is("[data-tablesaw-ignorerow]");
+		});
+	};
+
+	Table.prototype._getRowIndex = function($row) {
+		return $row.prevAll().length;
+	};
+
+	Table.prototype._getHeaderRowIndeces = function() {
+		var self = this;
+		var indeces = [];
+		this._getHeaderRows().each(function() {
+			indeces.push(self._getRowIndex($(this)));
+		});
+		return indeces;
+	};
+
+	Table.prototype._getPrimaryHeaderCells = function($row) {
+		return ($row || this._getPrimaryHeaderRow()).find("th");
+	};
+
+	Table.prototype._findPrimaryHeadersForCell = function(cell) {
+		var $headerRow = this._getPrimaryHeaderRow();
+		var $headers = this._getPrimaryHeaderCells($headerRow);
+		var headerRowIndex = this._getRowIndex($headerRow);
+		var results = [];
+
+		for (var rowNumber = 0; rowNumber < this.headerMapping.length; rowNumber++) {
+			if (rowNumber === headerRowIndex) {
+				continue;
+			}
+			for (var colNumber = 0; colNumber < this.headerMapping[rowNumber].length; colNumber++) {
+				if (this.headerMapping[rowNumber][colNumber] === cell) {
+					results.push($headers[colNumber]);
+				}
+			}
+		}
+		return results;
+	};
+
+	// used by init cells
+	Table.prototype.getRows = function() {
+		var self = this;
+		return this.$table.find("tr").filter(function() {
+			return $(this).closest("table").is(self.$table);
+		});
+	};
+
+	// used by sortable
+	Table.prototype.getBodyRows = function(tbody) {
+		return (tbody ? $(tbody) : this.$tbody).children().filter("tr");
+	};
+
+	Table.prototype.getHeaderCellIndex = function(cell) {
+		var lookup = this.headerMapping[0];
+		for (var colIndex = 0; colIndex < lookup.length; colIndex++) {
+			if (lookup[colIndex] === cell) {
+				return colIndex;
+			}
+		}
+
+		return -1;
 	};
 
 	Table.prototype._initCells = function() {
-		var colstart,
-			thrs = this.table.querySelectorAll( "thead tr" ),
-			self = this;
+		var $rows = this.getRows();
+		var columnLookup = [];
 
-		$( thrs ).each( function(){
+		$rows.each(function(rowNumber) {
+			columnLookup[rowNumber] = [];
+		});
+
+		$rows.each(function(rowNumber) {
 			var coltally = 0;
+			var $t = $(this);
+			var children = $t.children();
 
-			$( this ).children().each( function(){
-				var span = parseInt( this.getAttribute( "colspan" ), 10 ),
-					sel = ":nth-child(" + ( coltally + 1 ) + ")";
+			children.each(function() {
+				var colspan = parseInt(this.getAttribute("colspan"), 10);
+				var rowspan = parseInt(this.getAttribute("rowspan"), 10);
 
-				colstart = coltally + 1;
+				// set in a previous rowspan
+				while (columnLookup[rowNumber][coltally]) {
+					coltally++;
+				}
 
-				if( span ){
-					for( var k = 0; k < span - 1; k++ ){
+				columnLookup[rowNumber][coltally] = this;
+
+				// TODO? both colspan and rowspan
+				if (colspan) {
+					for (var k = 0; k < colspan - 1; k++) {
 						coltally++;
-						sel += ", :nth-child(" + ( coltally + 1 ) + ")";
+						columnLookup[rowNumber][coltally] = this;
+					}
+				}
+				if (rowspan) {
+					for (var j = 1; j < rowspan; j++) {
+						columnLookup[rowNumber + j][coltally] = this;
 					}
 				}
 
-				// Store "cells" data on header as a reference to all cells in the same column as this TH
-				this.cells = self.$table.find("tr").not( thrs[0] ).not( this ).children().filter( sel );
 				coltally++;
 			});
 		});
 
-		return colstart;
+		var headerRowIndeces = this._getHeaderRowIndeces();
+		for (var colNumber = 0; colNumber < columnLookup[0].length; colNumber++) {
+			for (var headerIndex = 0, k = headerRowIndeces.length; headerIndex < k; headerIndex++) {
+				var headerCol = columnLookup[headerRowIndeces[headerIndex]][colNumber];
+
+				var rowNumber = headerRowIndeces[headerIndex];
+				var rowCell;
+
+				if (!headerCol.cells) {
+					headerCol.cells = [];
+				}
+
+				while (rowNumber < columnLookup.length) {
+					rowCell = columnLookup[rowNumber][colNumber];
+
+					if (headerCol !== rowCell) {
+						headerCol.cells.push(rowCell);
+					}
+
+					rowNumber++;
+				}
+			}
+		}
+
+		this.headerMapping = columnLookup;
 	};
 
 	Table.prototype.refresh = function() {
 		this._initCells();
 
-		this.$table.trigger( events.refresh );
+		this.$table.trigger(events.refresh, [this]);
+	};
+
+	Table.prototype._getToolbarAnchor = function() {
+		var $parent = this.$table.parent();
+		if ($parent.is(".tablesaw-overflow")) {
+			return $parent;
+		}
+		return this.$table;
+	};
+
+	Table.prototype._getToolbar = function($anchor) {
+		if (!$anchor) {
+			$anchor = this._getToolbarAnchor();
+		}
+		return $anchor.prev().filter("." + classes.toolbar);
 	};
 
 	Table.prototype.createToolbar = function() {
 		// Insert the toolbar
 		// TODO move this into a separate component
-		var $toolbar = this.$table.prev().filter( '.' + classes.toolbar );
-		if( !$toolbar.length ) {
-			$toolbar = $( '<div>' )
-				.addClass( classes.toolbar )
-				.insertBefore( this.$table );
+		var $anchor = this._getToolbarAnchor();
+		var $toolbar = this._getToolbar($anchor);
+		if (!$toolbar.length) {
+			$toolbar = $("<div>").addClass(classes.toolbar).insertBefore($anchor);
 		}
 		this.$toolbar = $toolbar;
 
-		if( this.mode ) {
-			this.$toolbar.addClass( 'mode-' + this.mode );
+		if (this.mode) {
+			this.$toolbar.addClass("tablesaw-mode-" + this.mode);
 		}
 	};
 
 	Table.prototype.destroy = function() {
-		// Don’t remove the toolbar. Some of the table features are not yet destroy-friendly.
-		this.$table.prev().filter( '.' + classes.toolbar ).each(function() {
-			this.className = this.className.replace( /\bmode\-\w*\b/gi, '' );
+		// Don’t remove the toolbar, just erase the classes on it.
+		// Some of the table features are not yet destroy-friendly.
+		this._getToolbar().each(function() {
+			this.className = this.className.replace(/\btablesaw-mode\-\w*\b/gi, "");
 		});
 
-		var tableId = this.$table.attr( 'id' );
-		$( document ).unbind( "." + tableId );
-		$( window ).unbind( "." + tableId );
+		var tableId = this.$table.attr("id");
+		$(document).off("." + tableId);
+		$(window).off("." + tableId);
 
 		// other plugins
-		this.$table.trigger( events.destroy, [ this ] );
+		this.$table.trigger(events.destroy, [this]);
 
-		this.$table.removeAttr( 'data-tablesaw-mode' );
-
-		this.$table.removeData( pluginName );
+		this.$table.removeData(pluginName);
 	};
 
 	// Collection method.
-	$.fn[ pluginName ] = function() {
-		return this.each( function() {
-			var $t = $( this );
+	$.fn[pluginName] = function() {
+		return this.each(function() {
+			var $t = $(this);
 
-			if( $t.data( pluginName ) ){
+			if ($t.data(pluginName)) {
 				return;
 			}
 
-			var table = new Table( this );
-			$t.data( pluginName, table );
+			new Table(this);
 		});
 	};
 
-	$( document ).on( "enhance.tablesaw", function( e ) {
+	var $doc = $(win.document);
+	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
-		if( Tablesaw.mustard ) {
-			$( e.target ).find( initSelector )[ pluginName ]();
+		if (Tablesaw.mustard) {
+			$(e.target).find(initSelector).filter(initFilterSelector)[pluginName]();
 		}
 	});
 
-}( jQuery ));
+	// Avoid a resize during scroll:
+	// Some Mobile devices trigger a resize during scroll (sometimes when
+	// doing elastic stretch at the end of the document or from the
+	// location bar hide)
+	var isScrolling = false;
+	var scrollTimeout;
+	$doc.on("scroll.tablesaw", function() {
+		isScrolling = true;
+
+		win.clearTimeout(scrollTimeout);
+		scrollTimeout = win.setTimeout(function() {
+			isScrolling = false;
+		}, 300); // must be greater than the resize timeout below
+	});
+
+	var resizeTimeout;
+	$(win).on("resize", function() {
+		if (!isScrolling) {
+			win.clearTimeout(resizeTimeout);
+			resizeTimeout = win.setTimeout(function() {
+				$doc.trigger(events.resize);
+			}, 150); // must be less than the scrolling timeout above.
+		}
+	});
+})();

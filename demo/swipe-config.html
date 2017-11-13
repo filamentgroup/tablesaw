@@ -10,18 +10,14 @@
 	<link rel="stylesheet" href="demo.css">
 	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
 
-	<!--[if lt IE 9]><script src="../dist/dependencies/respond.js"></script><![endif]-->
-	<script src="../dist/dependencies/jquery.js"></script>
-	<script src="../dist/tablesaw.js"></script>
-	<script src="../dist/tablesaw-init.js"></script>
 	<script>
-	Tablesaw.config = {
-		swipe: {
-			horizontalThreshold: 20, // default is 15
-			verticalThreshold: 40 // default is 30
-		}
+	TablesawConfig = {
+		swipeHorizontalThreshold: 20, // default is 15
+		swipeVerticalThreshold: 40 // default is 30
 	};
 	</script>
+	<script src="../dist/tablesaw.js"></script>
+	<script src="../dist/tablesaw-init.js"></script>
 	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
 </head>
 <body>
@@ -49,7 +45,6 @@
 			<a href="stackonly.html">Stack Only</a>
 			<a href="swipe.html" class="current">Swipe Table</a>
 			<a href="toggle.html">Toggle</a>
-			<a href="bare.html">Bare</a>
 			</nav>
 		</div>
 	</div>
