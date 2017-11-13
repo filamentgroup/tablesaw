@@ -205,7 +205,7 @@
 				}
 			},
 			sortRows: function(rows, colNum, ascending, col, tbody) {
-				function convertCells(cellArr, belongingToTbody, sortOrder) {
+				function convertCells(cellArr, belongingToTbody, multiColSortOrder) {
 					var cells = [];
 					$.each(cellArr, function(i, cell) {
 						var row = cell.parentNode;
@@ -218,10 +218,12 @@
 							$next = $next.next();
 						}
 
-						var sortValues = [];
-						var $cells = $row.children();
-						for(var c in sortOrder) {
-							sortValues.push(getSortValue( $cells.get( sortOrder[c] ) ));
+						var multiColSortValues = [];
+						if(multiColSortOrder) {
+							var $cells = $row.children();
+							$.each(multiColSortOrder, function(i, colNum){
+								multiColSortValues.push(getSortValue( $cells.get( colNum ) ));
+							});
 						}
 
 						var tbody = row.parentNode;
@@ -230,7 +232,8 @@
 						if ($row.is("[" + attrs.subRow + "]")) {
 						} else if (tbody === belongingToTbody) {
 							cells.push({
-								cell: sortValues,
+								cell: getSortValue(cell),
+								multiCol: multiColSortValues,
 								row: row,
 								subrows: subrows.length ? subrows : null,
 								ignored: $row.is("[" + attrs.ignoreRow + "]")
@@ -239,7 +242,7 @@
 					});
 					return cells;
 				}
-				function getSortFxn( ascending, col, sortOrder) {
+				function getSortFxn( ascending, col, multiColSortOrder) {
 					var _sortFxn = function (valueA, valueB, forceNumeric) {
 						if( forceNumeric ){
 							var regex = /[^\-\+\d\.]/g;
@@ -267,10 +270,12 @@
 							!$(col).is("[" + attrs.numericCol + '="false"]');
 					};
 					return function( a , b ) {
-						var fn = _sortFxn(a.cell[0], b.cell[0], _forceNumeric(col) );
-						for (var i = 1; i < a.cell.length; i++) {
-							var forceNumeric = _forceNumeric(col.parentElement.children[sortOrder[i]]);
-							fn = fn || _sortFxn(a.cell[i], b.cell[i], forceNumeric);
+						var fn = _sortFxn(a.cell, b.cell, _forceNumeric(col) );
+						if(multiColSortOrder && a.multiCol.length > 0 ) {
+							for (var i = 0; i < a.multiCol.length; i++) {
+								var forceNumeric = _forceNumeric(col.parentElement.children[multiColSortOrder[i]]);
+								fn = fn || _sortFxn(a.multiCol[i], b.multiCol[i], forceNumeric);
+							}
 						}
 						return fn;
 					};
@@ -287,17 +292,28 @@
 					}
 					return newRows;
 				}
+				function getMultiColSortOrder() {
+					var sortOrderArr;
+					var dataSortableMulticol = col.dataset.tablesawSortableMulticol;
+					if(dataSortableMulticol) {
+						try {
+							sortOrderArr = JSON.parse(col.dataset.tablesawSortableMulticol)
+						} catch (e) {
+							console.error("The sort order for the multicolumn sort is not a valid array: "+dataSortableMulticol+"\n"+e);
+						}
+					}
+					return sortOrderArr;
+				}
 
 				var fn;
 				var sorted;
-				var sortOrder = col.dataset.tablesawSortableMulticol ? JSON.parse(col.dataset.tablesawSortableMulticol) : [ colNum ];
-				var cells = convertCells(col.cells, tbody, sortOrder);
-
+				var multiColSortOrder = getMultiColSortOrder();
+				var cells = convertCells(col.cells, tbody, multiColSortOrder);
 				var customFn = $(col).data("tablesaw-sort");
 
 				fn =
 					(customFn && typeof customFn === "function" ? customFn(ascending) : false) ||
-					getSortFxn(ascending, col, sortOrder);
+					getSortFxn(ascending, col, multiColSortOrder);
 
 				sorted = cells.sort(fn);
 

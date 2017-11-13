@@ -26,7 +26,7 @@
 				'<tr>',
 					'<th data-tablesaw-priority="1" data-tablesaw-sortable-col>Header</th>',
 					'<th data-tablesaw-sortable-col data-tablesaw-sortable-numeric>Header</th>',
-					'<th data-tablesaw-sortable-col data-tablesaw-sortable-multicol="[2,1,0]">Header</th>',
+					'<th data-tablesaw-sortable-col data-tablesaw-sortable-multicol="[1,0]">Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
 					'<th>Header</th>',
@@ -231,7 +231,7 @@
 
 	});
 
-	QUnit.test( 'Multiple Column sort is working', function(assert) {
+	QUnit.test( 'Multiple column sort is working', function(assert) {
 		var maximumRow1Text = "body row 4",
 			rowsNumber = $table.find( 'tbody tr' ).length,
 			previousRow1Text = $table.find( 'tbody tr').eq(rowsNumber-1).find('td' ).eq( 0 ).text(),
