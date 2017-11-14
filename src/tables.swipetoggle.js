@@ -47,9 +47,10 @@
 		}
 
 		$table.addClass("tablesaw-swipe");
-		$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
 
 		function initMinHeaderWidths() {
+			$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
+
 			headerWidths = [];
 			// Calculate initial widths
 			$headerCells.each(function() {
@@ -337,6 +338,7 @@
 				$t.off(".swipetoggle");
 			})
 			.on(Tablesaw.events.refresh, function() {
+				unmaintainWidths();
 				initMinHeaderWidths();
 				fakeBreakpoints();
 			});
