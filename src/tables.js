@@ -307,7 +307,10 @@ if (Tablesaw.mustard) {
 			var children = $t.children();
 
 			children.each(function() {
-				var colspan = parseInt(this.getAttribute("colspan"), 10);
+				var colspan = parseInt(
+					this.getAttribute("data-tablesaw-maxcolspan") || this.getAttribute("colspan"),
+					10
+				);
 				var rowspan = parseInt(this.getAttribute("rowspan"), 10);
 
 				// set in a previous rowspan
