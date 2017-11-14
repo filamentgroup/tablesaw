@@ -323,6 +323,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._initCells = function() {
+		// re-establish original colspans
+		this.$table.find("[data-tablesaw-maxcolspan]").each(function() {
+			var $t = $(this);
+			$t.attr("colspan", $t.attr("data-tablesaw-maxcolspan"));
+		});
+
 		var $rows = this.getRows();
 		var columnLookup = [];
 
@@ -1373,9 +1379,10 @@ if (Tablesaw.mustard) {
 		}
 
 		$table.addClass("tablesaw-swipe");
-		$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
 
 		function initMinHeaderWidths() {
+			$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
+
 			headerWidths = [];
 			// Calculate initial widths
 			$headerCells.each(function() {
@@ -1663,6 +1670,7 @@ if (Tablesaw.mustard) {
 				$t.off(".swipetoggle");
 			})
 			.on(Tablesaw.events.refresh, function() {
+				unmaintainWidths();
 				initMinHeaderWidths();
 				fakeBreakpoints();
 			});
