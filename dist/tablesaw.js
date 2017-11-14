@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.6-beta.1 - 2017-11-03
+/*! Tablesaw - v3.0.6-beta.2 - 2017-11-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -1896,7 +1896,7 @@ if (Tablesaw.mustard) {
 		var colspan = 0;
 		this._getPrimaryHeaderCells().each(function() {
 			var $t = $(this);
-			if($t.css("display") !== "none") {
+			if ($t.css("display") !== "none") {
 				colspan += parseInt($t.attr("colspan"), 10) || 1;
 			}
 		});
@@ -1906,25 +1906,25 @@ if (Tablesaw.mustard) {
 	Table.prototype.getColspanForCell = function($cell) {
 		var visibleColspan = this._getVisibleColspan();
 		var visibleSiblingColumns = 0;
-		if( $cell.closest( "tr" ).data( "tablesaw-rowspanned" ) ) {
+		if ($cell.closest("tr").data("tablesaw-rowspanned")) {
 			visibleSiblingColumns++;
 		}
-console.log( "ROWSPANNED", $cell.closest( "tr" ).data( "tablesaw-rowspanned" ) );
+
 		$cell.siblings().each(function() {
-			var $t = $( this );
+			var $t = $(this);
 			var colColspan = parseInt($t.attr("colspan"), 10) || 1;
 
-			if( $t.css("display") !== "none" ) {
+			if ($t.css("display") !== "none") {
 				visibleSiblingColumns += colColspan;
 			}
 		});
-		console.log( $cell[ 0 ], visibleColspan, visibleSiblingColumns );
+		// console.log( $cell[ 0 ], visibleColspan, visibleSiblingColumns );
 
 		return visibleColspan - visibleSiblingColumns;
 	};
 
 	Table.prototype.isCellInColumn = function(header, cell) {
-		return $( header ).add( header.cells ).filter(function() {
+		return $(header).add(header.cells).filter(function() {
 			return this === cell;
 		}).length;
 	};
@@ -1936,51 +1936,54 @@ console.log( "ROWSPANNED", $cell.closest( "tr" ).data( "tablesaw-rowspanned" ) )
 		// find persistent column rowspans
 		this.$table.find("[rowspan][data-tablesaw-priority]").each(function() {
 			var $t = $(this);
-			if( $t.attr( "data-tablesaw-priority" ) !== "persist" ) {
+			if ($t.attr("data-tablesaw-priority") !== "persist") {
 				return;
 			}
 
 			var $row = $t.closest("tr");
-			var rowspan = parseInt( $t.attr("rowspan"), 10);
-			if( rowspan > 1 ) {
+			var rowspan = parseInt($t.attr("rowspan"), 10);
+			if (rowspan > 1) {
 				$row = $row.next();
 
-				$row.data( "tablesaw-rowspanned", true );
+				$row.data("tablesaw-rowspanned", true);
 
 				rowspan--;
 			}
 		});
 
-		this.$table.find("[colspan],[data-tablesaw-maxcolspan]").filter(function() {
-			// is not in primary header row
-			return $(this).closest( "tr" )[0] !== primaryHeaderRow[ 0 ];
-		}).each(function() {
-			var $cell = $(this);
+		this.$table
+			.find("[colspan],[data-tablesaw-maxcolspan]")
+			.filter(function() {
+				// is not in primary header row
+				return $(this).closest("tr")[0] !== primaryHeaderRow[0];
+			})
+			.each(function() {
+				var $cell = $(this);
 
-			if( userAction === undefined || self.isCellInColumn(header, this)) {
-			} else {
-				// if is not a user action AND the cell is not in the updating column, kill it
-				return;
-			}
+				if (userAction === undefined || self.isCellInColumn(header, this)) {
+				} else {
+					// if is not a user action AND the cell is not in the updating column, kill it
+					return;
+				}
 
-			var colspan = self.getColspanForCell( $cell );
+				var colspan = self.getColspanForCell($cell);
 
-			if( cls && userAction !== undefined ) {
-				console.log( colspan === 0 ? "addClass" : "removeClass", $cell );
-				$cell[ colspan === 0 ? "addClass" : "removeClass" ]( cls );
-			}
+				if (cls && userAction !== undefined) {
+					// console.log( colspan === 0 ? "addClass" : "removeClass", $cell );
+					$cell[colspan === 0 ? "addClass" : "removeClass"](cls);
+				}
 
-			// cache original colspan
-			var maxColspan = parseInt( $cell.attr( "data-tablesaw-maxcolspan" ), 10 );
-			if( !maxColspan ) {
-				$cell.attr( "data-tablesaw-maxcolspan", $cell.attr( "colspan" ) );
-			} else if( colspan > maxColspan ) {
-				colspan = maxColspan;
-			}
+				// cache original colspan
+				var maxColspan = parseInt($cell.attr("data-tablesaw-maxcolspan"), 10);
+				if (!maxColspan) {
+					$cell.attr("data-tablesaw-maxcolspan", $cell.attr("colspan"));
+				} else if (colspan > maxColspan) {
+					colspan = maxColspan;
+				}
 
-			console.log( this, "setting colspan to ", colspan );
-			$cell.attr( "colspan", colspan );
-		});
+				// console.log( this, "setting colspan to ", colspan );
+				$cell.attr("colspan", colspan);
+			});
 	};
 
 	Table.prototype._findPrimaryHeadersForCell = function(cell) {
@@ -3106,7 +3109,7 @@ console.log( "ROWSPANNED", $cell.closest( "tr" ).data( "tablesaw-rowspanned" ) )
 		}
 
 		function isPersistent(headerCell) {
-			return $(headerCell).is("[data-tablesaw-priority=\"persist\"]");
+			return $(headerCell).is('[data-tablesaw-priority="persist"]');
 		}
 
 		function unmaintainWidths() {
@@ -3243,7 +3246,7 @@ console.log( "ROWSPANNED", $cell.closest( "tr" ).data( "tablesaw-rowspanned" ) )
 				if (sums[index] <= containerWidth || needsNonPersistentColumn) {
 					needsNonPersistentColumn = false;
 					showColumn(this);
-					tblsaw.updateColspanCells( classes.hiddenCol, this, true );
+					tblsaw.updateColspanCells(classes.hiddenCol, this, true);
 				}
 			});
 
@@ -3265,10 +3268,10 @@ console.log( "ROWSPANNED", $cell.closest( "tr" ).data( "tablesaw-rowspanned" ) )
 
 				maintainWidths();
 				hideColumn($headerCellsNoPersist.get(pair[0]));
-				tblsaw.updateColspanCells( classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false );
-				
+				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
+
 				showColumn($headerCellsNoPersist.get(pair[1]));
-				tblsaw.updateColspanCells( classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true );
+				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true);
 
 				$table.trigger("tablesawcolumns");
 			}
