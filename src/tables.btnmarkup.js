@@ -62,6 +62,7 @@
 				};
 
 				update(this, sel);
+				// todo should this be tablesawrefresh?
 				$(this).on("change refresh", function() {
 					update(this, sel);
 				});

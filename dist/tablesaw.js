@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.6-beta.3 - 2017-11-14
+/*! Tablesaw - v3.0.6-beta.4 - 2017-11-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -2043,7 +2043,10 @@ if (Tablesaw.mustard) {
 			var children = $t.children();
 
 			children.each(function() {
-				var colspan = parseInt(this.getAttribute("colspan"), 10);
+				var colspan = parseInt(
+					this.getAttribute("data-tablesaw-maxcolspan") || this.getAttribute("colspan"),
+					10
+				);
 				var rowspan = parseInt(this.getAttribute("rowspan"), 10);
 
 				// set in a previous rowspan
@@ -2371,6 +2374,7 @@ if (Tablesaw.mustard) {
 				};
 
 				update(this, sel);
+				// todo should this be tablesawrefresh?
 				$(this).on("change refresh", function() {
 					update(this, sel);
 				});
