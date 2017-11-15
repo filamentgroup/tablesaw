@@ -49,13 +49,22 @@
 		$table.addClass("tablesaw-swipe");
 
 		function initMinHeaderWidths() {
+			$table.css({
+				width: "1px"
+			});
+
+			// remove any hidden columns
 			$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
 
 			headerWidths = [];
 			// Calculate initial widths
 			$headerCells.each(function() {
-				var width = this.offsetWidth;
-				headerWidths.push(width);
+				headerWidths.push(this.offsetWidth);
+			});
+
+			// reset props
+			$table.css({
+				width: ""
 			});
 		}
 
@@ -238,6 +247,8 @@
 					}
 				}
 
+				// TODO just blindly hiding the previous column and showing the next column can result in
+				// column content overflow
 				maintainWidths();
 				hideColumn($headerCellsNoPersist.get(pair[0]));
 				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
