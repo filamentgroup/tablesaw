@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.6-beta.4 - 2017-11-14
+/*! Tablesaw - v3.0.6-beta.5 - 2017-11-15
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -3088,13 +3088,22 @@ if (Tablesaw.mustard) {
 		$table.addClass("tablesaw-swipe");
 
 		function initMinHeaderWidths() {
+			$table.css({
+				width: "1px"
+			});
+
+			// remove any hidden columns
 			$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
 
 			headerWidths = [];
 			// Calculate initial widths
 			$headerCells.each(function() {
-				var width = this.offsetWidth;
-				headerWidths.push(width);
+				headerWidths.push(this.offsetWidth);
+			});
+
+			// reset props
+			$table.css({
+				width: ""
 			});
 		}
 
@@ -3277,6 +3286,8 @@ if (Tablesaw.mustard) {
 					}
 				}
 
+				// TODO just blindly hiding the previous column and showing the next column can result in
+				// column content overflow
 				maintainWidths();
 				hideColumn($headerCellsNoPersist.get(pair[0]));
 				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
