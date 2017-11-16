@@ -22,7 +22,9 @@
 
 				if (sel) {
 					// TODO next major version: remove .btn-select
-					$(this).addClass("btn-select tablesaw-btn-select")[pluginName]("_select", sel);
+					$(this)
+						.addClass("btn-select tablesaw-btn-select")
+						[pluginName]("_select", sel);
 				}
 				return oEl;
 			},
@@ -90,4 +92,6 @@
 
 	// add methods
 	$.extend($.fn[pluginName].prototype, methods);
+
+	// TODO OOP this and add to Tablesaw object
 })();

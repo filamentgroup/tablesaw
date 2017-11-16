@@ -47,7 +47,9 @@
 			})
 			.filter(function() {
 				return (
-					!$(this).closest("tr").is("[" + attrs.labelless + "]") &&
+					!$(this)
+						.closest("tr")
+						.is("[" + attrs.labelless + "]") &&
 					(!self.hideempty || !!$(this).html())
 				);
 			})
@@ -112,12 +114,18 @@
 		})
 		.on(Tablesaw.events.refresh, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).init();
+				$(tablesaw.table)
+					.data(data.key)
+					.init();
 			}
 		})
 		.on(Tablesaw.events.destroy, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).destroy();
+				$(tablesaw.table)
+					.data(data.key)
+					.destroy();
 			}
 		});
+
+	Tablesaw.Stack = Stack;
 })();

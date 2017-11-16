@@ -88,4 +88,6 @@
 			S.init(Tablesaw.table);
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();

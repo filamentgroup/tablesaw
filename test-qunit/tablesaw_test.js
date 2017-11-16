@@ -267,6 +267,8 @@
 	QUnit.test( 'Initialization', function( assert ) {
 		var $minimap = $table.prev().find( '.minimap' );
 		assert.ok( $minimap.length, 'Minimap exists.' );
+		// assert.ok( window.Tablesaw.MiniMap.showMiniMap( $table ), 'showMiniMap return true.' );
+		assert.equal( $minimap.css( "display" ), "block", 'Minimap is visible.' );
 		assert.equal( $minimap.find( 'li' ).length, $table.find( 'tbody tr' ).eq( 0 ) .find( 'td' ).length, 'Minimap has same number of dots as columns.' );
 	});
 

@@ -19,8 +19,11 @@
 					shoestring = require('shoestring')(root);
 				}
 			}
-			factory(shoestring);
-			return shoestring;
+
+			return {
+				$: shoestring,
+				Tablesaw: factory(shoestring)
+			};
 		};
 	} else {
 		// Browser globals

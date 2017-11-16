@@ -9,6 +9,19 @@
 	var MiniMap = {
 		attr: {
 			init: "data-tablesaw-minimap"
+		},
+		show: function(table) {
+			var mq = table.getAttribute(MiniMap.attr.init);
+
+			if (mq === "") {
+				// value-less but exists
+				return true;
+			} else if (mq && "matchMedia" in win) {
+				// has a mq value
+				return win.matchMedia(mq).matches;
+			}
+
+			return false;
 		}
 	};
 
@@ -26,13 +39,8 @@
 
 		$btns.appendTo(tblsaw.$toolbar);
 
-		function showMinimap($table) {
-			var mq = $table.attr(MiniMap.attr.init);
-			return !mq || (win.matchMedia && win.matchMedia(mq).matches);
-		}
-
 		function showHideNav() {
-			if (!showMinimap($table)) {
+			if (!MiniMap.show($table[0])) {
 				$btns.css("display", "none");
 				return;
 			}
@@ -74,4 +82,7 @@
 			createMiniMap(tablesaw.$table);
 		}
 	});
+
+	// TODO OOP this better
+	Tablesaw.MiniMap = MiniMap;
 })();

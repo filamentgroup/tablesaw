@@ -19,7 +19,7 @@ A set of plugins for responsive tables.
 * [Check All](#check-all)
 * [Internationalization i18n](#internationalization-i18n)
 * [Limitations](#limitations)
-* [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+* [Run Tests](http://filamentgroup.github.io/tablesaw/test-qunit/tablesaw.html)
 * [Browser Support](#browser-support)
 
 ## Stack Mode
@@ -363,7 +363,7 @@ Some of the more intrusive default styles have instead moved to opt-in classes y
 | `rowspan` | _Not yet supported_ ([#247](https://github.com/filamentgroup/tablesaw/issues/247)) | Supported | Supported | _Not yet supported_ ([#268](https://github.com/filamentgroup/tablesaw/issues/268)) |
 | `colspan` | Supported | Supported | Supported | Supported |
 
-## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+## [Tests](http://filamentgroup.github.io/tablesaw/test-qunit/tablesaw.html)
 
 ## Browser Support
 

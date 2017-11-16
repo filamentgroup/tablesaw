@@ -19,8 +19,10 @@
 					jQuery = require('jquery')(root);
 				}
 			}
-			factory(jQuery);
-			return jQuery;
+			return {
+				$: jQuery,
+				Tablesaw: factory(jQuery)
+			};
 		};
 	} else {
 		// Browser globals

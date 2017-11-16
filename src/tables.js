@@ -69,7 +69,10 @@ if (Tablesaw.mustard) {
 		this.$table = $(element);
 
 		// only one <thead> and <tfoot> are allowed, per the specification
-		this.$thead = this.$table.children().filter("thead").eq(0);
+		this.$thead = this.$table
+			.children()
+			.filter("thead")
+			.eq(0);
 
 		// multiple <tbody> are allowed, per the specification
 		this.$tbody = this.$table.children().filter("tbody");
@@ -120,9 +123,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._getHeaderRows = function() {
-		return this.$thead.children().filter("tr").filter(function() {
-			return !$(this).is("[data-tablesaw-ignorerow]");
-		});
+		return this.$thead
+			.children()
+			.filter("tr")
+			.filter(function() {
+				return !$(this).is("[data-tablesaw-ignorerow]");
+			});
 	};
 
 	Table.prototype._getRowIndex = function($row) {
@@ -144,16 +150,18 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._$getCells = function(th) {
 		var self = this;
-		return $(th).add(th.cells).filter(function() {
-			var $t = $(this);
-			var $row = $t.parent();
-			var hasColspan = $t.is("[colspan]");
-			// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
-			return (
-				!$row.is("[" + self.attributes.subrow + "]") &&
-				(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
-			);
-		});
+		return $(th)
+			.add(th.cells)
+			.filter(function() {
+				var $t = $(this);
+				var $row = $t.parent();
+				var hasColspan = $t.is("[colspan]");
+				// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+				return (
+					!$row.is("[" + self.attributes.subrow + "]") &&
+					(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
+				);
+			});
 	};
 
 	Table.prototype._getVisibleColspan = function() {
@@ -188,9 +196,11 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype.isCellInColumn = function(header, cell) {
-		return $(header).add(header.cells).filter(function() {
-			return this === cell;
-		}).length;
+		return $(header)
+			.add(header.cells)
+			.filter(function() {
+				return this === cell;
+			}).length;
 	};
 
 	Table.prototype.updateColspanCells = function(cls, header, userAction) {
@@ -273,7 +283,9 @@ if (Tablesaw.mustard) {
 	Table.prototype.getRows = function() {
 		var self = this;
 		return this.$table.find("tr").filter(function() {
-			return $(this).closest("table").is(self.$table);
+			return $(this)
+				.closest("table")
+				.is(self.$table);
 		});
 	};
 
@@ -397,7 +409,9 @@ if (Tablesaw.mustard) {
 		var $anchor = this._getToolbarAnchor();
 		var $toolbar = this._getToolbar($anchor);
 		if (!$toolbar.length) {
-			$toolbar = $("<div>").addClass(classes.toolbar).insertBefore($anchor);
+			$toolbar = $("<div>")
+				.addClass(classes.toolbar)
+				.insertBefore($anchor);
 		}
 		this.$toolbar = $toolbar;
 
@@ -440,7 +454,10 @@ if (Tablesaw.mustard) {
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
-			$(e.target).find(initSelector).filter(initFilterSelector)[pluginName]();
+			$(e.target)
+				.find(initSelector)
+				.filter(initFilterSelector)
+				[pluginName]();
 		}
 	});
 
@@ -468,4 +485,6 @@ if (Tablesaw.mustard) {
 			}, 150); // must be less than the scrolling timeout above.
 		}
 	});
+
+	Tablesaw.Table = Table;
 })();

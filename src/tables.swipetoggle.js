@@ -364,4 +364,6 @@
 			createSwipeTable(tablesaw, tablesaw.$table);
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();

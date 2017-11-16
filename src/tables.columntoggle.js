@@ -136,15 +136,20 @@
 
 			if (self.set.length) {
 				var index;
-				$(self.$popup).find("input[type='checkbox']").each(function(j) {
-					if (this === e.target) {
-						index = j;
-						return false;
-					}
-				});
+				$(self.$popup)
+					.find("input[type='checkbox']")
+					.each(function(j) {
+						if (this === e.target) {
+							index = j;
+							return false;
+						}
+					});
 
 				$(self.set).each(function() {
-					var checkbox = $(this).data(data.key).$popup.find("input[type='checkbox']").get(index);
+					var checkbox = $(this)
+						.data(data.key)
+						.$popup.find("input[type='checkbox']")
+						.get(index);
 					if (checkbox) {
 						checkbox.checked = e.target.checked;
 						onToggleCheckboxChange(checkbox);
@@ -230,7 +235,11 @@
 		var invisibleColumns = 0;
 		this.$menu.find("input").each(function() {
 			var header = self.getHeaderFromCheckbox(this);
-			this.checked = self.tablesaw._$getCells(header).eq(0).css("display") === "table-cell";
+			this.checked =
+				self.tablesaw
+					._$getCells(header)
+					.eq(0)
+					.css("display") === "table-cell";
 		});
 
 		this.updateColspanCells();
@@ -260,13 +269,19 @@
 
 	$(document).on(Tablesaw.events.destroy, function(e, tablesaw) {
 		if (tablesaw.mode === "columntoggle") {
-			$(tablesaw.table).data(data.key).destroy();
+			$(tablesaw.table)
+				.data(data.key)
+				.destroy();
 		}
 	});
 
 	$(document).on(Tablesaw.events.refresh, function(e, tablesaw) {
 		if (tablesaw.mode === "columntoggle") {
-			$(tablesaw.table).data(data.key).refreshPriority();
+			$(tablesaw.table)
+				.data(data.key)
+				.refreshPriority();
 		}
 	});
+
+	Tablesaw.ColumnToggle = ColumnToggle;
 })();

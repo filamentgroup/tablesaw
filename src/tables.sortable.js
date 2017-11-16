@@ -69,7 +69,10 @@
 					$.each(h, function(i, col) {
 						var b = $("<button class='" + classes.sortButton + "'/>");
 						b.on("click", { col: col }, fn);
-						$(col).wrapInner(b).find("button").append("<span class='tablesaw-sortable-arrow'>");
+						$(col)
+							.wrapInner(b)
+							.find("button")
+							.append("<span class='tablesaw-sortable-arrow'>");
 					});
 				}
 
@@ -93,9 +96,12 @@
 						newSortValue = heads.index(headCell[0]);
 
 					clearOthers(
-						headCell.closest("thead").find("th").filter(function() {
-							return this !== headCell[0];
-						})
+						headCell
+							.closest("thead")
+							.find("th")
+							.filter(function() {
+								return this !== headCell[0];
+							})
 					);
 					if (headCell.is("." + classes.descend) || !headCell.is("." + classes.ascend)) {
 						el[pluginName]("sortBy", v, true);
@@ -105,7 +111,10 @@
 						newSortValue += "_desc";
 					}
 					if ($switcher) {
-						$switcher.find("select").val(newSortValue).trigger("refresh");
+						$switcher
+							.find("select")
+							.val(newSortValue)
+							.trigger("refresh");
 					}
 
 					e.preventDefault();
@@ -123,7 +132,9 @@
 				}
 
 				function addSwitcher(heads) {
-					$switcher = $("<div>").addClass(classes.switcher).addClass(classes.tableToolbar);
+					$switcher = $("<div>")
+						.addClass(classes.switcher)
+						.addClass(classes.tableToolbar);
 
 					var html = ["<label>" + Tablesaw.i18n.sort + ":"];
 
@@ -184,7 +195,9 @@
 					}
 					$switcher.find(".tablesaw-btn").tablesawbtn();
 					$switcher.find("select").on("change", function() {
-						var val = $(this).val().split("_"),
+						var val = $(this)
+								.val()
+								.split("_"),
 							head = heads.eq(val[0]);
 
 						clearOthers(head.siblings());
@@ -194,7 +207,10 @@
 
 				el.addClass(pluginName);
 
-				heads = el.children().filter("thead").find("th[" + attrs.sortCol + "]");
+				heads = el
+					.children()
+					.filter("thead")
+					.find("th[" + attrs.sortCol + "]");
 
 				addClassToHeads(heads);
 				makeHeadsActionable(heads, headsOnAction);
@@ -371,4 +387,6 @@
 			Tablesaw.$table[pluginName]();
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();

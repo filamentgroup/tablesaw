@@ -31,7 +31,9 @@
 	CheckAll.prototype._filterCells = function($checkboxes) {
 		return $checkboxes
 			.filter(function() {
-				return !$(this).closest("tr").is("[data-tablesaw-subrow],[data-tablesaw-ignorerow]");
+				return !$(this)
+					.closest("tr")
+					.is("[data-tablesaw-subrow],[data-tablesaw-ignorerow]");
 			})
 			.find(this.checkboxSelector)
 			.not(this.checkAllSelector);
@@ -127,4 +129,6 @@
 	$(document).on(Tablesaw.events.create, function(e, tablesaw) {
 		new CheckAll(tablesaw);
 	});
+
+	Tablesaw.CheckAll = CheckAll;
 })();

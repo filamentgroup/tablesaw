@@ -127,7 +127,12 @@ module.exports = function(grunt) {
 			}
 		},
 		qunit: {
-			files: ['test/**/*.html']
+			files: ['test-qunit/**/*.html']
+		},
+		run: {
+			ava: {
+				exec: "./node_modules/.bin/ava"
+			}
 		},
 		watch: {
 			src: {
@@ -197,13 +202,13 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('travis', ['qunit']);
+	grunt.registerTask('test', ['qunit', 'run:ava']);
 	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsjquery', 'concat:jsstack', 'concat:jsstackjquery', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);
 
-	grunt.registerTask('default', ['src', 'qunit', 'filesize']);
+	grunt.registerTask('default', ['src', 'test', 'filesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);
