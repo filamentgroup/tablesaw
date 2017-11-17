@@ -1,14 +1,10 @@
 import test from 'ava';
-import "console-advanced";
-import saw from '../dist/tablesaw.js';
-const sawObj = saw();
-
-const Tablesaw = sawObj.Tablesaw;
-const $ = sawObj.$;
+// import "console-advanced";
+import Tablesaw from '../dist/tablesaw.js';
 
 test('Tablesaw, DOM lib exists', t => {
 	t.is(typeof Tablesaw, "object");
-	t.is(typeof $, "function");
+	t.is(typeof Tablesaw.$, "function");
 	t.not(typeof Tablesaw.Table, "undefined");
 	t.not(typeof Tablesaw.Stack, "undefined");
 	t.not(typeof Tablesaw.ColumnToggle, "undefined");
