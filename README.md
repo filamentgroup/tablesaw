@@ -57,6 +57,8 @@ The Column Toggle Table allows the user to select which columns they want to be 
 | --- | --- |
 | Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>` |
 
+The user always has the option to select all columns. If the table gets too wide for the viewport, it can overflow and cause a page-level scrollbar. To combat this issue, we recommend wrapping your table in a `<div class="tablesaw-overflow">` element to restrict scrolling to the table-only. The [toggle demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html) has one such example.
+
 <details>
 <summary><em>Advanced Option</em>: Prioritize Columns</summary>
 
