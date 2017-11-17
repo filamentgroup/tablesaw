@@ -280,15 +280,13 @@ The demos above include full markup examples for all of the Tablesaw types.
 
 #### Manual initialization of Tablesaw Components
 
-If you want to initialize your Tablesaw tables manually, don’t include `<script src="tablesaw-init.js">` in your markup. Instead, you can trigger the `enhance.tablesaw` event on any DOM node you wish. This will scan the tree for any Tablesaw tables and initialize them for you.
+If you want to initialize your Tablesaw tables manually, don’t include `<script src="tablesaw-init.js">` in your markup. Instead, you can use `Tablesaw.init()`. This will scan the tree for any Tablesaw tables and initialize them for you.
 
-Two caveats here:
-
-* This can only properly occur after DOMContentLoaded.
-* Tables must be visible for proper initialization.
+*Tables must be visible for proper initialization.*
 
 ```js
-$( "#my-tab-content" ).trigger( "enhance.tablesaw" );
+Tablesaw.init();
+Tablesaw.init( myElement ); // OR pass an element to only init within a context
 ```
 
 ### Using Stack-Only Tablesaw

@@ -2415,7 +2415,7 @@ module.exports = __webpack_require__(1);
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! Tablesaw - v3.0.6-beta.5 - 2017-11-17
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*! Tablesaw - v3.0.6 - 2017-11-17
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -4142,6 +4142,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 }(typeof window !== "undefined" ? window : this, function ($, win) {
 	"use strict";
 
+var domContentLoadedTriggered = false;
+document.addEventListener( "DOMContentLoaded", function() {
+	domContentLoadedTriggered = true;
+});
+
 var Tablesaw = {
 	i18n: {
 		modeStack: "Stack",
@@ -4161,8 +4166,20 @@ var Tablesaw = {
 		(!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
 		!window.operamini,
 	$: $,
-	init: function( element ) {
+	_init: function(element) {
 		Tablesaw.$(element || document).trigger("enhance.tablesaw");
+	},
+	init: function(element) {
+		if( !domContentLoadedTriggered ) {
+			if( "addEventListener" in document ) {
+				// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
+				document.addEventListener( "DOMContentLoaded", function() {
+					Tablesaw._init(element);
+				});
+			}
+		} else {
+			Tablesaw._init(element);
+		}
 	}
 };
 
