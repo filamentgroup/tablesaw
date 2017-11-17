@@ -1,38 +1,18 @@
-/*! Tablesaw - v3.0.6-beta.5 - 2017-11-15
+/*! Tablesaw - v3.0.6 - 2017-11-17
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
-// UMD module definition
-// From: https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js
-
-(function (factory) {
-	if (typeof define === 'function' && define.amd) {
-			// AMD. Register as an anonymous module.
-			define(['jquery'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		// Node/CommonJS
-		module.exports = function( root, jQuery ) {
-			if ( jQuery === undefined ) {
-				// require('jQuery') returns a factory that requires window to
-				// build a jQuery instance, we normalize how we use modules
-				// that require this pattern but the window provided is a noop
-				// if it's defined (how jquery works)
-				if ( typeof window !== 'undefined' ) {
-					jQuery = require('jquery');
-				} else {
-					jQuery = require('jquery')(root);
-				}
-			}
-			factory(jQuery);
-			return jQuery;
-		};
-	} else {
-		// Browser globals
-		factory(jQuery);
-	}
-}(function ($) {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(["jquery"], function (jQuery) {
+      return (root.Tablesaw = factory(jQuery, root));
+    });
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('jquery')(root), root);
+  } else {
+    root.Tablesaw = factory(jQuery, root);
+  }
+}(typeof window !== "undefined" ? window : this, function ($, win) {
 	"use strict";
-
-	var win = typeof window !== "undefined" ? window : this;
 
 var Tablesaw = {
 	i18n: {
@@ -51,7 +31,11 @@ var Tablesaw = {
 	mustard:
 		"head" in document && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
 		(!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
-		!window.operamini
+		!window.operamini,
+	$: $,
+	init: function(element) {
+		Tablesaw.$(element || document).trigger("enhance.tablesaw");
+	}
 };
 
 $(win.document).on("enhance.tablesaw", function() {
@@ -98,7 +82,10 @@ if (Tablesaw.mustard) {
 		this.$table = $(element);
 
 		// only one <thead> and <tfoot> are allowed, per the specification
-		this.$thead = this.$table.children().filter("thead").eq(0);
+		this.$thead = this.$table
+			.children()
+			.filter("thead")
+			.eq(0);
 
 		// multiple <tbody> are allowed, per the specification
 		this.$tbody = this.$table.children().filter("tbody");
@@ -149,9 +136,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._getHeaderRows = function() {
-		return this.$thead.children().filter("tr").filter(function() {
-			return !$(this).is("[data-tablesaw-ignorerow]");
-		});
+		return this.$thead
+			.children()
+			.filter("tr")
+			.filter(function() {
+				return !$(this).is("[data-tablesaw-ignorerow]");
+			});
 	};
 
 	Table.prototype._getRowIndex = function($row) {
@@ -173,16 +163,18 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._$getCells = function(th) {
 		var self = this;
-		return $(th).add(th.cells).filter(function() {
-			var $t = $(this);
-			var $row = $t.parent();
-			var hasColspan = $t.is("[colspan]");
-			// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
-			return (
-				!$row.is("[" + self.attributes.subrow + "]") &&
-				(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
-			);
-		});
+		return $(th)
+			.add(th.cells)
+			.filter(function() {
+				var $t = $(this);
+				var $row = $t.parent();
+				var hasColspan = $t.is("[colspan]");
+				// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+				return (
+					!$row.is("[" + self.attributes.subrow + "]") &&
+					(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
+				);
+			});
 	};
 
 	Table.prototype._getVisibleColspan = function() {
@@ -217,9 +209,11 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype.isCellInColumn = function(header, cell) {
-		return $(header).add(header.cells).filter(function() {
-			return this === cell;
-		}).length;
+		return $(header)
+			.add(header.cells)
+			.filter(function() {
+				return this === cell;
+			}).length;
 	};
 
 	Table.prototype.updateColspanCells = function(cls, header, userAction) {
@@ -302,7 +296,9 @@ if (Tablesaw.mustard) {
 	Table.prototype.getRows = function() {
 		var self = this;
 		return this.$table.find("tr").filter(function() {
-			return $(this).closest("table").is(self.$table);
+			return $(this)
+				.closest("table")
+				.is(self.$table);
 		});
 	};
 
@@ -426,7 +422,9 @@ if (Tablesaw.mustard) {
 		var $anchor = this._getToolbarAnchor();
 		var $toolbar = this._getToolbar($anchor);
 		if (!$toolbar.length) {
-			$toolbar = $("<div>").addClass(classes.toolbar).insertBefore($anchor);
+			$toolbar = $("<div>")
+				.addClass(classes.toolbar)
+				.insertBefore($anchor);
 		}
 		this.$toolbar = $toolbar;
 
@@ -469,7 +467,10 @@ if (Tablesaw.mustard) {
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
-			$(e.target).find(initSelector).filter(initFilterSelector)[pluginName]();
+			$(e.target)
+				.find(initSelector)
+				.filter(initFilterSelector)
+				[pluginName]();
 		}
 	});
 
@@ -497,6 +498,8 @@ if (Tablesaw.mustard) {
 			}, 150); // must be less than the scrolling timeout above.
 		}
 	});
+
+	Tablesaw.Table = Table;
 })();
 
 (function() {
@@ -541,7 +544,9 @@ if (Tablesaw.mustard) {
 			})
 			.filter(function() {
 				return (
-					!$(this).closest("tr").is("[" + attrs.labelless + "]") &&
+					!$(this)
+						.closest("tr")
+						.is("[" + attrs.labelless + "]") &&
 					(!self.hideempty || !!$(this).html())
 				);
 			})
@@ -606,14 +611,20 @@ if (Tablesaw.mustard) {
 		})
 		.on(Tablesaw.events.refresh, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).init();
+				$(tablesaw.table)
+					.data(data.key)
+					.init();
 			}
 		})
 		.on(Tablesaw.events.destroy, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).destroy();
+				$(tablesaw.table)
+					.data(data.key)
+					.destroy();
 			}
 		});
+
+	Tablesaw.Stack = Stack;
 })();
 
 (function() {
@@ -633,7 +644,9 @@ if (Tablesaw.mustard) {
 
 				if (sel) {
 					// TODO next major version: remove .btn-select
-					$(this).addClass("btn-select tablesaw-btn-select")[pluginName]("_select", sel);
+					$(this)
+						.addClass("btn-select tablesaw-btn-select")
+						[pluginName]("_select", sel);
 				}
 				return oEl;
 			},
@@ -701,6 +714,8 @@ if (Tablesaw.mustard) {
 
 	// add methods
 	$.extend($.fn[pluginName].prototype, methods);
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
@@ -834,15 +849,20 @@ if (Tablesaw.mustard) {
 
 			if (self.set.length) {
 				var index;
-				$(self.$popup).find("input[type='checkbox']").each(function(j) {
-					if (this === e.target) {
-						index = j;
-						return false;
-					}
-				});
+				$(self.$popup)
+					.find("input[type='checkbox']")
+					.each(function(j) {
+						if (this === e.target) {
+							index = j;
+							return false;
+						}
+					});
 
 				$(self.set).each(function() {
-					var checkbox = $(this).data(data.key).$popup.find("input[type='checkbox']").get(index);
+					var checkbox = $(this)
+						.data(data.key)
+						.$popup.find("input[type='checkbox']")
+						.get(index);
 					if (checkbox) {
 						checkbox.checked = e.target.checked;
 						onToggleCheckboxChange(checkbox);
@@ -928,7 +948,11 @@ if (Tablesaw.mustard) {
 		var invisibleColumns = 0;
 		this.$menu.find("input").each(function() {
 			var header = self.getHeaderFromCheckbox(this);
-			this.checked = self.tablesaw._$getCells(header).eq(0).css("display") === "table-cell";
+			this.checked =
+				self.tablesaw
+					._$getCells(header)
+					.eq(0)
+					.css("display") === "table-cell";
 		});
 
 		this.updateColspanCells();
@@ -958,15 +982,21 @@ if (Tablesaw.mustard) {
 
 	$(document).on(Tablesaw.events.destroy, function(e, tablesaw) {
 		if (tablesaw.mode === "columntoggle") {
-			$(tablesaw.table).data(data.key).destroy();
+			$(tablesaw.table)
+				.data(data.key)
+				.destroy();
 		}
 	});
 
 	$(document).on(Tablesaw.events.refresh, function(e, tablesaw) {
 		if (tablesaw.mode === "columntoggle") {
-			$(tablesaw.table).data(data.key).refreshPriority();
+			$(tablesaw.table)
+				.data(data.key)
+				.refreshPriority();
 		}
 	});
+
+	Tablesaw.ColumnToggle = ColumnToggle;
 })();
 
 (function() {
@@ -1033,7 +1063,10 @@ if (Tablesaw.mustard) {
 					$.each(h, function(i, col) {
 						var b = $("<button class='" + classes.sortButton + "'/>");
 						b.on("click", { col: col }, fn);
-						$(col).wrapInner(b).find("button").append("<span class='tablesaw-sortable-arrow'>");
+						$(col)
+							.wrapInner(b)
+							.find("button")
+							.append("<span class='tablesaw-sortable-arrow'>");
 					});
 				}
 
@@ -1057,9 +1090,12 @@ if (Tablesaw.mustard) {
 						newSortValue = heads.index(headCell[0]);
 
 					clearOthers(
-						headCell.closest("thead").find("th").filter(function() {
-							return this !== headCell[0];
-						})
+						headCell
+							.closest("thead")
+							.find("th")
+							.filter(function() {
+								return this !== headCell[0];
+							})
 					);
 					if (headCell.is("." + classes.descend) || !headCell.is("." + classes.ascend)) {
 						el[pluginName]("sortBy", v, true);
@@ -1069,7 +1105,10 @@ if (Tablesaw.mustard) {
 						newSortValue += "_desc";
 					}
 					if ($switcher) {
-						$switcher.find("select").val(newSortValue).trigger("refresh");
+						$switcher
+							.find("select")
+							.val(newSortValue)
+							.trigger("refresh");
 					}
 
 					e.preventDefault();
@@ -1087,7 +1126,9 @@ if (Tablesaw.mustard) {
 				}
 
 				function addSwitcher(heads) {
-					$switcher = $("<div>").addClass(classes.switcher).addClass(classes.tableToolbar);
+					$switcher = $("<div>")
+						.addClass(classes.switcher)
+						.addClass(classes.tableToolbar);
 
 					var html = ["<label>" + Tablesaw.i18n.sort + ":"];
 
@@ -1148,7 +1189,9 @@ if (Tablesaw.mustard) {
 					}
 					$switcher.find(".tablesaw-btn").tablesawbtn();
 					$switcher.find("select").on("change", function() {
-						var val = $(this).val().split("_"),
+						var val = $(this)
+								.val()
+								.split("_"),
 							head = heads.eq(val[0]);
 
 						clearOthers(head.siblings());
@@ -1158,7 +1201,10 @@ if (Tablesaw.mustard) {
 
 				el.addClass(pluginName);
 
-				heads = el.children().filter("thead").find("th[" + attrs.sortCol + "]");
+				heads = el
+					.children()
+					.filter("thead")
+					.find("th[" + attrs.sortCol + "]");
 
 				addClassToHeads(heads);
 				makeHeadsActionable(heads, headsOnAction);
@@ -1335,6 +1381,8 @@ if (Tablesaw.mustard) {
 			Tablesaw.$table[pluginName]();
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
@@ -1696,12 +1744,27 @@ if (Tablesaw.mustard) {
 			createSwipeTable(tablesaw, tablesaw.$table);
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
 	var MiniMap = {
 		attr: {
 			init: "data-tablesaw-minimap"
+		},
+		show: function(table) {
+			var mq = table.getAttribute(MiniMap.attr.init);
+
+			if (mq === "") {
+				// value-less but exists
+				return true;
+			} else if (mq && "matchMedia" in win) {
+				// has a mq value
+				return win.matchMedia(mq).matches;
+			}
+
+			return false;
 		}
 	};
 
@@ -1719,13 +1782,8 @@ if (Tablesaw.mustard) {
 
 		$btns.appendTo(tblsaw.$toolbar);
 
-		function showMinimap($table) {
-			var mq = $table.attr(MiniMap.attr.init);
-			return !mq || (win.matchMedia && win.matchMedia(mq).matches);
-		}
-
 		function showHideNav() {
-			if (!showMinimap($table)) {
+			if (!MiniMap.show($table[0])) {
 				$btns.css("display", "none");
 				return;
 			}
@@ -1767,6 +1825,9 @@ if (Tablesaw.mustard) {
 			createMiniMap(tablesaw.$table);
 		}
 	});
+
+	// TODO OOP this better
+	Tablesaw.MiniMap = MiniMap;
 })();
 
 (function() {
@@ -1852,6 +1913,8 @@ if (Tablesaw.mustard) {
 			S.init(Tablesaw.table);
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
@@ -1880,7 +1943,9 @@ if (Tablesaw.mustard) {
 	CheckAll.prototype._filterCells = function($checkboxes) {
 		return $checkboxes
 			.filter(function() {
-				return !$(this).closest("tr").is("[data-tablesaw-subrow],[data-tablesaw-ignorerow]");
+				return !$(this)
+					.closest("tr")
+					.is("[data-tablesaw-subrow],[data-tablesaw-ignorerow]");
 			})
 			.find(this.checkboxSelector)
 			.not(this.checkAllSelector);
@@ -1976,6 +2041,9 @@ if (Tablesaw.mustard) {
 	$(document).on(Tablesaw.events.create, function(e, tablesaw) {
 		new CheckAll(tablesaw);
 	});
+
+	Tablesaw.CheckAll = CheckAll;
 })();
 
+	return Tablesaw;
 }));

@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.6-beta.5 - 2017-11-15
+/*! Tablesaw - v3.0.6 - 2017-11-17
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -1708,38 +1708,18 @@
 	return shoestring;
 }));
 
-// UMD module definition
-// From: https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js
-
-(function (factory) {
-	if (typeof define === 'function' && define.amd) {
-			// AMD. Register as an anonymous module.
-			define(['shoestring'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		// Node/CommonJS
-		module.exports = function( root, shoestring ) {
-			if ( shoestring === undefined ) {
-				// require('shoestring') returns a factory that requires window to
-				// build a shoestring instance, we normalize how we use modules
-				// that require this pattern but the window provided is a noop
-				// if it's defined (how jquery works)
-				if ( typeof window !== 'undefined' ) {
-					shoestring = require('shoestring');
-				} else {
-					shoestring = require('shoestring')(root);
-				}
-			}
-			factory(shoestring);
-			return shoestring;
-		};
-	} else {
-		// Browser globals
-		factory(shoestring);
-	}
-}(function ($) {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(["shoestring"], function (shoestring) {
+      return (root.Tablesaw = factory(shoestring, root));
+    });
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('shoestring'), root);
+  } else {
+    root.Tablesaw = factory(shoestring, root);
+  }
+}(typeof window !== "undefined" ? window : this, function ($, win) {
 	"use strict";
-
-	var win = typeof window !== "undefined" ? window : this;
 
 var Tablesaw = {
 	i18n: {
@@ -1758,7 +1738,11 @@ var Tablesaw = {
 	mustard:
 		"head" in document && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
 		(!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
-		!window.operamini
+		!window.operamini,
+	$: $,
+	init: function(element) {
+		Tablesaw.$(element || document).trigger("enhance.tablesaw");
+	}
 };
 
 $(win.document).on("enhance.tablesaw", function() {
@@ -1805,7 +1789,10 @@ if (Tablesaw.mustard) {
 		this.$table = $(element);
 
 		// only one <thead> and <tfoot> are allowed, per the specification
-		this.$thead = this.$table.children().filter("thead").eq(0);
+		this.$thead = this.$table
+			.children()
+			.filter("thead")
+			.eq(0);
 
 		// multiple <tbody> are allowed, per the specification
 		this.$tbody = this.$table.children().filter("tbody");
@@ -1856,9 +1843,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._getHeaderRows = function() {
-		return this.$thead.children().filter("tr").filter(function() {
-			return !$(this).is("[data-tablesaw-ignorerow]");
-		});
+		return this.$thead
+			.children()
+			.filter("tr")
+			.filter(function() {
+				return !$(this).is("[data-tablesaw-ignorerow]");
+			});
 	};
 
 	Table.prototype._getRowIndex = function($row) {
@@ -1880,16 +1870,18 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._$getCells = function(th) {
 		var self = this;
-		return $(th).add(th.cells).filter(function() {
-			var $t = $(this);
-			var $row = $t.parent();
-			var hasColspan = $t.is("[colspan]");
-			// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
-			return (
-				!$row.is("[" + self.attributes.subrow + "]") &&
-				(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
-			);
-		});
+		return $(th)
+			.add(th.cells)
+			.filter(function() {
+				var $t = $(this);
+				var $row = $t.parent();
+				var hasColspan = $t.is("[colspan]");
+				// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+				return (
+					!$row.is("[" + self.attributes.subrow + "]") &&
+					(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
+				);
+			});
 	};
 
 	Table.prototype._getVisibleColspan = function() {
@@ -1924,9 +1916,11 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype.isCellInColumn = function(header, cell) {
-		return $(header).add(header.cells).filter(function() {
-			return this === cell;
-		}).length;
+		return $(header)
+			.add(header.cells)
+			.filter(function() {
+				return this === cell;
+			}).length;
 	};
 
 	Table.prototype.updateColspanCells = function(cls, header, userAction) {
@@ -2009,7 +2003,9 @@ if (Tablesaw.mustard) {
 	Table.prototype.getRows = function() {
 		var self = this;
 		return this.$table.find("tr").filter(function() {
-			return $(this).closest("table").is(self.$table);
+			return $(this)
+				.closest("table")
+				.is(self.$table);
 		});
 	};
 
@@ -2133,7 +2129,9 @@ if (Tablesaw.mustard) {
 		var $anchor = this._getToolbarAnchor();
 		var $toolbar = this._getToolbar($anchor);
 		if (!$toolbar.length) {
-			$toolbar = $("<div>").addClass(classes.toolbar).insertBefore($anchor);
+			$toolbar = $("<div>")
+				.addClass(classes.toolbar)
+				.insertBefore($anchor);
 		}
 		this.$toolbar = $toolbar;
 
@@ -2176,7 +2174,10 @@ if (Tablesaw.mustard) {
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
-			$(e.target).find(initSelector).filter(initFilterSelector)[pluginName]();
+			$(e.target)
+				.find(initSelector)
+				.filter(initFilterSelector)
+				[pluginName]();
 		}
 	});
 
@@ -2204,6 +2205,8 @@ if (Tablesaw.mustard) {
 			}, 150); // must be less than the scrolling timeout above.
 		}
 	});
+
+	Tablesaw.Table = Table;
 })();
 
 (function() {
@@ -2248,7 +2251,9 @@ if (Tablesaw.mustard) {
 			})
 			.filter(function() {
 				return (
-					!$(this).closest("tr").is("[" + attrs.labelless + "]") &&
+					!$(this)
+						.closest("tr")
+						.is("[" + attrs.labelless + "]") &&
 					(!self.hideempty || !!$(this).html())
 				);
 			})
@@ -2313,14 +2318,21 @@ if (Tablesaw.mustard) {
 		})
 		.on(Tablesaw.events.refresh, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).init();
+				$(tablesaw.table)
+					.data(data.key)
+					.init();
 			}
 		})
 		.on(Tablesaw.events.destroy, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).destroy();
+				$(tablesaw.table)
+					.data(data.key)
+					.destroy();
 			}
 		});
+
+	Tablesaw.Stack = Stack;
 })();
 
+	return Tablesaw;
 }));
