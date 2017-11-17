@@ -136,8 +136,16 @@ module.exports = function(grunt) {
 		},
 		watch: {
 			src: {
-				files: ['dist/<%= pkg.name %>.js', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>', '<%= concat.cssall.src %>' ],
+				files: [
+					'<%= concat.jsall.src %>',
+					'<%= concat.jsautoinit.src %>',
+					'<%= concat.cssall.src %>'
+				],
 				tasks: ['src']
+			},
+			test: {
+				files: ['dist/<%= pkg.name %>.js'],
+				tasks: ['test']
 			}
 		},
 		uglify: {
