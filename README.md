@@ -21,6 +21,7 @@ A set of plugins for responsive tables.
 * [Limitations](#limitations)
 * [Run Tests](http://filamentgroup.github.io/tablesaw/test-qunit/tablesaw.html)
 * [Browser Support](#browser-support)
+* [Bundler Compatibility](#bundler-compatibility)
 
 ## Stack Mode
 
@@ -375,12 +376,18 @@ All major browsers (evergreens are not listed, but supported). Notably this proj
 
 Other legacy browsers and Opera Mini receive unenhanced table markup.
 
+## Bundler Compatibility
+
+* Added in `v3.0.6`: [tested to work in Webpack](./demo/webpack/).
+
 ## Building the Project Locally
 
 Run `npm install` to install dependencies and then `grunt` to build the project files into the `dist` folder.
 
 ## Release Names
 
+* [3.0.3: Cucumbertree](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.3)
+* [3.0.2: Bald Cypress](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.2)
 * [3.0.1: Cypress](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.1)
 * [3.0.0: Rosewood](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.0)
 * [2.0.1: Mountain Hemlock](https://github.com/filamentgroup/tablesaw/releases/tag/v2.0.1)

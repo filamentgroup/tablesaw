@@ -2395,11 +2395,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_tablesaw_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_tablesaw_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__dist_tablesaw_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_tablesaw__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__dist_tablesaw___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__dist_tablesaw__);
 
 
-console.log( "this should be the tablesaw object: ", __WEBPACK_IMPORTED_MODULE_0__dist_tablesaw_js___default.a );
+console.log( "this should be the tablesaw object: ", __WEBPACK_IMPORTED_MODULE_0__dist_tablesaw___default.a );
 
 
 
@@ -4143,7 +4143,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 	"use strict";
 
 var domContentLoadedTriggered = false;
-document.addEventListener( "DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
 	domContentLoadedTriggered = true;
 });
 
@@ -4170,10 +4170,10 @@ var Tablesaw = {
 		Tablesaw.$(element || document).trigger("enhance.tablesaw");
 	},
 	init: function(element) {
-		if( !domContentLoadedTriggered ) {
-			if( "addEventListener" in document ) {
+		if (!domContentLoadedTriggered) {
+			if ("addEventListener" in document) {
 				// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
-				document.addEventListener( "DOMContentLoaded", function() {
+				document.addEventListener("DOMContentLoaded", function() {
 					Tablesaw._init(element);
 				});
 			}
