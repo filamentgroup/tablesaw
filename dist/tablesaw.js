@@ -1721,6 +1721,11 @@
 }(typeof window !== "undefined" ? window : this, function ($, win) {
 	"use strict";
 
+var domContentLoadedTriggered = false;
+document.addEventListener("DOMContentLoaded", function() {
+	domContentLoadedTriggered = true;
+});
+
 var Tablesaw = {
 	i18n: {
 		modeStack: "Stack",
@@ -1740,8 +1745,20 @@ var Tablesaw = {
 		(!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
 		!window.operamini,
 	$: $,
-	init: function(element) {
+	_init: function(element) {
 		Tablesaw.$(element || document).trigger("enhance.tablesaw");
+	},
+	init: function(element) {
+		if (!domContentLoadedTriggered) {
+			if ("addEventListener" in document) {
+				// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
+				document.addEventListener("DOMContentLoaded", function() {
+					Tablesaw._init(element);
+				});
+			}
+		} else {
+			Tablesaw._init(element);
+		}
 	}
 };
 
