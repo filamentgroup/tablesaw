@@ -17,9 +17,11 @@ A set of plugins for responsive tables.
 * [Sortable](#sortable)
 * [Kitchen Sink Example](http://filamentgroup.github.io/tablesaw/demo/kitchensink.html)
 * [Check All](#check-all)
+* [Internationalization i18n](#internationalization-i18n)
 * [Limitations](#limitations)
-* [Run Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+* [Run Tests](http://filamentgroup.github.io/tablesaw/test-qunit/tablesaw.html)
 * [Browser Support](#browser-support)
+* [Bundler Compatibility](#bundler-compatibility)
 
 ## Stack Mode
 
@@ -55,6 +57,8 @@ The Column Toggle Table allows the user to select which columns they want to be 
 | Option | Description |
 | --- | --- |
 | Add a Mini-Map | The little dots that appear next to the column toggle popup. Use the `data-tablesaw-minimap` attribute: `<table data-tablesaw-mode="columntoggle" data-tablesaw-minimap>` |
+
+The user always has the option to select all columns. If the table gets too wide for the viewport, it can overflow and cause a page-level scrollbar. To combat this issue, we recommend wrapping your table in a `<div class="tablesaw-overflow">` element to restrict scrolling to the table-only. The [toggle demo](http://filamentgroup.github.io/tablesaw/demo/toggle.html) has one such example.
 
 <details>
 <summary><em>Advanced Option</em>: Prioritize Columns</summary>
@@ -206,9 +210,32 @@ All of the above options combined into a single table.
 
 ## Check All
 
-Added in 3.0.1. Add the `data-tablesaw-checkall` to a checkbox in a `thead` cell to enable that checkbox to toggle the other checkboxes in the same column.
+_Added in 3.0.1._  Add the `data-tablesaw-checkall` to a checkbox in a `thead` cell to enable that checkbox to toggle the other checkboxes in the same column.
 
 * [Check All Demo](http://filamentgroup.github.io/tablesaw/demo/checkall.html)
+
+## Internationalization i18n
+
+_Added in 3.0.2._ Use the `TablesawConfig` global on your page to override internationalization strings. It doesn’t matter if it’s declared before or after the Tablesaw JavaScript library.
+
+```js
+<script>
+TablesawConfig = {
+  i18n: {
+    modeStack: 'Stack',
+    modeSwipe: 'Swipe',
+    modeToggle: 'Toggle',
+    modeSwitchColumnsAbbreviated: 'Cols',
+    modeSwitchColumns: 'Columns',
+    columnToggleButton: 'Columns',
+    columnToggleError: 'No eligible columns.',
+    sort: 'Sort',
+    swipePreviousColumn: 'Previous column',
+    swipeNextColumn: 'Next column'
+  }
+};
+</script>
+```
 
 ## Getting Started
 
@@ -254,15 +281,13 @@ The demos above include full markup examples for all of the Tablesaw types.
 
 #### Manual initialization of Tablesaw Components
 
-If you want to initialize your Tablesaw tables manually, don’t include `<script src="tablesaw-init.js">` in your markup. Instead, you can trigger the `enhance.tablesaw` event on any DOM node you wish. This will scan the tree for any Tablesaw tables and initialize them for you.
+If you want to initialize your Tablesaw tables manually, don’t include `<script src="tablesaw-init.js">` in your markup. Instead, you can use `Tablesaw.init()`. This will scan the tree for any Tablesaw tables and initialize them for you.
 
-Two caveats here:
-
-* This can only properly occur after DOMContentLoaded.
-* Tables must be visible for proper initialization.
+*Tables must be visible for proper initialization.*
 
 ```js
-$( "#my-tab-content" ).trigger( "enhance.tablesaw" );
+Tablesaw.init();
+Tablesaw.init( myElement ); // OR pass an element to only init within a context
 ```
 
 ### Using Stack-Only Tablesaw
@@ -332,14 +357,14 @@ Some of the more intrusive default styles have instead moved to opt-in classes y
 
 ## Limitations
 
-* Simple `colspan` and `rowspan` are supported, in part thanks to a [lovely PR](https://github.com/filamentgroup/tablesaw/pull/225) from @jgibson. More complex `colspan` scenarios (where table cells cross Tablesaw top-level column boundaries) are not supported. Tablesaw top-level column boundaries are defined by the cells in the first table header row and determine what columns are listed in the Column Toggle switcher or what hides/shows when the user navigates on a Swipe table.
+* Simple `colspan` and `rowspan` are supported, in part thanks to a [lovely PR](https://github.com/filamentgroup/tablesaw/pull/225) from @jgibson.
 
 | | Stack | Column Toggle | Swipe | Sortable |
 | --- | --- | --- | --- | --- |
 | `rowspan` | _Not yet supported_ ([#247](https://github.com/filamentgroup/tablesaw/issues/247)) | Supported | Supported | _Not yet supported_ ([#268](https://github.com/filamentgroup/tablesaw/issues/268)) |
 | `colspan` | Supported | Supported | Supported | Supported |
 
-## [Tests](http://filamentgroup.github.io/tablesaw/test/tablesaw.html)
+## [Tests](http://filamentgroup.github.io/tablesaw/test-qunit/tablesaw.html)
 
 ## Browser Support
 
@@ -351,7 +376,24 @@ All major browsers (evergreens are not listed, but supported). Notably this proj
 
 Other legacy browsers and Opera Mini receive unenhanced table markup.
 
+## Bundler Compatibility
+
+* Added in `v3.0.6`: [tested to work in Webpack](./demo/webpack/).
+
 ## Building the Project Locally
 
 Run `npm install` to install dependencies and then `grunt` to build the project files into the `dist` folder.
 
+## Release Names
+
+* [3.0.3: Cucumbertree](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.3)
+* [3.0.2: Bald Cypress](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.2)
+* [3.0.1: Cypress](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.1)
+* [3.0.0: Rosewood](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.0)
+* [2.0.1: Mountain Hemlock](https://github.com/filamentgroup/tablesaw/releases/tag/v2.0.1)
+* [2.0.0: Hemlock](https://github.com/filamentgroup/tablesaw/releases/tag/v2.0.0)
+* [1.0.5: Hickory](https://github.com/filamentgroup/tablesaw/releases/tag/v1.0.5)
+* [1.0.4: Ironwood](https://github.com/filamentgroup/tablesaw/releases/tag/v1.0.4)
+* [1.0.3: Red Mahogany](https://github.com/filamentgroup/tablesaw/releases/tag/v1.0.3)
+
+_Previous versions didn’t have names._

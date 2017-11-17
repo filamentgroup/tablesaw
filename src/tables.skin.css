@@ -28,6 +28,10 @@
 	text-align: left;
 	vertical-align: middle;
 }
+.tablesaw-sortable-btn {
+	/* same as cell padding above */
+	padding: .5em .7em;
+}
 .tablesaw thead th {
 	text-align: left;
 }
@@ -46,12 +50,12 @@
 	margin: .59375em 0;
 }
 
-.tablesaw-swipe .tablesaw-cell-persist {
+.tablesaw-swipe .tablesaw-swipe-cellpersist {
 	border-right: 2px solid #e4e1de;
 }
-.tablesaw-swipe-shadow .tablesaw-cell-persist {
+.tablesaw-swipe-shadow .tablesaw-swipe-cellpersist {
 	border-right-width: 1px;
 }
-.tablesaw-swipe-shadow .tablesaw-cell-persist {
+.tablesaw-swipe-shadow .tablesaw-swipe-cellpersist {
 	box-shadow: 3px 0 4px -1px #e4e1de;
 }

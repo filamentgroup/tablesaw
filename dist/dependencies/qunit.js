@@ -1,12 +1,12 @@
 /*!
- * QUnit 2.1.1
+ * QUnit 2.4.1
  * https://qunitjs.com/
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2017-01-06T01:52Z
+ * Date: 2017-10-22T05:12Z
  */
 (function (global$1) {
   'use strict';
@@ -14,13 +14,24 @@
   global$1 = 'default' in global$1 ? global$1['default'] : global$1;
 
   var window = global$1.window;
+  var self$1 = global$1.self;
   var console = global$1.console;
   var setTimeout = global$1.setTimeout;
   var clearTimeout = global$1.clearTimeout;
 
   var document = window && window.document;
   var navigator = window && window.navigator;
-  var sessionStorage = window && window.sessionStorage;
+
+  var localSessionStorage = function () {
+  	var x = "qunit-test-string";
+  	try {
+  		global$1.sessionStorage.setItem(x, x);
+  		global$1.sessionStorage.removeItem(x);
+  		return global$1.sessionStorage;
+  	} catch (e) {
+  		return undefined;
+  	}
+  }();
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
@@ -141,19 +152,16 @@
   	return result;
   }
 
-  // From jquery.js
+  /**
+   * Determines whether an element exists in a given array or not.
+   *
+   * @method inArray
+   * @param {Any} elem
+   * @param {Array} array
+   * @return {Boolean}
+   */
   function inArray(elem, array) {
-  	if (array.indexOf) {
-  		return array.indexOf(elem);
-  	}
-
-  	for (var i = 0, length = array.length; i < length; i++) {
-  		if (array[i] === elem) {
-  			return i;
-  		}
-  	}
-
-  	return -1;
+  	return array.indexOf(elem) !== -1;
   }
 
   /**
@@ -219,10 +227,8 @@
   		case "Function":
   		case "Symbol":
   			return type.toLowerCase();
-  	}
-
-  	if ((typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object") {
-  		return "object";
+  		default:
+  			return typeof obj === "undefined" ? "undefined" : _typeof(obj);
   	}
   }
 
@@ -231,26 +237,47 @@
   	return objectType(obj) === type;
   }
 
+  // Based on Java's String.hashCode, a simple but not
+  // rigorously collision resistant hashing function
+  function generateHash(module, testName) {
+  	var str = module + "\x1C" + testName;
+  	var hash = 0;
+
+  	for (var i = 0; i < str.length; i++) {
+  		hash = (hash << 5) - hash + str.charCodeAt(i);
+  		hash |= 0;
+  	}
+
+  	// Convert the possibly negative integer hash code into an 8 character hex string, which isn't
+  	// strictly necessary but increases user understanding that the id is a SHA-like hash
+  	var hex = (0x100000000 + hash).toString(16);
+  	if (hex.length < 8) {
+  		hex = "0000000" + hex;
+  	}
+
+  	return hex.slice(-8);
+  }
+
   // Test for equality any JavaScript type.
-  // Author: Philippe Rathé <prathe@gmail.com>
+  // Authors: Philippe Rathé <prathe@gmail.com>, David Chan <david@troi.org>
   var equiv = (function () {
 
-  	// Stack to decide between skip/abort functions
-  	var callers = [];
-
-  	// Stack to avoiding loops from circular referencing
-  	var parents = [];
-  	var parentsB = [];
+  	// Value pairs queued for comparison. Used for breadth-first processing order, recursion
+  	// detection and avoiding repeated comparison (see below for details).
+  	// Elements are { a: val, b: val }.
+  	var pairs = [];
 
   	var getProto = Object.getPrototypeOf || function (obj) {
   		return obj.__proto__;
   	};
 
-  	function useStrictEquality(b, a) {
+  	function useStrictEquality(a, b) {
 
-  		// To catch short annotation VS 'new' annotation of a declaration. e.g.:
+  		// This only gets called if a and b are not strict equal, and is used to compare on
+  		// the primitive values inside object wrappers. For example:
   		// `var i = 1;`
   		// `var j = new Number(1);`
+  		// Neither a nor b can be null, as a !== b and they have the same type.
   		if ((typeof a === "undefined" ? "undefined" : _typeof(a)) === "object") {
   			a = a.valueOf();
   		}
@@ -293,6 +320,31 @@
   		return "flags" in regexp ? regexp.flags : regexp.toString().match(/[gimuy]*$/)[0];
   	}
 
+  	function isContainer(val) {
+  		return ["object", "array", "map", "set"].indexOf(objectType(val)) !== -1;
+  	}
+
+  	function breadthFirstCompareChild(a, b) {
+
+  		// If a is a container not reference-equal to b, postpone the comparison to the
+  		// end of the pairs queue -- unless (a, b) has been seen before, in which case skip
+  		// over the pair.
+  		if (a === b) {
+  			return true;
+  		}
+  		if (!isContainer(a)) {
+  			return typeEquiv(a, b);
+  		}
+  		if (pairs.every(function (pair) {
+  			return pair.a !== a || pair.b !== b;
+  		})) {
+
+  			// Not yet started comparing this pair
+  			pairs.push({ a: a, b: b });
+  		}
+  		return true;
+  	}
+
   	var callbacks = {
   		"string": useStrictEquality,
   		"boolean": useStrictEquality,
@@ -306,24 +358,20 @@
   			return true;
   		},
 
-  		"regexp": function regexp(b, a) {
+  		"regexp": function regexp(a, b) {
   			return a.source === b.source &&
 
   			// Include flags in the comparison
   			getRegExpFlags(a) === getRegExpFlags(b);
   		},
 
-  		// - skip when the property is a method of an instance (OOP)
-  		// - abort otherwise,
-  		// initial === would have catch identical references anyway
-  		"function": function _function(b, a) {
-
-  			var caller = callers[callers.length - 1];
-  			return caller !== Object && typeof caller !== "undefined" && a.toString() === b.toString();
+  		// abort (identical references / instance methods were skipped earlier)
+  		"function": function _function() {
+  			return false;
   		},
 
-  		"array": function array(b, a) {
-  			var i, j, len, loop, aCircular, bCircular;
+  		"array": function array(a, b) {
+  			var i, len;
 
   			len = a.length;
   			if (len !== b.length) {
@@ -332,50 +380,63 @@
   				return false;
   			}
 
-  			// Track reference to avoid circular references
-  			parents.push(a);
-  			parentsB.push(b);
   			for (i = 0; i < len; i++) {
-  				loop = false;
-  				for (j = 0; j < parents.length; j++) {
-  					aCircular = parents[j] === a[i];
-  					bCircular = parentsB[j] === b[i];
-  					if (aCircular || bCircular) {
-  						if (a[i] === b[i] || aCircular && bCircular) {
-  							loop = true;
-  						} else {
-  							parents.pop();
-  							parentsB.pop();
-  							return false;
-  						}
-  					}
-  				}
-  				if (!loop && !innerEquiv(a[i], b[i])) {
-  					parents.pop();
-  					parentsB.pop();
+
+  				// Compare non-containers; queue non-reference-equal containers
+  				if (!breadthFirstCompareChild(a[i], b[i])) {
   					return false;
   				}
   			}
-  			parents.pop();
-  			parentsB.pop();
   			return true;
   		},
 
-  		"set": function set$$1(b, a) {
+  		// Define sets a and b to be equivalent if for each element aVal in a, there
+  		// is some element bVal in b such that aVal and bVal are equivalent. Element
+  		// repetitions are not counted, so these are equivalent:
+  		// a = new Set( [ {}, [], [] ] );
+  		// b = new Set( [ {}, {}, [] ] );
+  		"set": function set$$1(a, b) {
   			var innerEq,
   			    outerEq = true;
 
   			if (a.size !== b.size) {
+
+  				// This optimization has certain quirks because of the lack of
+  				// repetition counting. For instance, adding the same
+  				// (reference-identical) element to two equivalent sets can
+  				// make them non-equivalent.
   				return false;
   			}
 
   			a.forEach(function (aVal) {
+
+  				// Short-circuit if the result is already known. (Using for...of
+  				// with a break clause would be cleaner here, but it would cause
+  				// a syntax error on older Javascript implementations even if
+  				// Set is unused)
+  				if (!outerEq) {
+  					return;
+  				}
+
   				innerEq = false;
 
   				b.forEach(function (bVal) {
+  					var parentPairs;
+
+  					// Likewise, short-circuit if the result is already known
+  					if (innerEq) {
+  						return;
+  					}
+
+  					// Swap out the global pairs list, as the nested call to
+  					// innerEquiv will clobber its contents
+  					parentPairs = pairs;
   					if (innerEquiv(bVal, aVal)) {
   						innerEq = true;
   					}
+
+  					// Replace the global pairs list
+  					pairs = parentPairs;
   				});
 
   				if (!innerEq) {
@@ -386,21 +447,54 @@
   			return outerEq;
   		},
 
-  		"map": function map(b, a) {
+  		// Define maps a and b to be equivalent if for each key-value pair (aKey, aVal)
+  		// in a, there is some key-value pair (bKey, bVal) in b such that
+  		// [ aKey, aVal ] and [ bKey, bVal ] are equivalent. Key repetitions are not
+  		// counted, so these are equivalent:
+  		// a = new Map( [ [ {}, 1 ], [ {}, 1 ], [ [], 1 ] ] );
+  		// b = new Map( [ [ {}, 1 ], [ [], 1 ], [ [], 1 ] ] );
+  		"map": function map(a, b) {
   			var innerEq,
   			    outerEq = true;
 
   			if (a.size !== b.size) {
+
+  				// This optimization has certain quirks because of the lack of
+  				// repetition counting. For instance, adding the same
+  				// (reference-identical) key-value pair to two equivalent maps
+  				// can make them non-equivalent.
   				return false;
   			}
 
   			a.forEach(function (aVal, aKey) {
+
+  				// Short-circuit if the result is already known. (Using for...of
+  				// with a break clause would be cleaner here, but it would cause
+  				// a syntax error on older Javascript implementations even if
+  				// Map is unused)
+  				if (!outerEq) {
+  					return;
+  				}
+
   				innerEq = false;
 
   				b.forEach(function (bVal, bKey) {
+  					var parentPairs;
+
+  					// Likewise, short-circuit if the result is already known
+  					if (innerEq) {
+  						return;
+  					}
+
+  					// Swap out the global pairs list, as the nested call to
+  					// innerEquiv will clobber its contents
+  					parentPairs = pairs;
   					if (innerEquiv([bVal, bKey], [aVal, aKey])) {
   						innerEq = true;
   					}
+
+  					// Replace the global pairs list
+  					pairs = parentPairs;
   				});
 
   				if (!innerEq) {
@@ -411,52 +505,31 @@
   			return outerEq;
   		},
 
-  		"object": function object(b, a) {
-  			var i, j, loop, aCircular, bCircular;
-
-  			// Default to true
-  			var eq = true;
-  			var aProperties = [];
-  			var bProperties = [];
+  		"object": function object(a, b) {
+  			var i,
+  			    aProperties = [],
+  			    bProperties = [];
 
   			if (compareConstructors(a, b) === false) {
   				return false;
   			}
 
-  			// Stack constructor before traversing properties
-  			callers.push(a.constructor);
-
-  			// Track reference to avoid circular references
-  			parents.push(a);
-  			parentsB.push(b);
-
   			// Be strict: don't ensure hasOwnProperty and go deep
   			for (i in a) {
-  				loop = false;
-  				for (j = 0; j < parents.length; j++) {
-  					aCircular = parents[j] === a[i];
-  					bCircular = parentsB[j] === b[i];
-  					if (aCircular || bCircular) {
-  						if (a[i] === b[i] || aCircular && bCircular) {
-  							loop = true;
-  						} else {
-  							eq = false;
-  							break;
-  						}
-  					}
-  				}
+
+  				// Collect a's properties
   				aProperties.push(i);
-  				if (!loop && !innerEquiv(a[i], b[i])) {
-  					eq = false;
-  					break;
+
+  				// Skip OOP methods that look the same
+  				if (a.constructor !== Object && typeof a.constructor !== "undefined" && typeof a[i] === "function" && typeof b[i] === "function" && a[i].toString() === b[i].toString()) {
+  					continue;
+  				}
+
+  				// Compare non-containers; queue non-reference-equal containers
+  				if (!breadthFirstCompareChild(a[i], b[i])) {
+  					return false;
   				}
   			}
-
-  			parents.pop();
-  			parentsB.pop();
-
-  			// Unstack, we are done
-  			callers.pop();
 
   			for (i in b) {
 
@@ -465,31 +538,61 @@
   			}
 
   			// Ensures identical properties name
-  			return eq && innerEquiv(aProperties.sort(), bProperties.sort());
+  			return typeEquiv(aProperties.sort(), bProperties.sort());
   		}
   	};
 
   	function typeEquiv(a, b) {
   		var type = objectType(a);
-  		return objectType(b) === type && callbacks[type](b, a);
+
+  		// Callbacks for containers will append to the pairs queue to achieve breadth-first
+  		// search order. The pairs queue is also used to avoid reprocessing any pair of
+  		// containers that are reference-equal to a previously visited pair (a special case
+  		// this being recursion detection).
+  		//
+  		// Because of this approach, once typeEquiv returns a false value, it should not be
+  		// called again without clearing the pair queue else it may wrongly report a visited
+  		// pair as being equivalent.
+  		return objectType(b) === type && callbacks[type](a, b);
   	}
 
-  	// The real equiv function
   	function innerEquiv(a, b) {
+  		var i, pair;
 
   		// We're done when there's nothing more to compare
   		if (arguments.length < 2) {
   			return true;
   		}
 
-  		// Require type-specific equality
-  		return (a === b || typeEquiv(a, b)) && (
+  		// Clear the global pair queue and add the top-level values being compared
+  		pairs = [{ a: a, b: b }];
+
+  		for (i = 0; i < pairs.length; i++) {
+  			pair = pairs[i];
+
+  			// Perform type-specific comparison on any pairs that are not strictly
+  			// equal. For container types, that comparison will postpone comparison
+  			// of any sub-container pair to the end of the pair queue. This gives
+  			// breadth-first search order. It also avoids the reprocessing of
+  			// reference-equal siblings, cousins etc, which can have a significant speed
+  			// impact when comparing a container of small objects each of which has a
+  			// reference to the same (singleton) large object.
+  			if (pair.a !== pair.b && !typeEquiv(pair.a, pair.b)) {
+  				return false;
+  			}
+  		}
 
   		// ...across all consecutive argument pairs
-  		arguments.length === 2 || innerEquiv.apply(this, [].slice.call(arguments, 1)));
+  		return arguments.length === 2 || innerEquiv.apply(this, [].slice.call(arguments, 1));
   	}
 
-  	return innerEquiv;
+  	return function () {
+  		var result = innerEquiv.apply(undefined, arguments);
+
+  		// Release any retained objects
+  		pairs.length = 0;
+  		return result;
+  	};
   })();
 
   /**
@@ -531,21 +634,25 @@
   	// Set of all modules.
   	modules: [],
 
-  	// Stack of nested modules
-  	moduleStack: [],
-
   	// The first unnamed module
   	currentModule: {
   		name: "",
   		tests: [],
   		childModules: [],
-  		testsRun: 0
+  		testsRun: 0,
+  		unskippedTestsRun: 0,
+  		hooks: {
+  			before: [],
+  			beforeEach: [],
+  			afterEach: [],
+  			after: []
+  		}
   	},
 
   	callbacks: {},
 
   	// The storage module to use for reordering tests
-  	storage: sessionStorage
+  	storage: localSessionStorage
   };
 
   // take a predefined QUnit.config and extend the defaults
@@ -616,10 +723,10 @@
   			var res,
   			    parser,
   			    parserType,
-  			    inStack = inArray(obj, stack);
+  			    objIndex = stack.indexOf(obj);
 
-  			if (inStack !== -1) {
-  				return "recursion(" + (inStack - stack.length) + ")";
+  			if (objIndex !== -1) {
+  				return "recursion(" + (objIndex - stack.length) + ")";
   			}
 
   			objType = objType || this.typeOf(obj);
@@ -749,7 +856,7 @@
   				nonEnumerableProperties = ["message", "name"];
   				for (i in nonEnumerableProperties) {
   					key = nonEnumerableProperties[i];
-  					if (key in map && inArray(key, keys) < 0) {
+  					if (key in map && !inArray(key, keys)) {
   						keys.push(key);
   					}
   				}
@@ -843,6 +950,64 @@
   	return dump;
   })();
 
+  var LISTENERS = Object.create(null);
+  var SUPPORTED_EVENTS = ["runStart", "suiteStart", "testStart", "assertion", "testEnd", "suiteEnd", "runEnd"];
+
+  /**
+   * Emits an event with the specified data to all currently registered listeners.
+   * Callbacks will fire in the order in which they are registered (FIFO). This
+   * function is not exposed publicly; it is used by QUnit internals to emit
+   * logging events.
+   *
+   * @private
+   * @method emit
+   * @param {String} eventName
+   * @param {Object} data
+   * @return {Void}
+   */
+  function emit(eventName, data) {
+  	if (objectType(eventName) !== "string") {
+  		throw new TypeError("eventName must be a string when emitting an event");
+  	}
+
+  	// Clone the callbacks in case one of them registers a new callback
+  	var originalCallbacks = LISTENERS[eventName];
+  	var callbacks = originalCallbacks ? [].concat(toConsumableArray(originalCallbacks)) : [];
+
+  	for (var i = 0; i < callbacks.length; i++) {
+  		callbacks[i](data);
+  	}
+  }
+
+  /**
+   * Registers a callback as a listener to the specified event.
+   *
+   * @public
+   * @method on
+   * @param {String} eventName
+   * @param {Function} callback
+   * @return {Void}
+   */
+  function on(eventName, callback) {
+  	if (objectType(eventName) !== "string") {
+  		throw new TypeError("eventName must be a string when registering a listener");
+  	} else if (!inArray(eventName, SUPPORTED_EVENTS)) {
+  		var events = SUPPORTED_EVENTS.join(", ");
+  		throw new Error("\"" + eventName + "\" is not a valid event; must be one of: " + events + ".");
+  	} else if (objectType(callback) !== "function") {
+  		throw new TypeError("callback must be a function when registering a listener");
+  	}
+
+  	if (!LISTENERS[eventName]) {
+  		LISTENERS[eventName] = [];
+  	}
+
+  	// Don't register the same callback more than once
+  	if (!inArray(callback, LISTENERS[eventName])) {
+  		LISTENERS[eventName].push(callback);
+  	}
+  }
+
   // Register logging callbacks
   function registerLoggingCallbacks(obj) {
   	var i,
@@ -929,9 +1094,240 @@
   	return extractStacktrace(error, offset);
   }
 
-  var unitSampler;
-  var focused = false;
   var priorityCount = 0;
+  var unitSampler = void 0;
+
+  /**
+   * Advances the ProcessingQueue to the next item if it is ready.
+   * @param {Boolean} last
+   */
+  function advance() {
+  	var start = now();
+  	config.depth = (config.depth || 0) + 1;
+
+  	while (config.queue.length && !config.blocking) {
+  		var elapsedTime = now() - start;
+
+  		if (!defined.setTimeout || config.updateRate <= 0 || elapsedTime < config.updateRate) {
+  			if (priorityCount > 0) {
+  				priorityCount--;
+  			}
+
+  			config.queue.shift()();
+  		} else {
+  			setTimeout(advance, 13);
+  			break;
+  		}
+  	}
+
+  	config.depth--;
+
+  	if (!config.blocking && !config.queue.length && config.depth === 0) {
+  		done();
+  	}
+  }
+
+  function addToQueueImmediate(callback) {
+  	if (objectType(callback) === "array") {
+  		while (callback.length) {
+  			addToQueueImmediate(callback.pop());
+  		}
+
+  		return;
+  	}
+
+  	config.queue.unshift(callback);
+  	priorityCount++;
+  }
+
+  /**
+   * Adds a function to the ProcessingQueue for execution.
+   * @param {Function|Array} callback
+   * @param {Boolean} priority
+   * @param {String} seed
+   */
+  function addToQueue(callback, prioritize, seed) {
+  	if (prioritize) {
+  		config.queue.splice(priorityCount++, 0, callback);
+  	} else if (seed) {
+  		if (!unitSampler) {
+  			unitSampler = unitSamplerGenerator(seed);
+  		}
+
+  		// Insert into a random position after all prioritized items
+  		var index = Math.floor(unitSampler() * (config.queue.length - priorityCount + 1));
+  		config.queue.splice(priorityCount + index, 0, callback);
+  	} else {
+  		config.queue.push(callback);
+  	}
+  }
+
+  /**
+   * Creates a seeded "sample" generator which is used for randomizing tests.
+   */
+  function unitSamplerGenerator(seed) {
+
+  	// 32-bit xorshift, requires only a nonzero seed
+  	// http://excamera.com/sphinx/article-xorshift.html
+  	var sample = parseInt(generateHash(seed), 16) || -1;
+  	return function () {
+  		sample ^= sample << 13;
+  		sample ^= sample >>> 17;
+  		sample ^= sample << 5;
+
+  		// ECMAScript has no unsigned number type
+  		if (sample < 0) {
+  			sample += 0x100000000;
+  		}
+
+  		return sample / 0x100000000;
+  	};
+  }
+
+  /**
+   * This function is called when the ProcessingQueue is done processing all
+   * items. It handles emitting the final run events.
+   */
+  function done() {
+  	var storage = config.storage;
+
+  	ProcessingQueue.finished = true;
+
+  	var runtime = now() - config.started;
+  	var passed = config.stats.all - config.stats.bad;
+
+  	emit("runEnd", globalSuite.end(true));
+  	runLoggingCallbacks("done", {
+  		passed: passed,
+  		failed: config.stats.bad,
+  		total: config.stats.all,
+  		runtime: runtime
+  	});
+
+  	// Clear own storage items if all tests passed
+  	if (storage && config.stats.bad === 0) {
+  		for (var i = storage.length - 1; i >= 0; i--) {
+  			var key = storage.key(i);
+
+  			if (key.indexOf("qunit-test-") === 0) {
+  				storage.removeItem(key);
+  			}
+  		}
+  	}
+  }
+
+  var ProcessingQueue = {
+  	finished: false,
+  	add: addToQueue,
+  	addImmediate: addToQueueImmediate,
+  	advance: advance
+  };
+
+  var TestReport = function () {
+  	function TestReport(name, suite, options) {
+  		classCallCheck(this, TestReport);
+
+  		this.name = name;
+  		this.suiteName = suite.name;
+  		this.fullName = suite.fullName.concat(name);
+  		this.runtime = 0;
+  		this.assertions = [];
+
+  		this.skipped = !!options.skip;
+  		this.todo = !!options.todo;
+
+  		this.valid = options.valid;
+
+  		this._startTime = 0;
+  		this._endTime = 0;
+
+  		suite.pushTest(this);
+  	}
+
+  	createClass(TestReport, [{
+  		key: "start",
+  		value: function start(recordTime) {
+  			if (recordTime) {
+  				this._startTime = Date.now();
+  			}
+
+  			return {
+  				name: this.name,
+  				suiteName: this.suiteName,
+  				fullName: this.fullName.slice()
+  			};
+  		}
+  	}, {
+  		key: "end",
+  		value: function end(recordTime) {
+  			if (recordTime) {
+  				this._endTime = Date.now();
+  			}
+
+  			return extend(this.start(), {
+  				runtime: this.getRuntime(),
+  				status: this.getStatus(),
+  				errors: this.getFailedAssertions(),
+  				assertions: this.getAssertions()
+  			});
+  		}
+  	}, {
+  		key: "pushAssertion",
+  		value: function pushAssertion(assertion) {
+  			this.assertions.push(assertion);
+  		}
+  	}, {
+  		key: "getRuntime",
+  		value: function getRuntime() {
+  			return this._endTime - this._startTime;
+  		}
+  	}, {
+  		key: "getStatus",
+  		value: function getStatus() {
+  			if (this.skipped) {
+  				return "skipped";
+  			}
+
+  			var testPassed = this.getFailedAssertions().length > 0 ? this.todo : !this.todo;
+
+  			if (!testPassed) {
+  				return "failed";
+  			} else if (this.todo) {
+  				return "todo";
+  			} else {
+  				return "passed";
+  			}
+  		}
+  	}, {
+  		key: "getFailedAssertions",
+  		value: function getFailedAssertions() {
+  			return this.assertions.filter(function (assertion) {
+  				return !assertion.passed;
+  			});
+  		}
+  	}, {
+  		key: "getAssertions",
+  		value: function getAssertions() {
+  			return this.assertions.slice();
+  		}
+
+  		// Remove actual and expected values from assertions. This is to prevent
+  		// leaking memory throughout a test suite.
+
+  	}, {
+  		key: "slimAssertions",
+  		value: function slimAssertions() {
+  			this.assertions = this.assertions.map(function (assertion) {
+  				delete assertion.actual;
+  				delete assertion.expected;
+  				return assertion;
+  			});
+  		}
+  	}]);
+  	return TestReport;
+  }();
+
+  var focused$1 = false;
 
   function Test(settings) {
   	var i, l;
@@ -939,12 +1335,36 @@
   	++Test.count;
 
   	this.expected = null;
-  	extend(this, settings);
   	this.assertions = [];
   	this.semaphore = 0;
-  	this.usedAsync = false;
   	this.module = config.currentModule;
   	this.stack = sourceFromStacktrace(3);
+  	this.steps = [];
+  	this.timeout = undefined;
+
+  	// If a module is skipped, all its tests and the tests of the child suites
+  	// should be treated as skipped even if they are defined as `only` or `todo`.
+  	// As for `todo` module, all its tests will be treated as `todo` except for
+  	// tests defined as `skip` which will be left intact.
+  	//
+  	// So, if a test is defined as `todo` and is inside a skipped module, we should
+  	// then treat that test as if was defined as `skip`.
+  	if (this.module.skip) {
+  		settings.skip = true;
+  		settings.todo = false;
+
+  		// Skipped tests should be left intact
+  	} else if (this.module.todo && !settings.skip) {
+  		settings.todo = true;
+  	}
+
+  	extend(this, settings);
+
+  	this.testReport = new TestReport(settings.testName, this.module.suiteReport, {
+  		todo: settings.todo,
+  		skip: settings.skip,
+  		valid: this.valid()
+  	});
 
   	// Register unique strings
   	for (i = 0, l = this.module.tests; i < l.length; i++) {
@@ -957,7 +1377,8 @@
 
   	this.module.tests.push({
   		name: this.testName,
-  		testId: this.testId
+  		testId: this.testId,
+  		skip: !!settings.skip
   	});
 
   	if (settings.skip) {
@@ -967,6 +1388,13 @@
   		this.async = false;
   		this.expected = 0;
   	} else {
+  		if (typeof this.callback !== "function") {
+  			var method = this.todo ? "todo" : "test";
+
+  			// eslint-disable-next-line max-len
+  			throw new TypeError("You must provide a function as a test callback to QUnit." + method + "(\"" + settings.testName + "\")");
+  		}
+
   		this.assert = new Assert(this);
   	}
   }
@@ -995,6 +1423,7 @@
   		for (i = notStartedModules.length - 1; i >= 0; i--) {
   			startModule = notStartedModules[i];
   			startModule.stats = { all: 0, bad: 0, started: now() };
+  			emit("suiteStart", startModule.suiteReport.start(true));
   			runLoggingCallbacks("moduleStart", {
   				name: startModule.name,
   				tests: startModule.tests
@@ -1003,15 +1432,10 @@
 
   		config.current = this;
 
-  		if (module.testEnvironment) {
-  			delete module.testEnvironment.before;
-  			delete module.testEnvironment.beforeEach;
-  			delete module.testEnvironment.afterEach;
-  			delete module.testEnvironment.after;
-  		}
   		this.testEnvironment = extend({}, module.testEnvironment);
 
   		this.started = now();
+  		emit("testStart", this.testReport.start(true));
   		runLoggingCallbacks("testStart", {
   			name: this.testName,
   			module: module.name,
@@ -1053,6 +1477,12 @@
   		function runTest(test) {
   			promise = test.callback.call(test.testEnvironment, test.assert);
   			test.resolvePromise(promise);
+
+  			// If the test has a "lock" on it, but the timeout is 0, then we push a
+  			// failure as the test should be synchronous.
+  			if (test.timeout === 0 && test.semaphore !== 0) {
+  				pushFailure("Test did not finish synchronously even though assert.timeout( 0 ) was used.", sourceFromStacktrace(2));
+  			}
   		}
   	},
 
@@ -1061,22 +1491,27 @@
   	},
 
   	queueHook: function queueHook(hook, hookName, hookOwner) {
-  		var promise,
-  		    test = this;
-  		return function runHook() {
+  		var _this = this;
+
+  		var callHook = function callHook() {
+  			var promise = hook.call(_this.testEnvironment, _this.assert);
+  			_this.resolvePromise(promise, hookName);
+  		};
+
+  		var runHook = function runHook() {
   			if (hookName === "before") {
-  				if (hookOwner.testsRun !== 0) {
+  				if (hookOwner.unskippedTestsRun !== 0) {
   					return;
   				}
 
-  				test.preserveEnvironment = true;
+  				_this.preserveEnvironment = true;
   			}
 
-  			if (hookName === "after" && hookOwner.testsRun !== numberOfTests(hookOwner) - 1) {
+  			if (hookName === "after" && hookOwner.unskippedTestsRun !== numberOfUnskippedTests(hookOwner) - 1 && config.queue.length > 2) {
   				return;
   			}
 
-  			config.current = test;
+  			config.current = _this;
   			if (config.notrycatch) {
   				callHook();
   				return;
@@ -1084,15 +1519,13 @@
   			try {
   				callHook();
   			} catch (error) {
-  				test.pushFailure(hookName + " failed on " + test.testName + ": " + (error.message || error), extractStacktrace(error, 0));
-  			}
-
-  			function callHook() {
-  				promise = hook.call(test.testEnvironment, test.assert);
-  				test.resolvePromise(promise, hookName);
+  				_this.pushFailure(hookName + " failed on " + _this.testName + ": " + (error.message || error), extractStacktrace(error, 0));
   			}
   		};
+
+  		return runHook;
   	},
+
 
   	// Currently only used for module level hooks, can be used to add global level ones
   	hooks: function hooks(handler) {
@@ -1102,8 +1535,11 @@
   			if (module.parentModule) {
   				processHooks(test, module.parentModule);
   			}
-  			if (module.testEnvironment && objectType(module.testEnvironment[handler]) === "function") {
-  				hooks.push(test.queueHook(module.testEnvironment[handler], handler, module));
+
+  			if (module.hooks[handler].length) {
+  				for (var i = 0; i < module.hooks[handler].length; i++) {
+  					hooks.push(test.queueHook(module.hooks[handler][i], handler, module));
+  				}
   			}
   		}
 
@@ -1111,8 +1547,10 @@
   		if (!this.skip) {
   			processHooks(this, this.module);
   		}
+
   		return hooks;
   	},
+
 
   	finish: function finish() {
   		config.current = this;
@@ -1129,6 +1567,7 @@
   		    moduleName = module.name,
   		    testName = this.testName,
   		    skipped = !!this.skip,
+  		    todo = !!this.todo,
   		    bad = 0,
   		    storage = config.storage;
 
@@ -1145,7 +1584,7 @@
   			}
   		}
 
-  		notifyTestsRan(module);
+  		notifyTestsRan(module, skipped);
 
   		// Store result when possible
   		if (storage) {
@@ -1156,10 +1595,16 @@
   			}
   		}
 
+  		// After emitting the js-reporters event we cleanup the assertion data to
+  		// avoid leaking it. It is not used by the legacy testDone callbacks.
+  		emit("testEnd", this.testReport.end(true));
+  		this.testReport.slimAssertions();
+
   		runLoggingCallbacks("testDone", {
   			name: testName,
   			module: moduleName,
   			skipped: skipped,
+  			todo: todo,
   			failed: bad,
   			passed: this.assertions.length - bad,
   			total: this.assertions.length,
@@ -1174,6 +1619,21 @@
   		});
 
   		if (module.testsRun === numberOfTests(module)) {
+  			logSuiteEnd(module);
+
+  			// Check if the parent modules, iteratively, are done. If that the case,
+  			// we emit the `suiteEnd` event and trigger `moduleDone` callback.
+  			var parent = module.parentModule;
+  			while (parent && parent.testsRun === numberOfTests(parent)) {
+  				logSuiteEnd(parent);
+  				parent = parent.parentModule;
+  			}
+  		}
+
+  		config.current = undefined;
+
+  		function logSuiteEnd(module) {
+  			emit("suiteEnd", module.suiteReport.end(true));
   			runLoggingCallbacks("moduleDone", {
   				name: module.name,
   				tests: module.tests,
@@ -1183,8 +1643,6 @@
   				runtime: now() - module.stats.started
   			});
   		}
-
-  		config.current = undefined;
   	},
 
   	preserveTestEnvironment: function preserveTestEnvironment() {
@@ -1195,18 +1653,16 @@
   	},
 
   	queue: function queue() {
-  		var priority,
-  		    previousFailCount,
-  		    test = this;
+  		var test = this;
 
   		if (!this.valid()) {
   			return;
   		}
 
-  		function run() {
+  		function runTest() {
 
   			// Each of these can by async
-  			synchronize([function () {
+  			ProcessingQueue.addImmediate([function () {
   				test.before();
   			}, test.hooks("before"), function () {
   				test.preserveTestEnvironment();
@@ -1219,17 +1675,26 @@
   			}]);
   		}
 
-  		previousFailCount = config.storage && +config.storage.getItem("qunit-test-" + this.module.name + "-" + this.testName);
+  		var previousFailCount = config.storage && +config.storage.getItem("qunit-test-" + this.module.name + "-" + this.testName);
 
   		// Prioritize previously failed tests, detected from storage
-  		priority = config.reorder && previousFailCount;
+  		var prioritize = config.reorder && !!previousFailCount;
 
   		this.previousFailure = !!previousFailCount;
 
-  		return synchronize(run, priority, config.seed);
+  		ProcessingQueue.add(runTest, prioritize, config.seed);
+
+  		// If the queue has already finished, we manually process the new test
+  		if (ProcessingQueue.finished) {
+  			ProcessingQueue.advance();
+  		}
   	},
 
+
   	pushResult: function pushResult(resultInfo) {
+  		if (this !== config.current) {
+  			throw new Error("Assertion occured after test had finished.");
+  		}
 
   		// Destructure of resultInfo = { result, actual, expected, message, negative }
   		var source,
@@ -1239,21 +1704,25 @@
   			result: resultInfo.result,
   			message: resultInfo.message,
   			actual: resultInfo.actual,
-  			expected: resultInfo.expected,
   			testId: this.testId,
   			negative: resultInfo.negative || false,
-  			runtime: now() - this.started
+  			runtime: now() - this.started,
+  			todo: !!this.todo
   		};
 
+  		if (hasOwn.call(resultInfo, "expected")) {
+  			details.expected = resultInfo.expected;
+  		}
+
   		if (!resultInfo.result) {
-  			source = sourceFromStacktrace();
+  			source = resultInfo.source || sourceFromStacktrace();
 
   			if (source) {
   				details.source = source;
   			}
   		}
 
-  		runLoggingCallbacks("log", details);
+  		this.logAssertion(details);
 
   		this.assertions.push({
   			result: !!resultInfo.result,
@@ -1266,27 +1735,35 @@
   			throw new Error("pushFailure() assertion outside test context, was " + sourceFromStacktrace(2));
   		}
 
-  		var details = {
-  			module: this.module.name,
-  			name: this.testName,
+  		this.pushResult({
   			result: false,
   			message: message || "error",
   			actual: actual || null,
-  			testId: this.testId,
-  			runtime: now() - this.started
-  		};
-
-  		if (source) {
-  			details.source = source;
-  		}
-
-  		runLoggingCallbacks("log", details);
-
-  		this.assertions.push({
-  			result: false,
-  			message: message
+  			source: source
   		});
   	},
+
+  	/**
+    * Log assertion details using both the old QUnit.log interface and
+    * QUnit.on( "assertion" ) interface.
+    *
+    * @private
+    */
+  	logAssertion: function logAssertion(details) {
+  		runLoggingCallbacks("log", details);
+
+  		var assertion = {
+  			passed: details.result,
+  			actual: details.actual,
+  			expected: details.expected,
+  			message: details.message,
+  			stack: details.source,
+  			todo: details.todo
+  		};
+  		this.testReport.pushAssertion(assertion);
+  		emit("assertion", assertion);
+  	},
+
 
   	resolvePromise: function resolvePromise(promise, phase) {
   		var then,
@@ -1331,7 +1808,7 @@
   		}
 
   		function moduleChainIdMatch(testModule) {
-  			return inArray(testModule.moduleId, config.moduleId) > -1 || testModule.parentModule && moduleChainIdMatch(testModule.parentModule);
+  			return inArray(testModule.moduleId, config.moduleId) || testModule.parentModule && moduleChainIdMatch(testModule.parentModule);
   		}
 
   		// Internally-generated tests are always valid
@@ -1344,7 +1821,7 @@
   			return false;
   		}
 
-  		if (config.testId && config.testId.length > 0 && inArray(this.testId, config.testId) < 0) {
+  		if (config.testId && config.testId.length > 0 && !inArray(this.testId, config.testId)) {
 
   			return false;
   		}
@@ -1397,79 +1874,6 @@
   	return currentTest.pushFailure.apply(currentTest, arguments);
   }
 
-  // Based on Java's String.hashCode, a simple but not
-  // rigorously collision resistant hashing function
-  function generateHash(module, testName) {
-  	var hex,
-  	    i = 0,
-  	    hash = 0,
-  	    str = module + "\x1C" + testName,
-  	    len = str.length;
-
-  	for (; i < len; i++) {
-  		hash = (hash << 5) - hash + str.charCodeAt(i);
-  		hash |= 0;
-  	}
-
-  	// Convert the possibly negative integer hash code into an 8 character hex string, which isn't
-  	// strictly necessary but increases user understanding that the id is a SHA-like hash
-  	hex = (0x100000000 + hash).toString(16);
-  	if (hex.length < 8) {
-  		hex = "0000000" + hex;
-  	}
-
-  	return hex.slice(-8);
-  }
-
-  function synchronize(callback, priority, seed) {
-  	var last = !priority,
-  	    index;
-
-  	if (objectType(callback) === "array") {
-  		while (callback.length) {
-  			synchronize(callback.shift());
-  		}
-  		return;
-  	}
-
-  	if (priority) {
-  		config.queue.splice(priorityCount++, 0, callback);
-  	} else if (seed) {
-  		if (!unitSampler) {
-  			unitSampler = unitSamplerGenerator(seed);
-  		}
-
-  		// Insert into a random position after all priority items
-  		index = Math.floor(unitSampler() * (config.queue.length - priorityCount + 1));
-  		config.queue.splice(priorityCount + index, 0, callback);
-  	} else {
-  		config.queue.push(callback);
-  	}
-
-  	if (internalState.autorun && !config.blocking) {
-  		process(last);
-  	}
-  }
-
-  function unitSamplerGenerator(seed) {
-
-  	// 32-bit xorshift, requires only a nonzero seed
-  	// http://excamera.com/sphinx/article-xorshift.html
-  	var sample = parseInt(generateHash(seed), 16) || -1;
-  	return function () {
-  		sample ^= sample << 13;
-  		sample ^= sample >>> 17;
-  		sample ^= sample << 5;
-
-  		// ECMAScript has no unsigned number type
-  		if (sample < 0) {
-  			sample += 0x100000000;
-  		}
-
-  		return sample / 0x100000000;
-  	};
-  }
-
   function saveGlobal() {
   	config.pollution = [];
 
@@ -1507,13 +1911,11 @@
 
   // Will be exposed as QUnit.test
   function test(testName, callback) {
-  	if (focused) {
+  	if (focused$1) {
   		return;
   	}
 
-  	var newTest;
-
-  	newTest = new Test({
+  	var newTest = new Test({
   		testName: testName,
   		callback: callback
   	});
@@ -1521,9 +1923,23 @@
   	newTest.queue();
   }
 
+  function todo(testName, callback) {
+  	if (focused$1) {
+  		return;
+  	}
+
+  	var newTest = new Test({
+  		testName: testName,
+  		callback: callback,
+  		todo: true
+  	});
+
+  	newTest.queue();
+  }
+
   // Will be exposed as QUnit.skip
   function skip(testName) {
-  	if (focused) {
+  	if (focused$1) {
   		return;
   	}
 
@@ -1537,16 +1953,14 @@
 
   // Will be exposed as QUnit.only
   function only(testName, callback) {
-  	var newTest;
-
-  	if (focused) {
+  	if (focused$1) {
   		return;
   	}
 
   	config.queue.length = 0;
-  	focused = true;
+  	focused$1 = true;
 
-  	newTest = new Test({
+  	var newTest = new Test({
   		testName: testName,
   		callback: callback
   	});
@@ -1556,20 +1970,29 @@
 
   // Put a hold on processing and return a function that will release it.
   function internalStop(test) {
-  	var released = false;
-
   	test.semaphore += 1;
   	config.blocking = true;
 
   	// Set a recovery timeout, if so configured.
-  	if (config.testTimeout && defined.setTimeout) {
-  		clearTimeout(config.timeout);
-  		config.timeout = setTimeout(function () {
-  			pushFailure("Test timed out", sourceFromStacktrace(2));
-  			internalRecover(test);
-  		}, config.testTimeout);
+  	if (defined.setTimeout) {
+  		var timeoutDuration = void 0;
+
+  		if (typeof test.timeout === "number") {
+  			timeoutDuration = test.timeout;
+  		} else if (typeof config.testTimeout === "number") {
+  			timeoutDuration = config.testTimeout;
+  		}
+
+  		if (typeof timeoutDuration === "number" && timeoutDuration > 0) {
+  			clearTimeout(config.timeout);
+  			config.timeout = setTimeout(function () {
+  				pushFailure("Test took longer than " + timeoutDuration + "ms; test timed out.", sourceFromStacktrace(2));
+  				internalRecover(test);
+  			}, timeoutDuration);
+  		}
   	}
 
+  	var released = false;
   	return function resume() {
   		if (released) {
   			return;
@@ -1632,26 +2055,60 @@
   	}
   }
 
-  function numberOfTests(module) {
-  	var count = module.tests.length,
-  	    modules = [].concat(toConsumableArray(module.childModules));
+  function collectTests(module) {
+  	var tests = [].concat(module.tests);
+  	var modules = [].concat(toConsumableArray(module.childModules));
 
   	// Do a breadth-first traversal of the child modules
   	while (modules.length) {
   		var nextModule = modules.shift();
-  		count += nextModule.tests.length;
+  		tests.push.apply(tests, nextModule.tests);
   		modules.push.apply(modules, toConsumableArray(nextModule.childModules));
   	}
 
-  	return count;
+  	return tests;
   }
 
-  function notifyTestsRan(module) {
+  function numberOfTests(module) {
+  	return collectTests(module).length;
+  }
+
+  function numberOfUnskippedTests(module) {
+  	return collectTests(module).filter(function (test) {
+  		return !test.skip;
+  	}).length;
+  }
+
+  function notifyTestsRan(module, skipped) {
   	module.testsRun++;
+  	if (!skipped) {
+  		module.unskippedTestsRun++;
+  	}
   	while (module = module.parentModule) {
   		module.testsRun++;
+  		if (!skipped) {
+  			module.unskippedTestsRun++;
+  		}
   	}
   }
+
+  /**
+   * Returns a function that proxies to the given method name on the globals
+   * console object. The proxy will also detect if the console doesn't exist and
+   * will appropriately no-op. This allows support for IE9, which doesn't have a
+   * console if the developer tools are not open.
+   */
+  function consoleProxy(method) {
+  	return function () {
+  		if (console) {
+  			console[method].apply(console, arguments);
+  		}
+  	};
+  }
+
+  var Logger = {
+  	warn: consoleProxy("warn")
+  };
 
   var Assert = function () {
   	function Assert(testContext) {
@@ -1662,11 +2119,43 @@
 
   	// Assert helpers
 
-  	// Specify the number of expected assertions to guarantee that failed test
-  	// (no assertions are run at all) don't slip through.
-
-
   	createClass(Assert, [{
+  		key: "timeout",
+  		value: function timeout(duration) {
+  			if (typeof duration !== "number") {
+  				throw new Error("You must pass a number as the duration to assert.timeout");
+  			}
+
+  			this.test.timeout = duration;
+  		}
+
+  		// Documents a "step", which is a string value, in a test as a passing assertion
+
+  	}, {
+  		key: "step",
+  		value: function step(message) {
+  			var result = !!message;
+
+  			this.test.steps.push(message);
+
+  			return this.pushResult({
+  				result: result,
+  				message: message || "You must provide a message to assert.step"
+  			});
+  		}
+
+  		// Verifies the steps in a test match a given array of string values
+
+  	}, {
+  		key: "verifySteps",
+  		value: function verifySteps(steps, message) {
+  			this.deepEqual(this.test.steps, steps, message);
+  		}
+
+  		// Specify the number of expected assertions to guarantee that failed test
+  		// (no assertions are run at all) don't slip through.
+
+  	}, {
   		key: "expect",
   		value: function expect(asserts) {
   			if (arguments.length === 1) {
@@ -1681,18 +2170,22 @@
   	}, {
   		key: "async",
   		value: function async(count) {
-  			var test$$1 = this.test,
-  			    popped = false,
+  			var test$$1 = this.test;
+
+  			var popped = false,
   			    acceptCallCount = count;
 
   			if (typeof acceptCallCount === "undefined") {
   				acceptCallCount = 1;
   			}
 
-  			test$$1.usedAsync = true;
   			var resume = internalStop(test$$1);
 
   			return function done() {
+  				if (config.current !== test$$1) {
+  					throw Error("assert.async callback called after test finished.");
+  				}
+
   				if (popped) {
   					test$$1.pushFailure("Too many calls to the `assert.async` callback", sourceFromStacktrace(2));
   					return;
@@ -1714,7 +2207,7 @@
   	}, {
   		key: "push",
   		value: function push(result, actual, expected, message, negative) {
-  			console.warn("assert.push is deprecated and will be removed in QUnit 3.0." + " Please use assert.pushResult instead (http://api.qunitjs.com/pushResult/).");
+  			Logger.warn("assert.push is deprecated and will be removed in QUnit 3.0." + " Please use assert.pushResult instead (https://api.qunitjs.com/assert/pushResult).");
 
   			var currentAssert = this instanceof Assert ? this : config.current.assert;
   			return currentAssert.pushResult({
@@ -1730,8 +2223,8 @@
   		value: function pushResult(resultInfo) {
 
   			// Destructure of resultInfo = { result, actual, expected, message, negative }
-  			var assert = this,
-  			    currentTest = assert instanceof Assert && assert.test || config.current;
+  			var assert = this;
+  			var currentTest = assert instanceof Assert && assert.test || config.current;
 
   			// Backwards compatibility fix.
   			// Allows the direct use of global exported assertions and QUnit.assert.*
@@ -1740,12 +2233,6 @@
   			// not exactly the test where assertion were intended to be called.
   			if (!currentTest) {
   				throw new Error("assertion outside test context, in " + sourceFromStacktrace(2));
-  			}
-
-  			if (currentTest.usedAsync === true && currentTest.semaphore === 0) {
-  				currentTest.pushFailure("Assertion after the final `assert.async` was resolved", sourceFromStacktrace(2));
-
-  				// Allow this assertion to continue running anyway...
   			}
 
   			if (!(assert instanceof Assert)) {
@@ -1884,8 +2371,9 @@
   		key: "throws",
   		value: function throws(block, expected, message) {
   			var actual = void 0,
-  			    result = false,
-  			    currentTest = this instanceof Assert && this.test || config.current;
+  			    result = false;
+
+  			var currentTest = this instanceof Assert && this.test || config.current;
 
   			// 'expected' is optional unless doing string comparison
   			if (objectType(expected) === "string") {
@@ -2009,126 +2497,314 @@
   		});
   		QUnit.config.autostart = false;
   	}
+
+  	// For Web/Service Workers
+  	if (self$1 && self$1.WorkerGlobalScope && self$1 instanceof self$1.WorkerGlobalScope) {
+  		self$1.QUnit = QUnit;
+  	}
   }
 
-  (function () {
-  	if (!defined.document) {
-  		return;
+  var SuiteReport = function () {
+  	function SuiteReport(name, parentSuite) {
+  		classCallCheck(this, SuiteReport);
+
+  		this.name = name;
+  		this.fullName = parentSuite ? parentSuite.fullName.concat(name) : [];
+
+  		this.tests = [];
+  		this.childSuites = [];
+
+  		if (parentSuite) {
+  			parentSuite.pushChildSuite(this);
+  		}
   	}
 
-  	// `onErrorFnPrev` initialized at top of scope
-  	// Preserve other handlers
-  	var onErrorFnPrev = window.onerror;
-
-  	// Cover uncaught exceptions
-  	// Returning true will suppress the default browser handler,
-  	// returning false will let it run.
-  	window.onerror = function (error, filePath, linerNr) {
-  		var ret = false;
-  		if (onErrorFnPrev) {
-  			ret = onErrorFnPrev(error, filePath, linerNr);
-  		}
-
-  		// Treat return value as window.onerror itself does,
-  		// Only do our handling if not suppressed.
-  		if (ret !== true) {
-  			if (config.current) {
-  				if (config.current.ignoreGlobalErrors) {
-  					return true;
-  				}
-  				pushFailure(error, filePath + ":" + linerNr);
-  			} else {
-  				test("global failure", extend(function () {
-  					pushFailure(error, filePath + ":" + linerNr);
-  				}, { validTest: true }));
+  	createClass(SuiteReport, [{
+  		key: "start",
+  		value: function start(recordTime) {
+  			if (recordTime) {
+  				this._startTime = Date.now();
   			}
-  			return false;
+
+  			return {
+  				name: this.name,
+  				fullName: this.fullName.slice(),
+  				tests: this.tests.map(function (test) {
+  					return test.start();
+  				}),
+  				childSuites: this.childSuites.map(function (suite) {
+  					return suite.start();
+  				}),
+  				testCounts: {
+  					total: this.getTestCounts().total
+  				}
+  			};
   		}
+  	}, {
+  		key: "end",
+  		value: function end(recordTime) {
+  			if (recordTime) {
+  				this._endTime = Date.now();
+  			}
 
-  		return ret;
-  	};
-  })();
+  			return {
+  				name: this.name,
+  				fullName: this.fullName.slice(),
+  				tests: this.tests.map(function (test) {
+  					return test.end();
+  				}),
+  				childSuites: this.childSuites.map(function (suite) {
+  					return suite.end();
+  				}),
+  				testCounts: this.getTestCounts(),
+  				runtime: this.getRuntime(),
+  				status: this.getStatus()
+  			};
+  		}
+  	}, {
+  		key: "pushChildSuite",
+  		value: function pushChildSuite(suite) {
+  			this.childSuites.push(suite);
+  		}
+  	}, {
+  		key: "pushTest",
+  		value: function pushTest(test) {
+  			this.tests.push(test);
+  		}
+  	}, {
+  		key: "getRuntime",
+  		value: function getRuntime() {
+  			return this._endTime - this._startTime;
+  		}
+  	}, {
+  		key: "getTestCounts",
+  		value: function getTestCounts() {
+  			var counts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { passed: 0, failed: 0, skipped: 0, todo: 0, total: 0 };
 
+  			counts = this.tests.reduce(function (counts, test) {
+  				if (test.valid) {
+  					counts[test.getStatus()]++;
+  					counts.total++;
+  				}
+
+  				return counts;
+  			}, counts);
+
+  			return this.childSuites.reduce(function (counts, suite) {
+  				return suite.getTestCounts(counts);
+  			}, counts);
+  		}
+  	}, {
+  		key: "getStatus",
+  		value: function getStatus() {
+  			var _getTestCounts = this.getTestCounts(),
+  			    total = _getTestCounts.total,
+  			    failed = _getTestCounts.failed,
+  			    skipped = _getTestCounts.skipped,
+  			    todo = _getTestCounts.todo;
+
+  			if (failed) {
+  				return "failed";
+  			} else {
+  				if (skipped === total) {
+  					return "skipped";
+  				} else if (todo === total) {
+  					return "todo";
+  				} else {
+  					return "passed";
+  				}
+  			}
+  		}
+  	}]);
+  	return SuiteReport;
+  }();
+
+  // Handle an unhandled exception. By convention, returns true if further
+  // error handling should be suppressed and false otherwise.
+  // In this case, we will only suppress further error handling if the
+  // "ignoreGlobalErrors" configuration option is enabled.
+  function onError(error) {
+  	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+  		args[_key - 1] = arguments[_key];
+  	}
+
+  	if (config.current) {
+  		if (config.current.ignoreGlobalErrors) {
+  			return true;
+  		}
+  		pushFailure.apply(undefined, [error.message, error.fileName + ":" + error.lineNumber].concat(args));
+  	} else {
+  		test("global failure", extend(function () {
+  			pushFailure.apply(undefined, [error.message, error.fileName + ":" + error.lineNumber].concat(args));
+  		}, { validTest: true }));
+  	}
+
+  	return false;
+  }
+
+  var focused = false;
   var QUnit = {};
+  var globalSuite = new SuiteReport();
 
+  // The initial "currentModule" represents the global (or top-level) module that
+  // is not explicitly defined by the user, therefore we add the "globalSuite" to
+  // it since each module has a suiteReport associated with it.
+  config.currentModule.suiteReport = globalSuite;
+
+  var moduleStack = [];
   var globalStartCalled = false;
   var runStarted = false;
-
-  var internalState = {
-  	autorun: false
-  };
 
   // Figure out if we're running the tests from a server or not
   QUnit.isLocal = !(defined.document && window.location.protocol !== "file:");
 
   // Expose the current QUnit version
-  QUnit.version = "2.1.1";
+  QUnit.version = "2.4.1";
+
+  function createModule(name, testEnvironment, modifiers) {
+  	var parentModule = moduleStack.length ? moduleStack.slice(-1)[0] : null;
+  	var moduleName = parentModule !== null ? [parentModule.name, name].join(" > ") : name;
+  	var parentSuite = parentModule ? parentModule.suiteReport : globalSuite;
+
+  	var skip$$1 = parentModule !== null && parentModule.skip || modifiers.skip;
+  	var todo$$1 = parentModule !== null && parentModule.todo || modifiers.todo;
+
+  	var module = {
+  		name: moduleName,
+  		parentModule: parentModule,
+  		tests: [],
+  		moduleId: generateHash(moduleName),
+  		testsRun: 0,
+  		unskippedTestsRun: 0,
+  		childModules: [],
+  		suiteReport: new SuiteReport(name, parentSuite),
+
+  		// Pass along `skip` and `todo` properties from parent module, in case
+  		// there is one, to childs. And use own otherwise.
+  		// This property will be used to mark own tests and tests of child suites
+  		// as either `skipped` or `todo`.
+  		skip: skip$$1,
+  		todo: skip$$1 ? false : todo$$1
+  	};
+
+  	var env = {};
+  	if (parentModule) {
+  		parentModule.childModules.push(module);
+  		extend(env, parentModule.testEnvironment);
+  	}
+  	extend(env, testEnvironment);
+  	module.testEnvironment = env;
+
+  	config.modules.push(module);
+  	return module;
+  }
+
+  function processModule(name, options, executeNow) {
+  	var modifiers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  	var module = createModule(name, options, modifiers);
+
+  	// Move any hooks to a 'hooks' object
+  	var testEnvironment = module.testEnvironment;
+  	var hooks = module.hooks = {};
+
+  	setHookFromEnvironment(hooks, testEnvironment, "before");
+  	setHookFromEnvironment(hooks, testEnvironment, "beforeEach");
+  	setHookFromEnvironment(hooks, testEnvironment, "afterEach");
+  	setHookFromEnvironment(hooks, testEnvironment, "after");
+
+  	function setHookFromEnvironment(hooks, environment, name) {
+  		var potentialHook = environment[name];
+  		hooks[name] = typeof potentialHook === "function" ? [potentialHook] : [];
+  		delete environment[name];
+  	}
+
+  	var moduleFns = {
+  		before: setHookFunction(module, "before"),
+  		beforeEach: setHookFunction(module, "beforeEach"),
+  		afterEach: setHookFunction(module, "afterEach"),
+  		after: setHookFunction(module, "after")
+  	};
+
+  	var currentModule = config.currentModule;
+  	if (objectType(executeNow) === "function") {
+  		moduleStack.push(module);
+  		config.currentModule = module;
+  		executeNow.call(module.testEnvironment, moduleFns);
+  		moduleStack.pop();
+  		module = module.parentModule || currentModule;
+  	}
+
+  	config.currentModule = module;
+  }
+
+  // TODO: extract this to a new file alongside its related functions
+  function module$1(name, options, executeNow) {
+  	if (focused) {
+  		return;
+  	}
+
+  	if (arguments.length === 2) {
+  		if (objectType(options) === "function") {
+  			executeNow = options;
+  			options = undefined;
+  		}
+  	}
+
+  	processModule(name, options, executeNow);
+  }
+
+  module$1.only = function () {
+  	if (focused) {
+  		return;
+  	}
+
+  	config.modules.length = 0;
+  	config.queue.length = 0;
+
+  	module$1.apply(undefined, arguments);
+
+  	focused = true;
+  };
+
+  module$1.skip = function (name, options, executeNow) {
+  	if (focused) {
+  		return;
+  	}
+
+  	if (arguments.length === 2) {
+  		if (objectType(options) === "function") {
+  			executeNow = options;
+  			options = undefined;
+  		}
+  	}
+
+  	processModule(name, options, executeNow, { skip: true });
+  };
+
+  module$1.todo = function (name, options, executeNow) {
+  	if (focused) {
+  		return;
+  	}
+
+  	if (arguments.length === 2) {
+  		if (objectType(options) === "function") {
+  			executeNow = options;
+  			options = undefined;
+  		}
+  	}
+
+  	processModule(name, options, executeNow, { todo: true });
+  };
 
   extend(QUnit, {
+  	on: on,
 
-  	// Call on start of module test to prepend name to all tests
-  	module: function module(name, testEnvironment, executeNow) {
-  		var module, moduleFns;
-  		var currentModule = config.currentModule;
-
-  		if (arguments.length === 2) {
-  			if (objectType(testEnvironment) === "function") {
-  				executeNow = testEnvironment;
-  				testEnvironment = undefined;
-  			}
-  		}
-
-  		module = createModule();
-
-  		moduleFns = {
-  			before: setHook(module, "before"),
-  			beforeEach: setHook(module, "beforeEach"),
-  			afterEach: setHook(module, "afterEach"),
-  			after: setHook(module, "after")
-  		};
-
-  		if (objectType(executeNow) === "function") {
-  			config.moduleStack.push(module);
-  			setCurrentModule(module);
-  			executeNow.call(module.testEnvironment, moduleFns);
-  			config.moduleStack.pop();
-  			module = module.parentModule || currentModule;
-  		}
-
-  		setCurrentModule(module);
-
-  		function createModule() {
-  			var parentModule = config.moduleStack.length ? config.moduleStack.slice(-1)[0] : null;
-  			var moduleName = parentModule !== null ? [parentModule.name, name].join(" > ") : name;
-  			var module = {
-  				name: moduleName,
-  				parentModule: parentModule,
-  				tests: [],
-  				moduleId: generateHash(moduleName),
-  				testsRun: 0,
-  				childModules: []
-  			};
-
-  			var env = {};
-  			if (parentModule) {
-  				parentModule.childModules.push(module);
-  				extend(env, parentModule.testEnvironment);
-  				delete env.beforeEach;
-  				delete env.afterEach;
-  			}
-  			extend(env, testEnvironment);
-  			module.testEnvironment = env;
-
-  			config.modules.push(module);
-  			return module;
-  		}
-
-  		function setCurrentModule(module) {
-  			config.currentModule = module;
-  		}
-  	},
+  	module: module$1,
 
   	test: test,
+
+  	todo: todo,
 
   	skip: skip,
 
@@ -2146,14 +2822,18 @@
   				throw new Error("Called start() outside of a test context too many times");
   			} else if (config.autostart) {
   				throw new Error("Called start() outside of a test context when " + "QUnit.config.autostart was true");
-  			} else if (!defined.document && !config.pageLoaded) {
-
-  				// Starts from Node even if .load was not previously called
-  				QUnit.load();
   			} else if (!config.pageLoaded) {
 
-  				// The page isn't completely loaded yet, so bail out and let `QUnit.load` handle it
+  				// The page isn't completely loaded yet, so we set autostart and then
+  				// load if we're in Node or wait for the browser's load event.
   				config.autostart = true;
+
+  				// Starts from Node even if .load was not previously called. We still return
+  				// early otherwise we'll wind up "beginning" twice.
+  				if (!defined.document) {
+  					QUnit.load();
+  				}
+
   				return;
   			}
   		} else {
@@ -2195,7 +2875,9 @@
   	stack: function stack(offset) {
   		offset = (offset || 0) + 2;
   		return sourceFromStacktrace(offset);
-  	}
+  	},
+
+  	onError: onError
   });
 
   QUnit.pushFailure = pushFailure;
@@ -2244,6 +2926,7 @@
   		}
 
   		// The test run is officially beginning now
+  		emit("runStart", globalSuite.start(true));
   		runLoggingCallbacks("begin", {
   			totalTests: Test.count,
   			modules: modulesLog
@@ -2251,72 +2934,12 @@
   	}
 
   	config.blocking = false;
-  	process(true);
+  	ProcessingQueue.advance();
   }
 
-  function process(last) {
-  	function next() {
-  		process(last);
-  	}
-  	var start = now();
-  	config.depth = (config.depth || 0) + 1;
-
-  	while (config.queue.length && !config.blocking) {
-  		if (!defined.setTimeout || config.updateRate <= 0 || now() - start < config.updateRate) {
-  			if (config.current) {
-
-  				// Reset async tracking for each phase of the Test lifecycle
-  				config.current.usedAsync = false;
-  			}
-  			config.queue.shift()();
-  		} else {
-  			setTimeout(next, 13);
-  			break;
-  		}
-  	}
-  	config.depth--;
-  	if (last && !config.blocking && !config.queue.length && config.depth === 0) {
-  		done();
-  	}
-  }
-
-  function done() {
-  	var runtime,
-  	    passed,
-  	    i,
-  	    key,
-  	    storage = config.storage;
-
-  	internalState.autorun = true;
-
-  	runtime = now() - config.started;
-  	passed = config.stats.all - config.stats.bad;
-
-  	runLoggingCallbacks("done", {
-  		failed: config.stats.bad,
-  		passed: passed,
-  		total: config.stats.all,
-  		runtime: runtime
-  	});
-
-  	// Clear own storage items if all tests passed
-  	if (storage && config.stats.bad === 0) {
-  		for (i = storage.length - 1; i >= 0; i--) {
-  			key = storage.key(i);
-  			if (key.indexOf("qunit-test-") === 0) {
-  				storage.removeItem(key);
-  			}
-  		}
-  	}
-  }
-
-  function setHook(module, hookName) {
-  	if (module.testEnvironment === undefined) {
-  		module.testEnvironment = {};
-  	}
-
-  	return function (callback) {
-  		module.testEnvironment[hookName] = callback;
+  function setHookFunction(module, hookName) {
+  	return function setHook(callback) {
+  		module.hooks[hookName].push(callback);
   	};
   }
 
@@ -2455,6 +3078,13 @@
   		return decodeURIComponent(param.replace(/\+/g, "%20"));
   	}
   })();
+
+  var stats = {
+  	passedTests: 0,
+  	failedTests: 0,
+  	skippedTests: 0,
+  	todoTests: 0
+  };
 
   // Escape text for attribute or text content.
   function escapeText(s) {
@@ -2663,7 +3293,8 @@
   			// Skip inherited or undefined properties
   			if (hasOwn.call(params, key) && params[key] !== undefined) {
 
-  				// Output a parameter for each value of this key (but usually just one)
+  				// Output a parameter for each value of this key
+  				// (but usually just one)
   				arrValue = [].concat(params[key]);
   				for (i = 0; i < arrValue.length; i++) {
   					querystring += encodeURIComponent(key);
@@ -3046,7 +3677,8 @@
   		var banner = id("qunit-banner"),
   		    tests = id("qunit-tests"),
   		    abortButton = id("qunit-abort-tests-button"),
-  		    html = ["Tests completed in ", details.runtime, " milliseconds.<br />", "<span class='passed'>", details.passed, "</span> assertions of <span class='total'>", details.total, "</span> passed, <span class='failed'>", details.failed, "</span> failed."].join(""),
+  		    totalTests = stats.passedTests + stats.skippedTests + stats.todoTests + stats.failedTests,
+  		    html = [totalTests, " tests completed in ", details.runtime, " milliseconds, with ", stats.failedTests, " failed, ", stats.skippedTests, " skipped, and ", stats.todoTests, " todo.<br />", "<span class='passed'>", details.passed, "</span> assertions of <span class='total'>", details.total, "</span> passed, <span class='failed'>", details.failed, "</span> failed."].join(""),
   		    test,
   		    assertLi,
   		    assertList;
@@ -3069,7 +3701,7 @@
   		}
 
   		if (banner && (!abortButton || abortButton.disabled === false)) {
-  			banner.className = details.failed ? "qunit-fail" : "qunit-pass";
+  			banner.className = stats.failedTests ? "qunit-fail" : "qunit-pass";
   		}
 
   		if (abortButton) {
@@ -3083,8 +3715,9 @@
   		if (config.altertitle && document$$1.title) {
 
   			// Show ✖ for good, ✔ for bad suite result in title
-  			// use escape sequences in case file gets loaded with non-utf-8-charset
-  			document$$1.title = [details.failed ? "\u2716" : "\u2714", document$$1.title.replace(/^[\u2714\u2716] /i, "")].join(" ");
+  			// use escape sequences in case file gets loaded with non-utf-8
+  			// charset
+  			document$$1.title = [stats.failedTests ? "\u2716" : "\u2714", document$$1.title.replace(/^[\u2714\u2716] /i, "")].join(" ");
   		}
 
   		// Scroll back to top to show results
@@ -3121,7 +3754,7 @@
   		if (running) {
   			bad = QUnit.config.reorder && details.previousFailure;
 
-  			running.innerHTML = (bad ? "Rerunning previously failed test: <br />" : "Running: <br />") + getNameHtml(details.name, details.module);
+  			running.innerHTML = [bad ? "Rerunning previously failed test: <br />" : "Running: <br />", getNameHtml(details.name, details.module)].join("");
   		}
   	});
 
@@ -3166,13 +3799,19 @@
 
   				message += "<tr class='test-actual'><th>Result: </th><td><pre>" + escapeText(actual) + "</pre></td></tr>";
 
-  				// Don't show diff if actual or expected are booleans
-  				if (!/^(true|false)$/.test(actual) && !/^(true|false)$/.test(expected)) {
+  				if (typeof details.actual === "number" && typeof details.expected === "number") {
+  					if (!isNaN(details.actual) && !isNaN(details.expected)) {
+  						showDiff = true;
+  						diff = details.actual - details.expected;
+  						diff = (diff > 0 ? "+" : "") + diff;
+  					}
+  				} else if (typeof details.actual !== "boolean" && typeof details.expected !== "boolean") {
   					diff = QUnit.diff(expected, actual);
+
+  					// don't show diff if there is zero overlap
   					showDiff = stripHtml(diff).length !== stripHtml(expected).length + stripHtml(actual).length;
   				}
 
-  				// Don't show diff if expected and actual are totally different
   				if (showDiff) {
   					message += "<tr class='test-diff'><th>Diff: </th><td><pre>" + diff + "</pre></td></tr>";
   				}
@@ -3224,7 +3863,10 @@
   		good = details.passed;
   		bad = details.failed;
 
-  		if (bad === 0) {
+  		// This test passed if it has no unexpected failed assertions
+  		var testPassed = details.failed > 0 ? details.todo : !details.todo;
+
+  		if (testPassed) {
 
   			// Collapse the passing tests
   			addClass(assertList, "qunit-collapsed");
@@ -3248,6 +3890,8 @@
   		testTitle.innerHTML += " <b class='counts'>(" + testCounts + details.assertions.length + ")</b>";
 
   		if (details.skipped) {
+  			stats.skippedTests++;
+
   			testItem.className = "skipped";
   			skipped = document$$1.createElement("em");
   			skipped.className = "qunit-skipped-label";
@@ -3258,12 +3902,28 @@
   				toggleClass(assertList, "qunit-collapsed");
   			});
 
-  			testItem.className = bad ? "fail" : "pass";
+  			testItem.className = testPassed ? "pass" : "fail";
+
+  			if (details.todo) {
+  				var todoLabel = document$$1.createElement("em");
+  				todoLabel.className = "qunit-todo-label";
+  				todoLabel.innerHTML = "todo";
+  				testItem.className += " todo";
+  				testItem.insertBefore(todoLabel, testTitle);
+  			}
 
   			time = document$$1.createElement("span");
   			time.className = "runtime";
   			time.innerHTML = details.runtime + " ms";
   			testItem.insertBefore(time, assertList);
+
+  			if (!testPassed) {
+  				stats.failedTests++;
+  			} else if (details.todo) {
+  				stats.todoTests++;
+  			} else {
+  				stats.passedTests++;
+  			}
   		}
 
   		// Show the source of the test when showing assertions
@@ -3271,7 +3931,7 @@
   			sourceName = document$$1.createElement("p");
   			sourceName.innerHTML = "<strong>Source: </strong>" + details.source;
   			addClass(sourceName, "qunit-source");
-  			if (bad === 0) {
+  			if (testPassed) {
   				addClass(sourceName, "qunit-collapsed");
   			}
   			addEvent(testTitle, "click", function () {
@@ -3292,6 +3952,39 @@
   	} else {
   		addEvent(window, "load", QUnit.load);
   	}
+
+  	// Wrap window.onerror. We will call the original window.onerror to see if
+  	// the existing handler fully handles the error; if not, we will call the
+  	// QUnit.onError function.
+  	var originalWindowOnError = window.onerror;
+
+  	// Cover uncaught exceptions
+  	// Returning true will suppress the default browser handler,
+  	// returning false will let it run.
+  	window.onerror = function (message, fileName, lineNumber) {
+  		var ret = false;
+  		if (originalWindowOnError) {
+  			for (var _len = arguments.length, args = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+  				args[_key - 3] = arguments[_key];
+  			}
+
+  			ret = originalWindowOnError.call.apply(originalWindowOnError, [this, message, fileName, lineNumber].concat(args));
+  		}
+
+  		// Treat return value as window.onerror itself does,
+  		// Only do our handling if not suppressed.
+  		if (ret !== true) {
+  			var error = {
+  				message: message,
+  				fileName: fileName,
+  				lineNumber: lineNumber
+  			};
+
+  			ret = QUnit.onError(error);
+  		}
+
+  		return ret;
+  	};
   })();
 
   /*
@@ -4192,7 +4885,9 @@
   				line = text.substring(lineStart, lineEnd + 1);
   				lineStart = lineEnd + 1;
 
-  				if (lineHash.hasOwnProperty ? lineHash.hasOwnProperty(line) : lineHash[line] !== undefined) {
+  				var lineHashExists = lineHash.hasOwnProperty ? lineHash.hasOwnProperty(line) : lineHash[line] !== undefined;
+
+  				if (lineHashExists) {
   					chars += String.fromCharCode(lineHash[line]);
   				} else {
   					chars += String.fromCharCode(lineArrayLength);

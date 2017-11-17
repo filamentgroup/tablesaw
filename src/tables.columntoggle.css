@@ -5,7 +5,6 @@
 .tablesaw-overflow {
 	position: relative;
 	width: 100%;
-	overflow-y: hidden;
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	/* More in skin.css */
@@ -134,14 +133,14 @@
 
 @media only all {
 	/* Unchecked manually: Always hide */
-	.tablesaw-columntoggle th.tablesaw-cell-hidden,
-	.tablesaw-columntoggle td.tablesaw-cell-hidden {
+	.tablesaw-columntoggle th.tablesaw-toggle-cellhidden,
+	.tablesaw-columntoggle td.tablesaw-toggle-cellhidden {
 		display: none;
 	}
 
 	/* Checked manually: Always show */
-	.tablesaw-columntoggle th.tablesaw-cell-visible,
-	.tablesaw-columntoggle td.tablesaw-cell-visible {
+	.tablesaw-columntoggle th.tablesaw-toggle-cellvisible,
+	.tablesaw-columntoggle td.tablesaw-toggle-cellvisible {
 		display: table-cell;
 	}
 }

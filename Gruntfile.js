@@ -127,42 +127,26 @@ module.exports = function(grunt) {
 			}
 		},
 		qunit: {
-			files: ['test/**/*.html']
+			files: ['test-qunit/**/*.html']
 		},
-		jshint: {
-			gruntfile: {
-				options: {
-					jshintrc: '.jshintrc'
-				},
-				src: 'Gruntfile.js'
-			},
-			src: {
-				options: {
-					jshintrc: 'src/.jshintrc',
-					ignores: []
-				},
-				src: ['dist/tablesaw-init.js', 'dist/tablesaw.jquery.js']
-			},
-			test: {
-				options: {
-					jshintrc: 'test/.jshintrc'
-				},
-				src: ['test/**/*.js']
-			},
+		run: {
+			ava: {
+				exec: "./node_modules/.bin/ava"
+			}
 		},
 		watch: {
-			gruntfile: {
-				files: '<%= jshint.gruntfile.src %>',
-				tasks: ['jshint:gruntfile']
-			},
 			src: {
-				files: ['dist/<%= pkg.name %>.js', '<%= concat.jsall.src %>', '<%= concat.jsautoinit.src %>', '<%= concat.cssall.src %>' ],
+				files: [
+					'<%= concat.jsall.src %>',
+					'<%= concat.jsautoinit.src %>',
+					'<%= concat.cssall.src %>'
+				],
 				tasks: ['src']
 			},
 			test: {
-				files: '<%= jshint.test.src %>',
-				tasks: ['jshint:test', 'qunit']
-			},
+				files: ['dist/<%= pkg.name %>.js'],
+				tasks: ['test']
+			}
 		},
 		uglify: {
 			js: {
@@ -226,13 +210,13 @@ module.exports = function(grunt) {
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 	// Default task.
-	grunt.registerTask('travis', ['jshint', 'qunit']);
+	grunt.registerTask('test', ['qunit', 'run:ava']);
 	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsjquery', 'concat:jsstack', 'concat:jsstackjquery', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);
 
-	grunt.registerTask('default', ['src', 'jshint', 'qunit', 'filesize']);
+	grunt.registerTask('default', ['src', 'test', 'filesize']);
 
 	// Deploy
 	grunt.registerTask('deploy', ['default', 'gh-pages']);

@@ -3,8 +3,8 @@
 }
 @media only all {
 	/* Unchecked manually: Always hide */
-	.tablesaw-swipe th.tablesaw-cell-hidden,
-	.tablesaw-swipe td.tablesaw-cell-hidden {
+	.tablesaw-swipe th.tablesaw-swipe-cellhidden,
+	.tablesaw-swipe td.tablesaw-swipe-cellhidden {
 		display: none;
 	}
 }
