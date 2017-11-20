@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.3 - 2017-07-13
+/*! Tablesaw - v3.0.6 - 2017-11-20
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -1708,38 +1708,23 @@
 	return shoestring;
 }));
 
-// UMD module definition
-// From: https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js
-
-(function (factory) {
-	if (typeof define === 'function' && define.amd) {
-			// AMD. Register as an anonymous module.
-			define(['shoestring'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		// Node/CommonJS
-		module.exports = function( root, shoestring ) {
-			if ( shoestring === undefined ) {
-				// require('shoestring') returns a factory that requires window to
-				// build a shoestring instance, we normalize how we use modules
-				// that require this pattern but the window provided is a noop
-				// if it's defined (how jquery works)
-				if ( typeof window !== 'undefined' ) {
-					shoestring = require('shoestring');
-				} else {
-					shoestring = require('shoestring')(root);
-				}
-			}
-			factory(shoestring);
-			return shoestring;
-		};
-	} else {
-		// Browser globals
-		factory(shoestring);
-	}
-}(function ($) {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(["shoestring"], function (shoestring) {
+      return (root.Tablesaw = factory(shoestring, root));
+    });
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('shoestring'), root);
+  } else {
+    root.Tablesaw = factory(shoestring, root);
+  }
+}(typeof window !== "undefined" ? window : this, function ($, win) {
 	"use strict";
 
-	var win = typeof window !== "undefined" ? window : this;
+var domContentLoadedTriggered = false;
+document.addEventListener("DOMContentLoaded", function() {
+	domContentLoadedTriggered = true;
+});
 
 var Tablesaw = {
 	i18n: {
@@ -1758,7 +1743,23 @@ var Tablesaw = {
 	mustard:
 		"head" in document && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
 		(!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
-		!window.operamini
+		!window.operamini,
+	$: $,
+	_init: function(element) {
+		Tablesaw.$(element || document).trigger("enhance.tablesaw");
+	},
+	init: function(element) {
+		if (!domContentLoadedTriggered) {
+			if ("addEventListener" in document) {
+				// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
+				document.addEventListener("DOMContentLoaded", function() {
+					Tablesaw._init(element);
+				});
+			}
+		} else {
+			Tablesaw._init(element);
+		}
+	}
 };
 
 $(win.document).on("enhance.tablesaw", function() {
@@ -1805,7 +1806,10 @@ if (Tablesaw.mustard) {
 		this.$table = $(element);
 
 		// only one <thead> and <tfoot> are allowed, per the specification
-		this.$thead = this.$table.children().filter("thead").eq(0);
+		this.$thead = this.$table
+			.children()
+			.filter("thead")
+			.eq(0);
 
 		// multiple <tbody> are allowed, per the specification
 		this.$tbody = this.$table.children().filter("tbody");
@@ -1813,6 +1817,11 @@ if (Tablesaw.mustard) {
 		this.mode = this.$table.attr("data-tablesaw-mode") || defaultMode;
 
 		this.$toolbar = null;
+
+		this.attributes = {
+			subrow: "data-tablesaw-subrow",
+			ignorerow: "data-tablesaw-ignorerow"
+		};
 
 		this.init();
 	};
@@ -1851,9 +1860,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._getHeaderRows = function() {
-		return this.$thead.children().filter("tr").filter(function() {
-			return !$(this).is("[data-tablesaw-ignorerow]");
-		});
+		return this.$thead
+			.children()
+			.filter("tr")
+			.filter(function() {
+				return !$(this).is("[data-tablesaw-ignorerow]");
+			});
 	};
 
 	Table.prototype._getRowIndex = function($row) {
@@ -1871,6 +1883,118 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._getPrimaryHeaderCells = function($row) {
 		return ($row || this._getPrimaryHeaderRow()).find("th");
+	};
+
+	Table.prototype._$getCells = function(th) {
+		var self = this;
+		return $(th)
+			.add(th.cells)
+			.filter(function() {
+				var $t = $(this);
+				var $row = $t.parent();
+				var hasColspan = $t.is("[colspan]");
+				// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+				return (
+					!$row.is("[" + self.attributes.subrow + "]") &&
+					(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
+				);
+			});
+	};
+
+	Table.prototype._getVisibleColspan = function() {
+		var colspan = 0;
+		this._getPrimaryHeaderCells().each(function() {
+			var $t = $(this);
+			if ($t.css("display") !== "none") {
+				colspan += parseInt($t.attr("colspan"), 10) || 1;
+			}
+		});
+		return colspan;
+	};
+
+	Table.prototype.getColspanForCell = function($cell) {
+		var visibleColspan = this._getVisibleColspan();
+		var visibleSiblingColumns = 0;
+		if ($cell.closest("tr").data("tablesaw-rowspanned")) {
+			visibleSiblingColumns++;
+		}
+
+		$cell.siblings().each(function() {
+			var $t = $(this);
+			var colColspan = parseInt($t.attr("colspan"), 10) || 1;
+
+			if ($t.css("display") !== "none") {
+				visibleSiblingColumns += colColspan;
+			}
+		});
+		// console.log( $cell[ 0 ], visibleColspan, visibleSiblingColumns );
+
+		return visibleColspan - visibleSiblingColumns;
+	};
+
+	Table.prototype.isCellInColumn = function(header, cell) {
+		return $(header)
+			.add(header.cells)
+			.filter(function() {
+				return this === cell;
+			}).length;
+	};
+
+	Table.prototype.updateColspanCells = function(cls, header, userAction) {
+		var self = this;
+		var primaryHeaderRow = self._getPrimaryHeaderRow();
+
+		// find persistent column rowspans
+		this.$table.find("[rowspan][data-tablesaw-priority]").each(function() {
+			var $t = $(this);
+			if ($t.attr("data-tablesaw-priority") !== "persist") {
+				return;
+			}
+
+			var $row = $t.closest("tr");
+			var rowspan = parseInt($t.attr("rowspan"), 10);
+			if (rowspan > 1) {
+				$row = $row.next();
+
+				$row.data("tablesaw-rowspanned", true);
+
+				rowspan--;
+			}
+		});
+
+		this.$table
+			.find("[colspan],[data-tablesaw-maxcolspan]")
+			.filter(function() {
+				// is not in primary header row
+				return $(this).closest("tr")[0] !== primaryHeaderRow[0];
+			})
+			.each(function() {
+				var $cell = $(this);
+
+				if (userAction === undefined || self.isCellInColumn(header, this)) {
+				} else {
+					// if is not a user action AND the cell is not in the updating column, kill it
+					return;
+				}
+
+				var colspan = self.getColspanForCell($cell);
+
+				if (cls && userAction !== undefined) {
+					// console.log( colspan === 0 ? "addClass" : "removeClass", $cell );
+					$cell[colspan === 0 ? "addClass" : "removeClass"](cls);
+				}
+
+				// cache original colspan
+				var maxColspan = parseInt($cell.attr("data-tablesaw-maxcolspan"), 10);
+				if (!maxColspan) {
+					$cell.attr("data-tablesaw-maxcolspan", $cell.attr("colspan"));
+				} else if (colspan > maxColspan) {
+					colspan = maxColspan;
+				}
+
+				// console.log( this, "setting colspan to ", colspan );
+				$cell.attr("colspan", colspan);
+			});
 	};
 
 	Table.prototype._findPrimaryHeadersForCell = function(cell) {
@@ -1896,7 +2020,9 @@ if (Tablesaw.mustard) {
 	Table.prototype.getRows = function() {
 		var self = this;
 		return this.$table.find("tr").filter(function() {
-			return $(this).closest("table").is(self.$table);
+			return $(this)
+				.closest("table")
+				.is(self.$table);
 		});
 	};
 
@@ -1917,6 +2043,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._initCells = function() {
+		// re-establish original colspans
+		this.$table.find("[data-tablesaw-maxcolspan]").each(function() {
+			var $t = $(this);
+			$t.attr("colspan", $t.attr("data-tablesaw-maxcolspan"));
+		});
+
 		var $rows = this.getRows();
 		var columnLookup = [];
 
@@ -1930,7 +2062,10 @@ if (Tablesaw.mustard) {
 			var children = $t.children();
 
 			children.each(function() {
-				var colspan = parseInt(this.getAttribute("colspan"), 10);
+				var colspan = parseInt(
+					this.getAttribute("data-tablesaw-maxcolspan") || this.getAttribute("colspan"),
+					10
+				);
 				var rowspan = parseInt(this.getAttribute("rowspan"), 10);
 
 				// set in a previous rowspan
@@ -2011,7 +2146,9 @@ if (Tablesaw.mustard) {
 		var $anchor = this._getToolbarAnchor();
 		var $toolbar = this._getToolbar($anchor);
 		if (!$toolbar.length) {
-			$toolbar = $("<div>").addClass(classes.toolbar).insertBefore($anchor);
+			$toolbar = $("<div>")
+				.addClass(classes.toolbar)
+				.insertBefore($anchor);
 		}
 		this.$toolbar = $toolbar;
 
@@ -2054,7 +2191,10 @@ if (Tablesaw.mustard) {
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
-			$(e.target).find(initSelector).filter(initFilterSelector)[pluginName]();
+			$(e.target)
+				.find(initSelector)
+				.filter(initFilterSelector)
+				[pluginName]();
 		}
 	});
 
@@ -2082,6 +2222,8 @@ if (Tablesaw.mustard) {
 			}, 150); // must be less than the scrolling timeout above.
 		}
 	});
+
+	Tablesaw.Table = Table;
 })();
 
 (function() {
@@ -2126,7 +2268,9 @@ if (Tablesaw.mustard) {
 			})
 			.filter(function() {
 				return (
-					!$(this).closest("tr").is("[" + attrs.labelless + "]") &&
+					!$(this)
+						.closest("tr")
+						.is("[" + attrs.labelless + "]") &&
 					(!self.hideempty || !!$(this).html())
 				);
 			})
@@ -2191,14 +2335,21 @@ if (Tablesaw.mustard) {
 		})
 		.on(Tablesaw.events.refresh, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).init();
+				$(tablesaw.table)
+					.data(data.key)
+					.init();
 			}
 		})
 		.on(Tablesaw.events.destroy, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).destroy();
+				$(tablesaw.table)
+					.data(data.key)
+					.destroy();
 			}
 		});
+
+	Tablesaw.Stack = Stack;
 })();
 
+	return Tablesaw;
 }));

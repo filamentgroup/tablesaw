@@ -1,38 +1,23 @@
-/*! Tablesaw - v3.0.3 - 2017-07-13
+/*! Tablesaw - v3.0.6 - 2017-11-20
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2017 Filament Group; Licensed MIT */
-// UMD module definition
-// From: https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js
-
-(function (factory) {
-	if (typeof define === 'function' && define.amd) {
-			// AMD. Register as an anonymous module.
-			define(['jquery'], factory);
-	} else if (typeof module === 'object' && module.exports) {
-		// Node/CommonJS
-		module.exports = function( root, jQuery ) {
-			if ( jQuery === undefined ) {
-				// require('jQuery') returns a factory that requires window to
-				// build a jQuery instance, we normalize how we use modules
-				// that require this pattern but the window provided is a noop
-				// if it's defined (how jquery works)
-				if ( typeof window !== 'undefined' ) {
-					jQuery = require('jquery');
-				} else {
-					jQuery = require('jquery')(root);
-				}
-			}
-			factory(jQuery);
-			return jQuery;
-		};
-	} else {
-		// Browser globals
-		factory(jQuery);
-	}
-}(function ($) {
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define(["jquery"], function (jQuery) {
+      return (root.Tablesaw = factory(jQuery, root));
+    });
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('jquery')(root), root);
+  } else {
+    root.Tablesaw = factory(jQuery, root);
+  }
+}(typeof window !== "undefined" ? window : this, function ($, win) {
 	"use strict";
 
-	var win = typeof window !== "undefined" ? window : this;
+var domContentLoadedTriggered = false;
+document.addEventListener("DOMContentLoaded", function() {
+	domContentLoadedTriggered = true;
+});
 
 var Tablesaw = {
 	i18n: {
@@ -51,7 +36,23 @@ var Tablesaw = {
 	mustard:
 		"head" in document && // IE9+, Firefox 4+, Safari 5.1+, Mobile Safari 4.1+, Opera 11.5+, Android 2.3+
 		(!window.blackberry || window.WebKitPoint) && // only WebKit Blackberry (OS 6+)
-		!window.operamini
+		!window.operamini,
+	$: $,
+	_init: function(element) {
+		Tablesaw.$(element || document).trigger("enhance.tablesaw");
+	},
+	init: function(element) {
+		if (!domContentLoadedTriggered) {
+			if ("addEventListener" in document) {
+				// Use raw DOMContentLoaded instead of shoestring (may have issues in Android 2.3, exhibited by stack table)
+				document.addEventListener("DOMContentLoaded", function() {
+					Tablesaw._init(element);
+				});
+			}
+		} else {
+			Tablesaw._init(element);
+		}
+	}
 };
 
 $(win.document).on("enhance.tablesaw", function() {
@@ -98,7 +99,10 @@ if (Tablesaw.mustard) {
 		this.$table = $(element);
 
 		// only one <thead> and <tfoot> are allowed, per the specification
-		this.$thead = this.$table.children().filter("thead").eq(0);
+		this.$thead = this.$table
+			.children()
+			.filter("thead")
+			.eq(0);
 
 		// multiple <tbody> are allowed, per the specification
 		this.$tbody = this.$table.children().filter("tbody");
@@ -106,6 +110,11 @@ if (Tablesaw.mustard) {
 		this.mode = this.$table.attr("data-tablesaw-mode") || defaultMode;
 
 		this.$toolbar = null;
+
+		this.attributes = {
+			subrow: "data-tablesaw-subrow",
+			ignorerow: "data-tablesaw-ignorerow"
+		};
 
 		this.init();
 	};
@@ -144,9 +153,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._getHeaderRows = function() {
-		return this.$thead.children().filter("tr").filter(function() {
-			return !$(this).is("[data-tablesaw-ignorerow]");
-		});
+		return this.$thead
+			.children()
+			.filter("tr")
+			.filter(function() {
+				return !$(this).is("[data-tablesaw-ignorerow]");
+			});
 	};
 
 	Table.prototype._getRowIndex = function($row) {
@@ -164,6 +176,118 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._getPrimaryHeaderCells = function($row) {
 		return ($row || this._getPrimaryHeaderRow()).find("th");
+	};
+
+	Table.prototype._$getCells = function(th) {
+		var self = this;
+		return $(th)
+			.add(th.cells)
+			.filter(function() {
+				var $t = $(this);
+				var $row = $t.parent();
+				var hasColspan = $t.is("[colspan]");
+				// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
+				return (
+					!$row.is("[" + self.attributes.subrow + "]") &&
+					(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
+				);
+			});
+	};
+
+	Table.prototype._getVisibleColspan = function() {
+		var colspan = 0;
+		this._getPrimaryHeaderCells().each(function() {
+			var $t = $(this);
+			if ($t.css("display") !== "none") {
+				colspan += parseInt($t.attr("colspan"), 10) || 1;
+			}
+		});
+		return colspan;
+	};
+
+	Table.prototype.getColspanForCell = function($cell) {
+		var visibleColspan = this._getVisibleColspan();
+		var visibleSiblingColumns = 0;
+		if ($cell.closest("tr").data("tablesaw-rowspanned")) {
+			visibleSiblingColumns++;
+		}
+
+		$cell.siblings().each(function() {
+			var $t = $(this);
+			var colColspan = parseInt($t.attr("colspan"), 10) || 1;
+
+			if ($t.css("display") !== "none") {
+				visibleSiblingColumns += colColspan;
+			}
+		});
+		// console.log( $cell[ 0 ], visibleColspan, visibleSiblingColumns );
+
+		return visibleColspan - visibleSiblingColumns;
+	};
+
+	Table.prototype.isCellInColumn = function(header, cell) {
+		return $(header)
+			.add(header.cells)
+			.filter(function() {
+				return this === cell;
+			}).length;
+	};
+
+	Table.prototype.updateColspanCells = function(cls, header, userAction) {
+		var self = this;
+		var primaryHeaderRow = self._getPrimaryHeaderRow();
+
+		// find persistent column rowspans
+		this.$table.find("[rowspan][data-tablesaw-priority]").each(function() {
+			var $t = $(this);
+			if ($t.attr("data-tablesaw-priority") !== "persist") {
+				return;
+			}
+
+			var $row = $t.closest("tr");
+			var rowspan = parseInt($t.attr("rowspan"), 10);
+			if (rowspan > 1) {
+				$row = $row.next();
+
+				$row.data("tablesaw-rowspanned", true);
+
+				rowspan--;
+			}
+		});
+
+		this.$table
+			.find("[colspan],[data-tablesaw-maxcolspan]")
+			.filter(function() {
+				// is not in primary header row
+				return $(this).closest("tr")[0] !== primaryHeaderRow[0];
+			})
+			.each(function() {
+				var $cell = $(this);
+
+				if (userAction === undefined || self.isCellInColumn(header, this)) {
+				} else {
+					// if is not a user action AND the cell is not in the updating column, kill it
+					return;
+				}
+
+				var colspan = self.getColspanForCell($cell);
+
+				if (cls && userAction !== undefined) {
+					// console.log( colspan === 0 ? "addClass" : "removeClass", $cell );
+					$cell[colspan === 0 ? "addClass" : "removeClass"](cls);
+				}
+
+				// cache original colspan
+				var maxColspan = parseInt($cell.attr("data-tablesaw-maxcolspan"), 10);
+				if (!maxColspan) {
+					$cell.attr("data-tablesaw-maxcolspan", $cell.attr("colspan"));
+				} else if (colspan > maxColspan) {
+					colspan = maxColspan;
+				}
+
+				// console.log( this, "setting colspan to ", colspan );
+				$cell.attr("colspan", colspan);
+			});
 	};
 
 	Table.prototype._findPrimaryHeadersForCell = function(cell) {
@@ -189,7 +313,9 @@ if (Tablesaw.mustard) {
 	Table.prototype.getRows = function() {
 		var self = this;
 		return this.$table.find("tr").filter(function() {
-			return $(this).closest("table").is(self.$table);
+			return $(this)
+				.closest("table")
+				.is(self.$table);
 		});
 	};
 
@@ -210,6 +336,12 @@ if (Tablesaw.mustard) {
 	};
 
 	Table.prototype._initCells = function() {
+		// re-establish original colspans
+		this.$table.find("[data-tablesaw-maxcolspan]").each(function() {
+			var $t = $(this);
+			$t.attr("colspan", $t.attr("data-tablesaw-maxcolspan"));
+		});
+
 		var $rows = this.getRows();
 		var columnLookup = [];
 
@@ -223,7 +355,10 @@ if (Tablesaw.mustard) {
 			var children = $t.children();
 
 			children.each(function() {
-				var colspan = parseInt(this.getAttribute("colspan"), 10);
+				var colspan = parseInt(
+					this.getAttribute("data-tablesaw-maxcolspan") || this.getAttribute("colspan"),
+					10
+				);
 				var rowspan = parseInt(this.getAttribute("rowspan"), 10);
 
 				// set in a previous rowspan
@@ -304,7 +439,9 @@ if (Tablesaw.mustard) {
 		var $anchor = this._getToolbarAnchor();
 		var $toolbar = this._getToolbar($anchor);
 		if (!$toolbar.length) {
-			$toolbar = $("<div>").addClass(classes.toolbar).insertBefore($anchor);
+			$toolbar = $("<div>")
+				.addClass(classes.toolbar)
+				.insertBefore($anchor);
 		}
 		this.$toolbar = $toolbar;
 
@@ -347,7 +484,10 @@ if (Tablesaw.mustard) {
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
-			$(e.target).find(initSelector).filter(initFilterSelector)[pluginName]();
+			$(e.target)
+				.find(initSelector)
+				.filter(initFilterSelector)
+				[pluginName]();
 		}
 	});
 
@@ -375,6 +515,8 @@ if (Tablesaw.mustard) {
 			}, 150); // must be less than the scrolling timeout above.
 		}
 	});
+
+	Tablesaw.Table = Table;
 })();
 
 (function() {
@@ -419,7 +561,9 @@ if (Tablesaw.mustard) {
 			})
 			.filter(function() {
 				return (
-					!$(this).closest("tr").is("[" + attrs.labelless + "]") &&
+					!$(this)
+						.closest("tr")
+						.is("[" + attrs.labelless + "]") &&
 					(!self.hideempty || !!$(this).html())
 				);
 			})
@@ -484,14 +628,20 @@ if (Tablesaw.mustard) {
 		})
 		.on(Tablesaw.events.refresh, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).init();
+				$(tablesaw.table)
+					.data(data.key)
+					.init();
 			}
 		})
 		.on(Tablesaw.events.destroy, function(e, tablesaw) {
 			if (tablesaw.mode === "stack") {
-				$(tablesaw.table).data(data.key).destroy();
+				$(tablesaw.table)
+					.data(data.key)
+					.destroy();
 			}
 		});
+
+	Tablesaw.Stack = Stack;
 })();
 
 (function() {
@@ -511,7 +661,9 @@ if (Tablesaw.mustard) {
 
 				if (sel) {
 					// TODO next major version: remove .btn-select
-					$(this).addClass("btn-select tablesaw-btn-select")[pluginName]("_select", sel);
+					$(this)
+						.addClass("btn-select tablesaw-btn-select")
+						[pluginName]("_select", sel);
 				}
 				return oEl;
 			},
@@ -551,6 +703,7 @@ if (Tablesaw.mustard) {
 				};
 
 				update(this, sel);
+				// todo should this be tablesawrefresh?
 				$(this).on("change refresh", function() {
 					update(this, sel);
 				});
@@ -578,6 +731,8 @@ if (Tablesaw.mustard) {
 
 	// add methods
 	$.extend($.fn[pluginName].prototype, methods);
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
@@ -595,8 +750,6 @@ if (Tablesaw.mustard) {
 		this.tablesaw = this.$table.data("tablesaw");
 
 		this.attributes = {
-			subrow: "data-tablesaw-subrow",
-			ignorerow: "data-tablesaw-ignorerow",
 			btnTarget: "data-tablesaw-columntoggle-btn-target",
 			set: "data-tablesaw-columntoggle-set"
 		};
@@ -673,7 +826,7 @@ if (Tablesaw.mustard) {
 		this.$headers.each(function() {
 			var $this = $(this),
 				priority = $this.attr("data-tablesaw-priority"),
-				$cells = self.$getCells(this);
+				$cells = self.tablesaw._$getCells(this);
 
 			if (priority && priority !== "persist") {
 				$cells.addClass(self.classes.priorityPrefix + priority);
@@ -697,12 +850,12 @@ if (Tablesaw.mustard) {
 			var checked = checkbox.checked;
 
 			var header = self.getHeaderFromCheckbox(checkbox);
-			var $cells = self.$getCells(header);
+			var $cells = self.tablesaw._$getCells(header);
 
 			$cells[!checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellhidden");
 			$cells[checked ? "addClass" : "removeClass"]("tablesaw-toggle-cellvisible");
 
-			self.updateColspanIgnoredRows(checked, $(header).add(header.cells));
+			self.updateColspanCells(header, checked);
 
 			self.$table.trigger("tablesawcolumns");
 		}
@@ -713,15 +866,20 @@ if (Tablesaw.mustard) {
 
 			if (self.set.length) {
 				var index;
-				$(self.$popup).find("input[type='checkbox']").each(function(j) {
-					if (this === e.target) {
-						index = j;
-						return false;
-					}
-				});
+				$(self.$popup)
+					.find("input[type='checkbox']")
+					.each(function(j) {
+						if (this === e.target) {
+							index = j;
+							return false;
+						}
+					});
 
 				$(self.set).each(function() {
-					var checkbox = $(this).data(data.key).$popup.find("input[type='checkbox']").get(index);
+					var checkbox = $(this)
+						.data(data.key)
+						.$popup.find("input[type='checkbox']")
+						.get(index);
 					if (checkbox) {
 						checkbox.checked = e.target.checked;
 						onToggleCheckboxChange(checkbox);
@@ -798,65 +956,6 @@ if (Tablesaw.mustard) {
 		this.refreshToggle();
 	};
 
-	ColumnToggle.prototype.updateColspanIgnoredRows = function(invisibleColumnCount, $cells) {
-		this.$table
-			.find("[" + this.attributes.subrow + "],[" + this.attributes.ignorerow + "]")
-			.each(function() {
-				var $t = $(this);
-				var $td = $t.find("td[colspan]").eq(0);
-				var excludedInvisibleColumns;
-
-				var colspan;
-				var originalColspan;
-				var modifier;
-
-				// increment or decrementing only (from a user triggered column show/hide)
-				if (invisibleColumnCount === true || invisibleColumnCount === false) {
-					// unless the column being hidden is not included in the colspan
-					modifier = $cells.filter(function() {
-						return this === $td[0];
-					}).length
-						? invisibleColumnCount ? 1 : -1
-						: 0;
-
-					colspan = parseInt($td.attr("colspan"), 10) + modifier;
-				} else {
-					// triggered from a resize or init
-					originalColspan = $td.data("original-colspan");
-
-					if (originalColspan) {
-						colspan = originalColspan;
-					} else {
-						colspan = parseInt($td.attr("colspan"), 10);
-						$td.data("original-colspan", colspan);
-					}
-
-					excludedInvisibleColumns = $t.find("td").filter(function() {
-						return this !== $td[0] && $(this).css("display") === "none";
-					}).length;
-
-					colspan -= invisibleColumnCount - excludedInvisibleColumns;
-				}
-
-				// TODO add a colstart param so that this more appropriately selects colspan elements based on the column being hidden.
-				$td.attr("colspan", colspan);
-			});
-	};
-
-	ColumnToggle.prototype.$getCells = function(th) {
-		var self = this;
-		return $(th).add(th.cells).filter(function() {
-			var $t = $(this);
-			var $row = $t.parent();
-			var hasColspan = $t.is("[colspan]");
-			// no subrows or ignored rows (keep cells in ignored rows that do not have a colspan)
-			return (
-				!$row.is("[" + self.attributes.subrow + "]") &&
-				(!$row.is("[" + self.attributes.ignorerow + "]") || !hasColspan)
-			);
-		});
-	};
-
 	ColumnToggle.prototype.getHeaderFromCheckbox = function(checkbox) {
 		return $(checkbox).data("tablesaw-header");
 	};
@@ -866,15 +965,18 @@ if (Tablesaw.mustard) {
 		var invisibleColumns = 0;
 		this.$menu.find("input").each(function() {
 			var header = self.getHeaderFromCheckbox(this);
-			var isVisible = self.$getCells(header).eq(0).css("display") === "table-cell";
-			this.checked = isVisible;
-
-			if (!isVisible) {
-				invisibleColumns++;
-			}
+			this.checked =
+				self.tablesaw
+					._$getCells(header)
+					.eq(0)
+					.css("display") === "table-cell";
 		});
 
-		this.updateColspanIgnoredRows(invisibleColumns);
+		this.updateColspanCells();
+	};
+
+	ColumnToggle.prototype.updateColspanCells = function(header, userAction) {
+		this.tablesaw.updateColspanCells("tablesaw-toggle-cellhidden", header, userAction);
 	};
 
 	ColumnToggle.prototype.destroy = function() {
@@ -897,15 +999,21 @@ if (Tablesaw.mustard) {
 
 	$(document).on(Tablesaw.events.destroy, function(e, tablesaw) {
 		if (tablesaw.mode === "columntoggle") {
-			$(tablesaw.table).data(data.key).destroy();
+			$(tablesaw.table)
+				.data(data.key)
+				.destroy();
 		}
 	});
 
 	$(document).on(Tablesaw.events.refresh, function(e, tablesaw) {
 		if (tablesaw.mode === "columntoggle") {
-			$(tablesaw.table).data(data.key).refreshPriority();
+			$(tablesaw.table)
+				.data(data.key)
+				.refreshPriority();
 		}
 	});
+
+	Tablesaw.ColumnToggle = ColumnToggle;
 })();
 
 (function() {
@@ -972,7 +1080,10 @@ if (Tablesaw.mustard) {
 					$.each(h, function(i, col) {
 						var b = $("<button class='" + classes.sortButton + "'/>");
 						b.on("click", { col: col }, fn);
-						$(col).wrapInner(b).find("button").append("<span class='tablesaw-sortable-arrow'>");
+						$(col)
+							.wrapInner(b)
+							.find("button")
+							.append("<span class='tablesaw-sortable-arrow'>");
 					});
 				}
 
@@ -996,9 +1107,12 @@ if (Tablesaw.mustard) {
 						newSortValue = heads.index(headCell[0]);
 
 					clearOthers(
-						headCell.closest("thead").find("th").filter(function() {
-							return this !== headCell[0];
-						})
+						headCell
+							.closest("thead")
+							.find("th")
+							.filter(function() {
+								return this !== headCell[0];
+							})
 					);
 					if (headCell.is("." + classes.descend) || !headCell.is("." + classes.ascend)) {
 						el[pluginName]("sortBy", v, true);
@@ -1008,7 +1122,10 @@ if (Tablesaw.mustard) {
 						newSortValue += "_desc";
 					}
 					if ($switcher) {
-						$switcher.find("select").val(newSortValue).trigger("refresh");
+						$switcher
+							.find("select")
+							.val(newSortValue)
+							.trigger("refresh");
 					}
 
 					e.preventDefault();
@@ -1026,7 +1143,9 @@ if (Tablesaw.mustard) {
 				}
 
 				function addSwitcher(heads) {
-					$switcher = $("<div>").addClass(classes.switcher).addClass(classes.tableToolbar);
+					$switcher = $("<div>")
+						.addClass(classes.switcher)
+						.addClass(classes.tableToolbar);
 
 					var html = ["<label>" + Tablesaw.i18n.sort + ":"];
 
@@ -1087,7 +1206,9 @@ if (Tablesaw.mustard) {
 					}
 					$switcher.find(".tablesaw-btn").tablesawbtn();
 					$switcher.find("select").on("change", function() {
-						var val = $(this).val().split("_"),
+						var val = $(this)
+								.val()
+								.split("_"),
 							head = heads.eq(val[0]);
 
 						clearOthers(head.siblings());
@@ -1097,7 +1218,10 @@ if (Tablesaw.mustard) {
 
 				el.addClass(pluginName);
 
-				heads = el.children().filter("thead").find("th[" + attrs.sortCol + "]");
+				heads = el
+					.children()
+					.filter("thead")
+					.find("th[" + attrs.sortCol + "]");
 
 				addClassToHeads(heads);
 				makeHeadsActionable(heads, headsOnAction);
@@ -1274,6 +1398,8 @@ if (Tablesaw.mustard) {
 			Tablesaw.$table[pluginName]();
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
@@ -1296,15 +1422,15 @@ if (Tablesaw.mustard) {
 		var $btns = $("<div class='tablesaw-advance'></div>");
 		// TODO next major version: remove .btn
 		var $prevBtn = $(
-			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left' title='" +
+			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro left'>" +
 				Tablesaw.i18n.swipePreviousColumn +
-				"'></a>"
+				"</a>"
 		).appendTo($btns);
 		// TODO next major version: remove .btn
 		var $nextBtn = $(
-			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro right' title='" +
+			"<a href='#' class='btn tablesaw-nav-btn tablesaw-btn btn-micro right'>" +
 				Tablesaw.i18n.swipeNextColumn +
-				"'></a>"
+				"</a>"
 		).appendTo($btns);
 
 		var $headerCells = tbl._getPrimaryHeaderCells();
@@ -1319,13 +1445,27 @@ if (Tablesaw.mustard) {
 
 		$table.addClass("tablesaw-swipe");
 
-		$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
+		function initMinHeaderWidths() {
+			$table.css({
+				width: "1px"
+			});
 
-		// Calculate initial widths
-		$headerCells.each(function() {
-			var width = this.offsetWidth;
-			headerWidths.push(width);
-		});
+			// remove any hidden columns
+			$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
+
+			headerWidths = [];
+			// Calculate initial widths
+			$headerCells.each(function() {
+				headerWidths.push(this.offsetWidth);
+			});
+
+			// reset props
+			$table.css({
+				width: ""
+			});
+		}
+
+		initMinHeaderWidths();
 
 		$btns.appendTo(tblsaw.$toolbar);
 
@@ -1334,52 +1474,20 @@ if (Tablesaw.mustard) {
 			$table.attr("id", tableId);
 		}
 
-		function $getCells(headerCell) {
-			return $(headerCell.cells).add(headerCell).filter(function() {
-				return !$(this).parent().is("[" + attrs.ignorerow + "],[" + attrs.subrow + "]");
-			});
-		}
-
 		function showColumn(headerCell) {
-			$getCells(headerCell).removeClass(classes.hiddenCol);
+			tblsaw._$getCells(headerCell).removeClass(classes.hiddenCol);
 		}
 
 		function hideColumn(headerCell) {
-			$getCells(headerCell).addClass(classes.hiddenCol);
+			tblsaw._$getCells(headerCell).addClass(classes.hiddenCol);
 		}
 
 		function persistColumn(headerCell) {
-			$getCells(headerCell).addClass(classes.persistCol);
+			tblsaw._$getCells(headerCell).addClass(classes.persistCol);
 		}
 
 		function isPersistent(headerCell) {
 			return $(headerCell).is('[data-tablesaw-priority="persist"]');
-		}
-
-		function countVisibleColspan() {
-			var count = 0;
-			$headerCells.each(function() {
-				var $t = $(this);
-				if ($t.is("." + classes.hiddenCol)) {
-					return;
-				}
-				count += parseInt($t.attr("colspan") || 1, 10);
-			});
-			return count;
-		}
-
-		function updateColspanOnIgnoredRows(newColspan) {
-			if (!newColspan) {
-				newColspan = countVisibleColspan();
-			}
-			$table
-				.find("[" + attrs.ignorerow + "],[" + attrs.subrow + "]")
-				.find("td[colspan]")
-				.each(function() {
-					var $t = $(this);
-					var colspan = parseInt($t.attr("colspan"), 10);
-					$t.attr("colspan", newColspan);
-				});
 		}
 
 		function unmaintainWidths() {
@@ -1499,27 +1607,27 @@ if (Tablesaw.mustard) {
 
 			// We need at least one column to swipe.
 			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
-			var visibleColumnCount = 0;
 
 			$headerCells.each(function(index) {
-				var colspan = parseInt($(this).attr("colspan") || 1, 10);
+				if (sums[index] > containerWidth) {
+					hideColumn(this);
+				}
+			});
+
+			$headerCells.each(function(index) {
 				if (persist[index]) {
-					visibleColumnCount += colspan;
 					// for visual box-shadow
 					persistColumn(this);
 					return;
 				}
 
 				if (sums[index] <= containerWidth || needsNonPersistentColumn) {
-					visibleColumnCount += colspan;
 					needsNonPersistentColumn = false;
 					showColumn(this);
-				} else {
-					hideColumn(this);
+					tblsaw.updateColspanCells(classes.hiddenCol, this, true);
 				}
 			});
 
-			updateColspanOnIgnoredRows(visibleColumnCount);
 			unmaintainWidths();
 
 			$table.trigger("tablesawcolumns");
@@ -1536,11 +1644,14 @@ if (Tablesaw.mustard) {
 					}
 				}
 
+				// TODO just blindly hiding the previous column and showing the next column can result in
+				// column content overflow
 				maintainWidths();
-
 				hideColumn($headerCellsNoPersist.get(pair[0]));
+				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
+
 				showColumn($headerCellsNoPersist.get(pair[1]));
-				updateColspanOnIgnoredRows();
+				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true);
 
 				$table.trigger("tablesawcolumns");
 			}
@@ -1635,13 +1746,8 @@ if (Tablesaw.mustard) {
 				$t.off(".swipetoggle");
 			})
 			.on(Tablesaw.events.refresh, function() {
-				// manual refresh
-				headerWidths = [];
-				$headerCells.each(function() {
-					var width = this.offsetWidth;
-					headerWidths.push(width);
-				});
-
+				unmaintainWidths();
+				initMinHeaderWidths();
 				fakeBreakpoints();
 			});
 
@@ -1655,12 +1761,27 @@ if (Tablesaw.mustard) {
 			createSwipeTable(tablesaw, tablesaw.$table);
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
 	var MiniMap = {
 		attr: {
 			init: "data-tablesaw-minimap"
+		},
+		show: function(table) {
+			var mq = table.getAttribute(MiniMap.attr.init);
+
+			if (mq === "") {
+				// value-less but exists
+				return true;
+			} else if (mq && "matchMedia" in win) {
+				// has a mq value
+				return win.matchMedia(mq).matches;
+			}
+
+			return false;
 		}
 	};
 
@@ -1669,7 +1790,7 @@ if (Tablesaw.mustard) {
 		var $btns = $('<div class="tablesaw-advance minimap">');
 		var $dotNav = $('<ul class="tablesaw-advance-dots">').appendTo($btns);
 		var hideDot = "tablesaw-advance-dots-hide";
-		var $headerCells = $table.find("thead th");
+		var $headerCells = $table.data("tablesaw")._getPrimaryHeaderCells();
 
 		// populate dots
 		$headerCells.each(function() {
@@ -1678,13 +1799,8 @@ if (Tablesaw.mustard) {
 
 		$btns.appendTo(tblsaw.$toolbar);
 
-		function showMinimap($table) {
-			var mq = $table.attr(MiniMap.attr.init);
-			return !mq || (win.matchMedia && win.matchMedia(mq).matches);
-		}
-
 		function showHideNav() {
-			if (!showMinimap($table)) {
+			if (!MiniMap.show($table[0])) {
 				$btns.css("display", "none");
 				return;
 			}
@@ -1726,6 +1842,9 @@ if (Tablesaw.mustard) {
 			createMiniMap(tablesaw.$table);
 		}
 	});
+
+	// TODO OOP this better
+	Tablesaw.MiniMap = MiniMap;
 })();
 
 (function() {
@@ -1811,6 +1930,8 @@ if (Tablesaw.mustard) {
 			S.init(Tablesaw.table);
 		}
 	});
+
+	// TODO OOP this and add to Tablesaw object
 })();
 
 (function() {
@@ -1839,7 +1960,9 @@ if (Tablesaw.mustard) {
 	CheckAll.prototype._filterCells = function($checkboxes) {
 		return $checkboxes
 			.filter(function() {
-				return !$(this).closest("tr").is("[data-tablesaw-subrow],[data-tablesaw-ignorerow]");
+				return !$(this)
+					.closest("tr")
+					.is("[data-tablesaw-subrow],[data-tablesaw-ignorerow]");
 			})
 			.find(this.checkboxSelector)
 			.not(this.checkAllSelector);
@@ -1935,6 +2058,9 @@ if (Tablesaw.mustard) {
 	$(document).on(Tablesaw.events.create, function(e, tablesaw) {
 		new CheckAll(tablesaw);
 	});
+
+	Tablesaw.CheckAll = CheckAll;
 })();
 
+	return Tablesaw;
 }));
