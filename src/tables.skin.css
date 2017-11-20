@@ -1,25 +1,24 @@
-/* TODO: fix shadows on IE */
-.tablesaw-overflow {
+@supports( background-attachment: local, local ) {
+	.tablesaw-overflow-shadows {
+		/* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
+		background:
+			/* Shadow covers */
+			linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
+			linear-gradient(to right, rgba(255,255,255,0), white 70%) top right,
+			/* Shadows */
+			radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
+			radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
+		background-repeat: no-repeat;
+		background-color: white;
+		background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
 
-	/* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
-	background:
-		/* Shadow covers */
-		linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
-		linear-gradient(to right, rgba(255,255,255,0), white 70%) top right,
+		/* Note: Edge does not support `local`, false positives in @supports */
+		/* Note: Android Browser does not support `local` */
+		 background-attachment: local, local, scroll, scroll;
 
-		/* Shadows */
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
-		radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
-	background-repeat: no-repeat;
-	background-color: white;
-	background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-
-	/* Note: Android Browser does not support `local` */
-	/* Note: Opera doesn't support this shorthand */
-	background-attachment: local, local, scroll, scroll;
-
-	/* Note: Chrome on Android only supports `background-attachment: local` when used with `border-radius` */
-	border-radius: .1px;
+		/* Note: Chrome on Android only supports `background-attachment: local` when used with `border-radius` */
+		border-radius: .1px;
+	}
 }
 
 .tablesaw th,

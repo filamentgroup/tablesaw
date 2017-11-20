@@ -411,8 +411,9 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._getToolbarAnchor = function() {
 		var $parent = this.$table.parent();
-		if ($parent.is(".tablesaw-overflow")) {
-			return $parent;
+		var $overflow = this.$table.closest(".tablesaw-overflow");
+		if ($overflow.length) {
+			return $overflow;
 		}
 		return this.$table;
 	};
