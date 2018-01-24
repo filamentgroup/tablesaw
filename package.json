@@ -41,11 +41,6 @@
     "inherit": true,
     "verbose": true
   },
-  "babel": {
-    "presets": [
-      "@ava/stage-4"
-    ]
-  },
   "main": "dist/tablesaw.js",
   "dependencies": {
     "shoestring": "^2.0.0"

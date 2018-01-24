@@ -1,3 +1,3 @@
-import browserEnv from "browser-env";
-// browserEnv();
+var browserEnv = require("browser-env");
+
 browserEnv(["window", "document", "navigator"]);
