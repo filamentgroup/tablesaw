@@ -1,18 +1,25 @@
-/*! Tablesaw - v3.0.6 - 2017-11-20
+/*! Tablesaw - v3.0.7 - 2018-01-24
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2017 Filament Group; Licensed MIT */
+* Copyright (c) 2018 Filament Group; Licensed MIT */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(["jquery"], function (jQuery) {
       return (root.Tablesaw = factory(jQuery, root));
     });
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('jquery')(root), root);
+    if( "document" in root ) {
+      module.exports = factory(require('jquery'), root);
+    } else {
+      // special jQuery case for CommonJS (pass in a window)
+      module.exports = factory(require('jquery')(root), root);
+    }
   } else {
     root.Tablesaw = factory(jQuery, root);
   }
-}(typeof window !== "undefined" ? window : this, function ($, win) {
+}(typeof window !== "undefined" ? window : this, function ($, window) {
 	"use strict";
+
+  var document = window.document;
 
 var domContentLoadedTriggered = false;
 document.addEventListener("DOMContentLoaded", function() {
@@ -55,7 +62,7 @@ var Tablesaw = {
 	}
 };
 
-$(win.document).on("enhance.tablesaw", function() {
+$(document).on("enhance.tablesaw", function() {
 	// Extend i18n config, if one exists.
 	if (typeof TablesawConfig !== "undefined" && TablesawConfig.i18n) {
 		Tablesaw.i18n = $.extend(Tablesaw.i18n, TablesawConfig.i18n || {});
@@ -480,7 +487,7 @@ if (Tablesaw.mustard) {
 		});
 	};
 
-	var $doc = $(win.document);
+	var $doc = $(document);
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
@@ -500,17 +507,17 @@ if (Tablesaw.mustard) {
 	$doc.on("scroll.tablesaw", function() {
 		isScrolling = true;
 
-		win.clearTimeout(scrollTimeout);
-		scrollTimeout = win.setTimeout(function() {
+		window.clearTimeout(scrollTimeout);
+		scrollTimeout = window.setTimeout(function() {
 			isScrolling = false;
 		}, 300); // must be greater than the resize timeout below
 	});
 
 	var resizeTimeout;
-	$(win).on("resize", function() {
+	$(window).on("resize", function() {
 		if (!isScrolling) {
-			win.clearTimeout(resizeTimeout);
-			resizeTimeout = win.setTimeout(function() {
+			window.clearTimeout(resizeTimeout);
+			resizeTimeout = window.setTimeout(function() {
 				$doc.trigger(events.resize);
 			}, 150); // must be less than the scrolling timeout above.
 		}

@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.0.6 - 2017-11-20
+/*! Tablesaw - v3.0.7 - 2018-01-24
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2017 Filament Group; Licensed MIT */
+* Copyright (c) 2018 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
 * http://github.com/filamentgroup/shoestring/
 * Copyright (c) 2017 Scott Jehl, Filament Group, Inc; Licensed MIT & GPLv2 */ 
@@ -1718,9 +1718,10 @@
   } else {
     root.Tablesaw = factory(shoestring, root);
   }
-}(typeof window !== "undefined" ? window : this, function ($, win) {
+}(typeof window !== "undefined" ? window : this, function ($, window) {
 	"use strict";
 
+  var document = window.document;
 var domContentLoadedTriggered = false;
 document.addEventListener("DOMContentLoaded", function() {
 	domContentLoadedTriggered = true;
@@ -1762,7 +1763,7 @@ var Tablesaw = {
 	}
 };
 
-$(win.document).on("enhance.tablesaw", function() {
+$(document).on("enhance.tablesaw", function() {
 	// Extend i18n config, if one exists.
 	if (typeof TablesawConfig !== "undefined" && TablesawConfig.i18n) {
 		Tablesaw.i18n = $.extend(Tablesaw.i18n, TablesawConfig.i18n || {});
@@ -2187,7 +2188,7 @@ if (Tablesaw.mustard) {
 		});
 	};
 
-	var $doc = $(win.document);
+	var $doc = $(document);
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
@@ -2207,17 +2208,17 @@ if (Tablesaw.mustard) {
 	$doc.on("scroll.tablesaw", function() {
 		isScrolling = true;
 
-		win.clearTimeout(scrollTimeout);
-		scrollTimeout = win.setTimeout(function() {
+		window.clearTimeout(scrollTimeout);
+		scrollTimeout = window.setTimeout(function() {
 			isScrolling = false;
 		}, 300); // must be greater than the resize timeout below
 	});
 
 	var resizeTimeout;
-	$(win).on("resize", function() {
+	$(window).on("resize", function() {
 		if (!isScrolling) {
-			win.clearTimeout(resizeTimeout);
-			resizeTimeout = win.setTimeout(function() {
+			window.clearTimeout(resizeTimeout);
+			resizeTimeout = window.setTimeout(function() {
 				$doc.trigger(events.resize);
 			}, 150); // must be less than the scrolling timeout above.
 		}
@@ -3284,7 +3285,7 @@ if (Tablesaw.mustard) {
 
 		function matchesMedia() {
 			var matchMedia = $table.attr("data-tablesaw-swipe-media");
-			return !matchMedia || ("matchMedia" in win && win.matchMedia(matchMedia).matches);
+			return !matchMedia || ("matchMedia" in window && window.matchMedia(matchMedia).matches);
 		}
 
 		function fakeBreakpoints() {
@@ -3381,7 +3382,7 @@ if (Tablesaw.mustard) {
 				var y;
 				var scrollTop = window.pageYOffset;
 
-				$(win).off(Tablesaw.events.resize, fakeBreakpoints);
+				$(window).off(Tablesaw.events.resize, fakeBreakpoints);
 
 				$(this)
 					.on("touchmove.swipetoggle", function(e) {
@@ -3418,7 +3419,7 @@ if (Tablesaw.mustard) {
 						}
 
 						window.setTimeout(function() {
-							$(win).on(Tablesaw.events.resize, fakeBreakpoints);
+							$(window).on(Tablesaw.events.resize, fakeBreakpoints);
 						}, 300);
 
 						$(this).off("touchmove.swipetoggle touchend.swipetoggle");
@@ -3448,7 +3449,7 @@ if (Tablesaw.mustard) {
 
 				$t.removeClass("tablesaw-swipe");
 				tblsaw.$toolbar.find(".tablesaw-advance").remove();
-				$(win).off(Tablesaw.events.resize, fakeBreakpoints);
+				$(window).off(Tablesaw.events.resize, fakeBreakpoints);
 
 				$t.off(".swipetoggle");
 			})
@@ -3459,7 +3460,7 @@ if (Tablesaw.mustard) {
 			});
 
 		fakeBreakpoints();
-		$(win).on(Tablesaw.events.resize, fakeBreakpoints);
+		$(window).on(Tablesaw.events.resize, fakeBreakpoints);
 	}
 
 	// on tablecreate, init
@@ -3483,9 +3484,9 @@ if (Tablesaw.mustard) {
 			if (mq === "") {
 				// value-less but exists
 				return true;
-			} else if (mq && "matchMedia" in win) {
+			} else if (mq && "matchMedia" in window) {
 				// has a mq value
-				return win.matchMedia(mq).matches;
+				return window.matchMedia(mq).matches;
 			}
 
 			return false;
@@ -3524,7 +3525,7 @@ if (Tablesaw.mustard) {
 
 		// run on init and resize
 		showHideNav();
-		$(win).on(Tablesaw.events.resize, showHideNav);
+		$(window).on(Tablesaw.events.resize, showHideNav);
 
 		$table
 			.on("tablesawcolumns.minimap", function() {
@@ -3534,7 +3535,7 @@ if (Tablesaw.mustard) {
 				var $t = $(this);
 
 				tblsaw.$toolbar.find(".tablesaw-advance").remove();
-				$(win).off(Tablesaw.events.resize, showHideNav);
+				$(window).off(Tablesaw.events.resize, showHideNav);
 
 				$t.off(".minimap");
 			});
@@ -3632,7 +3633,7 @@ if (Tablesaw.mustard) {
 		}
 	};
 
-	$(win.document).on(Tablesaw.events.create, function(e, Tablesaw) {
+	$(document).on(Tablesaw.events.create, function(e, Tablesaw) {
 		if (Tablesaw.$table.is(S.selectors.init)) {
 			S.init(Tablesaw.table);
 		}
