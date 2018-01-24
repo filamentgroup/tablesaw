@@ -83,7 +83,7 @@
 		}
 	};
 
-	$(win.document).on(Tablesaw.events.create, function(e, Tablesaw) {
+	$(document).on(Tablesaw.events.create, function(e, Tablesaw) {
 		if (Tablesaw.$table.is(S.selectors.init)) {
 			S.init(Tablesaw.table);
 		}

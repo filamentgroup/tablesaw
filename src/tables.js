@@ -46,7 +46,7 @@ var Tablesaw = {
 	}
 };
 
-$(win.document).on("enhance.tablesaw", function() {
+$(document).on("enhance.tablesaw", function() {
 	// Extend i18n config, if one exists.
 	if (typeof TablesawConfig !== "undefined" && TablesawConfig.i18n) {
 		Tablesaw.i18n = $.extend(Tablesaw.i18n, TablesawConfig.i18n || {});
@@ -471,7 +471,7 @@ if (Tablesaw.mustard) {
 		});
 	};
 
-	var $doc = $(win.document);
+	var $doc = $(document);
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
@@ -491,17 +491,17 @@ if (Tablesaw.mustard) {
 	$doc.on("scroll.tablesaw", function() {
 		isScrolling = true;
 
-		win.clearTimeout(scrollTimeout);
-		scrollTimeout = win.setTimeout(function() {
+		window.clearTimeout(scrollTimeout);
+		scrollTimeout = window.setTimeout(function() {
 			isScrolling = false;
 		}, 300); // must be greater than the resize timeout below
 	});
 
 	var resizeTimeout;
-	$(win).on("resize", function() {
+	$(window).on("resize", function() {
 		if (!isScrolling) {
-			win.clearTimeout(resizeTimeout);
-			resizeTimeout = win.setTimeout(function() {
+			window.clearTimeout(resizeTimeout);
+			resizeTimeout = window.setTimeout(function() {
 				$doc.trigger(events.resize);
 			}, 150); // must be less than the scrolling timeout above.
 		}

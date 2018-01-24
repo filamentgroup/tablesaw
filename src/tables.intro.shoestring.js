@@ -8,5 +8,7 @@
   } else {
     root.Tablesaw = factory(shoestring, root);
   }
-}(typeof window !== "undefined" ? window : this, function ($, win) {
+}(typeof window !== "undefined" ? window : this, function ($, window) {
 	"use strict";
+
+  var document = window.document;

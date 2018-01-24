@@ -16,9 +16,9 @@
 			if (mq === "") {
 				// value-less but exists
 				return true;
-			} else if (mq && "matchMedia" in win) {
+			} else if (mq && "matchMedia" in window) {
 				// has a mq value
-				return win.matchMedia(mq).matches;
+				return window.matchMedia(mq).matches;
 			}
 
 			return false;
@@ -57,7 +57,7 @@
 
 		// run on init and resize
 		showHideNav();
-		$(win).on(Tablesaw.events.resize, showHideNav);
+		$(window).on(Tablesaw.events.resize, showHideNav);
 
 		$table
 			.on("tablesawcolumns.minimap", function() {
@@ -67,7 +67,7 @@
 				var $t = $(this);
 
 				tblsaw.$toolbar.find(".tablesaw-advance").remove();
-				$(win).off(Tablesaw.events.resize, showHideNav);
+				$(window).off(Tablesaw.events.resize, showHideNav);
 
 				$t.off(".minimap");
 			});

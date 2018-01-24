@@ -180,7 +180,7 @@
 
 		function matchesMedia() {
 			var matchMedia = $table.attr("data-tablesaw-swipe-media");
-			return !matchMedia || ("matchMedia" in win && win.matchMedia(matchMedia).matches);
+			return !matchMedia || ("matchMedia" in window && window.matchMedia(matchMedia).matches);
 		}
 
 		function fakeBreakpoints() {
@@ -277,7 +277,7 @@
 				var y;
 				var scrollTop = window.pageYOffset;
 
-				$(win).off(Tablesaw.events.resize, fakeBreakpoints);
+				$(window).off(Tablesaw.events.resize, fakeBreakpoints);
 
 				$(this)
 					.on("touchmove.swipetoggle", function(e) {
@@ -314,7 +314,7 @@
 						}
 
 						window.setTimeout(function() {
-							$(win).on(Tablesaw.events.resize, fakeBreakpoints);
+							$(window).on(Tablesaw.events.resize, fakeBreakpoints);
 						}, 300);
 
 						$(this).off("touchmove.swipetoggle touchend.swipetoggle");
@@ -344,7 +344,7 @@
 
 				$t.removeClass("tablesaw-swipe");
 				tblsaw.$toolbar.find(".tablesaw-advance").remove();
-				$(win).off(Tablesaw.events.resize, fakeBreakpoints);
+				$(window).off(Tablesaw.events.resize, fakeBreakpoints);
 
 				$t.off(".swipetoggle");
 			})
@@ -355,7 +355,7 @@
 			});
 
 		fakeBreakpoints();
-		$(win).on(Tablesaw.events.resize, fakeBreakpoints);
+		$(window).on(Tablesaw.events.resize, fakeBreakpoints);
 	}
 
 	// on tablecreate, init
