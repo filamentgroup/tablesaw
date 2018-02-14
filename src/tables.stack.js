@@ -76,9 +76,12 @@
 					if (index > 0) {
 						$newHeader.append(document.createTextNode(", "));
 					}
-					$newHeader.append(
-						$sortableButton.length ? $sortableButton[0].childNodes : $header[0].childNodes
-					);
+
+					var parentNode = $sortableButton.length ? $sortableButton[0] : $header[0];
+					var el;
+					while ((el = parentNode.firstChild)) {
+						$newHeader[0].appendChild(el);
+					}
 				});
 
 				if ($newHeader.length && !$cell.find("." + classes.cellContentLabels).length) {
