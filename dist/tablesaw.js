@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.8 - 2018-01-25
+/*! Tablesaw - v3.0.9 - 2018-02-14
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2018 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -2298,9 +2298,12 @@ if (Tablesaw.mustard) {
 					if (index > 0) {
 						$newHeader.append(document.createTextNode(", "));
 					}
-					$newHeader.append(
-						$sortableButton.length ? $sortableButton[0].childNodes : $header[0].childNodes
-					);
+
+					var parentNode = $sortableButton.length ? $sortableButton[0] : $header[0];
+					var el;
+					while ((el = parentNode.firstChild)) {
+						$newHeader[0].appendChild(el);
+					}
 				});
 
 				if ($newHeader.length && !$cell.find("." + classes.cellContentLabels).length) {
