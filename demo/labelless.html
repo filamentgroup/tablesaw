@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>TableSaw Stack Table with Labelless Table, Row and Cell</title>
+
+	<link rel="stylesheet" href="../dist/stackonly/tablesaw.stackonly.css">
+	<link rel="stylesheet" href="demo.css">
+	<link rel="stylesheet" href="//filamentgroup.github.io/demo-head/demohead.css">
+
+	<script src="../dist/stackonly/tablesaw.stackonly.js"></script>
+	<script src="../dist/tablesaw-init.js"></script>
+	<script src="//filamentgroup.github.io/demo-head/loadfont.js"></script>
+</head>
+<body>
+	<div class="demo-header">
+		<div class="company">
+			<img src="http://filamentgroup.com/images/fg-logo-positive-sm-crop.png">
+		</div>
+		<div class="details">
+			<h1 class="description-container">Demo of <span class="repo-name">Tablesaw</span>
+				<span class="description">A group of plugins for responsive tables.</span>
+			</h1>
+			<ul class="outbound-links">
+				<li><a href="https://github.com/filamentgroup/tablesaw">Code</a></li>
+				<li><a href="https://github.com/filamentgroup/tablesaw/issues">Issues</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="nav-container">
+		<div class="docs-globalnav">
+			<nav class="docs-nav">
+			<a href="kitchensink.html">Kitchen Sink</a>
+			<a href="modeswitch.html">Mode Switch</a>
+			<a href="sort.html">Sortable</a>
+			<a href="stack.html">Stack</a>
+			<a href="stackonly.html" class="current">Stack Only</a>
+			<a href="swipe.html">Swipe Table</a>
+			<a href="toggle.html">Toggle</a>
+			<a href="checkall.html">Check All</a>
+			</nav>
+		</div>
+	</div>
+	<div class="docs-main">
+		<h2>(Only the) Stack Table with Labelless Table, Row and Cell</h2>
+		<p>The following is an example of a table with <i>data-tablesaw-no-labels</i> applied to the whole table.</p>
+		<table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" data-tablesaw-no-labels>
+			<thead>
+				<tr>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="3">Rank</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Year</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Gross</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>
+					<td>1</td>
+					<td>2009</td>
+					<td>83%</td>
+					<td>$2.7B</td>
+				</tr>
+				<tr>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Titanic_(1997_film)">Titanic</a></td>
+					<td>2</td>
+					<td>1997</td>
+					<td>88%</td>
+					<td>$2.1B</td>
+				</tr>
+				<tr>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/The_Avengers_(2012_film)">The Avengers</a></td>
+					<td>3</td>
+					<td>2012</td>
+					<td>92%</td>
+					<td>$1.5B</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<hr style="margin: 20px 0;"/>
+		<p>The following is an example of a table with <i>data-tablesaw-no-labels</i> applied to the first row as well as the first cell (td) on the second row.</p>
+		<table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+			<thead>
+				<tr >
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="persist">Movie Title</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-sortable-default-col data-tablesaw-priority="3">Rank</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="2">Year</th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="1"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+					<th scope="col" data-tablesaw-sortable-col data-tablesaw-priority="4">Gross</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-tablesaw-no-labels>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>
+					<td>1</td>
+					<td>2009</td>
+					<td>83%</td>
+					<td>$2.7B</td>
+				</tr>
+				<tr>
+					<td class="title" data-tablesaw-no-labels><a href="http://en.wikipedia.org/wiki/Titanic_(1997_film)">Titanic</a></td>
+					<td>2</td>
+					<td>1997</td>
+					<td>88%</td>
+					<td>$2.1B</td>
+				</tr>
+				<tr>
+					<td class="title"><a href="http://en.wikipedia.org/wiki/The_Avengers_(2012_film)">The Avengers</a></td>
+					<td>3</td>
+					<td>2012</td>
+					<td>92%</td>
+					<td>$1.5B</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</body>
+</html>
