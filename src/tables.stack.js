@@ -48,7 +48,7 @@
 			.filter(function() {
 				return (
 					!$(this)
-					  .is("[" + attrs.labelless + "]") &&
+					  	.is("[" + attrs.labelless + "]") &&
 					!$(this)
 						.closest("tr")
 						.is("[" + attrs.labelless + "]") &&
