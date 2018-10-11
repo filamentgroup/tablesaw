@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.9 - 2018-02-14
+/*! Tablesaw - v3.0.9 - 2018-10-11
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2018 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
@@ -2746,12 +2746,16 @@ if (Tablesaw.mustard) {
 	var pluginName = "tablesaw-sortable",
 		initSelector = "table[data-" + pluginName + "]",
 		sortableSwitchSelector = "[data-" + pluginName + "-switch]",
+		defaultAutoSortSelector = "[data-" + pluginName + "-default-autosort]",
+		memorizeSortSelector = "[data-" + pluginName + "-memorize]",
 		attrs = {
 			sortCol: "data-tablesaw-sortable-col",
 			defaultCol: "data-tablesaw-sortable-default-col",
 			numericCol: "data-tablesaw-sortable-numeric",
 			subRow: "data-tablesaw-subrow",
-			ignoreRow: "data-tablesaw-ignorerow"
+			ignoreRow: "data-tablesaw-ignorerow",
+			forceOrder: "data-tablesaw-sortable-forceorder",
+			noHint: "data-tablesaw-sortable-nohint"
 		},
 		classes = {
 			head: pluginName + "-head",
@@ -2790,16 +2794,18 @@ if (Tablesaw.mustard) {
 				function makeHeadsActionable(h, fn) {
 					$.each(h, function(i, col) {
 						var b = $("<button class='" + classes.sortButton + "'/>");
-						b.on("click", { col: col }, fn);
-						$(col)
-							.wrapInner(b)
-							.find("button")
-							.append("<span class='tablesaw-sortable-arrow'>");
+						b.on("click", fn);
+						$(col).wrapInner(b);
+						if (!$(col).is("[" + attrs.noHint + "]")) {
+							$(col)
+								.find("button")
+								.append("<span class='tablesaw-sortable-arrow'>");
+						}
 					});
 				}
 
-				function clearOthers(headcells) {
-					$.each(headcells, function(i, v) {
+				function clearOthers(headcell) {
+					$.each(headcell.siblings(), function(i, v) {
 						var col = $(v);
 						col.removeAttr(attrs.defaultCol);
 						col.removeClass(classes.ascend);
@@ -2813,44 +2819,95 @@ if (Tablesaw.mustard) {
 					}
 
 					e.stopPropagation();
-					var headCell = $(e.target).closest("[" + attrs.sortCol + "]"),
-						v = e.data.col,
-						newSortValue = heads.index(headCell[0]);
 
-					clearOthers(
-						headCell
-							.closest("thead")
-							.find("th")
-							.filter(function() {
-								return this !== headCell[0];
-							})
-					);
-					if (headCell.is("." + classes.descend) || !headCell.is("." + classes.ascend)) {
-						el[pluginName]("sortBy", v, true);
-						newSortValue += "_asc";
-					} else {
-						el[pluginName]("sortBy", v);
-						newSortValue += "_desc";
-					}
-					if ($switcher) {
-						$switcher
-							.find("select")
-							.val(newSortValue)
-							.trigger("refresh");
+					var headCell = $(e.target).closest("[" + attrs.sortCol + "]");
+					toggleSort(headCell);
+
+					if (el.is(memorizeSortSelector)) {
+						memorizeSort({
+							label: headCell.text(),
+							order: headCell.is("." + classes.descend) ? "desc" : "asc"
+						});
 					}
 
 					e.preventDefault();
 				}
 
-				function handleDefault(heads) {
-					$.each(heads, function(idx, el) {
-						var $el = $(el);
-						if ($el.is("[" + attrs.defaultCol + "]")) {
-							if (!$el.is("." + classes.descend)) {
-								$el.addClass(classes.ascend);
-							}
-						}
+				/**
+				 * Updates table by flipping sort order (if allowed) of column whose head is headcell.
+				 * @param {jQuery} headcell
+				 */
+				function toggleSort(headcell) {
+					var newSortValue = heads.index(headcell[0]);
+					clearOthers(headcell);
+
+					var inAscState = headcell.is("." + classes.ascend),
+						forcedDesc = headcell.is("[" + attrs.forceOrder + '="desc"]'),
+						forcedAsc = headcell.is("[" + attrs.forceOrder + '="asc"]');
+					if (forcedAsc || (!forcedDesc && !inAscState)) {
+						//sort asc by default
+						el[pluginName]("sortBy", headcell[0], true);
+						newSortValue += "_asc";
+					} else if (forcedDesc || (!forcedAsc && inAscState)) {
+						el[pluginName]("sortBy", headcell[0]);
+						newSortValue += "_desc";
+					}
+
+					updateSwitcher(newSortValue);
+				}
+
+				/**
+				 * Updates table using sort order of column whose head is headcell.
+				 * Effecively a refresh.
+				 * @param {*} headcell
+				 */
+				function resort(headcell) {
+					var newSortValue = heads.index(headcell[0]);
+					clearOthers(headcell);
+
+					var inDescState = headcell.is("." + classes.descend),
+						forcedDesc = headcell.is("[" + attrs.forceOrder + '="desc"]'),
+						forcedAsc = headcell.is("[" + attrs.forceOrder + '="asc"]');
+					if (forcedAsc || (!forcedDesc && !inDescState)) {
+						//sort asc by default
+						el[pluginName]("sortBy", headcell[0], true);
+						newSortValue += "_asc";
+					} else if (forcedDesc || (!forcedAsc && inDescState)) {
+						el[pluginName]("sortBy", headcell[0]);
+						newSortValue += "_desc";
+					}
+
+					updateSwitcher(newSortValue);
+				}
+
+				function updateSwitcher(newsortvalue) {
+					if ($switcher) {
+						$switcher
+							.find("select")
+							.val(newsortvalue)
+							.trigger("refresh");
+					}
+				}
+
+				function suggestDefault(heads) {
+					var past = retrieveSort();
+					var pastDefaultCol = heads.filter(function(index) {
+						return heads.eq(index).text() === past.label;
 					});
+					if (pastDefaultCol.length > 0) {
+						el[pluginName]("makeColDefault", pastDefaultCol, past.order === "desc" ? false : true);
+						clearOthers(pastDefaultCol); //no more than two default columns
+					}
+				}
+
+				function handleDefault(defaultCol) {
+					if (defaultCol.is("[" + attrs.forceOrder + '="asc"]')) {
+						defaultCol.addClass(classes.ascend);
+					} else if (defaultCol.is("[" + attrs.forceOrder + '="desc"]')) {
+						defaultCol.addClass(classes.descend);
+					} else if (!defaultCol.is("." + classes.descend)) {
+						defaultCol.addClass(classes.ascend);
+					}
 				}
 
 				function addSwitcher(heads) {
@@ -2858,7 +2915,7 @@ if (Tablesaw.mustard) {
 						.addClass(classes.switcher)
 						.addClass(classes.tableToolbar);
 
-					var html = ["<label>" + Tablesaw.i18n.sort + ":"];
+					var html = ["<label>" + Tablesaw.i18n.sort + ":"]; //TODO: Move some Captions here?
 
 					// TODO next major version: remove .btn
 					html.push('<span class="btn tablesaw-btn"><select>');
@@ -2866,7 +2923,9 @@ if (Tablesaw.mustard) {
 						var $t = $(this);
 						var isDefaultCol = $t.is("[" + attrs.defaultCol + "]");
 						var isDescending = $t.is("." + classes.descend);
-
+						var nohint = $t.is("[" + attrs.noHint + "]");
+						var forceAsc = $t.is("[" + attrs.forceOrder + '="asc"]');
+						var forceDesc = $t.is("[" + attrs.forceOrder + '="desc"]');
 						var hasNumericAttribute = $t.is("[" + attrs.numericCol + "]");
 						var numericCount = 0;
 						// Check only the first four rows to see if the column is numbers.
@@ -2882,28 +2941,30 @@ if (Tablesaw.mustard) {
 							$t.attr(attrs.numericCol, isNumeric ? "" : "false");
 						}
 
-						html.push(
-							"<option" +
-								(isDefaultCol && !isDescending ? " selected" : "") +
-								' value="' +
-								j +
-								'_asc">' +
-								$t.text() +
-								" " +
-								(isNumeric ? "&#x2191;" : "(A-Z)") +
-								"</option>"
-						);
-						html.push(
-							"<option" +
-								(isDefaultCol && isDescending ? " selected" : "") +
-								' value="' +
-								j +
-								'_desc">' +
-								$t.text() +
-								" " +
-								(isNumeric ? "&#x2193;" : "(Z-A)") +
-								"</option>"
-						);
+						if (!forceDesc) {
+							html.push(
+								"<option" +
+									(isDefaultCol && !isDescending ? " selected" : "") +
+									' value="' +
+									j +
+									'_asc">' +
+									$t.text() +
+									(nohint ? "" : " " + (isNumeric ? "&#x2191;" : "(A-Z)")) +
+									"</option>"
+							);
+						}
+						if (!forceAsc) {
+							html.push(
+								"<option" +
+									(isDefaultCol && isDescending ? " selected" : "") +
+									' value="' +
+									j +
+									'_desc">' +
+									$t.text() +
+									(nohint ? "" : " " + (isNumeric ? "&#x2193;" : "(Z-A)")) +
+									"</option>"
+							);
+						}
 					});
 					html.push("</select></span></label>");
 
@@ -2927,6 +2988,27 @@ if (Tablesaw.mustard) {
 					});
 				}
 
+				function memorizeSort(obj) {
+					var d = new Date();
+					d.setTime(d.getTime() + 1 * 24 * 60 * 1000);
+					for (var key in obj) {
+						document.cookie = [key + "=" + obj[key], "path=/", "expires=" + d.toUTCString()].join(
+							";"
+						);
+					}
+				}
+
+				function retrieveSort() {
+					var pastSort = {};
+					document.cookie.split(";").forEach(function(cookie) {
+						var tokens = cookie.split("=");
+						if (tokens.length == 2) {
+							pastSort[tokens[0].trim()] = tokens[1].trim();
+						} //else no or bad cookie
+					});
+					return pastSort;
+				}
+
 				el.addClass(pluginName);
 
 				heads = el
@@ -2934,12 +3016,22 @@ if (Tablesaw.mustard) {
 					.filter("thead")
 					.find("th[" + attrs.sortCol + "]");
 
+				if (el.is(memorizeSortSelector)) {
+					suggestDefault(heads); //merely suggest, handleDefault will consider forced order
+					el.attr(defaultAutoSortSelector.replace(/[\[\]]/g, ""), ""); //implied by memorizeSortSelector
+				}
+
+				var defaultcol = heads.filter("[" + attrs.defaultCol + "]").eq(0); //pitfall: "find" searches in descendants!
 				addClassToHeads(heads);
-				makeHeadsActionable(heads, headsOnAction);
-				handleDefault(heads);
+				makeHeadsActionable(heads, headsOnAction); //sortable columns have actionable <th> by default
+				handleDefault(defaultcol);
 
 				if (el.is(sortableSwitchSelector)) {
 					addSwitcher(heads);
+				}
+
+				if (el.is(defaultAutoSortSelector)) {
+					resort(defaultcol);
 				}
 			},
 			sortRows: function(rows, colNum, ascending, col, tbody) {
