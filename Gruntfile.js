@@ -23,6 +23,14 @@ module.exports = function(grunt) {
 		'src/tables.outro.js'
 	];
 
+	var jsCustomFiles = [
+		'src/tables.js',
+		'src/tables.btnmarkup.js',
+		'src/tables.columntoggle.js',
+		'src/tables.sortable.js',
+		'src/tables.outro.js'
+	];
+
 	// Project configuration.
 	grunt.initConfig({
 		// Metadata.
@@ -35,7 +43,8 @@ module.exports = function(grunt) {
 		// Task configuration.
 		clean: {
 			dependencies: ['dist/dependencies/'],
-			post: ['dist/tmp/', 'dist/**/*.min.*']
+			//post: ['dist/tmp/', 'dist/**/*.min.*']
+			post: ['dist/tmp']
 		},
 		copy: {
 			jquery: {
@@ -91,6 +100,12 @@ module.exports = function(grunt) {
 				].concat( jsStackOnlyFiles ),
 				dest: 'dist/stackonly/<%= pkg.name %>.stackonly.jquery.js'
 			},
+			jscustomjquery: {
+				src: [
+					'src/tables.intro.jquery.js'
+				].concat( jsCustomFiles ),
+				dest: 'dist/custom/<%= pkg.name %>.js'
+			},
 			cssall: {
 				src: [
 					'src/tables.css',
@@ -112,6 +127,16 @@ module.exports = function(grunt) {
 					'src/tables.stack-default-breakpoint.css'
 				],
 				dest: 'dist/tmp/<%= pkg.name %>.stackonly.myth.css'
+			},
+			csscustom: {
+				src: [
+					'src/tables.css',
+					'src/tables.toolbar.css',
+					'src/tables.skin.css',
+					'src/tables.columntoggle.css',
+					'src/tables.sortable.css'
+				],
+				dest: 'dist/tmp/<%= pkg.name %>.custom.myth.css'
 			},
 			cssstackmixinpre: {
 				src: [
@@ -157,7 +182,8 @@ module.exports = function(grunt) {
 					'dist/<%= pkg.name %>.min.js': [ 'dist/<%= pkg.name %>.js' ],
 					'dist/<%= pkg.name %>.jquery.min.js': [ 'dist/<%= pkg.name %>.jquery.js' ],
 					'dist/stackonly/<%= pkg.name %>.stackonly.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.js' ],
-					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.jquery.js' ]
+					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js': [ 'dist/stackonly/<%= pkg.name %>.stackonly.jquery.js' ],
+					'dist/custom/<%= pkg.name %>.min.js': [ 'dist/custom/<%= pkg.name %>.js' ]
 				}
 			}
 		},
@@ -165,7 +191,8 @@ module.exports = function(grunt) {
 			css: {
 				files: {
 					'dist/<%= pkg.name %>.min.css': [ 'dist/<%= pkg.name %>.css' ],
-					'dist/stackonly/<%= pkg.name %>.stackonly.min.css': [ 'dist/stackonly/<%= pkg.name %>.stackonly.css' ]
+					'dist/stackonly/<%= pkg.name %>.stackonly.min.css': [ 'dist/stackonly/<%= pkg.name %>.stackonly.css' ],
+					'dist/custom/<%= pkg.name %>.min.css': [ 'dist/custom/<%= pkg.name %>.css' ],
 				}
 			}
 		},
@@ -177,7 +204,9 @@ module.exports = function(grunt) {
 					'dist/<%= pkg.name %>.jquery.min.js',
 					'dist/stackonly/<%= pkg.name %>.stackonly.min.css',
 					'dist/stackonly/<%= pkg.name %>.stackonly.min.js',
-					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js'
+					'dist/stackonly/<%= pkg.name %>.stackonly.jquery.min.js',
+					'dist/custom/<%= pkg.name %>.min.css',
+					'dist/custom/<%= pkg.name %>.min.js'
 				]
 			}
 		},
@@ -190,7 +219,8 @@ module.exports = function(grunt) {
 				files: {
 					'dist/<%= pkg.name %>.css': '<%= concat.cssall.dest %>',
 					'dist/stackonly/<%= pkg.name %>.stackonly.css': '<%= concat.cssstack.dest %>',
-					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>'
+					'dist/tmp/<%= pkg.name %>.stackonly-sans-mixin.scss': '<%= concat.cssstackmixinpre.dest %>',
+					'dist/custom/<%= pkg.name %>.css': '<%= concat.csscustom.dest %>'
 				}
 			}
 		},
@@ -214,7 +244,10 @@ module.exports = function(grunt) {
 
 	// Default task.
 	grunt.registerTask('test', ['qunit', 'run:ava']);
-	grunt.registerTask('concat-pre', ['concat:jsautoinit', 'concat:jsall', 'concat:jsjquery', 'concat:jsstack', 'concat:jsstackjquery', 'concat:cssall', 'concat:cssstack', 'concat:cssstackmixinpre']);
+	grunt.registerTask('concat-pre', [
+		'concat:jsautoinit', 'concat:jsall', 'concat:jsjquery', 'concat:jsstack', 'concat:jscustomjquery', 'concat:jsstackjquery',
+		'concat:cssall', 'concat:cssstack', 'concat:csscustom', 'concat:cssstackmixinpre'
+	]);
 	grunt.registerTask('concat-post', ['concat:cssstackmixinpost']);
 	grunt.registerTask('src', ['concat-pre', 'myth', 'concat-post', 'clean:dependencies', 'copy', 'clean:post']);
 	grunt.registerTask('filesize', ['uglify', 'cssmin', 'bytesize', 'clean:post']);

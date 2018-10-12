@@ -1,3 +1,4 @@
 node_modules/
 .grunt
 demo/webpack/bundle.js
+dist/
