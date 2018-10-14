@@ -134,7 +134,8 @@ module.exports = function(grunt) {
 					'src/tables.toolbar.css',
 					'src/tables.skin.css',
 					'src/tables.columntoggle.css',
-					'src/tables.sortable.css'
+					'src/tables.sortable.css',
+					'src/tables.minimap.css'
 				],
 				dest: 'dist/tmp/<%= pkg.name %>.custom.myth.css'
 			},
