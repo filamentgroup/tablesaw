@@ -261,6 +261,12 @@
 								.split("_"),
 							head = heads.eq(val[0]);
 
+						if (el.is(memorizeSortSelector)) {
+							memorizeSort({
+								label: head.text(),
+								order: val[1]
+							});
+						}
 						clearOthers(head.siblings());
 						el[pluginName]("sortBy", head.get(0), val[1] === "asc");
 					});
