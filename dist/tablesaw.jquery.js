@@ -496,7 +496,7 @@ if (Tablesaw.mustard) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
 			var $target = $(e.target);
-			if($target.parent().length) {
+			if ($target.parent().length) {
 				$target = $target.parent();
 			}
 
@@ -577,8 +577,7 @@ if (Tablesaw.mustard) {
 			})
 			.filter(function() {
 				return (
-					!$(this)
-					  	.is("[" + attrs.labelless + "]") &&
+					!$(this).is("[" + attrs.labelless + "]") &&
 					!$(this)
 						.closest("tr")
 						.is("[" + attrs.labelless + "]") &&
@@ -623,6 +622,7 @@ if (Tablesaw.mustard) {
 				// Update if already exists.
 				var $label = $cell.find("." + classes.cellLabels);
 				if (!$label.length) {
+					$cell.prepend(document.createTextNode(" "));
 					$cell.prepend($newHeader);
 				} else {
 					// only if changed
