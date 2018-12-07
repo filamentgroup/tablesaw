@@ -20,18 +20,28 @@
 			throws(block, [expected], [message])
 	*/
 
+	function loadScriptPromise(src) {
+		return new Promise((resolve, reject) => {
+			var scr = document.createElement("script");
+			scr.async = true;
+			scr.src = src;
+			scr.onload = resolve;
+			document.head.appendChild(scr);
+		});
+	}
+
 	function loadTablesawDynamically() {
-		$('head').append('<script src="../dist/tablesaw.js"></script>');
+		return loadScriptPromise("../dist/tablesaw.js");
 	}
 
 	function initializeTablesawUsingMethodCall() {
-		if (!!window.Tablesaw)
+		if (!!window.Tablesaw) {
 			Tablesaw.init();
+		}
 	}
 
 	function initializeTablesawUsingInitScript() {
-		if (!!window.Tablesaw)
-			$('head').append('<script src="../dist/tablesaw-init.js"></script>');
+		return loadScriptPromise("../dist/tablesaw-init.js");
 	}
 
 	function createTableDynamically() {
@@ -73,7 +83,7 @@
 
 	var tableCounter = 0;
 
-	function createAndInitializeTable(assert, initializeUsingInitScript) {
+	async function createAndInitializeTable(assert, initializeUsingInitScript) {
 		tableCounter++;
 		var tableSelection = createTableDynamically();
 
@@ -83,29 +93,29 @@
 		assert.ok( !tableSelection.is('.tablesaw-sortable'), tableText + ' initialization class not found before being initialized ' + methodText );
 		
 		if (initializeUsingInitScript)
-			initializeTablesawUsingInitScript();
+			await initializeTablesawUsingInitScript();
 		else
-			initializeTablesawUsingMethodCall();
+			await initializeTablesawUsingMethodCall();
 
 		assert.ok( tableSelection.is('.tablesaw-sortable'), tableText + ' initialization class found before being initialized ' + methodText );
 	}
 
 	QUnit.module( 'Global' );
 
-	QUnit.test( 'tablesaw is dynamically loaded and tables are dynamically created and initialized', function( assert ) {
+	QUnit.test( 'tablesaw is dynamically loaded and tables are dynamically created and initialized', async function( assert ) {
 		assert.ok( !window.Tablesaw, 'Tablesaw object is not available.' );
 	 	assert.ok( !$( 'html' ).is('.tablesaw-enhanced'), 'Html initialization class is not set before Tablesaw is loaded.' );
 		
-		loadTablesawDynamically();
+		await loadTablesawDynamically();
 
 		assert.ok( !!window.Tablesaw && !!window.Tablesaw.init, 'Tablesaw object is available.' );
 		assert.ok( $( 'html' ).is('.tablesaw-enhanced'), 'Html initialization class is set after Tablesaw is loaded.' );
 
-		createAndInitializeTable(assert, false);
-		createAndInitializeTable(assert, true);
+		await createAndInitializeTable(assert, false);
+		await createAndInitializeTable(assert, true);
 
-		createAndInitializeTable(assert, false);
-		createAndInitializeTable(assert, true);
+		await createAndInitializeTable(assert, false);
+		await createAndInitializeTable(assert, true);
 	});
 
 }( window.shoestring || window.jQuery || window.$jQ ));

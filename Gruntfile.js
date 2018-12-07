@@ -48,7 +48,7 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					flatten: true,
-					src: [ 'node_modules/qunitjs/qunit/*' ],
+					src: [ 'node_modules/qunit/qunit/*' ],
 					dest: 'dist/dependencies/',
 					filter: 'isFile'
 				}]
