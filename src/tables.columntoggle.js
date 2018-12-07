@@ -1,9 +1,9 @@
 /*
-* tablesaw: A set of plugins for responsive tables
-* Column Toggle: allows the user to toggle which columns are visible.
-* Copyright (c) 2013 Filament Group, Inc.
-* MIT License
-*/
+ * tablesaw: A set of plugins for responsive tables
+ * Column Toggle: allows the user to toggle which columns are visible.
+ * Copyright (c) 2013 Filament Group, Inc.
+ * MIT License
+ */
 
 (function() {
 	var data = {
@@ -279,7 +279,7 @@
 		if (tablesaw.mode === "columntoggle") {
 			$(tablesaw.table)
 				.data(data.key)
-				.refreshPriority();
+				.refreshToggle();
 		}
 	});
 

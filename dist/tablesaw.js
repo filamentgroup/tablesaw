@@ -2726,7 +2726,7 @@ if (Tablesaw.mustard) {
 		if (tablesaw.mode === "columntoggle") {
 			$(tablesaw.table)
 				.data(data.key)
-				.refreshPriority();
+				.refreshToggle();
 		}
 	});
 
