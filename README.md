@@ -290,6 +290,17 @@ Tablesaw.init();
 Tablesaw.init( myElement ); // OR pass an element to only init within a context
 ```
 
+#### Dynamically Loading Tablesaw
+
+For user interfaces that are dynamically built, Tablesaw can be loaded on an as-needed basis.  
+Here's how you might do this with jQuery:
+
+```js
+$('head').append('<script src="tablesaw.js"></script>');
+```
+
+Following that, tables may be initialized manually as they are created.
+
 ### Using Stack-Only Tablesaw
 
 * [Stack-Only Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
