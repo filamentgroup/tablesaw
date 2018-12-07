@@ -48,6 +48,8 @@
 			.filter(function() {
 				return (
 					!$(this)
+					  	.is("[" + attrs.labelless + "]") &&
+					!$(this)
 						.closest("tr")
 						.is("[" + attrs.labelless + "]") &&
 					(!self.hideempty || !!$(this).html())
