@@ -1,9 +1,9 @@
 /*
-* tablesaw: A set of plugins for responsive tables
-* Stack and Column Toggle tables
-* Copyright (c) 2013 Filament Group, Inc.
-* MIT License
-*/
+ * tablesaw: A set of plugins for responsive tables
+ * Stack and Column Toggle tables
+ * Copyright (c) 2013 Filament Group, Inc.
+ * MIT License
+ */
 
 // Account for Tablesaw being loaded either before or after the DOMContentLoaded event is fired.
 var domContentLoadedTriggered = /complete|loaded/.test(document.readyState);
@@ -479,7 +479,12 @@ if (Tablesaw.mustard) {
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
-			$(e.target)
+			var $target = $(e.target);
+			if ($target.parent().length) {
+				$target = $target.parent();
+			}
+
+			$target
 				.find(initSelector)
 				.filter(initFilterSelector)
 				[pluginName]();

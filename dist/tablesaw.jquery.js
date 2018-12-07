@@ -495,7 +495,12 @@ if (Tablesaw.mustard) {
 	$doc.on("enhance.tablesaw", function(e) {
 		// Cut the mustard
 		if (Tablesaw.mustard) {
-			$(e.target)
+			var $target = $(e.target);
+			if($target.parent().length) {
+				$target = $target.parent();
+			}
+
+			$target
 				.find(initSelector)
 				.filter(initFilterSelector)
 				[pluginName]();
