@@ -39,7 +39,7 @@ If you only want to use the Stack Table and don’t want all the extra features 
 
 | Option | Description |
 | --- | --- |
-| Opt out of inline labels | To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-tablesaw-no-labels>`; on a per-row basis, use `<tr data-tablesaw-no-labels>`. |
+| Opt out of inline labels | To opt-out of inline label creation (the table header cell text that shows at small breakpoints) on a per-table basis, use `<table data-tablesaw-no-labels>`; on a per-row basis, use `<tr data-tablesaw-no-labels>`; on a per-cell basis, use `<td data-tablesaw-no-labels>` (added in v3.1.0) |
 | Hide headers for empty body cells | When the table cell is empty, use `<table data-tablesaw-hide-empty>` to hide the header when stacked. |
 
 ## Column Toggle Mode
