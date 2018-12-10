@@ -145,12 +145,12 @@
 	}
 }
 
-.tablesaw-columntoggle-popup .btn-group > label {
+.tablesaw-columntoggle-popup .tablesaw-btn-group > label {
 	display: block;
 	padding: .2em 0;
 	white-space: nowrap;
 	cursor: default;
 }
-.tablesaw-columntoggle-popup .btn-group > label input {
+.tablesaw-columntoggle-popup .tablesaw-btn-group > label input {
 	margin-right: .8em;
 }

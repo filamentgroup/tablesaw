@@ -88,7 +88,7 @@
 				"</span></a>"
 		);
 		$popup = $("<div class='" + this.classes.popup + "' id='" + id + "'></div>");
-		$menu = $("<div class='btn-group'></div>");
+		$menu = $("<div class='tablesaw-btn-group'></div>");
 
 		this.$popup = $popup;
 
