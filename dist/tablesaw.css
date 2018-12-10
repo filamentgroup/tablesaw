@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.9 - 2018-12-07
+/*! Tablesaw - v3.1.0 - 2018-12-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2018 Filament Group; Licensed MIT */
 
@@ -663,14 +663,14 @@ a.tablesaw-btn {
   }
 }
 
-.tablesaw-columntoggle-popup .btn-group > label {
+.tablesaw-columntoggle-popup .tablesaw-btn-group > label {
   display: block;
   padding: .2em 0;
   white-space: nowrap;
   cursor: default;
 }
 
-.tablesaw-columntoggle-popup .btn-group > label input {
+.tablesaw-columntoggle-popup .tablesaw-btn-group > label input {
   margin-right: .8em;
 }
 

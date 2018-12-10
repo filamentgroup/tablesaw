@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.0.9 - 2018-12-07
+/*! Tablesaw - v3.1.0 - 2018-12-10
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2018 Filament Group; Licensed MIT */
 (function (root, factory) {
@@ -303,7 +303,6 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._findPrimaryHeadersForCell = function(cell) {
 		var $headerRow = this._getPrimaryHeaderRow();
-		var $headers = this._getPrimaryHeaderCells($headerRow);
 		var headerRowIndex = this._getRowIndex($headerRow);
 		var results = [];
 
@@ -311,12 +310,14 @@ if (Tablesaw.mustard) {
 			if (rowNumber === headerRowIndex) {
 				continue;
 			}
+
 			for (var colNumber = 0; colNumber < this.headerMapping[rowNumber].length; colNumber++) {
 				if (this.headerMapping[rowNumber][colNumber] === cell) {
-					results.push($headers[colNumber]);
+					results.push(this.headerMapping[headerRowIndex][colNumber]);
 				}
 			}
 		}
+
 		return results;
 	};
 
@@ -635,7 +636,7 @@ if (Tablesaw.mustard) {
 		this.$table.removeClass(classes.stackTable);
 		this.$table.find("." + classes.cellLabels).remove();
 		this.$table.find("." + classes.cellContentLabels).each(function() {
-			$(this).replaceWith(this.childNodes);
+			$(this).replaceWith($(this.childNodes));
 		});
 	};
 

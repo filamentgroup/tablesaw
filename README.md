@@ -403,6 +403,8 @@ Run `npm install` to install dependencies and then `grunt` to build the project 
 
 ## Release Names
 
+* [3.1.0: Acacia](https://github.com/filamentgroup/tablesaw/releases/tag/v3.1.0)
+* [3.0.6: Wonderboom](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.6)
 * [3.0.3: Cucumbertree](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.3)
 * [3.0.2: Bald Cypress](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.2)
 * [3.0.1: Cypress](https://github.com/filamentgroup/tablesaw/releases/tag/v3.0.1)
