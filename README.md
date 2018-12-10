@@ -27,7 +27,7 @@ A set of plugins for responsive tables.
 
 This repository is now using [lodash style issue management](https://twitter.com/samselikoff/status/991395669016436736) for enhancements. This means enhancement issues will be closed instead of leaving them open.
 
-* Look through [the enhancement backlog](https://github.com/filamentgroup/tablesaw/issues?q=label%3Aneeds-votes+is%3Aclosed) and vote for your favorite features by adding a 👍 to the top comment.
+* Look through [the enhancement backlog](https://github.com/filamentgroup/tablesaw/issues?q=label%3Aneeds-votes+is%3Aclosed+sort%3Areactions-%2B1-desc) and vote for your favorite features by adding a 👍 to the top comment.
 
 ## Stack Mode
 
