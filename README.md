@@ -23,6 +23,12 @@ A set of plugins for responsive tables.
 * [Browser Support](#browser-support)
 * [Bundler Compatibility](#bundler-compatibility)
 
+## Roadmap and Enhancement Queue
+
+This repository is now using [lodash style issue management](https://twitter.com/samselikoff/status/991395669016436736) for enhancements. This means enhancement issues will be closed instead of leaving them open.
+
+* Look through [the enhancement backlog](https://github.com/filamentgroup/tablesaw/issues?q=label%3Aneeds-votes+is%3Aclosed) and vote for your favorite features by adding a 👍 to the top comment.
+
 ## Stack Mode
 
 * [Stack Demo](http://filamentgroup.github.io/tablesaw/demo/stack.html) and [Stack-Only Demo](http://filamentgroup.github.io/tablesaw/demo/stackonly.html)
