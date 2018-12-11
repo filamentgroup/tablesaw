@@ -101,7 +101,7 @@
 			if (priority && priority !== "persist") {
 				$cells.addClass(self.classes.priorityPrefix + priority);
 
-				$(cfg.getColumnToggleLabelTemplate($this.text()))
+				$(cfg.getColumnToggleLabelTemplate($this.html()))
 					.appendTo($menu)
 					.find('input[type="checkbox"]')
 					.data("tablesaw-header", this);
