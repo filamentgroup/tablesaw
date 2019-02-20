@@ -1,6 +1,23 @@
 .tablesaw-fix-persist {
 	table-layout: fixed;
 }
+.tablesaw-swipe-overflow {
+	position: relative;
+	overflow: hidden;
+}
+.tablesaw-swipe-overflow .tablesaw-overflow {
+	width: calc( 100% - 240px );
+	margin-left: 240px;
+	position: static;
+}
+.tablesaw-swipe-overflow td.tablesaw-swipe-cellpersist,
+.tablesaw-swipe-overflow th.tablesaw-swipe-cellpersist {
+	position: absolute;
+	left: 0;
+	width: 240px;
+	z-index: 2;
+	display: block;
+}
 @media only all {
 	/* Unchecked manually: Always hide */
 	.tablesaw-swipe th.tablesaw-swipe-cellhidden,

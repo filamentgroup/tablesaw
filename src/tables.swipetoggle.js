@@ -1,9 +1,9 @@
 /*
-* tablesaw: A set of plugins for responsive tables
-* Swipe Toggle: swipe gesture (or buttons) to navigate which columns are shown.
-* Copyright (c) 2013 Filament Group, Inc.
-* MIT License
-*/
+ * tablesaw: A set of plugins for responsive tables
+ * Swipe Toggle: swipe gesture (or buttons) to navigate which columns are shown.
+ * Copyright (c) 2013 Filament Group, Inc.
+ * MIT License
+ */
 
 (function() {
 	var classes = {
@@ -11,7 +11,10 @@
 		persistWidths: "tablesaw-fix-persist",
 		hiddenCol: "tablesaw-swipe-cellhidden",
 		persistCol: "tablesaw-swipe-cellpersist",
-		allColumnsVisible: "tablesaw-all-cols-visible"
+		allColumnsVisible: "tablesaw-all-cols-visible",
+		overflow: "tablesaw-overflow",
+		swipeOverflow: "tablesaw-swipe-overflow",
+		chromer: "tablesaw-overrides-chromer"
 	};
 	var attrs = {
 		disableTouchEvents: "data-tablesaw-no-touch",
@@ -21,6 +24,11 @@
 
 	function createSwipeTable(tbl, $table) {
 		var tblsaw = $table.data("tablesaw");
+
+		// Overrides for background-attachment
+		if ("chrome" in window) {
+			$table.closest("." + classes.overflow).addClass(classes.chromer);
+		}
 
 		var $btns = $("<div class='tablesaw-advance'></div>");
 		// TODO next major version: remove .btn
@@ -82,7 +90,9 @@
 		}
 
 		function hideColumn(headerCell) {
-			tblsaw._$getCells(headerCell).addClass(classes.hiddenCol);
+			if (!isOverflowing()) {
+				tblsaw._$getCells(headerCell).addClass(classes.hiddenCol);
+			}
 		}
 
 		function persistColumn(headerCell) {
@@ -178,6 +188,10 @@
 			return pair[1] > -1 && pair[1] < $headerCellsNoPersist.length;
 		}
 
+		function isOverflowing() {
+			return $table.closest("." + classes.swipeOverflow).length > 0;
+		}
+
 		function matchesMedia() {
 			var matchMedia = $table.attr("data-tablesaw-swipe-media");
 			return !matchMedia || ("matchMedia" in window && window.matchMedia(matchMedia).matches);
@@ -211,11 +225,13 @@
 			// We need at least one column to swipe.
 			var needsNonPersistentColumn = visibleNonPersistantCount === 0;
 
-			$headerCells.each(function(index) {
-				if (sums[index] > containerWidth) {
-					hideColumn(this);
-				}
-			});
+			if (!isOverflowing()) {
+				$headerCells.each(function(index) {
+					if (sums[index] > containerWidth) {
+						hideColumn(this);
+					}
+				});
+			}
 
 			$headerCells.each(function(index) {
 				if (persist[index]) {
@@ -227,7 +243,9 @@
 				if (sums[index] <= containerWidth || needsNonPersistentColumn) {
 					needsNonPersistentColumn = false;
 					showColumn(this);
-					tblsaw.updateColspanCells(classes.hiddenCol, this, true);
+					if (!isOverflowing()) {
+						tblsaw.updateColspanCells(classes.hiddenCol, this, true);
+					}
 				}
 			});
 
@@ -251,10 +269,14 @@
 				// column content overflow
 				maintainWidths();
 				hideColumn($headerCellsNoPersist.get(pair[0]));
-				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
+				if (!isOverflowing()) {
+					tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
+				}
 
 				showColumn($headerCellsNoPersist.get(pair[1]));
-				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true);
+				if (!isOverflowing()) {
+					tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true);
+				}
 
 				$table.trigger("tablesawcolumns");
 			}

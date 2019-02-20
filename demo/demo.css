@@ -44,6 +44,7 @@ abbr {
 	max-width: 40vw;
 }
 @media (min-width: 40em) {
+	th.title,
 	td.title {
 		max-width: 12em;
 	}

@@ -1,5 +1,5 @@
-@supports( background-attachment: local, local ) {
-	.tablesaw-overflow-shadows {
+@supports( background-attachment: local ) {
+	.tablesaw-overflow-shadows:not(.tablesaw-overrides-chromer) {
 		/* Thanks to http://lea.verou.me/2012/04/background-attachment-local/ (modified for horizontal overflow) */
 		background:
 			/* Shadow covers */
@@ -15,6 +15,33 @@
 		/* Note: Edge does not support `local`, false positives in @supports */
 		/* Note: Android Browser does not support `local` */
 		 background-attachment: local, local, scroll, scroll;
+
+		/* Note: Chrome on Android only supports `background-attachment: local` when used with `border-radius` */
+		border-radius: .1px;
+	}
+
+	/* Alternative override for Chrome.
+	 * We’re using two different shadows here to work around Chrome’s background-attachment issues */
+	.tablesaw-overflow-shadows.tablesaw-overrides-chromer {
+		/* Shadows */
+		background:
+			radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) -6px 0,
+			radial-gradient(50% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) top right -6px;
+		background-repeat: no-repeat;
+		background-size: 14px 100%;
+	}
+
+	.tablesaw-overflow-shadows.tablesaw-overrides-chromer table {
+		/* Shadow covers */
+		background:
+			linear-gradient(to right, white 30%, rgba(255,255,255,0)) 0 0,
+			linear-gradient(to right, rgba(255,255,255,0), white 70%) top right;
+		background-repeat: no-repeat;
+		background-size: 40px 100%;
+
+		/* Note: Edge does not support `local`, false positives in @supports */
+		/* Note: Android Browser does not support `local` */
+		 background-attachment: local;
 
 		/* Note: Chrome on Android only supports `background-attachment: local` when used with `border-radius` */
 		border-radius: .1px;
