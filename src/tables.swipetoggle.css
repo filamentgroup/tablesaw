@@ -1,22 +1,25 @@
 .tablesaw-fix-persist {
 	table-layout: fixed;
 }
-.tablesaw-swipe-overflow {
+
+.tablesaw-swipe-overflow.active {
 	position: relative;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
-.tablesaw-swipe-overflow .tablesaw-overflow {
-	width: calc( 100% - 240px );
-	margin-left: 240px;
+.tablesaw-swipe-overflow.active .tablesaw-overflow {
 	position: static;
+	/* width and margin-left set in JS */
+	/* e.g. width: calc( 100% - 240px ); */
+	/* e.g. margin-left: 240px; */
 }
-.tablesaw-swipe-overflow td.tablesaw-swipe-cellpersist,
-.tablesaw-swipe-overflow th.tablesaw-swipe-cellpersist {
+.tablesaw-swipe-overflow.active td.tablesaw-swipe-cellpersist,
+.tablesaw-swipe-overflow.active th.tablesaw-swipe-cellpersist {
 	position: absolute;
 	left: 0;
-	width: 240px;
 	z-index: 2;
 	display: block;
+	/* width set in JS */
+	/* e.g. width: 240px;*/
 }
 @media only all {
 	/* Unchecked manually: Always hide */

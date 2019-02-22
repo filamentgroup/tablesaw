@@ -14,7 +14,8 @@
 		allColumnsVisible: "tablesaw-all-cols-visible",
 		overflow: "tablesaw-overflow",
 		swipeOverflow: "tablesaw-swipe-overflow",
-		chromer: "tablesaw-overrides-chromer"
+		chromer: "tablesaw-overrides-chromer",
+		active: "active"
 	};
 	var attrs = {
 		disableTouchEvents: "data-tablesaw-no-touch",
@@ -24,10 +25,15 @@
 
 	function createSwipeTable(tbl, $table) {
 		var tblsaw = $table.data("tablesaw");
+		var $swipeOverflowContainer = $table.closest("." + classes.swipeOverflow);
+		var $overflowContainer = $table.closest("." + classes.overflow);
 
 		// Overrides for background-attachment
 		if ("chrome" in window) {
-			$table.closest("." + classes.overflow).addClass(classes.chromer);
+			$overflowContainer.addClass(classes.chromer);
+		}
+		if (isOverflowing()) {
+			$swipeOverflowContainer.addClass(classes.active);
 		}
 
 		var $btns = $("<div class='tablesaw-advance'></div>");
@@ -157,8 +163,9 @@
 		function getNext() {
 			var next = [],
 				checkFound;
-
+			console.log(headerWidths);
 			$headerCellsNoPersist.each(function(i) {
+				console.log($overflowContainer[0].scrollLeft, i, headerWidths[i]);
 				var $t = $(this),
 					isHidden = $t.css("display") === "none" || $t.is("." + classes.hiddenCol);
 
@@ -185,6 +192,7 @@
 		}
 
 		function canAdvance(pair) {
+			console.log(getPrev(), getNext());
 			return pair[1] > -1 && pair[1] < $headerCellsNoPersist.length;
 		}
 
@@ -233,10 +241,22 @@
 				});
 			}
 
+			var firstPersist = true;
 			$headerCells.each(function(index) {
 				if (persist[index]) {
 					// for visual box-shadow
 					persistColumn(this);
+
+					if (firstPersist) {
+						if (isOverflowing()) {
+							$overflowContainer.css({
+								width: "calc( 100% - " + sums[index] + "px )",
+								"margin-left": sums[index] + "px"
+							});
+							tblsaw._$getCells(this).css("width", sums[index] + "px");
+						}
+						firstPersist = false;
+					}
 					return;
 				}
 
@@ -268,8 +288,8 @@
 				// TODO just blindly hiding the previous column and showing the next column can result in
 				// column content overflow
 				maintainWidths();
-				hideColumn($headerCellsNoPersist.get(pair[0]));
 				if (!isOverflowing()) {
+					hideColumn($headerCellsNoPersist.get(pair[0]));
 					tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
 				}
 
