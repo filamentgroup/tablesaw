@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.0.9 - 2018-12-07
+/*! Tablesaw - v3.1.1 - 2019-03-15
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2018 Filament Group; Licensed MIT */
+* Copyright (c) 2019 Filament Group; Licensed MIT */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(["jquery"], function (jQuery) {
@@ -303,7 +303,6 @@ if (Tablesaw.mustard) {
 
 	Table.prototype._findPrimaryHeadersForCell = function(cell) {
 		var $headerRow = this._getPrimaryHeaderRow();
-		var $headers = this._getPrimaryHeaderCells($headerRow);
 		var headerRowIndex = this._getRowIndex($headerRow);
 		var results = [];
 
@@ -311,12 +310,14 @@ if (Tablesaw.mustard) {
 			if (rowNumber === headerRowIndex) {
 				continue;
 			}
+
 			for (var colNumber = 0; colNumber < this.headerMapping[rowNumber].length; colNumber++) {
 				if (this.headerMapping[rowNumber][colNumber] === cell) {
-					results.push($headers[colNumber]);
+					results.push(this.headerMapping[headerRowIndex][colNumber]);
 				}
 			}
 		}
+
 		return results;
 	};
 
@@ -577,8 +578,7 @@ if (Tablesaw.mustard) {
 			})
 			.filter(function() {
 				return (
-					!$(this)
-					  	.is("[" + attrs.labelless + "]") &&
+					!$(this).is("[" + attrs.labelless + "]") &&
 					!$(this)
 						.closest("tr")
 						.is("[" + attrs.labelless + "]") &&
@@ -623,6 +623,7 @@ if (Tablesaw.mustard) {
 				// Update if already exists.
 				var $label = $cell.find("." + classes.cellLabels);
 				if (!$label.length) {
+					$cell.prepend(document.createTextNode(" "));
 					$cell.prepend($newHeader);
 				} else {
 					// only if changed
@@ -635,7 +636,7 @@ if (Tablesaw.mustard) {
 		this.$table.removeClass(classes.stackTable);
 		this.$table.find("." + classes.cellLabels).remove();
 		this.$table.find("." + classes.cellContentLabels).each(function() {
-			$(this).replaceWith(this.childNodes);
+			$(this).replaceWith($(this.childNodes));
 		});
 	};
 
