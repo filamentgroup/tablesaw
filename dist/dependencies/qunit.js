@@ -1,12 +1,12 @@
 /*!
- * QUnit 2.8.0
+ * QUnit 2.9.2
  * https://qunitjs.com/
  *
  * Copyright jQuery Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2018-11-02T16:17Z
+ * Date: 2019-02-21T22:49Z
  */
 (function (global$1) {
   'use strict';
@@ -3563,6 +3563,7 @@
 
   // Put a hold on processing and return a function that will release it.
   function internalStop(test) {
+  	var released = false;
   	test.semaphore += 1;
   	config.blocking = true;
 
@@ -3580,12 +3581,12 @@
   			clearTimeout(config.timeout);
   			config.timeout = setTimeout$1(function () {
   				pushFailure("Test took longer than " + timeoutDuration + "ms; test timed out.", sourceFromStacktrace(2));
+  				released = true;
   				internalRecover(test);
   			}, timeoutDuration);
   		}
   	}
 
-  	var released = false;
   	return function resume() {
   		if (released) {
   			return;
@@ -3986,11 +3987,13 @@
   				// We don't want to validate thrown error
   				if (!expected) {
   					result = true;
-  					expected = null;
 
   					// Expected is a regexp
   				} else if (expectedType === "regexp") {
   					result = expected.test(errorString(actual));
+
+  					// Log the string form of the regexp
+  					expected = String(expected);
 
   					// Expected is a constructor, maybe an Error constructor
   				} else if (expectedType === "function" && actual instanceof expected) {
@@ -3999,6 +4002,9 @@
   					// Expected is an Error object
   				} else if (expectedType === "object") {
   					result = actual instanceof expected.constructor && actual.name === expected.name && actual.message === expected.message;
+
+  					// Log the string form of the Error object
+  					expected = errorString(expected);
 
   					// Expected is a validation function which returns true if validation passed
   				} else if (expectedType === "function" && expected.call({}, actual) === true) {
@@ -4009,7 +4015,9 @@
 
   			currentTest.assert.pushResult({
   				result: result,
-  				actual: actual,
+
+  				// undefined if it didn't throw
+  				actual: actual && errorString(actual),
   				expected: expected,
   				message: message
   			});
@@ -4069,11 +4077,13 @@
   				// We don't want to validate
   				if (expected === undefined) {
   					result = true;
-  					expected = actual;
 
   					// Expected is a regexp
   				} else if (expectedType === "regexp") {
   					result = expected.test(errorString(actual));
+
+  					// Log the string form of the regexp
+  					expected = String(expected);
 
   					// Expected is a constructor, maybe an Error constructor
   				} else if (expectedType === "function" && actual instanceof expected) {
@@ -4082,6 +4092,9 @@
   					// Expected is an Error object
   				} else if (expectedType === "object") {
   					result = actual instanceof expected.constructor && actual.name === expected.name && actual.message === expected.message;
+
+  					// Log the string form of the Error object
+  					expected = errorString(expected);
 
   					// Expected is a validation function which returns true if validation passed
   				} else {
@@ -4098,7 +4111,9 @@
 
   				currentTest.assert.pushResult({
   					result: result,
-  					actual: actual,
+
+  					// leave rejection value of undefined as-is
+  					actual: actual && errorString(actual),
   					expected: expected,
   					message: message
   				});
@@ -4120,12 +4135,14 @@
   /**
    * Converts an error into a simple string for comparisons.
    *
-   * @param {Error} error
+   * @param {Error|Object} error
    * @return {String}
    */
   function errorString(error) {
   	var resultErrorString = error.toString();
 
+  	// If the error wasn't a subclass of Error but something like
+  	// an object literal with name and message properties...
   	if (resultErrorString.substring(0, 7) === "[object") {
   		var name = error.name ? error.name.toString() : "Error";
   		var message = error.message ? error.message.toString() : "";
@@ -4240,7 +4257,7 @@
   QUnit.isLocal = !(defined.document && window$1.location.protocol !== "file:");
 
   // Expose the current QUnit version
-  QUnit.version = "2.8.0";
+  QUnit.version = "2.9.2";
 
   extend(QUnit, {
   	on: on,
@@ -4888,14 +4905,17 @@
   	}
 
   	function toolbarModuleFilter() {
-  		var allCheckbox,
-  		    commit,
+  		var commit,
   		    reset,
   		    moduleFilter = document.createElement("form"),
   		    label = document.createElement("label"),
   		    moduleSearch = document.createElement("input"),
   		    dropDown = document.createElement("div"),
   		    actions = document.createElement("span"),
+  		    applyButton = document.createElement("button"),
+  		    resetButton = document.createElement("button"),
+  		    allModulesLabel = document.createElement("label"),
+  		    allCheckbox = document.createElement("input"),
   		    dropDownList = document.createElement("ul"),
   		    dirty = false;
 
@@ -4910,9 +4930,27 @@
   		label.innerHTML = "Module: ";
   		label.appendChild(moduleSearch);
 
+  		applyButton.textContent = "Apply";
+  		applyButton.style.display = "none";
+
+  		resetButton.textContent = "Reset";
+  		resetButton.type = "reset";
+  		resetButton.style.display = "none";
+
+  		allCheckbox.type = "checkbox";
+  		allCheckbox.checked = config.moduleId.length === 0;
+
+  		allModulesLabel.className = "clickable";
+  		if (config.moduleId.length) {
+  			allModulesLabel.className = "checked";
+  		}
+  		allModulesLabel.appendChild(allCheckbox);
+  		allModulesLabel.appendChild(document.createTextNode("All modules"));
+
   		actions.id = "qunit-modulefilter-actions";
-  		actions.innerHTML = "<button style='display:none'>Apply</button>" + "<button type='reset' style='display:none'>Reset</button>" + "<label class='clickable" + (config.moduleId.length ? "" : " checked") + "'><input type='checkbox'" + (config.moduleId.length ? "" : " checked='checked'") + " />All modules</label>";
-  		allCheckbox = actions.lastChild.firstChild;
+  		actions.appendChild(applyButton);
+  		actions.appendChild(resetButton);
+  		actions.appendChild(allModulesLabel);
   		commit = actions.firstChild;
   		reset = commit.nextSibling;
   		addEvent(commit, "click", applyUrlParams);
@@ -5413,7 +5451,7 @@
   		// Show the source of the test when showing assertions
   		if (details.source) {
   			sourceName = document.createElement("p");
-  			sourceName.innerHTML = "<strong>Source: </strong>" + details.source;
+  			sourceName.innerHTML = "<strong>Source: </strong>" + escapeText(details.source);
   			addClass(sourceName, "qunit-source");
   			if (testPassed) {
   				addClass(sourceName, "qunit-collapsed");

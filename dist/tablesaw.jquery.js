@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.1.0 - 2018-12-10
+/*! Tablesaw - v3.1.1 - 2019-03-15
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2018 Filament Group; Licensed MIT */
+* Copyright (c) 2019 Filament Group; Licensed MIT */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(["jquery"], function (jQuery) {
@@ -1458,6 +1458,7 @@ if (Tablesaw.mustard) {
 		var $headerCells = tbl._getPrimaryHeaderCells();
 		var $headerCellsNoPersist = $headerCells.not('[data-tablesaw-priority="persist"]');
 		var headerWidths = [];
+		var headerWidthsNoPersist = [];
 		var $head = $(document.head || "head");
 		var tableId = $table.attr("id");
 
@@ -1476,9 +1477,14 @@ if (Tablesaw.mustard) {
 			$table.find("." + classes.hiddenCol).removeClass(classes.hiddenCol);
 
 			headerWidths = [];
+			headerWidthsNoPersist = [];
 			// Calculate initial widths
 			$headerCells.each(function() {
-				headerWidths.push(this.offsetWidth);
+				var width = this.offsetWidth;
+				headerWidths.push(width);
+				if (!isPersistent(this)) {
+					headerWidthsNoPersist.push(width);
+				}
 			});
 
 			// reset props
@@ -1564,12 +1570,12 @@ if (Tablesaw.mustard) {
 		}
 
 		function getNext() {
-			var next = [],
-				checkFound;
-
+			var next = [];
+			var checkFound;
 			$headerCellsNoPersist.each(function(i) {
-				var $t = $(this),
-					isHidden = $t.css("display") === "none" || $t.is("." + classes.hiddenCol);
+				var $t = $(this);
+				var isHidden = $t.css("display") === "none" || $t.is("." + classes.hiddenCol);
+				var colspan = parseInt($t.attr("colspan") || 1, 10);
 
 				if (!isHidden && !checkFound) {
 					checkFound = true;
@@ -1589,11 +1595,7 @@ if (Tablesaw.mustard) {
 			return [next[1] - 1, next[0] - 1];
 		}
 
-		function nextpair(fwd) {
-			return fwd ? getNext() : getPrev();
-		}
-
-		function canAdvance(pair) {
+		function canNavigate(pair) {
 			return pair[1] > -1 && pair[1] < $headerCellsNoPersist.length;
 		}
 
@@ -1636,10 +1638,16 @@ if (Tablesaw.mustard) {
 				}
 			});
 
+			var firstPersist = true;
 			$headerCells.each(function(index) {
 				if (persist[index]) {
 					// for visual box-shadow
 					persistColumn(this);
+
+					if (firstPersist) {
+						tblsaw._$getCells(this).css("width", sums[index] + "px");
+						firstPersist = false;
+					}
 					return;
 				}
 
@@ -1655,32 +1663,92 @@ if (Tablesaw.mustard) {
 			$table.trigger("tablesawcolumns");
 		}
 
-		function advance(fwd) {
-			var pair = nextpair(fwd);
-			if (canAdvance(pair)) {
+		function goForward() {
+			navigate(true);
+		}
+		function goBackward() {
+			navigate(false);
+		}
+
+		function navigate(isNavigateForward) {
+			var pair;
+			if (isNavigateForward) {
+				pair = getNext();
+			} else {
+				pair = getPrev();
+			}
+
+			if (canNavigate(pair)) {
 				if (isNaN(pair[0])) {
-					if (fwd) {
+					if (isNavigateForward) {
 						pair[0] = 0;
 					} else {
 						pair[0] = $headerCellsNoPersist.length - 1;
 					}
 				}
 
-				// TODO just blindly hiding the previous column and showing the next column can result in
-				// column content overflow
 				maintainWidths();
-				hideColumn($headerCellsNoPersist.get(pair[0]));
-				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[0]), false);
 
-				showColumn($headerCellsNoPersist.get(pair[1]));
-				tblsaw.updateColspanCells(classes.hiddenCol, $headerCellsNoPersist.get(pair[1]), true);
+				var showColumnIndex = pair[1];
+				var hideColumnIndex = pair[0];
+				var colspanCounter = parseInt(
+					$headerCellsNoPersist.eq(showColumnIndex).attr("colspan") || 1,
+					10
+				);
+				var columnToHide;
+
+				while (
+					colspanCounter > 0 &&
+					hideColumnIndex >= 0 &&
+					hideColumnIndex <= headerWidthsNoPersist.length &&
+					((isNavigateForward && hideColumnIndex < showColumnIndex) ||
+						(!isNavigateForward && hideColumnIndex > showColumnIndex))
+				) {
+					columnToHide = $headerCellsNoPersist.get(hideColumnIndex);
+
+					if (columnToHide) {
+						hideColumn(columnToHide);
+						tblsaw.updateColspanCells(classes.hiddenCol, columnToHide, false);
+						colspanCounter -= parseInt(
+							$headerCellsNoPersist.eq(hideColumnIndex).attr("colspan") || 1,
+							10
+						);
+					}
+
+					if (isNavigateForward) {
+						hideColumnIndex++;
+					} else {
+						hideColumnIndex--;
+					}
+				}
+
+				while (colspanCounter <= 0) {
+					var columnToShow = $headerCellsNoPersist.get(showColumnIndex);
+					showColumn(columnToShow);
+					tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, true);
+
+					if (isNavigateForward) {
+						showColumnIndex++;
+					} else {
+						showColumnIndex--;
+					}
+
+					colspanCounter += parseInt(
+						$headerCellsNoPersist.eq(showColumnIndex).attr("colspan") || 1,
+						10
+					);
+				}
 
 				$table.trigger("tablesawcolumns");
 			}
 		}
 
 		$prevBtn.add($nextBtn).on("click", function(e) {
-			advance(!!$(e.target).closest($nextBtn).length);
+			if (!!$(e.target).closest($nextBtn).length) {
+				goForward();
+			} else {
+				goBackward();
+			}
 			e.preventDefault();
 		});
 
@@ -1725,10 +1793,10 @@ if (Tablesaw.mustard) {
 
 						if (!isVerticalSwipe && !isPageScrolled) {
 							if (x - originX < -1 * horizontalThreshold) {
-								advance(true);
+								goForward();
 							}
 							if (x - originX > horizontalThreshold) {
-								advance(false);
+								goBackward();
 							}
 						}
 
@@ -1743,8 +1811,8 @@ if (Tablesaw.mustard) {
 
 		$table
 			.on("tablesawcolumns.swipetoggle", function() {
-				var canGoPrev = canAdvance(getPrev());
-				var canGoNext = canAdvance(getNext());
+				var canGoPrev = canNavigate(getPrev());
+				var canGoNext = canNavigate(getNext());
 				$prevBtn[canGoPrev ? "removeClass" : "addClass"](classes.hideBtn);
 				$nextBtn[canGoNext ? "removeClass" : "addClass"](classes.hideBtn);
 
@@ -1753,10 +1821,10 @@ if (Tablesaw.mustard) {
 				);
 			})
 			.on("tablesawnext.swipetoggle", function() {
-				advance(true);
+				goForward();
 			})
 			.on("tablesawprev.swipetoggle", function() {
-				advance(false);
+				goBackward();
 			})
 			.on(Tablesaw.events.destroy + ".swipetoggle", function() {
 				var $t = $(this);
