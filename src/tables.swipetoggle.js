@@ -273,39 +273,54 @@
 
 				var roomForColumnsWidth = maintainWidths();
 				var hideColumnIndex = pair[0];
+				var showColumnIndex = pair[1];
 
-				// Hide one column, show one or more
+				// Hide one column, show one or more based on how much space was freed up
 				var columnToShow;
 				var columnToHide = $headerCellsNoPersist.get(hideColumnIndex);
 				var wasAtLeastOneColumnShown = false;
+				var atLeastOneColumnIsVisible = false;
 
 				hideColumn(columnToHide);
 				tblsaw.updateColspanCells(classes.hiddenCol, columnToHide, true);
 
-				var columnIndex = hideColumnIndex;
-				while (columnIndex >= 0 && columnIndex <= headerWidthsNoPersist.length) {
+				var columnIndex = hideColumnIndex + (isNavigateForward ? 1 : -1);
+				while (columnIndex >= 0 && columnIndex < headerWidthsNoPersist.length) {
+					roomForColumnsWidth -= headerWidthsNoPersist[columnIndex];
+
+					var $columnToShow = $headerCellsNoPersist.eq(columnIndex);
+					if ($columnToShow.is(".tablesaw-swipe-cellhidden")) {
+						if (roomForColumnsWidth > 0) {
+							columnToShow = $columnToShow.get(0);
+							wasAtLeastOneColumnShown = true;
+							atLeastOneColumnIsVisible = true;
+							showColumn(columnToShow);
+							tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, false);
+						}
+					} else {
+						atLeastOneColumnIsVisible = true;
+					}
+
 					if (isNavigateForward) {
 						columnIndex++;
 					} else {
 						columnIndex--;
 					}
-					roomForColumnsWidth -= headerWidthsNoPersist[columnIndex];
-					if (
-						roomForColumnsWidth > 0 &&
-						$headerCellsNoPersist.eq(columnIndex).is(".tablesaw-swipe-cellhidden")
-					) {
-						wasAtLeastOneColumnShown = true;
-						columnToShow = $headerCellsNoPersist.get(columnIndex);
-						showColumn(columnToShow);
-						tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, false);
-					}
 				}
 
-				if (!wasAtLeastOneColumnShown) {
+				if (!atLeastOneColumnIsVisible) {
+					// if no columns are showing, at least show the first one we were aiming for.
+					columnToShow = $headerCellsNoPersist.get(showColumnIndex);
+					showColumn(columnToShow);
+					tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, false);
+				} else if (
+					!wasAtLeastOneColumnShown &&
+					canNavigate(isNavigateForward ? getNext() : getPrev())
+				) {
+					// if our one new column was hidden but no new columns were shown, let’s navigate again automatically.
 					navigate(isNavigateForward);
-				} else {
-					$table.trigger("tablesawcolumns");
 				}
+				$table.trigger("tablesawcolumns");
 			}
 		}
 
