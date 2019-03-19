@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.1.1 - 2019-03-15
+/*! Tablesaw - v3.1.2 - 2019-03-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2019 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14

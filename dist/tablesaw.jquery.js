@@ -1,4 +1,4 @@
-/*! Tablesaw - v3.1.1 - 2019-03-15
+/*! Tablesaw - v3.1.2 - 2019-03-19
 * https://github.com/filamentgroup/tablesaw
 * Copyright (c) 2019 Filament Group; Licensed MIT */
 (function (root, factory) {
@@ -1524,17 +1524,19 @@ if (Tablesaw.mustard) {
 		}
 
 		function maintainWidths() {
-			var prefix = "#" + tableId + ".tablesaw-swipe ",
-				styles = [],
-				tableWidth = $table.width(),
-				hash = [],
-				newHash;
+			var prefix = "#" + tableId + ".tablesaw-swipe ";
+			var styles = [];
+			var tableWidth = $table.width();
+			var tableWidthNoPersistantColumns = tableWidth;
+			var hash = [];
+			var newHash;
 
 			// save persistent column widths (as long as they take up less than 75% of table width)
 			$headerCells.each(function(index) {
 				var width;
 				if (isPersistent(this)) {
 					width = this.offsetWidth;
+					tableWidthNoPersistantColumns -= width;
 
 					if (width < tableWidth * 0.75) {
 						hash.push(index + "-" + width);
@@ -1567,6 +1569,8 @@ if (Tablesaw.mustard) {
 						.appendTo($head);
 				}
 			}
+
+			return tableWidthNoPersistantColumns;
 		}
 
 		function getNext() {
@@ -1575,7 +1579,6 @@ if (Tablesaw.mustard) {
 			$headerCellsNoPersist.each(function(i) {
 				var $t = $(this);
 				var isHidden = $t.css("display") === "none" || $t.is("." + classes.hiddenCol);
-				var colspan = parseInt($t.attr("colspan") || 1, 10);
 
 				if (!isHidden && !checkFound) {
 					checkFound = true;
@@ -1687,58 +1690,55 @@ if (Tablesaw.mustard) {
 					}
 				}
 
-				maintainWidths();
-
-				var showColumnIndex = pair[1];
+				var roomForColumnsWidth = maintainWidths();
 				var hideColumnIndex = pair[0];
-				var colspanCounter = parseInt(
-					$headerCellsNoPersist.eq(showColumnIndex).attr("colspan") || 1,
-					10
-				);
-				var columnToHide;
+				var showColumnIndex = pair[1];
 
-				while (
-					colspanCounter > 0 &&
-					hideColumnIndex >= 0 &&
-					hideColumnIndex <= headerWidthsNoPersist.length &&
-					((isNavigateForward && hideColumnIndex < showColumnIndex) ||
-						(!isNavigateForward && hideColumnIndex > showColumnIndex))
-				) {
-					columnToHide = $headerCellsNoPersist.get(hideColumnIndex);
+				// Hide one column, show one or more based on how much space was freed up
+				var columnToShow;
+				var columnToHide = $headerCellsNoPersist.get(hideColumnIndex);
+				var wasAtLeastOneColumnShown = false;
+				var atLeastOneColumnIsVisible = false;
 
-					if (columnToHide) {
-						hideColumn(columnToHide);
-						tblsaw.updateColspanCells(classes.hiddenCol, columnToHide, false);
-						colspanCounter -= parseInt(
-							$headerCellsNoPersist.eq(hideColumnIndex).attr("colspan") || 1,
-							10
-						);
+				hideColumn(columnToHide);
+				tblsaw.updateColspanCells(classes.hiddenCol, columnToHide, true);
+
+				var columnIndex = hideColumnIndex + (isNavigateForward ? 1 : -1);
+				while (columnIndex >= 0 && columnIndex < headerWidthsNoPersist.length) {
+					roomForColumnsWidth -= headerWidthsNoPersist[columnIndex];
+
+					var $columnToShow = $headerCellsNoPersist.eq(columnIndex);
+					if ($columnToShow.is(".tablesaw-swipe-cellhidden")) {
+						if (roomForColumnsWidth > 0) {
+							columnToShow = $columnToShow.get(0);
+							wasAtLeastOneColumnShown = true;
+							atLeastOneColumnIsVisible = true;
+							showColumn(columnToShow);
+							tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, false);
+						}
+					} else {
+						atLeastOneColumnIsVisible = true;
 					}
 
 					if (isNavigateForward) {
-						hideColumnIndex++;
+						columnIndex++;
 					} else {
-						hideColumnIndex--;
+						columnIndex--;
 					}
 				}
 
-				while (colspanCounter <= 0) {
-					var columnToShow = $headerCellsNoPersist.get(showColumnIndex);
+				if (!atLeastOneColumnIsVisible) {
+					// if no columns are showing, at least show the first one we were aiming for.
+					columnToShow = $headerCellsNoPersist.get(showColumnIndex);
 					showColumn(columnToShow);
-					tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, true);
-
-					if (isNavigateForward) {
-						showColumnIndex++;
-					} else {
-						showColumnIndex--;
-					}
-
-					colspanCounter += parseInt(
-						$headerCellsNoPersist.eq(showColumnIndex).attr("colspan") || 1,
-						10
-					);
+					tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, false);
+				} else if (
+					!wasAtLeastOneColumnShown &&
+					canNavigate(isNavigateForward ? getNext() : getPrev())
+				) {
+					// if our one new column was hidden but no new columns were shown, let’s navigate again automatically.
+					navigate(isNavigateForward);
 				}
-
 				$table.trigger("tablesawcolumns");
 			}
 		}
