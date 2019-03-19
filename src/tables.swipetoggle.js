@@ -105,17 +105,19 @@
 		}
 
 		function maintainWidths() {
-			var prefix = "#" + tableId + ".tablesaw-swipe ",
-				styles = [],
-				tableWidth = $table.width(),
-				hash = [],
-				newHash;
+			var prefix = "#" + tableId + ".tablesaw-swipe ";
+			var styles = [];
+			var tableWidth = $table.width();
+			var tableWidthNoPersistantColumns = tableWidth;
+			var hash = [];
+			var newHash;
 
 			// save persistent column widths (as long as they take up less than 75% of table width)
 			$headerCells.each(function(index) {
 				var width;
 				if (isPersistent(this)) {
 					width = this.offsetWidth;
+					tableWidthNoPersistantColumns -= width;
 
 					if (width < tableWidth * 0.75) {
 						hash.push(index + "-" + width);
@@ -148,6 +150,8 @@
 						.appendTo($head);
 				}
 			}
+
+			return tableWidthNoPersistantColumns;
 		}
 
 		function getNext() {
@@ -156,7 +160,6 @@
 			$headerCellsNoPersist.each(function(i) {
 				var $t = $(this);
 				var isHidden = $t.css("display") === "none" || $t.is("." + classes.hiddenCol);
-				var colspan = parseInt($t.attr("colspan") || 1, 10);
 
 				if (!isHidden && !checkFound) {
 					checkFound = true;
@@ -268,59 +271,41 @@
 					}
 				}
 
-				maintainWidths();
-
-				var showColumnIndex = pair[1];
+				var roomForColumnsWidth = maintainWidths();
 				var hideColumnIndex = pair[0];
-				var colspanCounter = parseInt(
-					$headerCellsNoPersist.eq(showColumnIndex).attr("colspan") || 1,
-					10
-				);
-				var columnToHide;
 
-				while (
-					colspanCounter > 0 &&
-					hideColumnIndex >= 0 &&
-					hideColumnIndex <= headerWidthsNoPersist.length &&
-					((isNavigateForward && hideColumnIndex < showColumnIndex) ||
-						(!isNavigateForward && hideColumnIndex > showColumnIndex))
-				) {
-					columnToHide = $headerCellsNoPersist.get(hideColumnIndex);
+				// Hide one column, show one or more
+				var columnToShow;
+				var columnToHide = $headerCellsNoPersist.get(hideColumnIndex);
+				var wasAtLeastOneColumnShown = false;
 
-					if (columnToHide) {
-						hideColumn(columnToHide);
-						tblsaw.updateColspanCells(classes.hiddenCol, columnToHide, false);
-						colspanCounter -= parseInt(
-							$headerCellsNoPersist.eq(hideColumnIndex).attr("colspan") || 1,
-							10
-						);
-					}
+				hideColumn(columnToHide);
+				tblsaw.updateColspanCells(classes.hiddenCol, columnToHide, true);
 
+				var columnIndex = hideColumnIndex;
+				while (columnIndex >= 0 && columnIndex <= headerWidthsNoPersist.length) {
 					if (isNavigateForward) {
-						hideColumnIndex++;
+						columnIndex++;
 					} else {
-						hideColumnIndex--;
+						columnIndex--;
+					}
+					roomForColumnsWidth -= headerWidthsNoPersist[columnIndex];
+					if (
+						roomForColumnsWidth > 0 &&
+						$headerCellsNoPersist.eq(columnIndex).is(".tablesaw-swipe-cellhidden")
+					) {
+						wasAtLeastOneColumnShown = true;
+						columnToShow = $headerCellsNoPersist.get(columnIndex);
+						showColumn(columnToShow);
+						tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, false);
 					}
 				}
 
-				while (colspanCounter <= 0) {
-					var columnToShow = $headerCellsNoPersist.get(showColumnIndex);
-					showColumn(columnToShow);
-					tblsaw.updateColspanCells(classes.hiddenCol, columnToShow, true);
-
-					if (isNavigateForward) {
-						showColumnIndex++;
-					} else {
-						showColumnIndex--;
-					}
-
-					colspanCounter += parseInt(
-						$headerCellsNoPersist.eq(showColumnIndex).attr("colspan") || 1,
-						10
-					);
+				if (!wasAtLeastOneColumnShown) {
+					navigate(isNavigateForward);
+				} else {
+					$table.trigger("tablesawcolumns");
 				}
-
-				$table.trigger("tablesawcolumns");
 			}
 		}
 
