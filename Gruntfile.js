@@ -1,5 +1,7 @@
 'use strict';
 
+var path = require('path');
+
 module.exports = function(grunt) {
 
 	var jsFiles = [
@@ -131,7 +133,8 @@ module.exports = function(grunt) {
 		},
 		run: {
 			ava: {
-				exec: "./node_modules/.bin/ava"
+				//exec: "./node_modules/.bin/ava"
+				exec: path.normalize("./node_modules/.bin/ava")
 			}
 		},
 		watch: {
