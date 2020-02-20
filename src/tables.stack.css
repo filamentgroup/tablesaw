@@ -13,6 +13,7 @@
 	/* Show the table cells as a block level element */
 	.tablesaw-stack {
 		clear: both;
+		display: block;
 	}
 	.tablesaw-stack td,
 	.tablesaw-stack th {

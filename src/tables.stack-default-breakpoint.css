@@ -38,6 +38,9 @@
 
 /* Media query to show as a standard table at 560px (35em x 16px) or wider */
 @media (min-width: 40em) {
+  .tablesaw-stack {
+    display: table;
+  }
   .tablesaw-stack tr {
     display: table-row;
   }
