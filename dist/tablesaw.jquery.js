@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.1.2 - 2019-03-19
+/*! Tablesaw - v3.1.2 - 2020-06-19
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2019 Filament Group; Licensed MIT */
+* Copyright (c) 2020 Filament Group; Licensed MIT */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(["jquery"], function (jQuery) {
@@ -586,7 +586,7 @@ if (Tablesaw.mustard) {
 				);
 			})
 			.each(function() {
-				var $newHeader = $(document.createElement("b")).addClass(classes.cellLabels);
+				var $newHeader = $(document.createElement("b")).addClass(classes.cellLabels).attr('aria-hidden', true);
 				var $cell = $(this);
 
 				$(self.tablesaw._findPrimaryHeadersForCell(this)).each(function(index) {

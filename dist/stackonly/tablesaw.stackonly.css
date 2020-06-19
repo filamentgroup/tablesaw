@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.1.2 - 2019-03-19
+/*! Tablesaw - v3.1.2 - 2020-06-19
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2019 Filament Group; Licensed MIT */
+* Copyright (c) 2020 Filament Group; Licensed MIT */
 
 .tablesaw {
   width: 100%;
@@ -88,7 +88,15 @@
 
   .tablesaw-stack thead td,
   .tablesaw-stack thead th {
-    display: none;
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
   }
 
   .tablesaw-stack tbody td,
