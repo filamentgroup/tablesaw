@@ -1,6 +1,6 @@
-/*! Tablesaw - v3.1.2 - 2019-03-19
+/*! Tablesaw - v3.1.2 - 2020-06-19
 * https://github.com/filamentgroup/tablesaw
-* Copyright (c) 2019 Filament Group; Licensed MIT */
+* Copyright (c) 2020 Filament Group; Licensed MIT */
 /*! Shoestring - v2.0.0 - 2017-02-14
 * http://github.com/filamentgroup/shoestring/
 * Copyright (c) 2017 Scott Jehl, Filament Group, Inc; Licensed MIT & GPLv2 */ 
@@ -2287,7 +2287,7 @@ if (Tablesaw.mustard) {
 				);
 			})
 			.each(function() {
-				var $newHeader = $(document.createElement("b")).addClass(classes.cellLabels);
+				var $newHeader = $(document.createElement("b")).addClass(classes.cellLabels).attr('aria-hidden', true);
 				var $cell = $(this);
 
 				$(self.tablesaw._findPrimaryHeadersForCell(this)).each(function(index) {

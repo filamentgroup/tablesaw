@@ -55,7 +55,9 @@
 				);
 			})
 			.each(function() {
-				var $newHeader = $(document.createElement("b")).addClass(classes.cellLabels);
+				var $newHeader = $(document.createElement("b"))
+					.addClass(classes.cellLabels)
+					.attr("aria-hidden", true);
 				var $cell = $(this);
 
 				$(self.tablesaw._findPrimaryHeadersForCell(this)).each(function(index) {
