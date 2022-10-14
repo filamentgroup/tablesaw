@@ -40,6 +40,7 @@
 			ascend: pluginName + "-ascending",
 			descend: pluginName + "-descending",
 			switcher: pluginName + "-switch",
+			switcherCaption: pluginName + "-caption",
 			tableToolbar: "tablesaw-bar-section",
 			sortButton: pluginName + "-btn"
 		},
@@ -193,7 +194,7 @@
 						.addClass(classes.switcher)
 						.addClass(classes.tableToolbar);
 
-					var html = ["<label>" + Tablesaw.i18n.sort + ":"]; //TODO: Move some Captions here?
+					var html = ['<label><span class="' + classes.switcherCaption + '">' + Tablesaw.i18n.sort + ':</span>'];
 
 					// TODO next major version: remove .btn
 					html.push('<span class="btn tablesaw-btn"><select>');
