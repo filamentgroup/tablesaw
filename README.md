@@ -1,3 +1,5 @@
+:warning: This project is archived and the repository is no longer maintained. 
+
 # Tablesaw
 
 [![npm version](https://badge.fury.io/js/tablesaw.svg)](https://badge.fury.io/js/tablesaw)
